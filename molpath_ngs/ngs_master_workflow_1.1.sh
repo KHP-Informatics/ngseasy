@@ -246,17 +246,7 @@ ${sample_name} \
 ${sample_dir} \
 ${sample_temp};
 
-#----------------------------------------------------------------------#
-# 6. Clean up aln sample dir
-#----------------------------------------------------------------------#
 
-echo ">>>>>" `date` " :-> " "Running Clean Up 01"
-
-qsub -q ${queue_name} -N rmvIntermediateSAMs.${sample_name} -hold_jid MarkDuplicates.${sample_name} -l h_vmem=1G -M ${email_contact} -m beas \
-${ngs_pipeline}/ngs_rmvdIntermediateSAMs.sh \
-${sample_name} \
-${sample_dir} \
-${sample_temp};
 
 ##############################
 ## END ALIGNMENT PIPELINE   ## 
@@ -338,12 +328,23 @@ ${sample_temp};
 
 echo ">>>>>" `date` " :-> " "Running AnalyzeCovariates"
 
-qsub -q ${queue_name} -N BaseRecalibrator_after.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas \
+qsub -q ${queue_name} -N AnalyzeCovariates_before_and_after_BQSR.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas \
 ${ngs_pipeline}/ngs_AnalyzeCovariates_before_and_after_BQSR.sh \
 ${sample_name} \
 ${sample_dir} \
 ${sample_temp};
 
+#----------------------------------------------------------------------#
+# 13. Clean up aln sample dir
+#----------------------------------------------------------------------#
+
+echo ">>>>>" `date` " :-> " "Running Clean Up 01"
+
+qsub -q ${queue_name} -N rmvIntermediateGATK.${sample_name} -hold_jid AnalyzeCovariates_before_and_after_BQSR.${sample_name} -l h_vmem=1G -M ${email_contact} -m beas \
+${ngs_pipeline}/ngs_rmvIntermediateGATK.sh \
+${sample_name} \
+${sample_dir} \
+${sample_temp};
 
 #########################
 ## END GATK CLEANING   ##
