@@ -18,8 +18,6 @@ sample_dir=${3}
 cd ${sample_dir}
 
 
-ngs="/scratch/project/pipelines/ngs_pipeline_dev/ngs_dev_sjn_tmp/ngs_bin"
-
 ## start novo 
 echo "----------------------------------------------------------------------------------------" 
 echo " Fastq prefix" ${1}
@@ -33,7 +31,7 @@ echo "--------------------------------------------------------------------------
 
 cd ${sample_dir}
 
-${ngs}/novoalign \
+${ngs_novo}/novoalign \
 -d ${reference_genome_novoindex} \
 -f ${fastq_dir}/${fastq_prefix}_1.fastq  ${fastq_dir}/${fastq_prefix}_2.fastq  \
 -F STDFQ \
