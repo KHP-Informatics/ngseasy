@@ -14,9 +14,8 @@ sample_dir=${2}
 
 cd ${sample_dir}
 
-ngs="/scratch/project/pipelines/ngs_pipeline_dev/ngs_dev_sjn_tmp/ngs_bin"
 
-${ngs}/samtools view -bS ${sample_dir}/${sample_name}.aln.sam > ${sample_dir}/${sample_name}.aln.bam;
-${ngs}/samtools index    ${sample_dir}/${sample_name}.aln.bam;
+${ngs_samtools}/samtools view -bS ${sample_dir}/${sample_name}.aln.sam > ${sample_dir}/${sample_name}.aln.bam;
+${ngs_samtools}/samtools index    ${sample_dir}/${sample_name}.aln.bam;
 
 

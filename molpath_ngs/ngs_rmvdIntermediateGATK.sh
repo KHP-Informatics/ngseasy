@@ -36,10 +36,10 @@ mv -v ${sample_dir}/AnalyzeCovariates_before_and_after_BQSR.${sample_name}.* ${s
 
 echo " clean up files"
 
-rm -v ${sample_dir}/${sample_name}.aln.sam
+#rm -v ${sample_dir}/${sample_name}.aln.sam
 rm -v ${sample_dir}/${sample_name}.alnSrt.ba*
 rm -v ${sample_dir}/${sample_name}.alnSrtRG.ba*
-rm -v ${sample_dir}/${sample_name}.novoraw.ba*
+#rm -v ${sample_dir}/${sample_name}.novoraw.ba*
 rm -v ${sample_dir}/${sample_name}.novorealn.ba*
 
 

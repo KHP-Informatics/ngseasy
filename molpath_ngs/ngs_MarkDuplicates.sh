@@ -15,9 +15,8 @@ sample_temp=${3}
 
 cd ${sample_dir}
 
-ngs="/scratch/project/pipelines/ngs_pipeline_dev/ngs_dev_sjn_tmp/ngs_bin"
 
-java -XX:ParallelGCThreads=1 -Xmx${java_mem}g -jar ${ngs}/MarkDuplicates.jar \
+java -XX:ParallelGCThreads=1 -Xmx${java_mem}g -jar ${ngs_picard}/MarkDuplicates.jar \
 TMP_DIR=${sample_temp} \
 VALIDATION_STRINGENCY=SILENT \
 MAX_RECORDS_IN_RAM=100000 \

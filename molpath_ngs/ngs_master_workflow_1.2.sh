@@ -2,13 +2,12 @@
 #$ -S /bin/bash
 #$ -cwd
 #$ -V
-#$ -N ngs_master_workflow_v1.1
 #$ -M stephen.newhouse@kcl.ac.uk
 #$ -m beas
 #$ -pe multi_thread 1
 #$ -l h_vmem=1G
 #$ -p -0.99999999999999999999999999999999999999999999999999999999999999999
-#$ -j yes
+#$ -j y
 #------------------------------------------------------------------------#
 
 
@@ -81,7 +80,7 @@ export ngs_samtools="/share/apps/samtools_0.1.18/bin"
 ## pipeline dir ##
 ##################
 
-export ngs_pipeline="/scratch/project/pipelines/ngs_pipeline_dev/ngs_dev_sjn_tmp"
+export ngs_pipeline="/home/snewhousebrc/scratch/pipelines/ngs/molpath_ngs"
 
 ######################
 ## reference genomes #
@@ -341,7 +340,7 @@ ${sample_temp};
 echo ">>>>>" `date` " :-> " "Running Clean Up 01"
 
 qsub -q ${queue_name} -N rmvIntermediateGATK.${sample_name} -hold_jid AnalyzeCovariates_before_and_after_BQSR.${sample_name} -l h_vmem=1G -M ${email_contact} -m beas \
-${ngs_pipeline}/ngs_rmvIntermediateGATK.sh \
+${ngs_pipeline}/ngs_rmvdIntermediateGATK.sh \
 ${sample_name} \
 ${sample_dir} \
 ${sample_temp};
@@ -349,17 +348,6 @@ ${sample_temp};
 #########################
 ## END GATK CLEANING   ##
 #########################
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,0 +1,24 @@
+moving to sample directory  /scratch/project/pipelines/ngs_pipeline_dev/ngs_molpath_sjn/patientx.haloplex.IONTORRENT
+>>>>> Wed Sep 11 17:18:38 BST 2013  :->  Aligning PE data 
+Your job 894724 ("novoalign.patientx.haloplex.IONTORRENT") has been submitted
+>>>>> Wed Sep 11 17:18:38 BST 2013  :->  Converting Novoalign SAM to BAM and indexing
+Your job 894726 ("sam2bam.patientx.haloplex.IONTORRENT") has been submitted
+Your job 894728 ("SortSam.patientx.haloplex.IONTORRENT") has been submitted
+>>>>> Wed Sep 11 17:18:38 BST 2013  :->  Running AddOrReplaceReadGroups
+Your job 894730 ("AddOrReplaceReadGroups.patientx.haloplex.IONTORRENT") has been submitted
+>>>>> Wed Sep 11 17:18:38 BST 2013  :->  Running MarkDuplicates
+Your job 894732 ("MarkDuplicates.patientx.haloplex.IONTORRENT") has been submitted
+>>>>> Wed Sep 11 17:18:38 BST 2013  :->  Running RealignerTargetCreator
+Your job 894734 ("RealignerTargetCreator.patientx.haloplex.IONTORRENT") has been submitted
+>>>>> Wed Sep 11 17:18:38 BST 2013  :->  Running IndelRealigner
+Your job 894736 ("IndelRealigner.patientx.haloplex.IONTORRENT") has been submitted
+>>>>> Wed Sep 11 17:18:38 BST 2013  :->  Running BaseRecalibrator before QUAL SCORE RECALIBRATION
+Your job 894738 ("BaseRecalibrator_before.patientx.haloplex.IONTORRENT") has been submitted
+>>>>> Wed Sep 11 17:18:38 BST 2013  :->  Running PrintReads > QUAL SCORE RECALIBRATION 
+Your job 894740 ("PrintReads_BQSR.patientx.haloplex.IONTORRENT") has been submitted
+>>>>> Wed Sep 11 17:18:38 BST 2013  :->  Running BaseRecalibrator after QUAL SCORE RECALIBRATION
+Your job 894742 ("BaseRecalibrator_after.patientx.haloplex.IONTORRENT") has been submitted
+>>>>> Wed Sep 11 17:18:38 BST 2013  :->  Running AnalyzeCovariates
+Your job 894743 ("AnalyzeCovariates_before_and_after_BQSR.patientx.haloplex.IONTORRENT") has been submitted
+>>>>> Wed Sep 11 17:18:38 BST 2013  :->  Running Clean Up 01
+Your job 894745 ("rmvIntermediateGATK.patientx.haloplex.IONTORRENT") has been submitted
