@@ -1,18 +1,14 @@
 #!/bin/sh
 #$ -S /bin/bash
 #$ -cwd
-#$ -M stephen.newhouse@kcl.ac.uk
-#$ -m beas
-#$ -l h_vmem=3G
 #$ -p -0.99999999999999999999999999999999999999999999999999
-#$ -pe multi_thread 8
 #$ -V
 
 ####################
 ## Call Novoalign ##
 ####################
 
-N_CPU=8
+N_CPU=${novo_cpu}
 fastq_prefix=${1}
 sample_name=${2}
 sample_dir=${3}

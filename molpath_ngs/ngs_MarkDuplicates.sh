@@ -1,9 +1,6 @@
 #!/bin/sh
 #$ -S /bin/bash
 #$ -cwd
-#$ -M stephen.newhouse@kcl.ac.uk
-#$ -m beas
-#$ -l h_vmem=8G
 #$ -p -0.99999999999999999999999999999999999999999999999999
 #$ -pe multi_thread 1
 #$ -V
@@ -18,7 +15,9 @@ sample_temp=${3}
 
 cd ${sample_dir}
 
-java -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/MarkDuplicates.jar \
+ngs="/scratch/project/pipelines/ngs_pipeline_dev/ngs_dev_sjn_tmp/ngs_bin"
+
+java -XX:ParallelGCThreads=1 -Xmx${java_mem}g -jar ${ngs}/MarkDuplicates.jar \
 TMP_DIR=${sample_temp} \
 VALIDATION_STRINGENCY=SILENT \
 MAX_RECORDS_IN_RAM=100000 \
@@ -26,7 +25,7 @@ CREATE_INDEX=true \
 REMOVE_DUPLICATES=false \
 ASSUME_SORTED=true \
 INPUT=${sample_dir}/${sample_name}.alnSrtRG.bam \
-METRICS_FILE=${sample_dir}/${sample_name}.novo \
+METRICS_FILE=${sample_dir}/${sample_name}.novoraw.MarkDuplicates \
 OUTPUT=${sample_dir}/${sample_name}.novoraw.bam;
 
 

@@ -4,7 +4,7 @@ args <- commandArgs(trailingOnly=TRUE);
 
 config_file <- args[1];
 
-d <- read.table(config_file, head=T)
+d <- read.table(config_file, head=T,sep="\t",as.is=T,fill=T)
 
 
 for( i in 1:dim(d)[1] )
@@ -26,7 +26,7 @@ RGDT=d$ReadGroup_runDate_RGDT[i] 	#Read Group run date Required.
 isPE=d$PE[i] 	#Read Group run date Required.
 
 
-callPipe <- paste("sh",pipeline,fastq_prefix,sample_name,qual_type,RGID,RGLB,RGPL,RGPU,RGSM,RGCN,RGDS,RGDT,isPE,sep="\t")
+callPipe <- paste(" qsub",pipeline,fastq_prefix,sample_name,qual_type,RGID,RGLB,RGPL,RGPU,RGSM,RGCN,RGDS,RGDT,isPE,sep="\t")
 
 system(callPipe)
 

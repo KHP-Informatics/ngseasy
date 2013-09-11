@@ -1,11 +1,7 @@
 #!/bin/sh
 #$ -S /bin/bash
 #$ -cwd
-#$ -M stephen.newhouse@kcl.ac.uk
-#$ -m beas
-#$ -l h_vmem=8G
 #$ -p -0.99999999999999999999999999999999999999999999999999
-#$ -pe multi_thread 1
 #$ -V
 
 ##############################
@@ -28,7 +24,7 @@ mRGDT=${11}
 
 cd ${sample_dir}
 
-java -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/AddOrReplaceReadGroups.jar \
+java -XX:ParallelGCThreads=1 -Xmx${java_mem}g -jar ${ngs_picard}/AddOrReplaceReadGroups.jar \
 TMP_DIR=${sample_temp} \
 VALIDATION_STRINGENCY=SILENT \
 MAX_RECORDS_IN_RAM=100000 \
