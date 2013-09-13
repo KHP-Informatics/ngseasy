@@ -21,8 +21,7 @@ java -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/Geno
 -baqGOP 40 \
 -BQSR ${sample_dir}/${sample_name}.novorealn.recal_data.table;
 
+
 ## index
 samtools index ${sample_dir}/${sample_name}.novorecal.bam
 
-## make bed file [needs header etc]
-bamToBed -i ${sample_dir}/${sample_name}.novorecal.bam > ${sample_dir}/${sample_name}.novorecal.bed;
