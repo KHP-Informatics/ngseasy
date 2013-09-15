@@ -12,7 +12,7 @@ for( i in 1:dim(d)[1] )
 {
 
 pipeline <- d$Pipeline[i] ## pipeline to call
-fastq_prefix=d$Fastq_file_prefix[i]	## fastq prefix
+Fastq_prefix=d$Fastq_file_prefix[i]	## fastq prefix
 sample_name=d$ReadGroup_sample_RGSM[i] ##sample name
 qual_type=d$QUAL[i]  ## Base quality coding for novoalign ie STFQ, ILMFQ, ILM1.8
 RGID=d$ReadGroup_id_RGID[i] 	#Read Group ID Required.
