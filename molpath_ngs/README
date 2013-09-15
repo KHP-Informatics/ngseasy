@@ -1,0 +1,10 @@
+
+HaloPlex Cancer Research Panel, ION, 16
+HaloPlex Cancer Research Panel, ILM, 16
+
+get list of gene
+
+add options to add gene list -L if gene list -eq 1 then get list and call and depth etc
+
+and disovery all var > then make new list of knonw and novel vars and use as input for genotyping at all known and new sites
+

@@ -24,11 +24,11 @@ RGCN=d$ReadGroup_SeqCentre_RGCN[i] 	#Read Group sequencing center name Required.
 RGDS=d$ReadGroup_Desc_RGDS[i] 	#Read Group description Required.
 RGDT=d$ReadGroup_runDate_RGDT[i] 	#Read Group run date Required.
 isPE=d$PE[i] 	#Read Group run date Required.
-
+targetbed=d$bed_list[i]
 
 #callPipe <- paste(" qsub",pipeline,fastq_prefix,sample_name,qual_type,RGID,RGLB,RGPL,RGPU,RGSM,RGCN,RGDS,RGDT,isPE,sep="\t")
 
-callPipe <- paste(" qsub -N ngs_pipeline.",RGID," ", pipeline," ",fastq_prefix," ", sample_name," ",qual_type," ",RGID," ",RGLB," ",RGPL," ",RGPU," ",RGSM," ",RGCN," ",RGDS," ",RGDT," ",isPE,sep="")
+callPipe <- paste(" qsub -N ngs_pipeline.",RGID," ", pipeline," ",fastq_prefix," ", sample_name," ",qual_type," ",RGID," ",RGLB," ",RGPL," ",RGPU," ",RGSM," ",RGCN," ",RGDS," ",RGDT," ",isPE," ",targetbed,sep="")
 
 
 system(callPipe)

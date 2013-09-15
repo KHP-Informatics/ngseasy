@@ -24,6 +24,7 @@ java -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/Geno
 --dbsnp ${b37_dbsnp} \
 -stand_call_conf ${stand_call_conf} \
 -stand_emit_conf ${stand_emit_conf} \
+--genotype_likelihoods_model BOTH \
 -baq CALCULATE_AS_NECESSARY \
 -baqGOP 30;
 

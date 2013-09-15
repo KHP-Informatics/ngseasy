@@ -25,4 +25,20 @@ java -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/Geno
 samtools index ${sample_dir}/${sample_name}.novorecal.bam
 
 ## make bed file [needs header etc]
-bamToBed -i ${sample_dir}/${sample_name}.novorecal.bam > ${sample_dir}/${sample_name}.novorecal.bed;
+samtools -bq 20 -F 1796  ${sample_dir}/${sample_name}.novorecal.bam  | bamToBed -i stdin |   awk '{print $1,$2,$3,$4,$5,$6}' |  perl -p -i -e 's/ /\t/g' > ${sample_dir}/${sample_name}.novorecal.bed;
+
+echo "................................................................................................"
+echo "clean up intermediate SAM/BAMs"
+
+rm ${sample_dir}/${sample_name}.aln.sam;
+rm ${sample_dir}/${sample_name}.aln.bam;
+rm ${sample_dir}/${sample_name}.alnSrt.ba*;
+rm ${sample_dir}/${sample_name}.alnSrtRG.ba*;
+rm ${sample_dir}/${sample_name}.novoraw.ba*;
+rm ${sample_dir}/${sample_name}.novorealn.ba*;
+
+
+
+
+
+

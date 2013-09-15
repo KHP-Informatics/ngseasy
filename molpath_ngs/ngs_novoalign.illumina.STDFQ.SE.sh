@@ -33,9 +33,12 @@ ${ngs_novo}/novoalign \
 -F STDFQ \
 --Q2Off \
 --3Prime  \
--g 65 \
--x 7 \
+-g 40 \
+-x 6 \
 -r All \
+-a GATCGGAAGAGCTCGTATGCCGTCTTCTGCTTG CAAGCAGAAGACGGCATACGAGCTCTTCCGATCT \
+-a AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT CAAGCAGAAGACGGCATACGAGCTCTTCCGATCT \
+-a ACACTCTTTCCCTACACGACGCTCTTCCGATCT \
 -c ${N_CPU} \
 -k -K ${sample_dir}/${sample_name}.novoalign.K.stats \
 -o SAM > ${sample_dir}/${sample_name}.aln.sam;
