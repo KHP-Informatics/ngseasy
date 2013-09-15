@@ -8,3 +8,33 @@ add options to add gene list -L if gene list -eq 1 then get list and call and de
 
 and disovery all var > then make new list of knonw and novel vars and use as input for genotyping at all known and new sites
 
+#############################################################################################
+# -- Authors: Stepgen Newhouse, Amos Folarin, Aditi Gulati                                  #
+# -- Organisation: KCL/SLaM/NHS                                                             #
+# -- Email: stephen.j.newhouse@gmail.com, amosfolarin@gmail.com,aditi.gulati@nhs.ne         #
+# -- Verion: 1.3                                                                            #
+# -- Date: 11/09/2013                                                                       #
+# -- DESC: NGS pipeline to perform SE/PE Alignments & GATK cleaning                         #
+#############################################################################################
+
+# called using "Rscript call_ngs_master_workflow.R <config_file>"
+
+# this calls the following with options read in from R and fired off using R's system() command
+
+# qsub ngs_master_workflow.sh <fastq_prefix> <sample_name> <qual_type> <RGID> <RGLB> <RGPL> <RGPU> <RGSM> <RGCN> <RGDS> <RGDT> <PE> <bed_list> [to add: options for pipelines steps, bed targets and geno all sites and knowns]
+
+# ALL OPTIONS REQUIRED
+# -- fastq_prefix=string	fastq prefix for Sample ID ie <fastq_prefix>_1.fastq <fastq_prefix>_2.fastq
+# -- sample_name=string		Sample ID
+# -- qual_type=string		Base quality coding for novoalign ie STFQ, ILMFQ, ILM1.8
+# -- RGID=String		Read Group ID Required. <PROJECT_NAME>
+# -- RGLB=String		Read Group Library Required. <PATIENT_ID>.<RGPL>.<>
+# -- RGPL=String		Read Group platform (e.g. illumina, solid) Required.
+# -- RGPU=String		Read Group platform unit (eg. run barcode) Required.
+# -- RGSM=String		Read Group sample name Required. PATIENT_ID
+# -- RGCN=String		Read Group sequencing center name Required.
+# -- RGDS=String		Read Group description Required.
+# -- RGDT=Iso8601Date		Read Group run date Required.
+# -- PE=1 or 0			Indicates PE or SE
+# -- bed_list=string		name/prefix of target bedfile
+
