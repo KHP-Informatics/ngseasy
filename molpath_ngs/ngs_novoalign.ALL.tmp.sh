@@ -74,7 +74,7 @@ samtools index    ${sample_dir}/${sample_name}.aln.bam;
 ## SortSam ##
 #############
 
-java -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/SortSam.jar \
+${java_1.7}/java  -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/SortSam.jar \
 TMP_DIR=${sample_temp} \
 VALIDATION_STRINGENCY=SILENT \
 MAX_RECORDS_IN_RAM=100000 \
@@ -100,7 +100,7 @@ OUTPUT=${sample_dir}/${sample_name}.alnSrt.bam;
 ## AddOrReplaceReadGroups   ##
 ##############################
 
-java -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/AddOrReplaceReadGroups.jar \
+${java_1.7}/java  -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/AddOrReplaceReadGroups.jar \
 TMP_DIR=${sample_temp} \
 VALIDATION_STRINGENCY=SILENT \
 MAX_RECORDS_IN_RAM=100000 \
@@ -133,7 +133,7 @@ OUTPUT=${sample_dir}/${sample_name}.alnSrtRG.bam;
 ## MarkDuplicates ##
 ####################
 
-java -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/MarkDuplicates.jar \
+${java_1.7}/java  -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/MarkDuplicates.jar \
 TMP_DIR=${sample_temp} \
 VALIDATION_STRINGENCY=SILENT \
 MAX_RECORDS_IN_RAM=100000 \

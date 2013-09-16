@@ -46,5 +46,6 @@ add option to output all sites from findcoverage intervals
 
 need an sql data thingy for importing results
 
+need options to call parts of the pipeline ie when a job fails run from there
 
 Plans to make more general and add perl and bash versions of call_ngs_master_workflow.R

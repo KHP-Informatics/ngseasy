@@ -40,17 +40,11 @@ ${ngs_novo}/novoalign \
 -d ${reference_genome_novoindex} \
 -f ${fastq_dir}/${fastq_prefix}_1.fastq \
 -F STDFQ \
--a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC \ 
+-a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC \
 -a AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT \
 -a GCTGAGGATCACCGACTGCCCATAGAGAGGCTGAGAC \
 -a GTGCTCTTCCGATCT \
---Q2Off \
---3Prime  \
--g 15 \
--x 4 \
--r All \
--H \
--c ${N_CPU} \
+--Q2Off --3Prime  -g 15 -x 4 -r All -H -c ${N_CPU} \
 -k -K ${sample_dir}/${sample_name}.novoalign.K.stats \
 -o SAM > ${sample_dir}/${sample_name}.aln.sam;
 

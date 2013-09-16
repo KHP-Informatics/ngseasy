@@ -37,7 +37,7 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 ## GATK 
 
-java -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/GenomeAnalysisTK.jar -T RealignerTargetCreator -R ${reference_genome_seq}  \
+${java_1.7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/GenomeAnalysisTK.jar -T RealignerTargetCreator -R ${reference_genome_seq}  \
 -I ${sample_dir}/${sample_name}.novoraw.bam -o ${sample_dir}/${sample_name}.novoraw.output.intervals \
 -known ${b37_1000G_biallelic_indels} -known ${b37_Mills_Devine_2hit_indels_sites};
 
