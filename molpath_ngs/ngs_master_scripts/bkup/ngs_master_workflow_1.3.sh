@@ -77,8 +77,7 @@ export gatk_java_mem=6
 ###############
 export ngs_picard="/share/apps/picard-tools_1.91/jar"
 export ngs_gatk="/share/apps/gatk_2.5-2"  ## gatk_2.7-2 needs java 1.7
-###  export ngs_novo="/share/apps/novocraft_current/bin/" ## Novoalign V3.01.01
-export ngs_novo="/home/snewhousebrc/scratch/pipelines/novo"
+export ngs_novo="/share/apps/novocraft_current/bin/" ## Novoalign V3.01.01
 export ngs_samtools="/share/apps/samtools_0.1.18/bin"
 
 ##################
@@ -231,19 +230,19 @@ echo ".................................................."
 #----------------------------------------------------------------------#
 ##echo ">>>>>" `date` " :-> " "Aligning PE data "
 
-if [ ${mPE} -eq 1 ] && [ ${mRGPL} == "illumina" ]; then
+if [ ${mPE} -eq 1 ] && [ ${mRGPL} -eq "illumina" ]; then
 
 echo "Reads are PE ILLUMINA"
 
 qsub -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.illumina.${qual_type}.PE.sh ${fastq_prefix} ${sample_name} ${sample_dir};
 
-elif [ ${mPE} -eq 0 ] && [ ${mRGPL} == "illumina" ]; then
+elif [ ${mPE} -eq 0 ] && [ ${mRGPL} -eq "illumina" ]; then
 
 echo "Reads are SE ILLUMINA"
 
 qsub -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.illumina.${qual_type}.SE.sh ${fastq_prefix} ${sample_name} ${sample_dir};
 
-elif [ ${mPE} -eq 0 ] && [ ${mRGPL} == "IONTORRENT" ]; then
+elif [ ${mPE} -eq 0 ] && [ ${mRGPL} -eq "IONTORRENT" ]; then
 
 echo " Reads are SE IONTORRENT"
 

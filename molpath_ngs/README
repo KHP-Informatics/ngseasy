@@ -1,13 +1,3 @@
-
-HaloPlex Cancer Research Panel, ION, 16
-HaloPlex Cancer Research Panel, ILM, 16
-
-get list of gene
-
-add options to add gene list -L if gene list -eq 1 then get list and call and depth etc
-
-and disovery all var > then make new list of knonw and novel vars and use as input for genotyping at all known and new sites
-
 #############################################################################################
 # -- Authors: Stepgen Newhouse, Amos Folarin, Aditi Gulati                                  #
 # -- Organisation: KCL/SLaM/NHS                                                             #
@@ -36,5 +26,25 @@ and disovery all var > then make new list of knonw and novel vars and use as inp
 # -- RGDS=String		Read Group description Required.
 # -- RGDT=Iso8601Date		Read Group run date Required.
 # -- PE=1 or 0			Indicates PE or SE
-# -- bed_list=string		name/prefix of target bedfile
+# -- bed_list=string		name/prefix of target bedfile : this will be  cancer, genome, exome, custom_interval
 
+######################################################################################################################################################################
+
+## SJN: my random notes and ramblings ##
+Need to add path to JAVA 1.7 in all scripts 
+
+HaloPlex Cancer Research Panel, ION, 16
+HaloPlex Cancer Research Panel, ILM, 16
+
+get list of gene ; DONE and merged from ensembl
+add ensembl datanase versions for anno
+
+add options to add gene list -L if gene list -eq 1 then get list and call and depth etc
+
+add disovery all var > then make new list of knonw and novel vars and use as input for genotyping at all known and new sites
+add option to output all sites from findcoverage intervals
+
+need an sql data thingy for importing results
+
+
+Plans to make more general and add perl and bash versions of call_ngs_master_workflow.R
