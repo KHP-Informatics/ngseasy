@@ -80,7 +80,6 @@ export gatk_java_mem=6
 export ngs_picard="/share/apps/picard-tools_1.91/jar"
 export ngs_gatk="/share/apps/gatk_2.7-2"  ## gatk_2.7-2 needs java 1.7
 export ngs_novo="/share/apps/novocraft_current/bin/" ## Novoalign V3.01.01
-####export ngs_novo="/home/snewhousebrc/scratch/pipelines/novo"
 export ngs_samtools="/share/apps/samtools_0.1.18/bin"
 
 ##################
@@ -90,23 +89,24 @@ export ngs_pipeline="/home/snewhousebrc/scratch/pipelines/ngs/molpath_ngs"
 
 ######################
 ## reference genomes #
+## movef refs to isilon and all b37 now!
 ######################
-export reference_genome_novoindex="/scratch/data/reference_genomes/gatk_resources/b37/human_g1k_v37.fasta.novoindex"
-export reference_genome_seq="/scratch/data/reference_genomes/gatk_resources/b37/human_g1k_v37.fasta"
+export reference_genome_novoindex="/isilon/irods_a/data_resources/ngs_ref_resources_b37/human_g1k_v37.fasta.novoindex"
+export reference_genome_seq="/isilon/irods_a/data_resources/ngs_ref_resources_b37/human_g1k_v37.fasta"
 
 ############################
 ## ref vcf files for gatk ##
 ############################
-## needs updating!!!!!!
-# indels
-export b37_1000G_biallelic_indels="/scratch/data/reference_genomes/gatk_resources/b37/1000G_biallelic.indels.b37.vcf"
-export b37_Mills_Devine_2hit_indels_sites="/scratch/data/reference_genomes/gatk_resources/b37/Mills_Devine_2hit.indels.b37.sites.vcf"
-export b37_Mills_Devine_2hit_indels="/scratch/data/reference_genomes/gatk_resources/b37/Mills_Devine_2hit.indels.b37.vcf"
-# snps
-export b37_1000G_omni2_5="/scratch/data/reference_genomes/gatk_resources/b37/1000G_omni2.5.b37.vcf"
-export b37_hapmap_3_3="/scratch/data/reference_genomes/gatk_resources/b37/hapmap_3.3.b37.sites.vcf"
-export b37_dbsnp_132_excluding_sites_after_129="/scratch/data/reference_genomes/gatk_resources/b37/dbsnp_132.b37.excluding_sites_after_129.vcf"
-export b37_dbsnp="/scratch/data/reference_genomes/gatk_resources/b37/dbsnp_132.b37.vcf"
+
+# indels #
+export b37_1000G_indels="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_phase1.indels.b37.vcf"
+export b37_Mills_Devine_2hit_indels="/isilon/irods_a/data_resources/ngs_ref_resources_b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
+
+# snps #
+export b37_1000G_omni2_5=="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_omni2.5.b37.vcf"
+export b37_dbsnp="/isilon/irods_a/data_resources/ngs_ref_resources_b37/dbsnp_137.b37.vcf"
+export b37_hapmap_3_3="/isilon/irods_a/data_resources/ngs_ref_resources_b37/hapmap_3.3.b37.vcf"
+export b37_1000G_snps="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_phase1.snps.high_confidence.b37.vcf"
 
 #######################
 ## Path to fastq dir ##
@@ -116,7 +116,6 @@ export fastq_dir="/scratch/project/pipelines/ngs_pipeline_dev/aditi_fastq"
 ###########################
 ## path to final aln dir ##
 ###########################
-## export aln_dir="/scratch/project/pipelines/ngs_pipeline_dev/ngs_molpath_sjn"
 export aln_dir="/home/snewhousebrc/scratch/pipelines/ngs"
 
 ###########################
