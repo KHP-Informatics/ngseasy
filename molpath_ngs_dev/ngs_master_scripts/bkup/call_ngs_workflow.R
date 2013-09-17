@@ -26,15 +26,18 @@ RGDT=d$ReadGroup_runDate_RGDT[i] 	#Read Group run date Required.
 isPE=d$PE[i] 	#Read Group run date Required.
 targetbed=d$bed_list[i]
 
-#callPipe <- paste(" qsub",pipeline,fastq_prefix,sample_name,qual_type,RGID,RGLB,RGPL,RGPU,RGSM,RGCN,RGDS,RGDT,isPE,sep="\t")
+## 17 Sep 2013 added 
+email_user=d$email_bioinf[i]
+fastq_dir=d$Fastq_dir[i]
+bamdir=d$BAM_dir[i]
 
-callPipe <- paste(" qsub -N ngs_pipeline.",RGID," ", pipeline," ",Fastq_prefix," ", sample_name," ",qual_type," ",RGID," ",RGLB," ",RGPL," ",RGPU," ",RGSM," ",RGCN," ",RGDS," ",RGDT," ",isPE," ",targetbed,sep="")
-
+callPipe <- paste(" qsub -N call_ngs.",RGID," ", pipeline," ",Fastq_prefix," ", sample_name," ",qual_type," ",RGID," ",RGLB," ",RGPL," ",RGPU," ",RGSM," ",RGCN," ",RGDS," ",RGDT," ",isPE," ",targetbed," ",email_user," ",fastq_dir," ",bamdir,sep="")
 
 system(callPipe)
 
 cat(callPipe,"\r","\n")
 
 }
+
 
 

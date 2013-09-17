@@ -40,6 +40,9 @@
 # -- RGDT=Iso8601Date		Read Group run date Required.
 # -- PE=1 or 0			Indicates PE or SE
 # -- bed_list=string		name/prefix of target bedfile
+# -- email
+# -- fastq_dir
+# -- bam_dir
 
 #------------------------------------------------------------------------#
 # Set environmental variables required for child processes (all )
@@ -55,8 +58,10 @@
 # QUE #
 #######
 export queue_name="short.q,long.q"
-export email_contact="stephen.newhouse@kcl.ac.uk"
 
+#######################
+## JAVA 1.7 for GATK ##
+#######################
 export java_1.7="/share/java/jdk1.7.0/bin"
 
 #####################
@@ -108,21 +113,6 @@ export b37_dbsnp="/isilon/irods_a/data_resources/ngs_ref_resources_b37/dbsnp_137
 export b37_hapmap_3_3="/isilon/irods_a/data_resources/ngs_ref_resources_b37/hapmap_3.3.b37.vcf"
 export b37_1000G_snps="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_phase1.snps.high_confidence.b37.vcf"
 
-#######################
-## Path to fastq dir ##
-#######################
-export fastq_dir="/scratch/project/pipelines/ngs_pipeline_dev/aditi_fastq"
-
-###########################
-## path to final aln dir ##
-###########################
-export aln_dir="/home/snewhousebrc/scratch/pipelines/ngs"
-
-###########################
-## path to tmp aln dir   ##
-###########################
-export ngstmp="/home/snewhousebrc/scratch/ngs_temp"
-
 #############################
 ## get and set all options ##
 #############################
@@ -140,6 +130,24 @@ mRGDT=${11}	#Read Group run date Required.
 mPE=${12} 	#Indicates PE or SE
 bed_list=${13}	#target bed for coverage
 
+export email_contact=${14}
+
+#######################
+## Path to fastq dir ##
+#######################
+export fastq_dir=${15}
+
+###########################
+## path to final aln dir ##
+###########################
+export aln_dir=${16}
+
+###########################
+## path to tmp aln dir   ##
+###########################
+export ngstmp="/home/snewhousebrc/scratch/ngs_temp"
+
+
 #------------------------------------------------------------------------------#
 # END setting environmental variables required for child processes (all )
 #------------------------------------------------------------------------------#
@@ -154,8 +162,10 @@ mkdir ${ngstmp}/${sample_name}_temp
 
 ## final data dir
 mkdir ${aln_dir}/${sample_name}
+
 mkdir ${aln_dir}/${sample_name}/sge_out
 
+## set sample temp and output dirs
 
 sample_temp=${ngstmp}/${sample_name}_temp
 
