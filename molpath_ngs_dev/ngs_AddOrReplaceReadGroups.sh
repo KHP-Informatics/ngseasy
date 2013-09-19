@@ -24,7 +24,7 @@ mRGDT=${11}
 
 cd ${sample_dir}
 
-${java_1.7}/java  -XX:ParallelGCThreads=1 -Xmx${java_mem}g -jar ${ngs_picard}/AddOrReplaceReadGroups.jar \
+${java_v1_7}/java  -XX:ParallelGCThreads=1 -Xmx${java_mem}g -jar ${ngs_picard}/AddOrReplaceReadGroups.jar \
 TMP_DIR=${sample_temp} \
 VALIDATION_STRINGENCY=SILENT \
 MAX_RECORDS_IN_RAM=100000 \

@@ -11,9 +11,11 @@
 
 # this calls the following with options read in from R and fired off using R's system() command
 
-# qsub ngs_master_workflow.sh <fastq_prefix> <sample_name> <qual_type> <RGID> <RGLB> <RGPL> <RGPU> <RGSM> <RGCN> <RGDS> <RGDT> <PE> <bed_list> [to add: options for pipelines steps, bed targets and geno all sites and knowns]
+# qsub <pipeline> <fastq_prefix> <sample_name> <qual_type> <RGID> <RGLB> <RGPL> <RGPU> <RGSM> <RGCN> <RGDS> <RGDT> <PE> <bed_list> <emial> <fastq_dir> <bam_dir>
 
 # ALL OPTIONS REQUIRED
+
+# -- pipeline=string		name of *sh pipeline master script
 # -- fastq_prefix=string	fastq prefix for Sample ID ie <fastq_prefix>_1.fastq <fastq_prefix>_2.fastq
 # -- sample_name=string		Sample ID
 # -- qual_type=string		Base quality coding for novoalign ie STFQ, ILMFQ, ILM1.8
@@ -27,4 +29,20 @@
 # -- RGDT=Iso8601Date		Read Group run date Required.
 # -- PE=1 or 0			Indicates PE or SE
 # -- bed_list=string		name/prefix of target bedfile
+# -- email=string
+# -- fastq_dir=string
+# -- bam_dir=string
+
+##############
+# PIPELINES ##
+##############
+
+# -- ngs_master_workflow_aln_01.sh
+# -- ngs_master_workflow_gatk_clean_02.sh
+# -- ngs_master_workflow_coverage_03.sh
+# -- ngs_master_workflow_variant_calling_04.sh
+# -- ngs_master_workflow_annovar_05.sh
+# -- ngs_master_workflow_full.sh
+
+
 

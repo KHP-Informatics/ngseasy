@@ -18,7 +18,7 @@ stand_emit_conf=${5} ## 10.0 ; default 30
 
 cd ${sample_dir}
 
-${java_1.7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/GenomeAnalysisTK.jar -T UnifiedGenotyper -R ${reference_genome_seq} \
+${java_v1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/GenomeAnalysisTK.jar -T UnifiedGenotyper -R ${reference_genome_seq} \
 -I ${sample_dir}/${sample_name}.novorecal.bam \
 -o ${sample_dir}/${sample_name}.novorecal.UnifiedGenotyper.raw.snps.indels.vcf \
 --dbsnp ${b37_dbsnp} \
@@ -29,3 +29,4 @@ ${java_1.7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${n
 -baqGOP 30;
 
 
+##########mv -v UnifiedGenotyper.${sample_name}.* ${sample_dir}/sge_out/

@@ -16,7 +16,7 @@ sample_temp=${3}
 cd ${sample_dir}
 
 
-${java_1.7}/java  -XX:ParallelGCThreads=1 -Xmx${java_mem}g -jar ${ngs_picard}/MarkDuplicates.jar \
+${java_v1_7}/java  -XX:ParallelGCThreads=1 -Xmx${java_mem}g -jar ${ngs_picard}/MarkDuplicates.jar \
 TMP_DIR=${sample_temp} \
 VALIDATION_STRINGENCY=SILENT \
 MAX_RECORDS_IN_RAM=100000 \

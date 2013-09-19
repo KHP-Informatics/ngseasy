@@ -9,6 +9,7 @@ sample_dir=${2}
 sample_temp=${3}
 geno=${4}
 
+cd ${sample_dir}
 
 invcf=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels.vcf
 avinput=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels.avinput
@@ -18,7 +19,7 @@ table_annovar_out=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels
 ## convert vcf to annovar input ##
 ##################################
 
-${annovar}/convert2annovar.pl --includeinfo --genoqual 0 --varqual 0 --comment --snpqual 0 --format vcf4 ${invcf} --outfile ${avinput};
+${annovar}/convert2annovar.pl --includeinfo --genoqual 0 --varqual 0 --format vcf4 ${invcf} --outfile ${avinput};
 
 ##                --withzyg                   print zygosity/coverage/quality when -includeinfo is used (for vcf4 format)
 ##                --genoqual <float>          genotype quality score threshold (for vcf4 format)
@@ -39,6 +40,8 @@ ${annovar}/table_annovar.pl ${avinput} ${annovar_humandb} \
 --buildver hg19 \
 --remove \
 --outfile ${table_annovar_out}; 
+
+
 
 
 #Since June 2013, the LJB2_* databases are now provided to ANNOVAR users. 

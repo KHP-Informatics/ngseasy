@@ -14,7 +14,7 @@ sample_temp=${3}
 
 echo "CollectMultipleMetrics"
 
-${java_1.7}/java  -XX:ParallelGCThreads=1 -Xmx${java_mem}g -jar ${ngs_picard}/CollectMultipleMetrics.jar \
+${java_1_7}/java  -XX:ParallelGCThreads=1 -Xmx${java_mem}g -jar ${ngs_picard}/CollectMultipleMetrics.jar \
 TMP_DIR=${sample_temp} \
 INPUT=${sample_dir}/${sample_name}.novorecal.bam \
 ASSUME_SORTED=true \
@@ -31,11 +31,13 @@ PROGRAM=MeanQualityByCycle;
 ###############################
 echo "FlagStat"
 
-${java_1.7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/GenomeAnalysisTK.jar -T FlagStat -R ${reference_genome_seq} \
+${java_1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/GenomeAnalysisTK.jar -T FlagStat -R ${reference_genome_seq} \
 -I ${sample_dir}/${sample_name}.novorecal.bam \
 -o ${sample_dir}/${sample_name}.novorecal.FlagStat;
 
 
+
+mv -v CollectMultipleMetrics.${sample_name}.* ${sample_dir}/sge_out/ 
 
 
 

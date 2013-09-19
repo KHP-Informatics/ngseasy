@@ -24,7 +24,7 @@
 
 # this calls the following with options read in from R and fired off using R's system() command
 
-# qsub ngs_master_workflow.sh <fastq_prefix> <sample_name> <qual_type> <RGID> <RGLB> <RGPL> <RGPU> <RGSM> <RGCN> <RGDS> <RGDT> <PE> <bed_list> [to add: options for pipelines steps, bed targets and geno all sites and knowns]
+# qsub <pipeline> <fastq_prefix> <sample_name> <qual_type> <RGID> <RGLB> <RGPL> <RGPU> <RGSM> <RGCN> <RGDS> <RGDT> <PE> <bed_list> <bed_type> <fastq_dir> <bam_dir> 
 
 # ALL OPTIONS REQUIRED
 # -- fastq_prefix=string	fastq prefix for Sample ID ie <fastq_prefix>_1.fastq <fastq_prefix>_2.fastq
@@ -40,44 +40,24 @@
 # -- RGDT=Iso8601Date		Read Group run date Required.
 # -- PE=1 or 0			Indicates PE or SE
 # -- bed_list=string		name/prefix of target bedfile
-# -- email
-# -- fastq_dir
-# -- bam_dir
+# -- ged_type=string		regiob or whole_genome
+# -- email			email address for qsub
+# -- fastq_dir			path to fastq data
+# -- bam_dir			path to working dir ie output
 
 #------------------------------------------------------------------------#
 # Set environmental variables required for child processes (all )
 #------------------------------------------------------------------------#
 
-########################################
-## target bed file for coverage calcs ##
-########################################
-
-## export bed_list="cancer"  ## TO Add:- genes, exons and other custom targets from ENSEMBL
+##################
+## pipeline dir ##
+##################
+export ngs_pipeline="/home/snewhousebrc/scratch/pipelines/ngs/molpath_ngs_dev" 
 
 #######
 # QUE #
 #######
 export queue_name="short.q,long.q"
-
-#######################
-## JAVA 1.7 for GATK ##
-#######################
-export java_1.7="/share/java/jdk1.7.0/bin"
-
-#####################
-# mem and cpu vars ##
-#####################
-## Novoalign
-export novo_cpu=8
-export novo_mem=3
-
-## Java & Picardtools
-export sge_h_vmem=8
-export java_mem=6
-
-## Java & GATK
-export gatk_h_vmem=8
-export gatk_java_mem=6
 
 ###############
 ## ngs tools ##
@@ -86,11 +66,6 @@ export ngs_picard="/share/apps/picard-tools_1.91/jar"
 export ngs_gatk="/share/apps/gatk_2.7-2"  ## gatk_2.7-2 needs java 1.7
 export ngs_novo="/share/apps/novocraft_current/bin/" ## Novoalign V3.01.01
 export ngs_samtools="/share/apps/samtools_0.1.18/bin"
-
-##################
-## pipeline dir ##
-##################
-export ngs_pipeline="/home/snewhousebrc/scratch/pipelines/ngs/molpath_ngs"
 
 ######################
 ## reference genomes #
@@ -102,20 +77,48 @@ export reference_genome_seq="/isilon/irods_a/data_resources/ngs_ref_resources_b3
 ############################
 ## ref vcf files for gatk ##
 ############################
-
 # indels #
 export b37_1000G_indels="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_phase1.indels.b37.vcf"
 export b37_Mills_Devine_2hit_indels="/isilon/irods_a/data_resources/ngs_ref_resources_b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
-
 # snps #
 export b37_1000G_omni2_5=="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_omni2.5.b37.vcf"
 export b37_dbsnp="/isilon/irods_a/data_resources/ngs_ref_resources_b37/dbsnp_137.b37.vcf"
 export b37_hapmap_3_3="/isilon/irods_a/data_resources/ngs_ref_resources_b37/hapmap_3.3.b37.vcf"
 export b37_1000G_snps="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_phase1.snps.high_confidence.b37.vcf"
 
+#############
+## annovar ##
+#############
+export annovar="/isilon/irods_a/datasets_res/Vault/annovar_2013Aug23"
+export annovar_humandb="/isilon/irods_a/datasets_res/Vault/annovar_2013Aug23/humandb"
+
+#######################
+## JAVA 1.7 for GATK ##
+#######################
+export java_v1_7="/share/java/jdk1.7.0/bin"
+
+#####################
+# mem and cpu vars ##
+#####################
+
+## Novoalign ##
+export novo_cpu=8
+export novo_mem=3
+
+## Java & Picardtools ##
+export sge_h_vmem=8
+export java_mem=6
+
+## Java & GATK ##
+export gatk_h_vmem=8
+export gatk_java_mem=6
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------#
 #############################
 ## get and set all options ##
 #############################
+
 fastq_prefix=${1}
 sample_name=${2}.${5}.${6}
 qual_type=${3}  ## Base quality coding for novoalign ie STFQ, ILMFQ, ILM1.8
@@ -129,18 +132,22 @@ mRGDS=${10}	#Read Group description Required.
 mRGDT=${11}	#Read Group run date Required.
 mPE=${12} 	#Indicates PE or SE
 bed_list=${13}	#target bed for coverage
+bed_type=${14}  # region or whole_genome : needed for coverage
 
-export email_contact=${14}
+############################
+## email contact for qsub ##
+############################
+export email_contact=${15}
 
 #######################
 ## Path to fastq dir ##
 #######################
-export fastq_dir=${15}
+export fastq_dir=${16}
 
 ###########################
 ## path to final aln dir ##
 ###########################
-export aln_dir=${16}
+export aln_dir=${17}
 
 ###########################
 ## path to tmp aln dir   ##
@@ -165,7 +172,9 @@ mkdir ${aln_dir}/${sample_name}
 
 mkdir ${aln_dir}/${sample_name}/sge_out
 
-## set sample temp and output dirs
+#########################################
+## set sample temp and output dirs ######
+#########################################
 
 sample_temp=${ngstmp}/${sample_name}_temp
 
@@ -180,57 +189,6 @@ sample_dir=${aln_dir}/${sample_name}
 echo "moving to sample directory "  ${sample_dir}
 
 cd ${sample_dir}
-
-#------------------------------------------------------------------------------#
-echo ".................................................."
-echo "fastq_dir : " ${fastq_dir}
-echo "project dir : " ${aln_dir}
-echo ".................................................."
-echo "Sample working dir : " ${sample_dir}
-echo "Sample temp dir : " ${sample_temp}
-echo "Sample information : "  ${fastq_prefix} ${sample_name} ${mRGID} ${mRGLB} ${mRGPL} ${mRGPU} ${mRGSM} ${mRGCN} ${mRGDS} ${mRGDT}
-echo ".................................................."
-echo "sge ques : " ${queue_name}
-echo "novo_mem : " ${novo_mem}G
-echo "sge_h_vmem : " ${sge_h_vmem}G
-echo "gatk_java_mem : " ${gatk_java_mem}
-echo "novo_cpu : " ${novo_cpu}
-echo "email_contact: " ${email_contact}
-echo "ngs_pipeline : " ${ngs_pipeline}
-echo ".................................................."
-ls -l ${ngs_pipeline}
-echo ".................................................."
-echo "ngs_picard : " ${ngs_picard} 
-echo "ngs_novo : " ${ngs_novo} 
-echo "ngs_gatk : " ${ngs_gatk} 
-echo "ngs_samtools: " ${ngs_samtools} 
-echo ".................................................."
-ls -l ${ngs_picard}
-echo ".................................................."
-ls -l ${ngs_novo}
-echo ".................................................."
-ls -l ${ngs_gatk}
-echo ".................................................."
-ls -l ${ngs_samtools}
-echo ".................................................."
-echo "fastq seq : " ${reference_genome_seq}
-head -5  ${reference_genome_seq}
-echo ".................................................."
-head ${b37_1000G_biallelic_indels}
-echo ".................................................."
-head ${b37_Mills_Devine_2hit_indels_sites}
-echo ".................................................."
-head ${b37_Mills_Devine_2hit_indels}
-echo ".................................................."
-head ${b37_1000G_omni2_5}
-echo ".................................................."
-head ${b37_hapmap_3_3}
-echo ".................................................."
-head ${b37_dbsnp_132_excluding_sites_after_129}
-echo ".................................................."
-head ${b37_dbsnp_132}
-echo ".................................................."
-#------------------------------------------------------------------------------#
 
 ##############################
 ## START ALIGNMENT PIPELINE ##
@@ -261,7 +219,6 @@ echo " Reads are SE IONTORRENT"
 qsub -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.IONTORRENT.${qual_type}.SE.sh ${fastq_prefix} ${sample_name} ${sample_dir};
 
 fi
-
 
 #----------------------------------------------------------------------#
 # 2. sam2bam
@@ -352,11 +309,9 @@ qsub -q ${queue_name} -N BaseRecalibrator_after.${sample_name} -hold_jid PrintRe
 #----------------------------------------------------------------------#
 # 12. AnalyzeCovariates before & after recal
 #----------------------------------------------------------------------#
-
 ##echo ">>>>>" `date` " :-> " "Running AnalyzeCovariates" 
-
-qsub -q ${queue_name} -N AnalyzeCovariates_before_and_after_BQSR.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AnalyzeCovariates_before_and_after_BQSR.sh \
-${sample_name} ${sample_dir} ${sample_temp};
+#####qsub -q ${queue_name} -N AnalyzeCovariates_before_and_after_BQSR.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AnalyzeCovariates_before_and_after_BQSR.sh \
+#####${sample_name} ${sample_dir} ${sample_temp};
 
 ##############################################
 ##  CALL VARIANTS SINGLE SAMPLE ##############
@@ -376,7 +331,7 @@ ${sample_name} ${sample_dir} ${sample_temp} 30 10;
 qsub -q ${queue_name} -N UnifiedGenotyper.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_UnifiedGenotyper.sh \
 ${sample_name} ${sample_dir} ${sample_temp} 30 10;
 
-## disovery 
+## to do : discovery > list > merge novels with knowns and re-genotype. Include a genotype all bases option
 
 
 #############################################################
@@ -399,20 +354,20 @@ qsub -q ${queue_name} -N CollectMultipleMetrics.${sample_name} -hold_jid PrintRe
 ${sample_name} ${sample_dir} ${sample_temp}
 
 
+
+#######################################################################
+## Variant annotations ################################################
+#######################################################################
+
 #----------------------------------------------------------------------#
 # 17. Table Annovar
 #----------------------------------------------------------------------#
 
-export annovar="/scratch/project/pipelines/ngs_resources/annovar_2013Aug23"
-
-export annovar_humandb="/scratch/project/pipelines/ngs_resources/annovar_2013Aug23/humandb"
-
-
 qsub -q ${queue_name} -N annovar_UnifiedGenotyper.${sample_name} -hold_jid UnifiedGenotyper.${sample_name} \
--l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "UnifiedGenotyper";
+-l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_UnifiedGenotyper_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "UnifiedGenotyper";
 
 qsub -q ${queue_name} -N annovar_HaplotypeCaller.${sample_name} -hold_jid HaplotypeCaller.${sample_name} \
--l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "HaplotypeCaller";
+-l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_HaplotypeCaller_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "HaplotypeCaller";
 
 
 #########################
