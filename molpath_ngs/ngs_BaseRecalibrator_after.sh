@@ -14,7 +14,7 @@ sample_temp=${3}
 
 cd ${sample_dir}
 
-${java_1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/GenomeAnalysisTK.jar -T BaseRecalibrator -R ${reference_genome_seq}  \
+${java_v1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/GenomeAnalysisTK.jar -T BaseRecalibrator -R ${reference_genome_seq}  \
 -I ${sample_dir}/${sample_name}.novorecal.bam \
 -o ${sample_dir}/${sample_name}.novorecal.recal_data.table \
 -knownSites ${b37_1000G_indels} \
@@ -24,7 +24,7 @@ ${java_1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${n
 -knownSites ${b37_hapmap_3_3} \
 -knownSites ${b37_dbsnp};
 
-mv -v BaseRecalibrator_after.${sample_name}.* ${sample_dir}/sge_out/
+##########mv -v BaseRecalibrator_after.${sample_name}.* ${sample_dir}/sge_out/
 
 
 #-nct 1 \

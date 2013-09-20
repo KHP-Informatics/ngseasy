@@ -1,0 +1,16 @@
+moving to sample directory  /home/snewhousebrc/scratch/patientx.TrueSeq_cancer.illumina
+Reads are PE ILLUMINA
+Your job 896491 ("novoalign.patientx.TrueSeq_cancer.illumina") has been submitted
+Your job 896492 ("sam2bam.patientx.TrueSeq_cancer.illumina") has been submitted
+Your job 896495 ("SortSam.patientx.TrueSeq_cancer.illumina") has been submitted
+Your job 896497 ("AddOrReplaceReadGroups.patientx.TrueSeq_cancer.illumina") has been submitted
+Your job 896499 ("MarkDuplicates.patientx.TrueSeq_cancer.illumina") has been submitted
+Your job 896501 ("RealignerTargetCreator.patientx.TrueSeq_cancer.illumina") has been submitted
+Your job 896504 ("IndelRealigner.patientx.TrueSeq_cancer.illumina") has been submitted
+Your job 896505 ("BaseRecalibrator_before.patientx.TrueSeq_cancer.illumina") has been submitted
+Your job 896508 ("PrintReads_BQSR.patientx.TrueSeq_cancer.illumina") has been submitted
+Your job 896510 ("BaseRecalibrator_after.patientx.TrueSeq_cancer.illumina") has been submitted
+Your job 896512 ("HaplotypeCaller.patientx.TrueSeq_cancer.illumina") has been submitted
+Your job 896514 ("UnifiedGenotyper.patientx.TrueSeq_cancer.illumina") has been submitted
+Your job 896515 ("DepthOfCoverage.patientx.TrueSeq_cancer.illumina") has been submitted
+Your job 896517 ("CollectMultipleMetrics.patientx.TrueSeq_cancer.illumina") has been submitted

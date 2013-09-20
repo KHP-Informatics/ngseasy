@@ -71,20 +71,20 @@ export ngs_samtools="/share/apps/samtools_0.1.18/bin"
 ## reference genomes #
 ## movef refs to isilon and all b37 now!
 ######################
-export reference_genome_novoindex="/isilon/irods_a/data_resources/ngs_ref_resources_b37/human_g1k_v37.fasta.novoindex"
-export reference_genome_seq="/isilon/irods_a/data_resources/ngs_ref_resources_b37/human_g1k_v37.fasta"
+export reference_genome_novoindex="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/human_g1k_v37.fasta.novoindex"
+export reference_genome_seq="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/human_g1k_v37.fasta"
 
 ############################
 ## ref vcf files for gatk ##
 ############################
 # indels #
-export b37_1000G_indels="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_phase1.indels.b37.vcf"
-export b37_Mills_Devine_2hit_indels="/isilon/irods_a/data_resources/ngs_ref_resources_b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
+export b37_1000G_indels="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_phase1.indels.b37.vcf"
+export b37_Mills_Devine_2hit_indels="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
 # snps #
-export b37_1000G_omni2_5=="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_omni2.5.b37.vcf"
-export b37_dbsnp="/isilon/irods_a/data_resources/ngs_ref_resources_b37/dbsnp_137.b37.vcf"
-export b37_hapmap_3_3="/isilon/irods_a/data_resources/ngs_ref_resources_b37/hapmap_3.3.b37.vcf"
-export b37_1000G_snps="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_phase1.snps.high_confidence.b37.vcf"
+export b37_1000G_omni2_5=="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_omni2.5.b37.vcf"
+export b37_dbsnp="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/dbsnp_137.b37.vcf"
+export b37_hapmap_3_3="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/hapmap_3.3.b37.vcf"
+export b37_1000G_snps="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_phase1.snps.high_confidence.b37.vcf"
 
 #############
 ## annovar ##
@@ -310,8 +310,8 @@ qsub -q ${queue_name} -N BaseRecalibrator_after.${sample_name} -hold_jid PrintRe
 # 12. AnalyzeCovariates before & after recal
 #----------------------------------------------------------------------#
 ##echo ">>>>>" `date` " :-> " "Running AnalyzeCovariates" 
-#####qsub -q ${queue_name} -N AnalyzeCovariates_before_and_after_BQSR.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AnalyzeCovariates_before_and_after_BQSR.sh \
-#####${sample_name} ${sample_dir} ${sample_temp};
+#### qsub -q ${queue_name} -N AnalyzeCovariates_before_and_after_BQSR.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AnalyzeCovariates_before_and_after_BQSR.sh \
+#### ${sample_name} ${sample_dir} ${sample_temp};
 
 ##############################################
 ##  CALL VARIANTS SINGLE SAMPLE ##############
@@ -363,11 +363,11 @@ ${sample_name} ${sample_dir} ${sample_temp}
 # 17. Table Annovar
 #----------------------------------------------------------------------#
 
-qsub -q ${queue_name} -N annovar_UnifiedGenotyper.${sample_name} -hold_jid UnifiedGenotyper.${sample_name} \
--l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_UnifiedGenotyper_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "UnifiedGenotyper";
+###### qsub -q ${queue_name} -N annovar_UnifiedGenotyper.${sample_name} -hold_jid UnifiedGenotyper.${sample_name} \
+######-l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_UnifiedGenotyper_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "UnifiedGenotyper";
 
-qsub -q ${queue_name} -N annovar_HaplotypeCaller.${sample_name} -hold_jid HaplotypeCaller.${sample_name} \
--l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_HaplotypeCaller_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "HaplotypeCaller";
+##### qsub -q ${queue_name} -N annovar_HaplotypeCaller.${sample_name} -hold_jid HaplotypeCaller.${sample_name} \
+####-l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_HaplotypeCaller_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "HaplotypeCaller";
 
 
 #########################

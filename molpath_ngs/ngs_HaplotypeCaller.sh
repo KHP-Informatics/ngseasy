@@ -20,7 +20,7 @@ cd ${sample_dir}
 
 ## run HaplotypeCaller
 
-${java_1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/GenomeAnalysisTK.jar -T HaplotypeCaller -R ${reference_genome_seq} \
+${java_v1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/GenomeAnalysisTK.jar -T HaplotypeCaller -R ${reference_genome_seq} \
 -I ${sample_dir}/${sample_name}.novorecal.bam \
 -o ${sample_dir}/${sample_name}.novorecal.HaplotypeCaller.raw.snps.indels.vcf \
 --dbsnp ${b37_dbsnp} \
@@ -29,4 +29,4 @@ ${java_1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${n
 --bamOutput ${sample_dir}/${sample_name}.novorecal.HaplotypeCaller.bam \
 --bamWriterType CALLED_HAPLOTYPES;
 
-mv -v HaplotypeCaller.${sample_name}.* ${sample_dir}/sge_out/
+##########mv -v HaplotypeCaller.${sample_name}.* ${sample_dir}/sge_out/

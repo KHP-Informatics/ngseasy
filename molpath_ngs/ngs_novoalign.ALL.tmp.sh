@@ -74,7 +74,7 @@ samtools index    ${sample_dir}/${sample_name}.aln.bam;
 ## SortSam ##
 #############
 
-${java_1_7}/java  -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/SortSam.jar \
+${java_v1_7}/java  -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/SortSam.jar \
 TMP_DIR=${sample_temp} \
 VALIDATION_STRINGENCY=SILENT \
 MAX_RECORDS_IN_RAM=100000 \
@@ -100,7 +100,7 @@ OUTPUT=${sample_dir}/${sample_name}.alnSrt.bam;
 ## AddOrReplaceReadGroups   ##
 ##############################
 
-${java_1_7}/java  -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/AddOrReplaceReadGroups.jar \
+${java_v1_7}/java  -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/AddOrReplaceReadGroups.jar \
 TMP_DIR=${sample_temp} \
 VALIDATION_STRINGENCY=SILENT \
 MAX_RECORDS_IN_RAM=100000 \
@@ -133,7 +133,7 @@ OUTPUT=${sample_dir}/${sample_name}.alnSrtRG.bam;
 ## MarkDuplicates ##
 ####################
 
-${java_1_7}/java  -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/MarkDuplicates.jar \
+${java_v1_7}/java  -XX:ParallelGCThreads=1 -Xmx6g -jar ${ngs_picard}/MarkDuplicates.jar \
 TMP_DIR=${sample_temp} \
 VALIDATION_STRINGENCY=SILENT \
 MAX_RECORDS_IN_RAM=100000 \
@@ -164,11 +164,11 @@ OUTPUT=${sample_dir}/${sample_name}.novo.bam;
 
 mkdir ${sample_dir}/sge_out
 
-mv -v rmvIntermediateSAMs.${sample_name} ${sample_dir}/sge_out/
-mv -v MarkDuplicates.${sample_name} ${sample_dir}/sge_out/
-mv -v SortSam.${sample_name} ${sample_dir}/sge_out/
-mv -v sam2bam.${sample_name} ${sample_dir}/sge_out/
-mv -v novoalign.${sample_name} ${sample_dir}/sge_out/
+##########mv -v rmvIntermediateSAMs.${sample_name} ${sample_dir}/sge_out/
+##########mv -v MarkDuplicates.${sample_name} ${sample_dir}/sge_out/
+##########mv -v SortSam.${sample_name} ${sample_dir}/sge_out/
+##########mv -v sam2bam.${sample_name} ${sample_dir}/sge_out/
+##########mv -v novoalign.${sample_name} ${sample_dir}/sge_out/
 
 rm -v ${sample_dir}/${sample_name}.alnSrtRG.*
 rm -v ${sample_dir}/${sample_name}.alnSrt.*

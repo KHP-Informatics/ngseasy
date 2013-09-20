@@ -45,15 +45,52 @@
 # -- fastq_dir			path to fastq data
 # -- bam_dir			path to working dir ie output
 
-
 #------------------------------------------------------------------------#
 # Set environmental variables required for child processes (all )
 #------------------------------------------------------------------------#
+
+##################
+## pipeline dir ##
+##################
+export ngs_pipeline="/home/snewhousebrc/scratch/pipelines/ngs/molpath_ngs_dev" 
 
 #######
 # QUE #
 #######
 export queue_name="short.q,long.q"
+
+###############
+## ngs tools ##
+###############
+export ngs_picard="/share/apps/picard-tools_1.91/jar"
+export ngs_gatk="/share/apps/gatk_2.7-2"  ## gatk_2.7-2 needs java 1.7
+export ngs_novo="/share/apps/novocraft_current/bin/" ## Novoalign V3.01.01
+export ngs_samtools="/share/apps/samtools_0.1.18/bin"
+
+######################
+## reference genomes #
+## movef refs to isilon and all b37 now!
+######################
+export reference_genome_novoindex="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/human_g1k_v37.fasta.novoindex"
+export reference_genome_seq="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/human_g1k_v37.fasta"
+
+############################
+## ref vcf files for gatk ##
+############################
+# indels #
+export b37_1000G_indels="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_phase1.indels.b37.vcf"
+export b37_Mills_Devine_2hit_indels="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
+# snps #
+export b37_1000G_omni2_5=="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_omni2.5.b37.vcf"
+export b37_dbsnp="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/dbsnp_137.b37.vcf"
+export b37_hapmap_3_3="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/hapmap_3.3.b37.vcf"
+export b37_1000G_snps="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_phase1.snps.high_confidence.b37.vcf"
+
+#############
+## annovar ##
+#############
+export annovar="/isilon/irods_a/datasets_res/Vault/annovar_2013Aug23"
+export annovar_humandb="/isilon/irods_a/datasets_res/Vault/annovar_2013Aug23/humandb"
 
 #######################
 ## JAVA 1.7 for GATK ##
@@ -76,39 +113,6 @@ export java_mem=6
 export gatk_h_vmem=8
 export gatk_java_mem=6
 
-###############
-## ngs tools ##
-###############
-export ngs_picard="/share/apps/picard-tools_1.91/jar"
-export ngs_gatk="/share/apps/gatk_2.7-2"  ## gatk_2.7-2 needs java 1.7
-export ngs_novo="/share/apps/novocraft_current/bin/" ## Novoalign V3.01.01
-export ngs_samtools="/share/apps/samtools_0.1.18/bin"
-
-##################
-## pipeline dir ##
-##################
-export ngs_pipeline="/home/snewhousebrc/scratch/pipelines/ngs/molpath_ngs_dev"
-
-######################
-## reference genomes #
-## movef refs to isilon and all b37 now!
-######################
-export reference_genome_novoindex="/isilon/irods_a/data_resources/ngs_ref_resources_b37/human_g1k_v37.fasta.novoindex"
-export reference_genome_seq="/isilon/irods_a/data_resources/ngs_ref_resources_b37/human_g1k_v37.fasta"
-
-############################
-## ref vcf files for gatk ##
-############################
-
-# indels #
-export b37_1000G_indels="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_phase1.indels.b37.vcf"
-export b37_Mills_Devine_2hit_indels="/isilon/irods_a/data_resources/ngs_ref_resources_b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
-
-# snps #
-export b37_1000G_omni2_5=="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_omni2.5.b37.vcf"
-export b37_dbsnp="/isilon/irods_a/data_resources/ngs_ref_resources_b37/dbsnp_137.b37.vcf"
-export b37_hapmap_3_3="/isilon/irods_a/data_resources/ngs_ref_resources_b37/hapmap_3.3.b37.vcf"
-export b37_1000G_snps="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_phase1.snps.high_confidence.b37.vcf"
 
 #---------------------------------------------------------------------------------------------------------------------------------------------#
 #############################
@@ -168,7 +172,9 @@ mkdir ${aln_dir}/${sample_name}
 
 mkdir ${aln_dir}/${sample_name}/sge_out
 
-## set sample temp and output dirs
+#########################################
+## set sample temp and output dirs ######
+#########################################
 
 sample_temp=${ngstmp}/${sample_name}_temp
 
@@ -183,57 +189,6 @@ sample_dir=${aln_dir}/${sample_name}
 echo "moving to sample directory "  ${sample_dir}
 
 cd ${sample_dir}
-
-#------------------------------------------------------------------------------#
-echo ".................................................."
-echo "fastq_dir : " ${fastq_dir}
-echo "project dir : " ${aln_dir}
-echo ".................................................."
-echo "Sample working dir : " ${sample_dir}
-echo "Sample temp dir : " ${sample_temp}
-echo "Sample information : "  ${fastq_prefix} ${sample_name} ${mRGID} ${mRGLB} ${mRGPL} ${mRGPU} ${mRGSM} ${mRGCN} ${mRGDS} ${mRGDT}
-echo ".................................................."
-echo "sge ques : " ${queue_name}
-echo "novo_mem : " ${novo_mem}G
-echo "sge_h_vmem : " ${sge_h_vmem}G
-echo "gatk_java_mem : " ${gatk_java_mem}
-echo "novo_cpu : " ${novo_cpu}
-echo "email_contact: " ${email_contact}
-echo "ngs_pipeline : " ${ngs_pipeline}
-echo ".................................................."
-ls -l ${ngs_pipeline}
-echo ".................................................."
-echo "ngs_picard : " ${ngs_picard} 
-echo "ngs_novo : " ${ngs_novo} 
-echo "ngs_gatk : " ${ngs_gatk} 
-echo "ngs_samtools: " ${ngs_samtools} 
-echo ".................................................."
-ls -l ${ngs_picard}
-echo ".................................................."
-ls -l ${ngs_novo}
-echo ".................................................."
-ls -l ${ngs_gatk}
-echo ".................................................."
-ls -l ${ngs_samtools}
-echo ".................................................."
-echo "fastq seq : " ${reference_genome_seq}
-head -5  ${reference_genome_seq}
-echo ".................................................."
-head ${b37_1000G_biallelic_indels}
-echo ".................................................."
-head ${b37_Mills_Devine_2hit_indels_sites}
-echo ".................................................."
-head ${b37_Mills_Devine_2hit_indels}
-echo ".................................................."
-head ${b37_1000G_omni2_5}
-echo ".................................................."
-head ${b37_hapmap_3_3}
-echo ".................................................."
-head ${b37_dbsnp_132_excluding_sites_after_129}
-echo ".................................................."
-head ${b37_dbsnp_132}
-echo ".................................................."
-#------------------------------------------------------------------------------#
 
 ##############################
 ## START ALIGNMENT PIPELINE ##
@@ -355,8 +310,8 @@ qsub -q ${queue_name} -N BaseRecalibrator_after.${sample_name} -hold_jid PrintRe
 # 12. AnalyzeCovariates before & after recal
 #----------------------------------------------------------------------#
 ##echo ">>>>>" `date` " :-> " "Running AnalyzeCovariates" 
-#####qsub -q ${queue_name} -N AnalyzeCovariates_before_and_after_BQSR.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AnalyzeCovariates_before_and_after_BQSR.sh \
-#####${sample_name} ${sample_dir} ${sample_temp};
+#### qsub -q ${queue_name} -N AnalyzeCovariates_before_and_after_BQSR.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AnalyzeCovariates_before_and_after_BQSR.sh \
+#### ${sample_name} ${sample_dir} ${sample_temp};
 
 ##############################################
 ##  CALL VARIANTS SINGLE SAMPLE ##############
@@ -408,16 +363,11 @@ ${sample_name} ${sample_dir} ${sample_temp}
 # 17. Table Annovar
 #----------------------------------------------------------------------#
 
-export annovar="/isilon/irods_a/data_resources/annovar_2013Aug23"
+###### qsub -q ${queue_name} -N annovar_UnifiedGenotyper.${sample_name} -hold_jid UnifiedGenotyper.${sample_name} \
+######-l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_UnifiedGenotyper_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "UnifiedGenotyper";
 
-export annovar_humandb="/isilon/irods_a/data_resources/annovar_2013Aug23/humandb"
-
-
-qsub -q ${queue_name} -N annovar_UnifiedGenotyper.${sample_name} -hold_jid UnifiedGenotyper.${sample_name} \
--l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_UnifiedGenotyper_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "UnifiedGenotyper";
-
-qsub -q ${queue_name} -N annovar_HaplotypeCaller.${sample_name} -hold_jid HaplotypeCaller.${sample_name} \
--l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_HaplotypeCaller_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "HaplotypeCaller";
+##### qsub -q ${queue_name} -N annovar_HaplotypeCaller.${sample_name} -hold_jid HaplotypeCaller.${sample_name} \
+####-l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_HaplotypeCaller_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "HaplotypeCaller";
 
 
 #########################

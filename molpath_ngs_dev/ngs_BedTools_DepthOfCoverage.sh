@@ -39,7 +39,7 @@ fi
 
 if [ $bed_type == "whole_genome" ]; then
 
-genome_bed="/isilon/irods_a/data_resources/ngs_ref_resources_b37/human_g1k_v37"
+genome_bed="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/human_g1k_v37"
 
 coverageBed -a ${sample_dir}/${sample_name}.novorecal.bed -b ${genome_bed}.bed > ${sample_dir}/${sample_name}.novorecal.coverage_${genome_bed};
 
