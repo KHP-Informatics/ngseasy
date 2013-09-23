@@ -81,7 +81,7 @@ export reference_genome_seq="/isilon/irods_a/datasets_res/Vault/ngs_ref_resource
 export b37_1000G_indels="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_phase1.indels.b37.vcf"
 export b37_Mills_Devine_2hit_indels="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
 # snps #
-export b37_1000G_omni2_5=="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_omni2.5.b37.vcf"
+export b37_1000G_omni2_5="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_omni2.5.b37.vcf"
 export b37_dbsnp="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/dbsnp_137.b37.vcf"
 export b37_hapmap_3_3="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/hapmap_3.3.b37.vcf"
 export b37_1000G_snps="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_phase1.snps.high_confidence.b37.vcf"
