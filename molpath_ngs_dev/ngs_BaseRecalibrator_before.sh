@@ -25,7 +25,7 @@ ${java_v1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${
 -knownSites ${b37_dbsnp};
 ##-nct 1 \
 ##-log ${sample_dir}/${sample_name}.novorealn.BaseRecalibrator.log;
-# indels #
+#### indels #
 ##export b37_1000G_indels="/isilon/irods_a/data_resources/ngs_ref_resources_b37/1000G_phase1.indels.b37.vcf"
 ## export b37_Mills_Devine_2hit_indels="/isilon/irods_a/data_resources/ngs_ref_resources_b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
 

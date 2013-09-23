@@ -21,7 +21,7 @@ cd ${sample_dir}
 ## head ${bed_list}_exons_50.bed ## padded with 50 base paires
 
 
-if [ $bed_type == "region"]  ; then
+if [ $bed_type == "region" ]  ; then
 
 for i in \
 ${bed_list} \
