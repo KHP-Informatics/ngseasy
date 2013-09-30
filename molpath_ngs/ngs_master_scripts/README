@@ -7,10 +7,13 @@
 # -- DESC: NGS pipeline to perform SE/PE Alignments & GATK cleaning                         #
 #############################################################################################
 
-# called using "Rscript call_ngs_master_workflow.R <config_file>"
+#--------------------------------------------------------------------------------------------
+# USAGE:
+# $ Rscript call_ngs_workflow.R <config_file>
 
-# this calls the following with options read in from R and fired off using R's system() command
-
+# The pipeline call_ngs_workflow.R is the entry point which packages parameters from the 
+# config file and calls the script defined by the [pipeline] field of the config file 
+# typically this will be pipeline=ngs_master_workflow.sh.
 # qsub <pipeline> <fastq_prefix> <sample_name> <qual_type> <RGID> <RGLB> <RGPL> <RGPU> <RGSM> <RGCN> <RGDS> <RGDT> <PE> <bed_list> <emial> <fastq_dir> <bam_dir>
 
 # ALL OPTIONS REQUIRED
