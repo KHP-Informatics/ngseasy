@@ -1,14 +1,34 @@
 #!/share/bin/Rscript --vanilla --default-packages=utils
 
+
+##################################################################################
+# DESCRIPTION:
+# Main entry point for the pipeline
+# Use this script to initiate the pipeline, this will bascially read the config
+# and dispatch grid engine jobs to ngs_master_workflow.sh for each patient dataset
+##################################################################################
+
+##################################################################################
+# ARGUMENTS:
+# ARG#1 = patient_template.conf, the configuration file listing details of each patient see example files
+# ARG#2 = pipeline_env.conf, the configuration file for various pipeline resources
+
+# USAGE:
+# Rscript call_ngs_workflow.R patient_template.conf  pipeline_env.conf 
+##################################################################################
+
+
+
 args <- commandArgs(trailingOnly=TRUE);
 
-config_file <- args[1];
+config_file <- args[1]; #patients/sample information
+pipeline_env_config <- arg[2] ; #config file with pipeline environment variables
+pipeline_env_var <- list(source(pipeline_env_config));
 
 d <- read.table(config_file, head=T,sep="\t",as.is=T,fill=T)
 
 
 for( i in 1:dim(d)[1] )
-
 {
 
 pipeline <- d$Pipeline[i] ## pipeline to call
@@ -30,7 +50,52 @@ email_user=d$email_bioinf[i]
 fastq_dir=d$Fastq_dir[i]
 bamdir=d$BAM_dir[i]
 
-callPipe <- paste(" qsub -N call_ngs.",RGID," ", pipeline," ",Fastq_prefix," ", sample_name," ",qual_type," ",RGID," ",RGLB," ",RGPL," ",RGPU," ",RGSM," ",RGCN," ",RGDS," ",RGDT," ",isPE," ",targetbed," ",bedtype," ",email_user," ",fastq_dir," ",bamdir,sep="")
+callPipe <- paste(
+                paste(" qsub -N call_ngs.",RGID, sep=""),
+                pipeline,
+                Fastq_prefix,
+                sample_name,
+                qual_type,
+                RGID,
+                RGLB,
+                RGPL,
+                RGPU,
+                RGSM,
+                RGCN,
+                RGDS,
+                RGDT,
+                isPE,
+                targetbed,
+                bedtype,
+                email_user,
+                fastq_dir,
+                bamdir,
+
+                ngs_pipeline,
+                queue_name,
+                ngs_picard,
+                ngs_gatk,
+                ngs_novo,
+                ngs_samtools,
+                reference_genome_novoindex,
+                reference_genome_seq,
+                b37_1000G_indels,
+                b37_Mills_Devine_2hit_indels,
+                b37_1000G_omni2_5,
+                b37_dbsnp,
+                b37_hapmap_3_3,
+                b37_1000G_snps,
+                annovar,
+                annovar_humandb,
+                java_v1_7,
+                novo_cpu,
+                novo_mem,
+                sge_h_vmem,
+                java_mem,
+                gatk_h_vmem,
+                gatk_java_mem,
+                ngstmp,
+                sep=" ")
 
 system(callPipe)
 

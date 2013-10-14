@@ -52,66 +52,66 @@
 ##################
 ## pipeline dir ##
 ##################
-export ngs_pipeline="/home/snewhousebrc/scratch/pipelines/ngs/molpath_ngs_dev" 
+export ngs_pipeline=${18} #"/home/snewhousebrc/scratch/pipelines/ngs/molpath_ngs_dev" 
 
 #######
 # QUE #
 #######
-export queue_name="short.q,long.q"
+export queue_name=${19} #"short.q,long.q"
 
 ###############
 ## ngs tools ##
 ###############
-export ngs_picard="/share/apps/picard-tools_1.91/jar"
-export ngs_gatk="/share/apps/gatk_2.7-2"  ## gatk_2.7-2 needs java 1.7
-export ngs_novo="/share/apps/novocraft_current/bin/" ## Novoalign V3.01.01
-export ngs_samtools="/share/apps/samtools_0.1.18/bin"
+export ngs_picard=${20} #"/share/apps/picard-tools_1.91/jar"
+export ngs_gatk=${21} #"/share/apps/gatk_2.7-2"  ## gatk_2.7-2 needs java 1.7
+export ngs_novo=${22} #"/share/apps/novocraft_current/bin/" ## Novoalign V3.01.01
+export ngs_samtools=${23} #"/share/apps/samtools_0.1.18/bin"
 
 ######################
 ## reference genomes #
 ## movef refs to isilon and all b37 now!
 ######################
-export reference_genome_novoindex="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/human_g1k_v37.fasta.novoindex"
-export reference_genome_seq="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/human_g1k_v37.fasta"
+export reference_genome_novoindex=${24} #"/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/human_g1k_v37.fasta.novoindex"
+export reference_genome_seq=${25} #"/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/human_g1k_v37.fasta"
 
 ############################
 ## ref vcf files for gatk ##
 ############################
 # indels #
-export b37_1000G_indels="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_phase1.indels.b37.vcf"
-export b37_Mills_Devine_2hit_indels="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
+export b37_1000G_indels=${26} #"/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_phase1.indels.b37.vcf"
+export b37_Mills_Devine_2hit_indels=${27} #"/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/Mills_and_1000G_gold_standard.indels.b37.vcf"
 # snps #
-export b37_1000G_omni2_5="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_omni2.5.b37.vcf"
-export b37_dbsnp="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/dbsnp_137.b37.vcf"
-export b37_hapmap_3_3="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/hapmap_3.3.b37.vcf"
-export b37_1000G_snps="/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_phase1.snps.high_confidence.b37.vcf"
+export b37_1000G_omni2_5=${28} #"/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_omni2.5.b37.vcf"
+export b37_dbsnp=${29} #"/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/dbsnp_137.b37.vcf"
+export b37_hapmap_3_3=${30} #"/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/hapmap_3.3.b37.vcf"
+export b37_1000G_snps=${31} #"/isilon/irods_a/datasets_res/Vault/ngs_ref_resources_b37/1000G_phase1.snps.high_confidence.b37.vcf"
 
 #############
 ## annovar ##
 #############
-export annovar="/isilon/irods_a/datasets_res/Vault/annovar_2013Aug23"
-export annovar_humandb="/isilon/irods_a/datasets_res/Vault/annovar_2013Aug23/humandb"
+export annovar=${32} #"/isilon/irods_a/datasets_res/Vault/annovar_2013Aug23"
+export annovar_humandb=${33} #"/isilon/irods_a/datasets_res/Vault/annovar_2013Aug23/humandb"
 
 #######################
 ## JAVA 1.7 for GATK ##
 #######################
-export java_v1_7="/share/java/jdk1.7.0/bin"
+export java_v1_7=${34} #"/share/java/jdk1.7.0/bin"
 
 #####################
 # mem and cpu vars ##
 #####################
 
 ## Novoalign ##
-export novo_cpu=8
-export novo_mem=3
+export novo_cpu=${35} #8
+export novo_mem=${36} #3
 
 ## Java & Picardtools ##
-export sge_h_vmem=8
-export java_mem=6
+export sge_h_vmem=${37} #8
+export java_mem=${38} #6
 
 ## Java & GATK ##
-export gatk_h_vmem=8
-export gatk_java_mem=6
+export gatk_h_vmem=${39} #8
+export gatk_java_mem=${40} #6
 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------#
@@ -152,7 +152,7 @@ export aln_dir=${17}
 ###########################
 ## path to tmp aln dir   ##
 ###########################
-export ngstmp="/home/snewhousebrc/scratch/ngs_temp"
+export ngstmp=${41}  #"/home/snewhousebrc/scratch/ngs_temp"
 
 
 #------------------------------------------------------------------------------#

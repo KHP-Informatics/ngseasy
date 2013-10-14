@@ -30,8 +30,20 @@ vcf_cosmic_c=${2}   #cosmic download vcf coding variants
 vcf_cosmic_nc=${3} #cosmic download vcf non-coding variants
 
 #intersect 
-bedtools intersect -wa -s -a ${vcf_patient} -b ${vcf_cosmic_c} > cosmic_i-c_${vcf_patient}
+bedtools intersect -wa -s -a ${vcf_patient} -b ${vcf_cosmic_c} > patient-intersect-cosmic_c_wa_${vcf_patient}
 
-bedtools intersect -wa -s -a ${vcf_patient} -b ${vcf_cosmic_nc} > cosmic_i-nc_${vcf_patient}
+bedtools intersect -wa -s -a ${vcf_patient} -b ${vcf_cosmic_nc} > patient-intersect-cosmic-nc_wa_${vcf_patient} 
+
+#count the unique positions returned: cut -f 2 cosmic_i-nc_${vcf_patient} | uniq| wc -l
+
+#intersect - but return the COSMIC vcf lines too
+bedtools intersect -wb -s -a ${vcf_patient} -b ${vcf_cosmic_c} > patient-intersect-cosmic_c_wb_${vcf_patient}
+  
+bedtools intersect -wb -s -a ${vcf_patient} -b ${vcf_cosmic_nc} > patient-intersect-cosmic_nc_wb_${vcf_patient}
+
+
+# bedtools links ....  # might be handy for report
+
+
 
 
