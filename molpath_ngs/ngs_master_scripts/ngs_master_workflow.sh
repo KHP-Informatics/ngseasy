@@ -20,30 +20,13 @@
 # -- DESC: NGS pipeline to perform SE/PE Alignments & GATK cleaning                         #
 #############################################################################################
 
-# called using "Rscript call_ngs_master_workflow.R <config_file>"
+# called by the main dispatch: 
+#   Rscript call_ngs_master_workflow.R <patient.config> <pipeline_env.config> 
 
-# this calls the following with options read in from R and fired off using R's system() command
+# For instructions on running the pipeline see the README file in this this directory:
 
-# qsub <pipeline> <fastq_prefix> <sample_name> <qual_type> <RGID> <RGLB> <RGPL> <RGPU> <RGSM> <RGCN> <RGDS> <RGDT> <PE> <bed_list> <bed_type> <fastq_dir> <bam_dir> 
 
-# ALL OPTIONS REQUIRED
-# -- fastq_prefix=string	fastq prefix for Sample ID ie <fastq_prefix>_1.fastq <fastq_prefix>_2.fastq
-# -- sample_name=string		Sample ID
-# -- qual_type=string		Base quality coding for novoalign ie STFQ, ILMFQ, ILM1.8
-# -- RGID=String		Read Group ID Required. <PROJECT_NAME>
-# -- RGLB=String		Read Group Library Required. <PATIENT_ID>.<RGPL>.<>
-# -- RGPL=String		Read Group platform (e.g. illumina, solid) Required.
-# -- RGPU=String		Read Group platform unit (eg. run barcode) Required.
-# -- RGSM=String		Read Group sample name Required. PATIENT_ID
-# -- RGCN=String		Read Group sequencing center name Required.
-# -- RGDS=String		Read Group description Required.
-# -- RGDT=Iso8601Date		Read Group run date Required.
-# -- PE=1 or 0			Indicates PE or SE
-# -- bed_list=string		name/prefix of target bedfile
-# -- ged_type=string		regiob or whole_genome
-# -- email			email address for qsub
-# -- fastq_dir			path to fastq data
-# -- bam_dir			path to working dir ie output
+
 
 #------------------------------------------------------------------------#
 # Set environmental variables required for child processes (all )
@@ -113,6 +96,12 @@ export java_mem=${38} #6
 export gatk_h_vmem=${39} #8
 export gatk_java_mem=${40} #6
 
+###########################
+## path to tmp aln dir   ##
+###########################
+export ngstmp=${41}  #"/home/snewhousebrc/scratch/ngs_temp"
+
+
 
 #---------------------------------------------------------------------------------------------------------------------------------------------#
 #############################
@@ -134,6 +123,7 @@ mPE=${12} 	#Indicates PE or SE
 bed_list=${13}	#target bed for coverage
 bed_type=${14}  # region or whole_genome : needed for coverage
 
+
 ############################
 ## email contact for qsub ##
 ############################
@@ -148,11 +138,6 @@ export fastq_dir=${16}
 ## path to final aln dir ##
 ###########################
 export aln_dir=${17}
-
-###########################
-## path to tmp aln dir   ##
-###########################
-export ngstmp=${41}  #"/home/snewhousebrc/scratch/ngs_temp"
 
 
 #------------------------------------------------------------------------------#
