@@ -95,6 +95,9 @@ callPipe <- paste(
                 gatk_h_vmem,
                 gatk_java_mem,
                 ngstmp,
+                
+                paste("-M", email_user, sep=" "),
+
                 sep=" ")
 
 system(callPipe)

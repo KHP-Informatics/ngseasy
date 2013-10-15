@@ -2,7 +2,6 @@
 #$ -S /bin/bash
 #$ -cwd
 #$ -V
-#$ -M stephen.newhouse@kcl.ac.uk
 #$ -m beas
 #$ -pe multi_thread 1
 #$ -l h_vmem=1G
