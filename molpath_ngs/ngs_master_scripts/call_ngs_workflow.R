@@ -23,7 +23,7 @@ args <- commandArgs(trailingOnly=TRUE);
 
 config_file <- args[1]; #patients/sample information
 pipeline_env_config <- arg[2] ; #config file with pipeline environment variables
-pipeline_env_var <- list(source(pipeline_env_config));
+source(pipeline_env_config);
 
 d <- read.table(config_file, head=T,sep="\t",as.is=T,fill=T)
 
