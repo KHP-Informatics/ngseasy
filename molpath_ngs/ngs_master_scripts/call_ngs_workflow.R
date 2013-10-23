@@ -22,8 +22,8 @@
 args <- commandArgs(trailingOnly=TRUE);
 
 config_file <- args[1]; #patients/sample information
-pipeline_env_config <- args[2] ; #config file with pipeline environment variables
-pipeline_env_var <- list(source(pipeline_env_config));
+pipeline_env_config <- arg[2] ; #config file with pipeline environment variables
+source(pipeline_env_config); #make available pipeline env vars 
 
 d <- read.table(config_file, head=T,sep="\t",as.is=T,fill=T)
 
