@@ -23,7 +23,7 @@ args <- commandArgs(trailingOnly=TRUE);
 
 config_file <- args[1]; #patients/sample information
 pipeline_env_config <- arg[2] ; #config file with pipeline environment variables
-pipeline_env_var <- list(source(pipeline_env_config));
+source(pipeline_env_config); #make available pipeline env vars 
 
 d <- read.table(config_file, head=T,sep="\t",as.is=T,fill=T)
 
@@ -50,9 +50,11 @@ email_user=d$email_bioinf[i]
 fastq_dir=d$Fastq_dir[i]
 bamdir=d$BAM_dir[i]
 
+#TODO pipeline directory defined twice (patient conf: pipelne_dir and pipeine env: ngs_pipeline)... resolve which setup... are we ever likely to run different pipelines on the same batch-submission of patients samples?
+
 callPipe <- paste(
                 paste(" qsub -N call_ngs.",RGID, sep=""),
-                pipeline,
+                paste(ngs_pipeline,"/","ngs_master_scripts","/",pipeline, sep=""),
                 Fastq_prefix,
                 sample_name,
                 qual_type,

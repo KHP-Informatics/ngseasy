@@ -24,9 +24,9 @@ cd ${sample_dir}
 if [ $bed_type == "region" ]; then
 
 for i in \
-${bed_list}_genes \
-${bed_list}_genes_exons \
-${bed_list}_genes_exons_50;do
+${bed_list} \
+${bed_list}_exons \
+${bed_list}_exons_50;do
 coverageBed -a ${sample_dir}/${sample_name}.novorecal.bed -b ${i}.bed > ${sample_dir}/${sample_name}.novorecal.coverage;
 coverageBed -hist -a ${sample_dir}/${sample_name}.novorecal.bed -b ${i}.bed  > ${sample_dir}/${sample_name}.novorecal.coverage_hist;
 coverageBed -hist -d -a ${sample_dir}/${sample_name}.novorecal.bed -b ${i}.bed > ${sample_dir}/${sample_name}.novorecal.coverage_hist.d;
