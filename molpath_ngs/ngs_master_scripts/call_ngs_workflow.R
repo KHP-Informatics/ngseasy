@@ -22,7 +22,7 @@
 args <- commandArgs(trailingOnly=TRUE);
 
 config_file <- args[1]; #patients/sample information
-pipeline_env_config <- arg[2] ; #config file with pipeline environment variables
+pipeline_env_config <- args[2] ; #config file with pipeline environment variables
 source(pipeline_env_config); #make available pipeline env vars 
 
 d <- read.table(config_file, head=T,sep="\t",as.is=T,fill=T)
@@ -54,8 +54,9 @@ bamdir=d$BAM_dir[i]
 
 callPipe <- paste(
                 paste(" qsub -N call_ngs.",RGID, sep=""),
-                paste(ngs_pipeline,"/","ngs_master_scripts","/",pipeline, sep=""),
-                Fastq_prefix,
+#####                paste(ngs_pipeline,"/","ngs_master_scripts","/",pipeline, sep=""),
+                paste("  ",pipeline, sep=""),
+		Fastq_prefix,
                 sample_name,
                 qual_type,
                 RGID,
