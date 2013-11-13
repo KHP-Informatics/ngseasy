@@ -5,7 +5,7 @@
 #$ -V
 
 ####################
-## Call BedTools_DepthOfCoverage ##
+## Call BedTools_DepthOfCoverag ##
 ####################
 sample_name=${1}
 sample_dir=${2}
@@ -21,15 +21,15 @@ cd ${sample_dir}
 ## head ${bed_list}_exons_50.bed ## padded with 50 base paires
 
 
-if [ $bed_type == "region" ]; then
+if [ $bed_type == "region" ]  ; then
 
 for i in \
-${bed_list}_new_haloplex_file \
-##${bed_list}_genes_exons \
-##${bed_list}_genes_exons_50;do
-coverageBed -a ${sample_dir}/${sample_name}.novorecal.bed -b ${i}.bed > ${sample_dir}/${sample_name}.novorecal.coverage;
-coverageBed -hist -a ${sample_dir}/${sample_name}.novorecal.bed -b ${i}.bed  > ${sample_dir}/${sample_name}.novorecal.coverage_hist;
-coverageBed -hist -d -a ${sample_dir}/${sample_name}.novorecal.bed -b ${i}.bed > ${sample_dir}/${sample_name}.novorecal.coverage_hist.d;
+${bed_list} \
+${bed_list}_exons \
+${bed_list}_exons_50;do
+coverageBed -a ${sample_dir}/${sample_name}.novorecal.bed -b ${i}.bed > ${sample_dir}/${sample_name}.novorecal.coverage_${i};
+coverageBed -hist -a ${sample_dir}/${sample_name}.novorecal.bed -b ${i}.bed  > ${sample_dir}/${sample_name}.novorecal.coverage_hist.${i};
+coverageBed -hist -d -a ${sample_dir}/${sample_name}.novorecal.bed -b ${i}.bed > ${sample_dir}/${sample_name}.novorecal.coverage_hist.d.${i};
 done
 
 fi

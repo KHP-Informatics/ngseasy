@@ -54,9 +54,8 @@ bamdir=d$BAM_dir[i]
 
 callPipe <- paste(
                 paste(" qsub -N call_ngs.",RGID, sep=""),
-#####                paste(ngs_pipeline,"/","ngs_master_scripts","/",pipeline, sep=""),
-                paste("  ",pipeline, sep=""),
-		Fastq_prefix,
+                paste(ngs_pipeline,"/","ngs_master_scripts","/",pipeline, sep=""),
+                Fastq_prefix,
                 sample_name,
                 qual_type,
                 RGID,
