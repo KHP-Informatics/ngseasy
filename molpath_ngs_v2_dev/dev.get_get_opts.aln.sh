@@ -2,28 +2,28 @@
 
 ## options
 
-while getopts fq:os:ok:qu:nc:wd:rg: option; do
-	case "${option}" in
+while getopts "f:o:k:q:c:w:r:" OPTION; do
+	case "${OPTION}" in
 
-		fq)		fastq=${OPTARG};;
-		os)		out_sam=${OPTARG};;
-		ok)		novo_k_stat=${OPTARG};;
-		qu)		novo_qual=${OPTARG};;
-		nc)		novo_core=${OPTARG};;
-		nc)		working_dir=${OPTARG};;
-		rg)		reference_genome=${OPTARG};;
+		f)	echo "-f fastq prefix is ${OPTARG}"				fastq=${OPTARG};;
+		o)	echo "-o sam output is ${OPTARG}"				out_sam=${OPTARG};;
+		k)	echo "-k novoalign k stats out is ${OPTARG}"	novo_k_stat=${OPTARG};;
+		q)	echo "-q quality scores are ${OPTARG}"			novo_qual=${OPTARG};;
+		c)	echo "-c number of cpus"						novo_core=${OPTARG};;
+		w)	echo "-w working directory is ${OPTARG}"		working_dir=${OPTARG};;
+		r)	echo "-r reference genome is ${OPTARG}"			reference_genome=${OPTARG};;
 	esac
 
 done
 
 qsub bash.sh \
--fq ${fastq_dir}/${fastq_prefix} \
--os ${sample_dir}/${sample_name}.aln.sam \
--ok ${sample_name}.novoalign.K.stats \
--qu STDFQ \
--nc 8 \
--wd ${sample_dir} \
--wd ${reference_genome_novoindex};
+-f ${fastq_dir}/${fastq_prefix} \
+-o ${sample_dir}/${sample_name}.aln.sam \
+-k ${sample_name}.novoalign.K.stats \
+-q STDFQ \
+-c 8 \
+-w ${sample_dir} \
+-r ${reference_genome_novoindex};
 
 #---------------------------------------------------------------------------------------------------#
 
