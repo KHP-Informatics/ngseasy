@@ -7,13 +7,23 @@
 # -- DESC: NGS pipeline to perform SE/PE Alignments & GATK cleaning                         #
 #############################################################################################
 
-# called using "Rscript call_ngs_master_workflow.R <config_file>"
+#--------------------------------------------------------------------------------------------
+# Call the pipeline main dispatch script with two config files:
 
-# this calls the following with options read in from R and fired off using R's system() command
+# ARGUMENTS:
+# ARG#1 = patient_template.conf, the configuration file listing details of each patient see example files
+# ARG#2 = pipeline_env.conf, the configuration file for various pipeline resources
 
+# USAGE:
+# Rscript call_ngs_workflow.R patient_template.conf  pipeline_env.conf 
+
+
+# The pipeline call_ngs_workflow.R is the entry point which packages parameters from the 
+# config file and calls the script defined by the [pipeline] field of the config file 
+# typically this will be pipeline=ngs_master_workflow.sh.
 # qsub <pipeline> <fastq_prefix> <sample_name> <qual_type> <RGID> <RGLB> <RGPL> <RGPU> <RGSM> <RGCN> <RGDS> <RGDT> <PE> <bed_list> <emial> <fastq_dir> <bam_dir>
 
-# ALL OPTIONS REQUIRED
+# ALL OPTIONS REQUIRED FOR PATIENT SAMPLE (provide in patient_template.conf file)
 
 # -- pipeline=string		name of *sh pipeline master script
 # -- fastq_prefix=string	fastq prefix for Sample ID ie <fastq_prefix>_1.fastq <fastq_prefix>_2.fastq
@@ -32,6 +42,33 @@
 # -- email=string
 # -- fastq_dir=string
 # -- bam_dir=string
+
+# ALL OPTIONS REQUIRED FOR POIPELINE ENVIRONMENT (from pipeline_env.conf file)
+# -- export ngs_pipeline=string                 pipeline dir
+# -- export queue_name=string                   sge queue
+# -- ngs_picard=string                          ngs tools
+# -- ngs_gatk=string                            ngs tools
+# -- ngs_novo=string                            ngs tools
+# -- ngs_samtools=string                        ngs tools
+# -- reference_genome_novoindex=string          reference genomes
+# -- reference_genome_seq=string                reference genomes
+# -- b37_1000G_indels=string                    ref vcf files for gatk
+# -- b37_Mills_Devine_2hit_indels=string        ref vcf files for gatk
+# -- b37_1000G_omni2_5=string                   ref vcf files for gatk    
+# -- b37_dbsnp=string                           ref vcf files for gatk
+# -- b37_hapmap_3_3                             ref vcf files for gatk
+# -- b37_1000G_snps                             ref vcf files for gatk
+# -- annovar=string                             annovar
+# -- annovar_humandb=string                     annovar
+# -- java_v1_7=string                           JAVA 1.7 for GATK
+# -- novo_cpu=integer                           mem and cpu vars Novoalign
+# -- novo_mem=integer                           mem and cpu vars Novoalign
+# -- sge_h_vmem=inetger                         mem and cpu vars  Java & Picardtools
+# -- java_mem=integer                           mem and cpu vars  Java & Picardtools
+# -- gatk_h_vmem=integer                        mem and cpu vars Java & GATK
+# -- gatk_java_mem                              mem and cpu vars Java & GATK
+# -- ngstmp                                     #?? I assume this should be a env var for the pipeline....
+
 
 ##############
 # PIPELINES ##

@@ -43,7 +43,7 @@ echo "FindCoveredIntervals"
 
 ${java_v1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/GenomeAnalysisTK.jar -T FindCoveredIntervals -R ${reference_genome_seq} \
 -I ${sample_dir}/${sample_name}.novorecal.bam \
--o ${sample_dir}/${sample_name}.novorecal.overedIntervals.list \
+-o ${sample_dir}/${sample_name}.novorecal.CoveredIntervals.list \
 --coverage_threshold 10;
 
 
