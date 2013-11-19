@@ -1,0 +1,114 @@
+#!/share/bin/Rscript --vanilla --default-packages=utils
+
+
+##################################################################################
+# DESCRIPTION:
+# Main entry point for the pipeline
+# Use this script to initiate the pipeline, this will bascially read the config
+# and dispatch grid engine jobs to ngs_master_workflow.sh for each patient dataset
+##################################################################################
+
+##################################################################################
+# ARGUMENTS:
+# ARG#1 = patient_template.conf, the configuration file listing details of each patient see example files
+# ARG#2 = pipeline_env.conf, the configuration file for various pipeline resources
+
+# USAGE:
+# Rscript call_ngs_workflow.R patient_template.conf  pipeline_env.conf 
+##################################################################################
+
+
+
+args <- commandArgs(trailingOnly=TRUE);
+
+config_file <- args[1]; #patients/sample information
+pipeline_env_config <- args[2] ; #config file with pipeline environment variables
+source(pipeline_env_config); #make available pipeline env vars 
+
+d <- read.table(config_file, head=T,sep="\t",as.is=T,fill=T)
+
+
+for( i in 1:dim(d)[1] )
+{
+
+pipeline <- d$Pipeline[i] ## pipeline to call
+Fastq_prefix=d$Fastq_file_prefix[i]	## fastq prefix
+sample_name=d$ReadGroup_sample_RGSM[i] ##sample name
+qual_type=d$QUAL[i]  ## Base quality coding for novoalign ie STFQ, ILMFQ, ILM1.8
+RGID=d$ReadGroup_id_RGID[i] 	#Read Group ID Required.
+RGLB=d$ReadGroup_library_RGLB[i] 	#Read Group Library Required.
+RGPL=d$ReadGroup_platform_RGPL[i] 	#Read Group platform (e.g. illumina, solid) Required.
+RGPU=d$ReadGroup_platform_unit_RGPU[i] 	#Read Group platform unit (eg. run barcode) Required.
+RGSM=d$ReadGroup_sample_RGSM[i] 	#Read Group sample name Required.
+RGCN=d$ReadGroup_SeqCentre_RGCN[i] 	#Read Group sequencing center name Required.
+RGDS=d$ReadGroup_Desc_RGDS[i] 	#Read Group description Required.
+RGDT=d$ReadGroup_runDate_RGDT[i] 	#Read Group run date Required.
+isPE=d$PE[i] 	#Read Group run date Required.
+targetbed=d$bed_list[i]
+bedtype=d$bed_type[i]
+email_user=d$email_bioinf[i]
+fastq_dir=d$Fastq_dir[i]
+bamdir=d$BAM_dir[i]
+sleep_time=d$sleep ## time to wait before calling nest job. Format 10s, 10m, 10h. see man sleep
+
+#TODO pipeline directory defined twice (patient conf: pipelne_dir and pipeine env: ngs_pipeline)... resolve which setup... are we ever likely to run different pipelines on the same batch-submission of patients samples?
+
+callPipe <- paste(
+                paste(" sleep ",sleep_time ," qsub -N call_ngs.",RGID, sep=""),
+#####                paste(ngs_pipeline,"/","ngs_master_scripts","/",pipeline, sep=""),
+                paste("  ",pipeline, sep=""),
+		Fastq_prefix,
+                sample_name,
+                qual_type,
+                RGID,
+                RGLB,
+                RGPL,
+                RGPU,
+                RGSM,
+                RGCN,
+                RGDS,
+                RGDT,
+                isPE,
+                targetbed,
+                bedtype,
+                email_user,
+                fastq_dir,
+                bamdir,
+
+                ngs_pipeline,
+                queue_name,
+                ngs_picard,
+                ngs_gatk,
+                ngs_novo,
+                ngs_samtools,
+                reference_genome_novoindex,
+                reference_genome_seq,
+                b37_1000G_indels,
+                b37_Mills_Devine_2hit_indels,
+                b37_1000G_omni2_5,
+                b37_dbsnp,
+                b37_hapmap_3_3,
+                b37_1000G_snps,
+                annovar,
+                annovar_humandb,
+                java_v1_7,
+                novo_cpu,
+                novo_mem,
+                sge_h_vmem,
+                java_mem,
+                gatk_h_vmem,
+                gatk_java_mem,
+                ngstmp,
+                
+                paste("-M", email_user, sep=" "),
+
+                sep=" ")
+
+system(callPipe)
+
+cat(callPipe,"\r","\n")
+
+}
+
+
+
