@@ -54,7 +54,7 @@ sleep_time=d$sleep ## time to wait before calling nest job. Format 10s, 10m, 10h
 #TODO pipeline directory defined twice (patient conf: pipelne_dir and pipeine env: ngs_pipeline)... resolve which setup... are we ever likely to run different pipelines on the same batch-submission of patients samples?
 
 callPipe <- paste(
-                paste(" sleep ",sleep_time ," qsub -N call_ngs.",RGID, sep=""),
+                paste(" sleep ",sleep_time ,"; qsub -N call_ngs.",RGID, sep=""),
 #####                paste(ngs_pipeline,"/","ngs_master_scripts","/",pipeline, sep=""),
                 paste("  ",pipeline, sep=""),
 		Fastq_prefix,
