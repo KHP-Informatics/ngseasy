@@ -4,11 +4,18 @@
 #$ -p -0.99999999999999999999999999999999999999999999999999
 #$ -V
 
-
-
 ####################
 ## Call Novoalign ##
 ####################
+
+###################################################################################################################################
+##  IONTORRENT :- http://www.novocraft.com/wiki/tiki-index.php?page=Benchmarking+Ion+Torrent+PGM+aligners&highlight=Ion%20Torrent 
+## HaloPlex cancer panel
+
+
+## note -g -x -H changes 
+## needs exploring
+
 
 N_CPU=${novo_cpu}
 fastq_prefix=${1}
@@ -25,23 +32,21 @@ echo " Sample Name" ${2}
 echo " Output dir" ${3}
 echo "starting novoalign " 
 echo " number of cpus " $N_CPU
-echo " reference_genome_novoindex " ${reference_genome_novoindex}
-echo " out SAM " ${sample_dir}/${sample_name}.aln.sam
 echo "----------------------------------------------------------------------------------------" 
 
 cd ${sample_dir}
 
+fastqc --noextract --outdir=${sample_dir}/ ${fastq_dir}/${fastq_prefix}_1.fastq 
+
 ${ngs_novo}/novoalign \
 -d ${reference_genome_novoindex} \
--f ${fastq_dir}/${fastq_prefix}_1.fastq  ${fastq_dir}/${fastq_prefix}_2.fastq  \
+-f ${fastq_dir}/${fastq_prefix}_1.fastq \
 -F STDFQ \
---Q2Off \
---3Prime  \
--g 65 \
--x 7 \
--r All \
--i PE 300,150 \
--c ${N_CPU} \
+-a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC \
+-a AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT \
+-a GCTGAGGATCACCGACTGCCCATAGAGAGGCTGAGAC \
+-a GTGCTCTTCCGATCT \
+--Q2Off --3Prime  -g 15 -x 4 -r All -H -c ${N_CPU} \
 -k -K ${sample_dir}/${sample_name}.novoalign.K.stats \
 -o SAM > ${sample_dir}/${sample_name}.aln.sam;
 
@@ -55,7 +60,7 @@ echo "--------------------------------------------------------------------------
 
 samtools view -hS ${sample_dir}/${sample_name}.aln.sam | head -500
  
-
+chmod 765 ${sample_dir}/${sample_name}.aln.sam;
 
 
 
