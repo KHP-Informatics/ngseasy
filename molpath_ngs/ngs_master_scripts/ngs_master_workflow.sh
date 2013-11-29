@@ -134,7 +134,7 @@ echo " Novo Dir = " $ngs_novo
 
 
 ############################
-## email contact for qsub ##
+## email contact for qsub -o ${SGE_OUT}  -e ${SGE_OUT}  ##
 ############################
 export email_contact=${15}
 
@@ -168,6 +168,8 @@ mkdir ${aln_dir}/${sample_name}
 
 mkdir ${aln_dir}/${sample_name}/sge_out
 
+SGE_OUT=${aln_dir}/${sample_name}/sge_out
+
 #########################################
 ## set sample temp and output dirs ######
 #########################################
@@ -200,19 +202,19 @@ if [ ${mPE} -eq 1 ] && [ ${mRGPL} == "illumina" ]; then
 
 echo "Reads are PE ILLUMINA"
 
-qsub -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.illumina.${qual_type}.PE.sh ${fastq_prefix} ${sample_name} ${sample_dir};
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.illumina.${qual_type}.PE.sh ${fastq_prefix} ${sample_name} ${sample_dir};
 
 elif [ ${mPE} -eq 0 ] && [ ${mRGPL} == "illumina" ]; then
 
 echo "Reads are SE ILLUMINA"
 
-qsub -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.illumina.${qual_type}.SE.sh ${fastq_prefix} ${sample_name} ${sample_dir};
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.illumina.${qual_type}.SE.sh ${fastq_prefix} ${sample_name} ${sample_dir};
 
 elif [ ${mPE} -eq 0 ] && [ ${mRGPL} == "IONTORRENT" ]; then
 
 echo " Reads are SE IONTORRENT"
 
-qsub -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.IONTORRENT.${qual_type}.SE.sh ${fastq_prefix} ${sample_name} ${sample_dir};
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.IONTORRENT.${qual_type}.SE.sh ${fastq_prefix} ${sample_name} ${sample_dir};
 
 fi
 
@@ -222,14 +224,14 @@ fi
 
 ##echo ">>>>>" `date` " :-> " "Converting Novoalign SAM to BAM and indexing"
 
-qsub -q ${queue_name} -N sam2bam.${sample_name} -hold_jid novoalign.${sample_name} -l h_vmem=${sge_h_vmem}G -pe multi_thread 1 -M ${email_contact} -m beas ${ngs_pipeline}/ngs_sam2bam.sh ${sample_name} ${sample_dir};
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N sam2bam.${sample_name} -hold_jid novoalign.${sample_name} -l h_vmem=${sge_h_vmem}G -pe multi_thread 1 -M ${email_contact} -m beas ${ngs_pipeline}/ngs_sam2bam.sh ${sample_name} ${sample_dir};
 
 
 #----------------------------------------------------------------------#
 # 3. SortSam
 #----------------------------------------------------------------------#
 
-qsub -q ${queue_name} -N SortSam.${sample_name} -hold_jid sam2bam.${sample_name}  -l h_vmem=${sge_h_vmem}G -pe multi_thread 1 -M ${email_contact} -m beas ${ngs_pipeline}/ngs_SortSam.sh ${sample_name} ${sample_dir} ${sample_temp};
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N SortSam.${sample_name} -hold_jid sam2bam.${sample_name}  -l h_vmem=${sge_h_vmem}G -pe multi_thread 1 -M ${email_contact} -m beas ${ngs_pipeline}/ngs_SortSam.sh ${sample_name} ${sample_dir} ${sample_temp};
 
 #----------------------------------------------------------------------#
 # 4. AddOrReplaceReadGroups 
@@ -237,7 +239,7 @@ qsub -q ${queue_name} -N SortSam.${sample_name} -hold_jid sam2bam.${sample_name}
 
 ##echo ">>>>>" `date` " :-> " "Running AddOrReplaceReadGroups" 
 
-qsub -q ${queue_name} -N AddOrReplaceReadGroups.${sample_name} -hold_jid SortSam.${sample_name} -l h_vmem=${sge_h_vmem}G -pe multi_thread 1 -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AddOrReplaceReadGroups.sh ${sample_name} ${sample_dir} \
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N AddOrReplaceReadGroups.${sample_name} -hold_jid SortSam.${sample_name} -l h_vmem=${sge_h_vmem}G -pe multi_thread 1 -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AddOrReplaceReadGroups.sh ${sample_name} ${sample_dir} \
 ${sample_temp} ${mRGID} ${mRGLB} ${mRGPL} ${mRGPU} ${mRGSM} ${mRGCN} ${mRGDS} ${mRGDT};
 
 
@@ -247,7 +249,7 @@ ${sample_temp} ${mRGID} ${mRGLB} ${mRGPL} ${mRGPU} ${mRGSM} ${mRGCN} ${mRGDS} ${
 
 ###echo ">>>>>" `date` " :-> " "Running MarkDuplicates"
 
-qsub -q ${queue_name} -N MarkDuplicates.${sample_name} -hold_jid AddOrReplaceReadGroups.${sample_name} -l h_vmem=${sge_h_vmem}G  -pe multi_thread 1 -M ${email_contact} -m beas ${ngs_pipeline}/ngs_MarkDuplicates.sh ${sample_name} ${sample_dir} ${sample_temp};
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N MarkDuplicates.${sample_name} -hold_jid AddOrReplaceReadGroups.${sample_name} -l h_vmem=${sge_h_vmem}G  -pe multi_thread 1 -M ${email_contact} -m beas ${ngs_pipeline}/ngs_MarkDuplicates.sh ${sample_name} ${sample_dir} ${sample_temp};
 
 ##############################
 ## END ALIGNMENT PIPELINE   ## 
@@ -263,7 +265,7 @@ qsub -q ${queue_name} -N MarkDuplicates.${sample_name} -hold_jid AddOrReplaceRea
 
 ##echo ">>>>>" `date` " :-> " "Running RealignerTargetCreator"
 
-qsub -q ${queue_name} -N RealignerTargetCreator.${sample_name} -hold_jid MarkDuplicates.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_RealignerTargetCreator.sh ${sample_name} ${sample_dir} ${sample_temp};
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N RealignerTargetCreator.${sample_name} -hold_jid MarkDuplicates.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_RealignerTargetCreator.sh ${sample_name} ${sample_dir} ${sample_temp};
 
 
 #----------------------------------------------------------------------#
@@ -272,7 +274,7 @@ qsub -q ${queue_name} -N RealignerTargetCreator.${sample_name} -hold_jid MarkDup
 
 ##echo ">>>>>" `date` " :-> " "Running IndelRealigner"
 
-qsub -q ${queue_name} -N IndelRealigner.${sample_name} -hold_jid RealignerTargetCreator.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_IndelRealigner.sh ${sample_name} ${sample_dir} ${sample_temp};
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N IndelRealigner.${sample_name} -hold_jid RealignerTargetCreator.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_IndelRealigner.sh ${sample_name} ${sample_dir} ${sample_temp};
 
 
 #----------------------------------------------------------------------#
@@ -281,7 +283,7 @@ qsub -q ${queue_name} -N IndelRealigner.${sample_name} -hold_jid RealignerTarget
 
 ##echo ">>>>>" `date` " :-> " "Running BaseRecalibrator before QUAL SCORE RECALIBRATION"
 
-qsub -q ${queue_name} -N BaseRecalibrator_before.${sample_name} -hold_jid IndelRealigner.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_BaseRecalibrator_before.sh ${sample_name} ${sample_dir} ${sample_temp};
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N BaseRecalibrator_before.${sample_name} -hold_jid IndelRealigner.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_BaseRecalibrator_before.sh ${sample_name} ${sample_dir} ${sample_temp};
 
 
 #----------------------------------------------------------------------#
@@ -290,7 +292,7 @@ qsub -q ${queue_name} -N BaseRecalibrator_before.${sample_name} -hold_jid IndelR
 
 ###echo ">>>>>" `date` " :-> " "Running PrintReads > QUAL SCORE RECALIBRATION "
 
-qsub -q ${queue_name} -N PrintReads_BQSR.${sample_name} -hold_jid BaseRecalibrator_before.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_PrintReads_BQSR.sh ${sample_name} ${sample_dir} ${sample_temp};
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N PrintReads_BQSR.${sample_name} -hold_jid BaseRecalibrator_before.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_PrintReads_BQSR.sh ${sample_name} ${sample_dir} ${sample_temp};
 
 
 #----------------------------------------------------------------------#
@@ -299,15 +301,15 @@ qsub -q ${queue_name} -N PrintReads_BQSR.${sample_name} -hold_jid BaseRecalibrat
 
 ##echo ">>>>>" `date` " :-> " "Running BaseRecalibrator after QUAL SCORE RECALIBRATION"
 
-############ qsub -q ${queue_name} -N BaseRecalibrator_after.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_BaseRecalibrator_after.sh ${sample_name} ${sample_dir} ${sample_temp};
+############ qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N BaseRecalibrator_after.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_BaseRecalibrator_after.sh ${sample_name} ${sample_dir} ${sample_temp};
 
 
 #----------------------------------------------------------------------#
 # 12. AnalyzeCovariates before & after recal
 #----------------------------------------------------------------------#
 ##echo ">>>>>" `date` " :-> " "Running AnalyzeCovariates" 
- #######qsub -q ${queue_name} -N AnalyzeCovariates_before_and_after_BQSR.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AnalyzeCovariates_before_and_after_BQSR.sh \
-#######${sample_name} ${sample_dir} ${sample_temp};
+### qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N AnalyzeCovariates_before_and_after_BQSR.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AnalyzeCovariates_before_and_after_BQSR.sh \
+#### ${sample_name} ${sample_dir} ${sample_temp};
 
 ##############################################
 ##  CALL VARIANTS SINGLE SAMPLE ##############
@@ -316,15 +318,15 @@ qsub -q ${queue_name} -N PrintReads_BQSR.${sample_name} -hold_jid BaseRecalibrat
 #----------------------------------------------------------------------#
 # 13. HaplotypeCaller 
 #----------------------------------------------------------------------#
-
-qsub -q ${queue_name} -N HaplotypeCaller.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_HaplotypeCaller.sh \
+i
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N HaplotypeCaller.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_HaplotypeCaller.sh \
 ${sample_name} ${sample_dir} ${sample_temp} 30 10;
 
 #----------------------------------------------------------------------#
 # 14. UnifiedGenotyper 
 #----------------------------------------------------------------------#
 
-qsub -q ${queue_name} -N UnifiedGenotyper.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_UnifiedGenotyper.sh \
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N UnifiedGenotyper.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_UnifiedGenotyper.sh \
 ${sample_name} ${sample_dir} ${sample_temp} 30 10;
 
 ## to do : discovery > list > merge novels with knowns and re-genotype. Include a genotype all bases option
@@ -338,7 +340,7 @@ ${sample_name} ${sample_dir} ${sample_temp} 30 10;
 # 15. BedTools_DepthOfCoverage 
 #----------------------------------------------------------------------#
 
-qsub -q ${queue_name} -N DepthOfCoverage.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_BedTools_DepthOfCoverage.sh \
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N DepthOfCoverage.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_BedTools_DepthOfCoverage.sh \
 ${sample_name} ${sample_dir} ${sample_temp} ${bed_list} ${bed_type};
 
 
@@ -346,7 +348,7 @@ ${sample_name} ${sample_dir} ${sample_temp} ${bed_list} ${bed_type};
 # 16. CollectMultipleMetrics
 #----------------------------------------------------------------------#
 
-qsub -q ${queue_name} -N CollectMultipleMetrics.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_CollectMultipleMetrics.sh \
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N CollectMultipleMetrics.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_CollectMultipleMetrics.sh \
 ${sample_name} ${sample_dir} ${sample_temp}
 
 
@@ -359,10 +361,10 @@ ${sample_name} ${sample_dir} ${sample_temp}
 # 17. Table Annovar
 #----------------------------------------------------------------------#
 
-qsub -q ${queue_name} -N annovar_UnifiedGenotyper.${sample_name} -hold_jid UnifiedGenotyper.${sample_name} \
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N annovar_UnifiedGenotyper.${sample_name} -hold_jid UnifiedGenotyper.${sample_name} \
 -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_UnifiedGenotyper_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "UnifiedGenotyper";
 
-qsub -q ${queue_name} -N annovar_HaplotypeCaller.${sample_name} -hold_jid HaplotypeCaller.${sample_name} \
+qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N annovar_HaplotypeCaller.${sample_name} -hold_jid HaplotypeCaller.${sample_name} \
 -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_table_annovar_HaplotypeCaller_hg19.sh ${sample_name} ${sample_dir} ${sample_temp} "HaplotypeCaller";
 
 

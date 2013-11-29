@@ -31,16 +31,25 @@ echo "--------------------------------------------------------------------------
 
 cd ${sample_dir}
 
+fastqc ${fastq_dir}/${fastq_prefix}_1.fastq;
+fastqc ${fastq_dir}/${fastq_prefix}_2.fastq
+
 ${ngs_novo}/novoalign \
 -d ${reference_genome_novoindex} \
 -f ${fastq_dir}/${fastq_prefix}_1.fastq  ${fastq_dir}/${fastq_prefix}_2.fastq  \
 -F STDFQ \
 --Q2Off \
 --3Prime  \
--g 65 \
--x 7 \
+-g 40 \
+-x 6 \
 -r All \
 -i PE 300,150 \
+-a ACACTCTTTCCCTACACGACGCTCTTCCGATCT GATCGGAAGAGCGGTTCAGCAGGAATGCCGAG \
+-a AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT  CAAGCAGAAGACGGCATACGAGATCGGTCTCGGCATTCCTGCTGAACCGCTCTTCCGATCT \
+-a ACACTCTTTCCCTACACGACGCTCTTCCGATCT CGGTCTCGGCATTCCTGCTGAACCGCTCTTCCGATCT \
+-a AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA CGGTCTCGGCATTCCTGCTGAACCGCTCTTCCGATCT \
+-a AGATCGGAAGAGCGGTTCAGCAGGAATGCCGAG AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA \
+-a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT \
 -c ${N_CPU} \
 -k -K ${sample_dir}/${sample_name}.novoalign.K.stats \
 -o SAM > ${sample_dir}/${sample_name}.aln.sam;
@@ -53,13 +62,19 @@ ls -l
 
 echo "----------------------------------------------------------------------------------------" 
 
-samtools view -hS ${sample_dir}/${sample_name}.aln.sam | head -500
+###samtools view -hS ${sample_dir}/${sample_name}.aln.sam | head -500
  
 
 
 
 
-
+##Illumina Paired End Adapter 1					ACACTCTTTCCCTACACGACGCTCTTCCGATCT
+##Illumina Paired End Adapter 2					GATCGGAAGAGCGGTTCAGCAGGAATGCCGAG
+##Illumina Paried End PCR Primer 1				AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
+##Illumina Paired End PCR Primer 2				CAAGCAGAAGACGGCATACGAGATCGGTCTCGGCATTCCTGCTGAACCGCTCTTCCGATCT
+##Illumina Paried End Sequencing Primer 1			ACACTCTTTCCCTACACGACGCTCTTCCGATCT
+##Illumina Paired End Sequencing Primer 2			CGGTCTCGGCATTCCTGCTGAACCGCTCTTCCGATCT
+##TruSeq Universal Adapter						AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGAT
 
 
 

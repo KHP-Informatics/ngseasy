@@ -22,7 +22,6 @@ cd ${sample_dir}
 
 
 if [ $bed_type == "region" ]; then
-
 for i in \
 ${bed_list};do
 ##${bed_list}_genes_exons \
