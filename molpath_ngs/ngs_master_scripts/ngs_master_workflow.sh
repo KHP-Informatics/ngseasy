@@ -36,10 +36,15 @@
 ##################
 export ngs_pipeline=${18} #"/scratch/project/pipelines/workspace_public/git_projects/pipelines/ngs/molpath_ngs" 
 
+echo "ngs_pipeline = " $ngs_pipeline
+
+
 #######
 # QUE #
 #######
 export queue_name=${19} #"short.q,long.q"
+
+
 
 ###############
 ## ngs tools ##
@@ -122,6 +127,11 @@ mPE=${12} 	#Indicates PE or SE
 bed_list=${13}	#target bed for coverage
 bed_type=${14}  # region or whole_genome : needed for coverage
 
+echo "is PE " $mPE
+
+echo " Novo Dir = " $ngs_novo
+
+
 
 ############################
 ## email contact for qsub ##
@@ -132,6 +142,8 @@ export email_contact=${15}
 ## Path to fastq dir ##
 #######################
 export fastq_dir=${16}
+
+echo "FASTQ DIR = " $fastq_dir
 
 ###########################
 ## path to final aln dir ##
@@ -294,8 +306,8 @@ qsub -q ${queue_name} -N PrintReads_BQSR.${sample_name} -hold_jid BaseRecalibrat
 # 12. AnalyzeCovariates before & after recal
 #----------------------------------------------------------------------#
 ##echo ">>>>>" `date` " :-> " "Running AnalyzeCovariates" 
-#### qsub -q ${queue_name} -N AnalyzeCovariates_before_and_after_BQSR.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AnalyzeCovariates_before_and_after_BQSR.sh \
-#### ${sample_name} ${sample_dir} ${sample_temp};
+ #######qsub -q ${queue_name} -N AnalyzeCovariates_before_and_after_BQSR.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AnalyzeCovariates_before_and_after_BQSR.sh \
+#######${sample_name} ${sample_dir} ${sample_temp};
 
 ##############################################
 ##  CALL VARIANTS SINGLE SAMPLE ##############
@@ -304,7 +316,7 @@ qsub -q ${queue_name} -N PrintReads_BQSR.${sample_name} -hold_jid BaseRecalibrat
 #----------------------------------------------------------------------#
 # 13. HaplotypeCaller 
 #----------------------------------------------------------------------#
-i
+
 qsub -q ${queue_name} -N HaplotypeCaller.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_HaplotypeCaller.sh \
 ${sample_name} ${sample_dir} ${sample_temp} 30 10;
 

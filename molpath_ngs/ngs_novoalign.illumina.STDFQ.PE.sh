@@ -31,8 +31,8 @@ echo "--------------------------------------------------------------------------
 
 cd ${sample_dir}
 
-fastqc ${fastq_dir}/${fastq_prefix}_1.fastq;
-fastqc ${fastq_dir}/${fastq_prefix}_2.fastq
+##fastqc ${fastq_dir}/${fastq_prefix}_1.fastq;
+##fastqc ${fastq_dir}/${fastq_prefix}_2.fastq
 
 ${ngs_novo}/novoalign \
 -d ${reference_genome_novoindex} \
