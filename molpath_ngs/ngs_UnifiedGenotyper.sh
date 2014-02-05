@@ -28,5 +28,16 @@ ${java_v1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${
 -baq CALCULATE_AS_NECESSARY \
 -baqGOP 30;
 
+# check
+if [ -e ${sample_dir}/${sample_name}.novorecal.UnifiedGenotyper.raw.snps.indels.vcf ]
+then
+echo " Checking VCF"
+head ${sample_dir}/${sample_name}.novorecal.UnifiedGenotyper.raw.snps.indels.vcf;
+wc -l ${sample_dir}/${sample_name}.novorecal.UnifiedGenotyper.raw.snps.indels.vcf;
+fi
+
+
+
+
 
 ##########mv -v UnifiedGenotyper.${sample_name}.* ${sample_dir}/sge_out/

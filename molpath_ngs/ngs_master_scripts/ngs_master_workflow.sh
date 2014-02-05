@@ -306,7 +306,7 @@ qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N PrintReads_BQSR.${sample_
 #----------------------------------------------------------------------#
 # 13. HaplotypeCaller 
 #----------------------------------------------------------------------#
-i
+
 qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N HaplotypeCaller.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_HaplotypeCaller.sh \
 ${sample_name} ${sample_dir} ${sample_temp} 30 10;
 

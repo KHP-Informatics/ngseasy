@@ -35,8 +35,8 @@ ${annovar}/convert2annovar.pl --includeinfo --genoqual 0 --varqual 0 --format vc
 ${annovar}/table_annovar.pl \
 --protocol refGene,knownGene,ensGene,wgEncodeGencodeManualV4,gerp++elem,phastConsElements46way,genomicSuperDups,esp6500si_all,1000g2012apr_all,1000g2012apr_eur,1000g2012apr_amr,1000g2012apr_asn,1000g2012apr_afr,cg46,cosmic64,snp129,snp132,snp137,avsift,ljb2_all \
 --operation g,g,g,g,r,r,r,f,f,f,f,f,f,f,f,f,f,f,f,f \
---csvout \
---otherinfo \
+##--csvout \
+##--otherinfo \
 --buildver hg19 \
 --remove \
 --outfile ${table_annovar_out} ${avinput} ${annovar_humandb};

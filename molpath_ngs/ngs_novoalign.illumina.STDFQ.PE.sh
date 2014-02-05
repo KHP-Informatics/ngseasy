@@ -31,8 +31,8 @@ echo "--------------------------------------------------------------------------
 
 cd ${sample_dir}
 
-fastqc --noextract --outdir=${sample_dir}/ ${fastq_dir}/${fastq_prefix}_1.fastq;
-fastqc --noextract --outdir=${sample_dir}/ ${fastq_dir}/${fastq_prefix}_2.fastq
+##fastqc --noextract --outdir=${sample_dir}/ ${fastq_dir}/${fastq_prefix}_1.fastq;
+##fastqc --noextract --outdir=${sample_dir}/ ${fastq_dir}/${fastq_prefix}_2.fastq
 
 ${ngs_novo}/novoalign \
 -d ${reference_genome_novoindex} \

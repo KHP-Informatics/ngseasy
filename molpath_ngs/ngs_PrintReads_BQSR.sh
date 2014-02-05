@@ -16,7 +16,7 @@ cd ${sample_dir}
 
 echo "PrintReads"
 
-${java_v1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/GenomeAnalysisTK.jar -T PrintReads -R ${reference_genome_seq}  \
+${java_v1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${ngs_gatk}/GenomeAnalysisTK.jar -T PrintReads -R ${reference_genome_seq} \
 -I ${sample_dir}/${sample_name}.novorealn.bam \
 -o ${sample_dir}/${sample_name}.novorecal.bam \
 -baq RECALCULATE \
@@ -27,14 +27,14 @@ ${java_v1_7}/java  -Xmx${gatk_java_mem}g -Djava.io.tmpdir=${sample_temp} -jar ${
 ## index ##
 ###########
 
-samtools index ${sample_dir}/${sample_name}.novorecal.bam
+samtools index ${sample_dir}/${sample_name}.novorecal.bam;
 
 ######################################
 ## make bed file [needs header etc] #
 #####################################
 echo "bam to bed file" 
 
-samtools view -b -h -q 20 -F 1796  ${sample_dir}/${sample_name}.novorecal.bam  | bamToBed -i stdin >  ${sample_dir}/${sample_name}.novorecal.bed;
+samtools view -b -h -q 20 -F 1796 ${sample_dir}/${sample_name}.novorecal.bam | bamToBed -i stdin > ${sample_dir}/${sample_name}.novorecal.bed;
 
 ##########################
 ## FindCoveredIntervals ##
