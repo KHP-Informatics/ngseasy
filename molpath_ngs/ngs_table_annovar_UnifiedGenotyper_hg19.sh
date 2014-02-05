@@ -11,9 +11,9 @@ geno=${4}
 
 cd ${sample_dir}
 
-invcf=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels.vcf
-avinput=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels.avinput
-table_annovar_out=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels
+invcf=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels.recode.vcf
+avinput=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels.recode.avinput
+table_annovar_out=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels.recode
 
 ##################################
 ## convert vcf to annovar input ##
@@ -34,8 +34,6 @@ ${annovar}/convert2annovar.pl --includeinfo --genoqual 0 --varqual 0 --format vc
 ${annovar}/table_annovar.pl \
 --protocol refGene,knownGene,ensGene,wgEncodeGencodeManualV4,gerp++elem,phastConsElements46way,genomicSuperDups,esp6500si_all,1000g2012apr_all,1000g2012apr_eur,1000g2012apr_amr,1000g2012apr_asn,1000g2012apr_afr,cg46,cosmic64,snp129,snp132,snp137,avsift,ljb2_all \
 --operation g,g,g,g,r,r,r,f,f,f,f,f,f,f,f,f,f,f,f,f \
-##--csvout \
-##--otherinfo \
 --buildver hg19 \
 --remove \
 --outfile ${table_annovar_out} ${avinput} ${annovar_humandb};

@@ -11,9 +11,9 @@ geno=${4}
 
 cd ${sample_dir}
 
-invcf=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels.vcf
-avinput=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels.avinput
-table_annovar_out=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels
+invcf=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels.recode.vcf
+avinput=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels.recode.avinput
+table_annovar_out=${sample_dir}/${sample_name}.novorecal.${geno}.raw.snps.indels.recode
 
 ##################################
 ## convert vcf to annovar input ##
