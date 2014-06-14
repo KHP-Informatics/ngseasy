@@ -1,0 +1,92 @@
+#########################################################################
+# -- Author: Amos Folarin                                               #
+# -- Organisation: KCL/SLaM                                             #
+# -- Email: amosfolarin@gmail.com                                       #
+#########################################################################
+
+
+#------------------------------------------------------------------------
+# This dockerfile should build the enviroment required for the ngs 
+# pipeline. Of course you can just get the docker container pre-built
+# from our repository
+#------------------------------------------------------------------------
+
+
+# Base image will be Trusty
+FROM ubuntu:14.04
+
+# Maintainer Amos Folarin
+MAINTAINER amosfolarin@gmail.com
+
+
+# Mount a volume external to the container to store stuff that needs to persist
+VOLUME ["/home/ngsEasy/data"]
+
+# Set up file structure
+RUN bash mkdir /pipeln
+# FASTQ Staging Area
+#RUN bash mkdir /pipeln/staging/ ## !!! this should be in an external volume !!!!
+# REF Data
+#RUN bash mkdir /pipeln/refdata ## !!! this should be in an external volume!!!!!
+# Results Folder by projetc and sample
+
+
+
+#------------------ INSTALL PIPELINE COMPONENTS --------------------------
+
+#++++++++++++++++++++++ Sequence Aligners ++++++++++++++++++++++++++++++++
+# 1)*novoalign*  2)bowtie, 3)bwa, 4) stampy
+
+#+ bowtie
+RUN wget -O /tmp/bowtie2-2.2.3-mingw-win64.zip http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.3/bowtie2-2.2.3-mingw-win64.zip/download
+RUN unzip /tmp/bowtie2-2.2.3-mingw-win64.zip -d /tmp/
+RUN #path it
+
+
+#++++++++++++++++++++++ SAM/BAM Processing +++++++++++++++++++++++++++++++
+#+ VCFtools: http://vcftools.sourceforge.net/index.html
+RUN wget -O /tmp/vcftools_0.1.12a.tar.gz http://sourceforge.net/projects/vcftools/files/vcftools_0.1.12a.tar.gz/download
+RUN tar xcvf /tmp/vcftools_0.1.12a.tar.gz -C /usr/lib
+RUN #path it
+
+
+
+
+#++++++++++++++++++++++ SNP/INDEL Calling ++++++++++++++++++++++++++++++++
+
+
+
+
+#++++++++++++++++++++++ Visualisations +++++++++++++++++++++++++++++++++++
+
+#++++++++++++++++++ Variant Annotation & Reports +++++++++++++++++++++++++
+
+
+#++++++++++++++++++++++  ++++++++++++++++++++++++++++++++
+
+
+
+#++++++++++++++++++++++  ++++++++++++++++++++++++++++++++
+
+
+
+#++++++++++++++++++++++  ++++++++++++++++++++++++++++++++
+
+
+
+
+
+
+
+
+
+
+
+# Cleanup the temp dir
+RUN bash rm -rf /tmp/*
+
+
+
+# Add an entrypoint or CMD that runs the pipeline, taking in the config file to parameterize
+#ENTRYPOINT ["/app/init"]
+#CMD ["app:start"]
