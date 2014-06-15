@@ -13,23 +13,32 @@
 
 
 # Base image will be Trusty
-FROM ubuntu:14.04
+FROM ubuntu:trusty
 
 # Maintainer Amos Folarin
-MAINTAINER amosfolarin@gmail.com
+MAINTAINER Amos Folarin amosfolarin@gmail.com
+
+# Required basic stuff, make, gcc, wget etc
+RUN apt-get update
+RUN apt-get install -y make
+RUN apt-get install -y gcc
+RUN apt-get install -y wget unzip
 
 
 # Mount a volume external to the container to store stuff that needs to persist
-VOLUME ["/home/ngsEasy/data"]
+# VOLUME ["/home/ngsEasy/data"]
 
 # Set up file structure
-RUN bash mkdir /pipeln
+# RUN mkdir /pipeln
 # FASTQ Staging Area
 #RUN bash mkdir /pipeln/staging/ ## !!! this should be in an external volume !!!!
 # REF Data
 #RUN bash mkdir /pipeln/refdata ## !!! this should be in an external volume!!!!!
 # Results Folder by projetc and sample
 
+
+# Create a pipeline user
+RUN useradd -m -s /bin/bash pipeman && cd /home/pipeman && echo "#bash config file for user pipeman" >> /home/pipeman/.bashrc
 
 
 #------------------ INSTALL PIPELINE COMPONENTS --------------------------
@@ -38,17 +47,17 @@ RUN bash mkdir /pipeln
 # 1)*novoalign*  2)bowtie, 3)bwa, 4) stampy
 
 #+ bowtie
-RUN wget -O /tmp/bowtie2-2.2.3-mingw-win64.zip http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.3/bowtie2-2.2.3-mingw-win64.zip/download
-RUN unzip /tmp/bowtie2-2.2.3-mingw-win64.zip -d /tmp/
-RUN #path it
+RUN wget -O /tmp/bowtie2-2.2.3-linux-x86_64.zip http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.3/bowtie2-2.2.3-linux-x86_64.zip/download \
+    && unzip /tmp/bowtie2-2.2.3-linux-x86_64.zip -d /usr/lib/ \
+    && sed  -i '$aPATH=${PATH}:/usr/lib/bowtie2-2.2.3' /home/pipeman/.bashrc 
 
 
 #++++++++++++++++++++++ SAM/BAM Processing +++++++++++++++++++++++++++++++
 #+ VCFtools: http://vcftools.sourceforge.net/index.html
-RUN wget -O /tmp/vcftools_0.1.12a.tar.gz http://sourceforge.net/projects/vcftools/files/vcftools_0.1.12a.tar.gz/download
-RUN tar xcvf /tmp/vcftools_0.1.12a.tar.gz -C /usr/lib
-RUN #path it
-
+RUN wget -O /tmp/vcftools_0.1.12a.tar.gz http://sourceforge.net/projects/vcftools/files/vcftools_0.1.12a.tar.gz/download \
+    && tar xzvf /tmp/vcftools_0.1.12a.tar.gz -C /usr/lib/  \
+    && cd /usr/lib/vcftools_0.1.12a/ && make \
+    && sed  -i '$aPATH=${PATH}:/usr/lib/vcftools_0.1.12a' /home/pipeman/.bashrc
 
 
 
@@ -83,7 +92,7 @@ RUN #path it
 
 
 # Cleanup the temp dir
-RUN bash rm -rf /tmp/*
+RUN rm -rf /tmp/*
 
 
 
