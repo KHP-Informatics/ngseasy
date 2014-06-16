@@ -1,0 +1,17 @@
+This pipeline uses a number of pieces of software which require registration. By using this you are agreeing to observe the Terms and Conditions of the relevant pieces of software that compose this pipeline.
+Explicit consent is required if there are any commercial uses of the software.
+
+
+#----------Software composing the pipeline-------------
+
+# These software required registration to access:
+1) Genome Analysis Tool Kit (GATK): 
+    http://www.broadinstitute.org/gatk
+
+2) ANNOVAR: 
+    http://www.openbioinformatics.org/annovar/annovar_db.html
+
+
+# These software required no registration, but please review their usage policies regardless!
+
+
