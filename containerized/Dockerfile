@@ -26,7 +26,7 @@ RUN apt-get install -y wget unzip
 RUN apt-get install zlib1g-dev
 
 # Mount a volume external to the container to store stuff that needs to persist
-# VOLUME ["/home/ngsEasy/data"]
+VOLUME ["/media/ngsEasy/data/reference"] # reference indexed genomes
 
 # Set up file structure
 # RUN mkdir /pipeln
