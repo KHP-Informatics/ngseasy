@@ -41,6 +41,7 @@ VOLUME ["/media/ngsEasy/data/reference"] # reference indexed genomes
 # Create a pipeline user
 RUN useradd -m -s /bin/bash pipeman && cd /home/pipeman && echo "#bash config file for user pipeman" >> /home/pipeman/.bashrc
 RUN groupadd ngsgroup
+RUN usermod -G nasgroup pipeman
 
 #------------------ INSTALL PIPELINE COMPONENTS --------------------------
 
@@ -71,6 +72,7 @@ RUN wget -O /tmp/vcftools_0.1.12a.tar.gz http://sourceforge.net/projects/vcftool
 # NOTE: ADD automatically unpacks compressed files
 ADD GenomeAnalysisTK-3.1-1.tar.bz2 /usr/local/pipeline/GenomeAnalysisTK-3.1-1.tar.bz2 
 RUN chmod 755 /usr/local/pipeline/GenomeAnalysisTK-3.1-1.tar.bz2 \
+    && chown -R pipeman:ngsgroup /usr/local/pipeline/GenomeAnalysisTK-3.1-1.tar.bz2 \
     && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/GenomeAnalysisTK-3.1-1.tar.bz2/GenomeAnalysisTK.jar' /home/pipeman/.bashrc
 
 # + BEDtools
@@ -82,7 +84,7 @@ RUN cd /usr/local/pipeline \
 
 # + Picard
 RUN wget -O /tmp/picard-tools-1.115.zip http://sourceforge.net/projects/picard/files/picard-tools/1.115/picard-tools-1.115.zip/download \
-    && mkdir /usr/local/pipeline/picardtools
+    && mkdir /usr/local/pipeline/picardtools \
     && unzip /tmp/picard-tools-1.115.zip -d /usr/local/pipeline/picardtools/ \
     && chown -R pipeman:ngsgroup /usr/local/pipeline/picardtools \
     && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/picardtools/picard-tools-1.115' /home/pipeman/.bashrc
@@ -128,7 +130,7 @@ RUN wget -O /tmp/samtools-0.1.19.tar.bz2 http://sourceforge.net/projects/samtool
 
 
 # Cleanup the temp dir
-RUN rm -rf /tmp/*
+# RUN rm -rf /tmp/*
 
 
 
