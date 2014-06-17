@@ -1,5 +1,6 @@
 #########################################################################
 # -- Author: Amos Folarin                                               #
+# -- Author: Stephen J Newhouse                                         #
 # -- Organisation: KCL/SLaM                                             #
 # -- Email: amosfolarin@gmail.com                                       #
 #########################################################################
@@ -7,23 +8,24 @@
 
 #------------------------------------------------------------------------
 # This dockerfile should build the enviroment required for the ngs 
-# pipeline. Of course you can just get the docker container pre-built
+# pipeline. Alternatively you can just get the docker container pre-built
 # from our repository
 #------------------------------------------------------------------------
 
 #------------------------------------------------------------------------
-# BUILDING THE DOCKER IMAGE:
+# BUILDING THE DOCKER IMAGE FROM THIS Dockerfile:
 # download this Dockerfile into a clean directory e.g. build_dir
 # Due to licencing, you should get your own versions of:
-# Download the compressed files into the build_dir, then edit the lines
+# 
+# 1) Download the compressed files into the build_dir, then edit the lines
 # of the Dockerfile to the correct versions of ANNOVAR and GATK
 #   * novoalign http://www.novocraft.com/
 #   * Stampy http://www.well.ox.ac.uk/project-stampy
 #   * GATK https://www.broadinstitute.org/gatk/
 #   * ANNOVAR http://www.openbioinformatics.org/annovar/
 #
-# $ cd build_dir
-# $ sudo docker build --tag <repo-name:tag> .
+# 2) $ cd build_dir
+# 3) $ sudo docker build --tag <repo-name:tag> .
 #------------------------------------------------------------------------
 
 # Base image will be Trusty
@@ -40,10 +42,15 @@ RUN apt-get install -y make tabix
 RUN apt-get install -y git-core wget unzip
 RUN apt-get install -y zlib1g-dev libncurses5-dev
 
-# Mount a volume external to the container to store stuff that needs to persist
-VOLUME ["/media/ngsEasy/data/reference"] # reference indexed genomes
 
-# Set up file structure
+#------------------------------------------------------------------------
+# VOLUMES and VOLUME CONTAINERS
+# Mount a volume external to the container to store stuff that needs to persist
+#------------------------------------------------------------------------
+# VOLUME ["/media/ngsEasy/data/reference"]
+# VOLUME ["/media/ngsEasy/data/reference"]
+# Shared data should sit in a Volume Container, 
+
 # RUN mkdir /pipeln
 # FASTQ Staging Area
 #RUN bash mkdir /pipeln/staging/ ## !!! this should be in an external volume !!!!
@@ -52,12 +59,19 @@ VOLUME ["/media/ngsEasy/data/reference"] # reference indexed genomes
 # Results Folder by projetc and sample
 
 
-# Create a pipeline user
+
+#------------------------------------------------------------------------
+# USER SETUP
+#------------------------------------------------------------------------
+# Create a pipeline user:pipeman and group:ngsgroup
 RUN useradd -m -s /bin/bash pipeman && cd /home/pipeman && echo "#bash config file for user pipeman" >> /home/pipeman/.bashrc
 RUN groupadd ngsgroup
 RUN usermod -G ngsgroup pipeman
 
-#------------------ INSTALL PIPELINE COMPONENTS --------------------------
+
+#------------------------------------------------------------------------
+#***************** INSTALL PIPELINE COMPONENTS **************************
+#------------------------------------------------------------------------
 
 #---------------------- Sequence Aligners --------------------------------
 # Aligner options: 1)*novoalign*  2)bowtie, 3)stampy, 4)bwa
@@ -144,23 +158,21 @@ RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.
 #------------------ Variant Annotation & Reports -------------------------
 # + ANNOVAR (see licence, and registration)
 #ADD
+#RUN
 
 
 
-
-#----------------------  --------------------------------
-
-
-
-#----------------------  --------------------------------
-
-
+#---------------------- NGS PIPELINE  --------------------------------
+RUN cd /usr/local/pipeline \
+    && git clone https://github.com/KHP-Informatics/ngs.git \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/ngs/molpath_ngs' /home/pipeman/.bashrc
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/ngs/molpath_ngs/ngs_master_scripts' /home/pipeman/.bashrc
 
 #----------------------  --------------------------------
 
 
 
-
+#----------------------  --------------------------------
 
 
 
@@ -169,7 +181,7 @@ RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.
 
 
 # Cleanup the temp dir
-# RUN rm -rf /tmp/*
+RUN rm -rf /tmp/*
 
 
 
