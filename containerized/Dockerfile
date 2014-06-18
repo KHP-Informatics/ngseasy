@@ -47,8 +47,14 @@ RUN apt-get install -y zlib1g-dev libncurses5-dev
 # VOLUMES and VOLUME CONTAINERS
 # Mount a volume external to the container to store stuff that needs to persist
 #------------------------------------------------------------------------
-# VOLUME ["/media/ngsEasy/data/reference"]
-# VOLUME ["/media/ngsEasy/data/reference"]
+# Reference sequence data:
+# on
+#   docker run volumes-from storage container "/*host*/data/reference"]
+# or mount shared directory on host
+#   docker run -v /*host*/data/reference:/media/ngsEasy/data/reference
+#
+# For collecting the output of the container, use normal volume
+# VOLUME ["/media/ngsEasy/data/output"]
 # Shared data should sit in a Volume Container, 
 
 # RUN mkdir /pipeln
@@ -76,7 +82,7 @@ RUN usermod -G ngsgroup pipeman
 #---------------------- Sequence Aligners --------------------------------
 # Aligner options: 1)*novoalign*  2)bowtie, 3)stampy, 4)bwa
 
-# + novoalign
+# + novoalign (registration required,  get compressed file and put in context dir for the build)
 ADD novocraftV3.02.06.Linux3.0.tar.gz /usr/local/pipeline/novocraftV3.02.06.Linux3.0
 RUN sed  -i '$aPATH=${PATH}:/usr/local/pipeline/novocraftV3.02.06.Linux3.0/novocraft' /home/pipeman/.bashrc
 
@@ -157,12 +163,14 @@ RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.
 
 #------------------ Variant Annotation & Reports -------------------------
 # + ANNOVAR (see licence, and registration)
-#ADD
-#RUN
+# Available on reg:  http://www.openbioinformatics.org/annovar/download/Ht8qRwQSTi/annovar.latest.tar.gz
+# hmmm... no version on tar.
+ADD annovar.latest.tar.gz /usr/local/pipeline/
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline/annovar \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/pipeline/annovar' /home/pipeman/.bashrc
 
 
-
-#---------------------- NGS PIPELINE  --------------------------------
+#------------------------- NGS PIPELINE ----------------------------------
 RUN cd /usr/local/pipeline \
     && git clone https://github.com/KHP-Informatics/ngs.git \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/ngs/molpath_ngs' /home/pipeman/.bashrc
@@ -173,9 +181,6 @@ RUN cd /usr/local/pipeline \
 
 
 #----------------------  --------------------------------
-
-
-
 
 
 
