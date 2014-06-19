@@ -47,22 +47,29 @@ RUN apt-get install -y zlib1g-dev libncurses5-dev
 # VOLUMES and VOLUME CONTAINERS
 # Mount a volume external to the container to store stuff that needs to persist
 #------------------------------------------------------------------------
-# Reference sequence data:
-# on
-#   docker run volumes-from storage container "/*host*/data/reference"]
-# or mount shared directory on host
-#   docker run -v /*host*/data/reference:/media/ngsEasy/data/reference
+#------ Pass in the config file via another volume, mount host pwd
+# You should mount the pwd when you launch docker, and then make sure the config file 
+# resides in pwd.
+# Then the docker process can read the file from /tmp/config/<configfile>
+#   $ docker run -v .:/tmp/config
 #
-# For collecting the output of the container, use normal volume
-# VOLUME ["/media/ngsEasy/data/output"]
-# Shared data should sit in a Volume Container, 
-
-# RUN mkdir /pipeln
+#------ RUN mkdir /pipeln
 # FASTQ Staging Area
 #RUN bash mkdir /pipeln/staging/ ## !!! this should be in an external volume !!!!
 # REF Data
 #RUN bash mkdir /pipeln/refdata ## !!! this should be in an external volume!!!!!
 # Results Folder by projetc and sample
+
+#------ Reference sequence data TODO:
+# Option1. Mount a volume in a dedicated Volume Container *Probably Preferred*
+#   $ docker run volumes-from <storage_container> 
+# the storage_container should have a directory with the data
+# /media/ngsEasy/data/reference
+#
+# Or...
+#
+# Option2.  mount shared directory on host
+#   $ docker run -v /*host*/data/reference:/media/ngsEasy/data/reference
 
 
 
@@ -79,6 +86,23 @@ RUN usermod -G ngsgroup pipeman
 #***************** INSTALL PIPELINE COMPONENTS **************************
 #------------------------------------------------------------------------
 
+#---------------------- Quality Control ----------------------------------
+
+# + Trimmomatic
+RUN wget -O /tmp/Trimmomatic-0.32.zip http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.32.zip \
+    && unzip /tmp/Trimmomatic-0.32.zip -d /usr/local/pipeline/ \
+    && chown -R pipeman:ngsgroup /usr/local/pipeline/Trimmomatic-0.32 \
+    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar' /home/pipeman/.bashrc \
+    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/Trimmomatic-0.32' /home/pipeman/.bashrc
+
+# + FastQC
+RUN wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.2.zip \
+    && unzip /tmp/fastqc_v0.11.2.zip -d /usr/local/pipeline/ \
+    && chown -R pipeman:ngsgroup /usr/local/pipeline/FastQC \
+    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/FastQC/jbzip2-0.9.jar:/usr/local/pipeline/FastQC/sam-1.103.jar' /home/pipeman/.bashrc \
+    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/FastQC' /home/pipeman/.bashrc
+    
+
 #---------------------- Sequence Aligners --------------------------------
 # Aligner options: 1)*novoalign*  2)bowtie, 3)stampy, 4)bwa
 
@@ -90,7 +114,7 @@ RUN sed  -i '$aPATH=${PATH}:/usr/local/pipeline/novocraftV3.02.06.Linux3.0/novoc
 RUN wget -O /tmp/bowtie2-2.2.3-linux-x86_64.zip http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.3/bowtie2-2.2.3-linux-x86_64.zip/download \
     && unzip /tmp/bowtie2-2.2.3-linux-x86_64.zip -d /usr/local/pipeline/ \
     && chown -R pipeman:ngsgroup /usr/local/pipeline/bowtie2-2.2.3 \
-    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/bowtie2-2.2.3' /home/pipeman/.bashrc 
+    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/bowtie2-2.2.3:/usr/local/pipeline/bowtie2-2.2.3/scripts' /home/pipeman/.bashrc 
 
 # + stampy (registration required, get compressed file and put in context dir for the build)
 ADD Stampy-latest.tgz /usr/local/pipeline/
@@ -124,7 +148,8 @@ RUN wget -O /tmp/vcftools_0.1.12a.tar.gz http://sourceforge.net/projects/vcftool
 ADD GenomeAnalysisTK-3.1-1.tar.bz2 /usr/local/pipeline/GenomeAnalysisTK-3.1-1 
 RUN chmod -R 755 /usr/local/pipeline/GenomeAnalysisTK-3.1-1 \
     && chown -R pipeman:ngsgroup /usr/local/pipeline/GenomeAnalysisTK-3.1-1 \
-    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/GenomeAnalysisTK-3.1-1/GenomeAnalysisTK.jar' /home/pipeman/.bashrc
+    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/GenomeAnalysisTK-3.1-1/GenomeAnalysisTK.jar' /home/pipeman/.bashrc \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/GenomeAnalysisTK-3.1-1' /home/pipeman/.bashrc
 
 # + BEDtools
 RUN cd /usr/local/pipeline \
@@ -138,7 +163,8 @@ RUN wget -O /tmp/picard-tools-1.115.zip http://sourceforge.net/projects/picard/f
     && mkdir /usr/local/pipeline/picardtools \
     && unzip /tmp/picard-tools-1.115.zip -d /usr/local/pipeline/picardtools/ \
     && chown -R pipeman:ngsgroup /usr/local/pipeline/picardtools \
-    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/picardtools/picard-tools-1.115' /home/pipeman/.bashrc
+    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/picardtools/picard-tools-1.115/snappy-java-1.0.3-rc3.jar' /home/pipeman/.bashrc \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/picardtools/picard-tools-1.115' /home/pipeman/.bashrc
 
 # + SAMtools
 RUN wget -O /tmp/samtools-0.1.19.tar.bz2 http://sourceforge.net/projects/samtools/files/samtools/0.1.19/samtools-0.1.19.tar.bz2/download \
@@ -167,14 +193,12 @@ RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.
 # hmmm... no version on tar.
 ADD annovar.latest.tar.gz /usr/local/pipeline/
 RUN chown -R pipeman:ngsgroup /usr/local/pipeline/annovar \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/pipeline/annovar' /home/pipeman/.bashrc
-
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/annovar' /home/pipeman/.bashrc
 
 #------------------------- NGS PIPELINE ----------------------------------
 RUN cd /usr/local/pipeline \
     && git clone https://github.com/KHP-Informatics/ngs.git \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/ngs/molpath_ngs' /home/pipeman/.bashrc
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/ngs/molpath_ngs/ngs_master_scripts' /home/pipeman/.bashrc
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/ngs/molpath_ngs:/usr/local/pipeline/ngs/molpath_ngs/ngs_master_scripts' /home/pipeman/.bashrc \
 
 #----------------------  --------------------------------
 
@@ -191,5 +215,5 @@ RUN rm -rf /tmp/*
 
 
 # Add an entrypoint or CMD that runs the pipeline, taking in the config file to parameterize
-#ENTRYPOINT ["/app/init"]
+#ENTRYPOINT ["/usr/local/pipeline/molpath_ngs/ngs_master_scripts/"]
 #CMD ["app:start"]
