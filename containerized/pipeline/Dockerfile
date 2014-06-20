@@ -245,10 +245,8 @@ RUN cd /usr/local/pipeline \
 RUN rm -rf /tmp/*
 
 
-
-# NOTE WE DONT WANT AN ENTRYPOINT (the default of /bin/sh -c will do fine,
-# we also want to be able to run the container without going through other 
-# entrypoints to diagnose problems etc.)
+# change to bash for the default entrypoint. You can override ENTRYPOINT and CMD now in docker run.
+# ENTRYPOINT /bin/bash
 
 # Launch the pipeline through a command this will be a default executaion of the pipeline 
 # and can be overridden with # docker run

@@ -45,6 +45,12 @@
 
 
 #------------------------------------------------------------------------
+# RUN CONTAINER:
+# ># docker -t --name='ngs_store_box' <storage_container_image>  
+#------------------------------------------------------------------------
+
+
+#------------------------------------------------------------------------
 # BUILDING THE DOCKER IMAGE FROM THIS Dockerfile:
 # 2) $ cd build_dir
 # 3) $ sudo docker build --tag <repo-name:tag> .
@@ -114,15 +120,18 @@ EXPOSE 34567
 
 
 #------------------------------------------------------------------------------
-# DAEMON want to keep this container running
+# ENTRY and CMD spawn a process to keep container running for the duration 
+# of the pipeline run
+# TODO: might be nice to have something that listens for all pipeline containers
+# for a lifesign and stop when all containers don't requrie it? for the moment
+# a simple process to watch the container's main volume size is ok.
 #------------------------------------------------------------------------------
 
-# some interruptable process
 #default command for entrypoint
-#CMD ["/usr/bin/du" "-sh" ]
+CMD ["/usr/bin/du", "-sh" , "/media/ngsEasy/data/reference" ]
 
-#default entrypoint
-#ENTRYPOINT ["/usr/bin/watch" "-n" "60"]
+#default entrypoint report value of CMD to terminal, can override with --entrypoint
+ENTRYPOINT ["/usr/bin/watch", "-n", "60"]
 
 
 

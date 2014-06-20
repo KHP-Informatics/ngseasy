@@ -8,12 +8,7 @@ container.
 - The Dockerfiles for building this pipeline:
 
 https://github.com/KHP-Informatics/ngs/blob/master/containerized/Dockerfile
-
-
-- Pipeline components are stored in /usr/local/pipeline/
-- The user for running the pipeline is: pipeman
-- Intermediary pipeine files are stored in the container under this dir 
-structure:
+https://github.com/KHP-Informatics/ngs/blob/master/containerized/storage/Dockerfile
 
 >     [ ngseasy  container ]... x n
 >     |
