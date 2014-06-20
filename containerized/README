@@ -1,17 +1,52 @@
-This pipeline uses a number of pieces of software which require registration. By using this you are agreeing to observe the Terms and Conditions of the relevant pieces of software that compose this pipeline.
-Explicit consent is required if there are any commercial uses of the software.
+As a multi-component system, NGS pipeline setup is traditionally heavy on 
+configuration. Our idea is to provide this in a simple encapsulated container. 
+Users also typically wish to configure their own environments and run the 
+pipeline on a wide range of hardware (workstations to clusters to cloud), being 
+able to stand-up a pipeline with minimal fuss is made straightforward with this 
+container.
+
+- The Dockerfiles for building this pipeline:
+
+https://github.com/KHP-Informatics/ngs/blob/master/containerized/Dockerfile
 
 
-#----------Software composing the pipeline-------------
+- Pipeline components are stored in /usr/local/pipeline/
+- The user for running the pipeline is: pipeman
+- Intermediary pipeine files are stored in the container under this dir 
+structure:
 
-# These software required registration to access:
-1) Genome Analysis Tool Kit (GATK): 
-    http://www.broadinstitute.org/gatk
+>     [ ngseasy  container ]... x n
+>     |
+>     |____[ storage container ]  #reference genomes
+>     |
+>     |____{ mounted volume pwd }  #pass config file from host
+>     |
+>     |____{ volume //data } #container output
 
-2) ANNOVAR: 
-    http://www.openbioinformatics.org/annovar/annovar_db.html
 
 
-# These software required no registration, but please review their usage policies regardless!
+
+################################################################################
+#             !!!!!! NOTICE TO USERS OF THE CONTAINER IMAGE !!!!!
+################################################################################
+
+While the software used to build the image is composed of free software versions
+some of the software has restrictions on use particularly for commercial 
+purposes. Therefore if you wish to use this for commercial purposes, then you 
+leagally have to approach the owners of the various components yourself!
+
+This pipeline uses a number of pieces of software which require registration. 
+By using this you are agreeing to observe the Terms and Conditions of the 
+relevant pieces of software that compose this pipeline.
+
+#----------Software composing the pipeline requiring registration-------------
+
+If you want to build the image from the Dockerfile then you need to get your 
+own versions of (below) in the build directory:
+
+   * novoalign http://www.novocraft.com/
+   * Stampy http://www.well.ox.ac.uk/project-stampy
+   * GATK https://www.broadinstitute.org/gatk/
+   * ANNOVAR http://www.openbioinformatics.org/annovar/
 
 

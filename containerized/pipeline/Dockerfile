@@ -12,6 +12,38 @@
 # from our repository
 #------------------------------------------------------------------------
 
+#As a multi-component system, NGS pipeline setup is traditionally heavy on
+#configuration. Our idea is to provide this in a simple encapsulated container.
+#Users also typically wish to configure their own environments and run the
+#pipeline on a wide range of hardware (workstations to clusters to cloud), being
+#able to stand-up a pipeline with minimal fuss is made straightforward with this
+#container.
+#
+# The containers for this NGS pipeline:
+# 
+# ngseasy pipeline 
+#   https://github.com/KHP-Informatics/ngs/blob/master/containerized/pipeline/Dockerfile
+# ngs_storage container 
+#   https://github.com/KHP-Informatics/ngs/blob/master/containerized/storage/Dockerfile
+#
+#- Pipeline components are stored in /usr/local/pipeline/
+#- The user for running the pipeline is: pipeman
+#- Intermediary pipeine files are stored in the container under this dir
+#   structure: TODO
+#
+# The system looks something like this:
+#
+#>     [ ngseasy  container ]... x n
+#>     |
+#>     |____[ storage container ]  #reference genomes
+#>     |
+#>     |____{ mounted volume pwd }  #pass config file from host
+#>     |
+#>     |____{ volume //data } #container output
+#
+
+
+
 #------------------------------------------------------------------------
 # BUILDING THE DOCKER IMAGE FROM THIS Dockerfile:
 # download this Dockerfile into a clean directory e.g. build_dir
@@ -41,7 +73,7 @@ RUN apt-get install -y python-dev
 RUN apt-get install -y make tabix
 RUN apt-get install -y git-core wget unzip
 RUN apt-get install -y zlib1g-dev libncurses5-dev
-
+RUN apt-get install -y sysvbanner
 
 #------------------------------------------------------------------------
 # VOLUMES and VOLUME CONTAINERS
@@ -214,6 +246,13 @@ RUN rm -rf /tmp/*
 
 
 
-# Add an entrypoint or CMD that runs the pipeline, taking in the config file to parameterize
-#ENTRYPOINT ["/usr/local/pipeline/molpath_ngs/ngs_master_scripts/"]
-#CMD ["app:start"]
+# NOTE WE DONT WANT AN ENTRYPOINT (the default of /bin/sh -c will do fine,
+# we also want to be able to run the container without going through other 
+# entrypoints to diagnose problems etc.)
+
+# Launch the pipeline through a command this will be a default executaion of the pipeline 
+# and can be overridden with # docker run
+#CMD ["/usr/local/pipeline/molpath_ngs/ngs_master_scripts/xxxxx"]
+
+
+
