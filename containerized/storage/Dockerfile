@@ -1,4 +1,4 @@
-#########################################################################
+########################################################################
 # -- Author: Amos Folarin                                               #
 # -- Author: Stephen J Newhouse                                         #
 # -- Organisation: KCL/SLaM                                             #
@@ -46,16 +46,6 @@
 
 #------------------------------------------------------------------------
 # BUILDING THE DOCKER IMAGE FROM THIS Dockerfile:
-# download this Dockerfile into a clean directory e.g. build_dir
-# Due to licencing, you should get your own versions of:
-# 
-# 1) Download the compressed files into the build_dir, then edit the lines
-# of the Dockerfile to the correct versions of ANNOVAR and GATK
-#   * novoalign http://www.novocraft.com/
-#   * Stampy http://www.well.ox.ac.uk/project-stampy
-#   * GATK https://www.broadinstitute.org/gatk/
-#   * ANNOVAR http://www.openbioinformatics.org/annovar/
-#
 # 2) $ cd build_dir
 # 3) $ sudo docker build --tag <repo-name:tag> .
 #------------------------------------------------------------------------
@@ -133,14 +123,6 @@ EXPOSE 34567
 
 #default entrypoint
 #ENTRYPOINT ["/usr/bin/watch" "-n" "60"]
-
-
-
-
-
-
-
-
 
 
 
