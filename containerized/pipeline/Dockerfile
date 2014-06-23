@@ -247,7 +247,16 @@ RUN sudo apt-get install -y r-base
 RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("caret", repos="http://cran.r-project.org")'
 # install bioconductor -- mod the biocLite.R script so it fires default bioc installation
 RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite()'
-
+# GenomicRanges
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("GenomicRanges",dependencies=TRUE)'
+# IRanges
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("IRanges",dependencies=TRUE)'
+# Biostrings
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("Biostrings",dependencies=TRUE)'
+# genomeIntervals
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("genomeIntervals",dependencies=TRUE)'
+# rtracklayer
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("rtracklayer",dependencies=TRUE)'
 
 #------------------ Variant Annotation & Reports -------------------------
 # + ANNOVAR (see licence, and registration)
