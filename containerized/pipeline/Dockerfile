@@ -271,6 +271,15 @@ ADD annovar.latest.tar.gz /usr/local/pipeline/
 RUN chown -R pipeman:ngsgroup /usr/local/pipeline/annovar \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/annovar' /home/pipeman/.bashrc
 
+# + SnpEff
+RUN wget -O /tmp/snpEff_latest_core.zip http://sourceforge.net/projects/snpeff/files/snpEff_latest_core.zip \
+    && unzip /tmp/snpEff_latest_core.zip -d /usr/local/pipeline/ \
+    && chown -R pipeman:ngsgroup /usr/local/pipeline/snpEff_latest_core \
+    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/snpEff_latest_core/snpEff/snpEff.jar' /home/pipeman/.bashrc \
+    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/snpEff_latest_core/snpEff' /home/pipeman/.bashrc
+
+
+
 #------------------------- NGS PIPELINE ----------------------------------
 RUN cd /usr/local/pipeline \
     && git clone https://github.com/KHP-Informatics/ngs.git \
