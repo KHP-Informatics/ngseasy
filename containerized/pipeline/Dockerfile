@@ -279,6 +279,16 @@ RUN wget -O /tmp/snpEff_latest_core.zip http://sourceforge.net/projects/snpeff/f
     && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/snpEff' /home/pipeman/.bashrc
 
 
+#----------------------------- vcf phaseing -----------------------------------
+
+# used to phase vcf files for family and population based studies 
+# + BEAGLE
+RUN wget -O /usr/local/pipeline/beagle/beagle.jar http://faculty.washington.edu/browning/beagle/beagle.jar \
+    && chown -R pipeman:ngsgroup /usr/local/pipeline/beagle/ \
+    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/beagle/beagle.jar' /home/pipeman/.bashrc \
+    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/beagle' /home/pipeman/.bashrc
+
+
 
 #------------------------- NGS PIPELINE ----------------------------------
 RUN cd /usr/local/pipeline \
