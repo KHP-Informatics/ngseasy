@@ -256,6 +256,10 @@ RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("gdata",depende
 RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("gplots",dependencies=TRUE ,repos="http://cran.r-project.org")'
 RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("ggplot2",dependencies=TRUE ,repos="http://cran.r-project.org")'
 RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("RColorBrewer",dependencies=TRUE ,repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("doMC",dependencies=TRUE ,repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("caTools",dependencies=TRUE ,repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("utils",dependencies=TRUE ,repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("lattice",dependencies=TRUE ,repos="http://cran.r-project.org")'
 
 
 #------------------------------------bioconductor---------------------------------
@@ -273,8 +277,10 @@ RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.
 RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("rtracklayer",dependencies=TRUE)'
 # workflows.R: variants
 RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://bioconductor.org/workflows.R");workflowInstall("variants")'
-
-
+# BSgenome Rsamtools ShortRead
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("BSgenome",dependencies=TRUE)'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("Rsamtools",dependencies=TRUE)'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("ShortRead",dependencies=TRUE)'
 
 
 #------------------ Variant Annotation & Reports -------------------------
