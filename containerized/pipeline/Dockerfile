@@ -209,6 +209,33 @@ RUN wget -O /tmp/samtools-0.1.19.tar.bz2 http://sourceforge.net/projects/samtool
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/samtools-0.1.19/bin' /home/pipeman/.bashrc
 
 
+#---------------------------------- DELLY ---------------------------------------
+
+# + install bamtools
+RUN cd /usr/local/pipeline
+RUN git clone https://github.com/pezmaster31/bamtools.git
+RUN cd bamtools/ ; mkdir build ; cd build/ ; cmake .. ; make
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline/bamtools
+
+# + install seqtk
+RUN cd /usr/local/pipeline
+RUN git clone https://github.com/lh3/seqtk.git
+RUN cd seqtk/ ; make
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk
+
+# + set environment
+ENV BOOST_ROOT /usr
+ENV BAMTOOLS_ROOT /bamtools
+ENV SEQTK_ROOT /seqtk
+ENV LD_LIBRARY_PATH /bamtools/lib
+
+# + install delly
+RUN cd /usr/local/pipeline
+RUN git clone https://github.com/tobiasrausch/delly.git
+RUN cd delly/ ; make -B src/delly
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline/delly
+
+
 
 #---------------------- Visualisations -----------------------------------
 
