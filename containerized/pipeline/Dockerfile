@@ -121,6 +121,13 @@ RUN usermod -G ngsgroup pipeman
 #***************** INSTALL PIPELINE COMPONENTS **************************
 #------------------------------------------------------------------------
 
+# make FASTQ_STAGGING dir
+RUN mkdir /usr/local/pipeline/FASTQ_STAGGING
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline/FASTQ_STAGGING
+# make reference_data dir
+RUN mkdir /usr/local/pipeline/reference_data
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline/reference_data
+
 #---------------------- Quality Control ----------------------------------
 
 # + Trimmomatic
