@@ -244,7 +244,7 @@ RUN chown -R pipeman:ngsgroup /usr/local/pipeline/delly
 RUN sudo apt-get install -y r-base
 #RUN R CMD INSTALL caret # doesn't do dependancies
 #RUN /usr/bin/Rscript --no-save --no-restore <( cat <<< 'install.packages("caret", repos="http://cran.r-project.org")' )
-RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("caret", repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("caret",dependencies=TRUE ,repos="http://cran.r-project.org")'
 # install bioconductor -- mod the biocLite.R script so it fires default bioc installation
 RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite()'
 # GenomicRanges
