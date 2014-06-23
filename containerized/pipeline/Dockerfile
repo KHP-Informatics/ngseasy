@@ -257,6 +257,11 @@ RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.
 RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("genomeIntervals",dependencies=TRUE)'
 # rtracklayer
 RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("rtracklayer",dependencies=TRUE)'
+# workflows.R: variants
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://bioconductor.org/workflows.R");workflowInstall("variants")'
+
+
+
 
 #------------------ Variant Annotation & Reports -------------------------
 # + ANNOVAR (see licence, and registration)
