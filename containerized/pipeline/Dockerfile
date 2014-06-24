@@ -76,7 +76,7 @@ RUN apt-get install -y zlib1g-dev libncurses5-dev
 RUN apt-get install -y sysvbanner
 
 # delly requirements 
-RUN apt-get install -y build-essential cmake zlib1g-dev libboost-date-time-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libboost-iostreams-dev
+RUN apt-get install -y build-essential cmake libboost-date-time-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libboost-iostreams-dev
 
 #------------------------------------------------------------------------
 # VOLUMES and VOLUME CONTAINERS
