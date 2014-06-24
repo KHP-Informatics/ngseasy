@@ -76,9 +76,22 @@ RUN apt-get install -y zlib1g-dev libncurses5-dev
 RUN apt-get install -y sysvbanner
 RUN apt-get install -y openjdk-7-jre
 RUN apt-get install -y openjdk-7-jdk
+RUN apt-get install -y curl libcurl3 php5-curl 
+RUN apt-get install -y libxml2 libxslt-dev libxml2-dev 
+RUN apt-get install -y fastx-toolkit 
+RUN apt-get install -y igv
+RUN apt-get install -y htmldoc html2tex
+
 
 # delly requirements 
-RUN apt-get install -y build-essential cmake libboost-date-time-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libboost-iostreams-dev
+RUN apt-get install -y build-essential 
+RUN apt-get install -y cmake
+RUN apt-get install -y libboost-date-time-dev
+RUN apt-get install -y libboost-program-options-dev 
+RUN apt-get install -y libboost-system-dev
+RUN apt-get install -y libboost-filesystem-dev
+RUN apt-get install -y libboost-iostreams-dev
+
 
 #------------------------------------------------------------------------
 # VOLUMES and VOLUME CONTAINERS
