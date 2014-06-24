@@ -74,6 +74,8 @@ RUN apt-get install -y make tabix
 RUN apt-get install -y git-core wget unzip
 RUN apt-get install -y zlib1g-dev libncurses5-dev
 RUN apt-get install -y sysvbanner
+RUN apt-get install -y openjdk-7-jre
+RUN apt-get install -y openjdk-7-jdk
 
 # delly requirements 
 RUN apt-get install -y build-essential cmake libboost-date-time-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libboost-iostreams-dev
@@ -152,9 +154,8 @@ RUN wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/pro
 # + get novoalign.lic from novoalign ~ $1000 and put in context dir for the build
 # + get updated version of novosort novosortV1.03.01.Linux3.0.tar.gz and put in context dir for the build
 ADD novocraftV3.02.06.Linux3.0.tar.gz /usr/local/pipeline/novocraftV3.02.06.Linux3.0
-# ADD novoalign.lic /usr/local/pipeline/novocraftV3.02.06.Linux3.0/novocraft/
-RUN cd /usr/local/pipeline/novocraftV3.02.06.Linux3.0/novocraft
-ADD novosortV1.03.01.Linux3.0.tar.gz  /usr/local/pipeline/novocraftV3.02.06.Linux3.0/novocraft
+ADD novoalign.lic /usr/local/pipeline/novocraftV3.02.06.Linux3.0/novocraft/
+ADD novosortV1.03.01.Linux3.0.tar.gz  /usr/local/pipeline/novocraftV3.02.06.Linux3.0/novocraft/
 RUN sed  -i '$aPATH=${PATH}:/usr/local/pipeline/novocraftV3.02.06.Linux3.0/novocraft' /home/pipeman/.bashrc
 
 # + bowtie
@@ -224,16 +225,21 @@ RUN wget -O /tmp/samtools-0.1.19.tar.bz2 http://sourceforge.net/projects/samtool
 #---------------------------------- DELLY ---------------------------------------
 
 # + install bamtools
-RUN cd /usr/local/pipeline
-RUN git clone https://github.com/pezmaster31/bamtools.git
-RUN cd bamtools/ ; mkdir build ; cd build/ ; cmake .. ; make
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline/bamtools
+RUN cd /usr/local/pipeline \
+&& git clone https://github.com/pezmaster31/bamtools.git \
+&& cd /usr/local/pipeline/bamtools/ \
+&& mkdir build \
+&& cd build/ \
+&& cmake .. \
+&& make \
+&& chown -R pipeman:ngsgroup /usr/local/pipeline/bamtools
 
 # + install seqtk
-RUN cd /usr/local/pipeline
-RUN git clone https://github.com/lh3/seqtk.git
-RUN cd seqtk/ ; make
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk
+RUN cd /usr/local/pipeline \
+&& git clone https://github.com/lh3/seqtk.git \
+&& cd seqtk/ \
+&& make \
+&& chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk
 
 # + set environment
 ENV BOOST_ROOT /usr
@@ -242,10 +248,11 @@ ENV SEQTK_ROOT /seqtk
 ENV LD_LIBRARY_PATH /bamtools/lib
 
 # + install delly
-RUN cd /usr/local/pipeline
-RUN git clone https://github.com/tobiasrausch/delly.git
-RUN cd delly/ ; make -B src/delly
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline/delly
+RUN cd /usr/local/pipeline \
+&& git clone https://github.com/tobiasrausch/delly.git \
+&& cd delly/ \
+&& make -B src/delly \
+&& chown -R pipeman:ngsgroup /usr/local/pipeline/delly
 
 
 
