@@ -345,9 +345,10 @@ RUN wget -O /usr/local/pipeline/beagle/beagle.jar http://faculty.washington.edu/
 
 
 #------------------------- NGS PIPELINE ----------------------------------
-RUN cd /usr/local/pipeline \
-    && git clone https://github.com/KHP-Informatics/ngs.git \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/ngs/molpath_ngs:/usr/local/pipeline/ngs/molpath_ngs/ngs_master_scripts' /home/pipeman/.bashrc \
+# needs updating 
+#RUN cd /usr/local/pipeline \
+#    && git clone https://github.com/KHP-Informatics/ngs.git \
+#    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/ngs/molpath_ngs:/usr/local/pipeline/ngs/molpath_ngs/ngs_master_scripts' /home/pipeman/.bashrc \
 
 #----------------------  --------------------------------
 
