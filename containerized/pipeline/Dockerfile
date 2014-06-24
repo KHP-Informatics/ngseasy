@@ -12,6 +12,38 @@
 # from our repository
 #------------------------------------------------------------------------
 
+#As a multi-component system, NGS pipeline setup is traditionally heavy on
+#configuration. Our idea is to provide this in a simple encapsulated container.
+#Users also typically wish to configure their own environments and run the
+#pipeline on a wide range of hardware (workstations to clusters to cloud), being
+#able to stand-up a pipeline with minimal fuss is made straightforward with this
+#container.
+#
+# The containers for this NGS pipeline:
+# 
+# ngseasy pipeline 
+#   https://github.com/KHP-Informatics/ngs/blob/master/containerized/pipeline/Dockerfile
+# ngs_storage container 
+#   https://github.com/KHP-Informatics/ngs/blob/master/containerized/storage/Dockerfile
+#
+#- Pipeline components are stored in /usr/local/pipeline/
+#- The user for running the pipeline is: pipeman
+#- Intermediary pipeine files are stored in the container under this dir
+#   structure: TODO
+#
+# The system looks something like this:
+#
+#>     [ ngseasy  container ]... x n
+#>     |
+#>     |____[ storage container ]  #reference genomes
+#>     |
+#>     |____{ mounted volume pwd }  #pass config file from host
+#>     |
+#>     |____{ volume //data } #container output
+#
+
+
+
 #------------------------------------------------------------------------
 # BUILDING THE DOCKER IMAGE FROM THIS Dockerfile:
 # download this Dockerfile into a clean directory e.g. build_dir
@@ -41,7 +73,10 @@ RUN apt-get install -y python-dev
 RUN apt-get install -y make tabix
 RUN apt-get install -y git-core wget unzip
 RUN apt-get install -y zlib1g-dev libncurses5-dev
+RUN apt-get install -y sysvbanner
 
+# delly requirements 
+RUN apt-get install -y build-essential cmake libboost-date-time-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev libboost-iostreams-dev
 
 #------------------------------------------------------------------------
 # VOLUMES and VOLUME CONTAINERS
@@ -85,6 +120,13 @@ RUN usermod -G ngsgroup pipeman
 #------------------------------------------------------------------------
 #***************** INSTALL PIPELINE COMPONENTS **************************
 #------------------------------------------------------------------------
+
+# make FASTQ_STAGGING dir
+RUN mkdir /usr/local/pipeline/FASTQ_STAGGING
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline/FASTQ_STAGGING
+# make reference_data dir
+RUN mkdir /usr/local/pipeline/reference_data
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline/reference_data
 
 #---------------------- Quality Control ----------------------------------
 
@@ -174,6 +216,33 @@ RUN wget -O /tmp/samtools-0.1.19.tar.bz2 http://sourceforge.net/projects/samtool
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/samtools-0.1.19/bin' /home/pipeman/.bashrc
 
 
+#---------------------------------- DELLY ---------------------------------------
+
+# + install bamtools
+RUN cd /usr/local/pipeline
+RUN git clone https://github.com/pezmaster31/bamtools.git
+RUN cd bamtools/ ; mkdir build ; cd build/ ; cmake .. ; make
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline/bamtools
+
+# + install seqtk
+RUN cd /usr/local/pipeline
+RUN git clone https://github.com/lh3/seqtk.git
+RUN cd seqtk/ ; make
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk
+
+# + set environment
+ENV BOOST_ROOT /usr
+ENV BAMTOOLS_ROOT /bamtools
+ENV SEQTK_ROOT /seqtk
+ENV LD_LIBRARY_PATH /bamtools/lib
+
+# + install delly
+RUN cd /usr/local/pipeline
+RUN git clone https://github.com/tobiasrausch/delly.git
+RUN cd delly/ ; make -B src/delly
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline/delly
+
+
 
 #---------------------- Visualisations -----------------------------------
 
@@ -182,9 +251,36 @@ RUN wget -O /tmp/samtools-0.1.19.tar.bz2 http://sourceforge.net/projects/samtool
 RUN sudo apt-get install -y r-base
 #RUN R CMD INSTALL caret # doesn't do dependancies
 #RUN /usr/bin/Rscript --no-save --no-restore <( cat <<< 'install.packages("caret", repos="http://cran.r-project.org")' )
-RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("caret", repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("caret",dependencies=TRUE ,repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("gdata",dependencies=TRUE ,repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("gplots",dependencies=TRUE ,repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("ggplot2",dependencies=TRUE ,repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("RColorBrewer",dependencies=TRUE ,repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("doMC",dependencies=TRUE ,repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("caTools",dependencies=TRUE ,repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("utils",dependencies=TRUE ,repos="http://cran.r-project.org")'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("lattice",dependencies=TRUE ,repos="http://cran.r-project.org")'
+
+
+#------------------------------------bioconductor---------------------------------
 # install bioconductor -- mod the biocLite.R script so it fires default bioc installation
 RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite()'
+# GenomicRanges
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("GenomicRanges",dependencies=TRUE)'
+# IRanges
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("IRanges",dependencies=TRUE)'
+# Biostrings
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("Biostrings",dependencies=TRUE)'
+# genomeIntervals
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("genomeIntervals",dependencies=TRUE)'
+# rtracklayer
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("rtracklayer",dependencies=TRUE)'
+# workflows.R: variants
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://bioconductor.org/workflows.R");workflowInstall("variants")'
+# BSgenome Rsamtools ShortRead
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("BSgenome",dependencies=TRUE)'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("Rsamtools",dependencies=TRUE)'
+RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("ShortRead",dependencies=TRUE)'
 
 
 #------------------ Variant Annotation & Reports -------------------------
@@ -194,6 +290,25 @@ RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.
 ADD annovar.latest.tar.gz /usr/local/pipeline/
 RUN chown -R pipeman:ngsgroup /usr/local/pipeline/annovar \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/annovar' /home/pipeman/.bashrc
+
+# + SnpEff
+RUN wget -O /tmp/snpEff_latest_core.zip http://sourceforge.net/projects/snpeff/files/snpEff_latest_core.zip \
+    && unzip /tmp/snpEff_latest_core.zip -d /usr/local/pipeline/ \
+    && chown -R pipeman:ngsgroup /usr/local/pipeline/snpEff \
+    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/snpEff/snpEff.jar' /home/pipeman/.bashrc \
+    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/snpEff' /home/pipeman/.bashrc
+
+
+#----------------------------- vcf phaseing -----------------------------------
+
+# used to phase vcf files for family and population based studies 
+# + BEAGLE
+RUN wget -O /usr/local/pipeline/beagle/beagle.jar http://faculty.washington.edu/browning/beagle/beagle.jar \
+    && chown -R pipeman:ngsgroup /usr/local/pipeline/beagle/ \
+    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/beagle/beagle.jar' /home/pipeman/.bashrc \
+    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/beagle' /home/pipeman/.bashrc
+
+
 
 #------------------------- NGS PIPELINE ----------------------------------
 RUN cd /usr/local/pipeline \
@@ -213,7 +328,12 @@ RUN cd /usr/local/pipeline \
 RUN rm -rf /tmp/*
 
 
+# change to bash for the default entrypoint. You can override ENTRYPOINT and CMD now in docker run.
+# ENTRYPOINT /bin/bash
 
-# Add an entrypoint or CMD that runs the pipeline, taking in the config file to parameterize
-#ENTRYPOINT ["/usr/local/pipeline/molpath_ngs/ngs_master_scripts/"]
-#CMD ["app:start"]
+# Launch the pipeline through a command this will be a default executaion of the pipeline 
+# and can be overridden with # docker run
+#CMD ["/usr/local/pipeline/molpath_ngs/ngs_master_scripts/xxxxx"]
+
+
+
