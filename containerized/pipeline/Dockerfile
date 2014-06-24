@@ -234,6 +234,8 @@ RUN cd /usr/local/pipeline \
 && make \
 && chown -R pipeman:ngsgroup /usr/local/pipeline/bamtools
 
+RUN ln -s ../include bamtools
+
 # + install seqtk
 RUN cd /usr/local/pipeline \
 && git clone https://github.com/lh3/seqtk.git \
