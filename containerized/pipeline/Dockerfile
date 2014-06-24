@@ -149,7 +149,12 @@ RUN wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/pro
 # Aligner options: 1)*novoalign*  2)bowtie, 3)stampy, 4)bwa
 
 # + novoalign (registration required,  get compressed file and put in context dir for the build)
+# + get novoalign.lic from novoalign ~ $1000 and put in context dir for the build
+# + get updated version of novosort novosortV1.03.01.Linux3.0.tar.gz and put in context dir for the build
 ADD novocraftV3.02.06.Linux3.0.tar.gz /usr/local/pipeline/novocraftV3.02.06.Linux3.0
+ADD novoalign.lic /usr/local/pipeline/novocraftV3.02.06.Linux3.0
+RUN cd /usr/local/pipeline/novocraftV3.02.06.Linux3.0/novocraft
+ADD novosortV1.03.01.Linux3.0.tar.gz 
 RUN sed  -i '$aPATH=${PATH}:/usr/local/pipeline/novocraftV3.02.06.Linux3.0/novocraft' /home/pipeman/.bashrc
 
 # + bowtie
