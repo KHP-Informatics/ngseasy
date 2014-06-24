@@ -287,7 +287,7 @@ RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.
 # rtracklayer
 RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("rtracklayer",dependencies=TRUE)'
 # workflows.R: variants
-RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://bioconductor.org/workflows.R");workflowInstall("variants")'
+###RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://bioconductor.org/workflows.R");workflowInstall("variants")'
 # BSgenome Rsamtools ShortRead
 RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("BSgenome",dependencies=TRUE)'
 RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("Rsamtools",dependencies=TRUE)'
