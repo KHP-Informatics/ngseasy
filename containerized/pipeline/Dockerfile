@@ -225,23 +225,21 @@ RUN wget -O /tmp/samtools-0.1.19.tar.bz2 http://sourceforge.net/projects/samtool
 #---------------------------------- DELLY ---------------------------------------
 
 # + install bamtools
-RUN cd /usr/local/pipeline \
-&& git clone https://github.com/pezmaster31/bamtools.git \
+##RUN cd /usr/local/pipeline \
+RUN git clone https://github.com/pezmaster31/bamtools.git \
 && cd bamtools/ \
 && mkdir build \
 && cd build/ \
 && cmake .. \
-&& make \
-&& chown -R pipeman:ngsgroup /usr/local/pipeline/bamtools
-
-RUN ln -s ../include bamtools
+&& make
+#&& chown -R pipeman:ngsgroup /usr/local/pipeline/bamtools
 
 # + install seqtk
-RUN cd /usr/local/pipeline \
-&& git clone https://github.com/lh3/seqtk.git \
+#RUN cd /usr/local/pipeline \
+RUN git clone https://github.com/lh3/seqtk.git \
 && cd seqtk/ \
-&& make \
-&& chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk
+&& make
+##&& chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk
 
 # + set environment
 ENV BOOST_ROOT /usr
@@ -250,12 +248,11 @@ ENV SEQTK_ROOT /seqtk
 ENV LD_LIBRARY_PATH /bamtools/lib
 
 # + install delly
-RUN cd /usr/local/pipeline \
-&& git clone https://github.com/tobiasrausch/delly.git \
+#RUN cd /usr/local/pipeline \
+RUN git clone https://github.com/tobiasrausch/delly.git \
 && cd delly/ \
-&& make -B src/delly \
-&& chown -R pipeman:ngsgroup /usr/local/pipeline/delly
-
+&& make -B src/delly
+#&& chown -R pipeman:ngsgroup /usr/local/pipeline/delly
 
 
 #---------------------- Visualisations -----------------------------------
