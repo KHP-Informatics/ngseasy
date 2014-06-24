@@ -227,7 +227,7 @@ RUN wget -O /tmp/samtools-0.1.19.tar.bz2 http://sourceforge.net/projects/samtool
 # + install bamtools
 RUN cd /usr/local/pipeline \
 && git clone https://github.com/pezmaster31/bamtools.git \
-&& cd /usr/local/pipeline/bamtools/ \
+&& cd bamtools/ \
 && mkdir build \
 && cd build/ \
 && cmake .. \
