@@ -78,9 +78,10 @@ RUN apt-get install -y openjdk-7-jre
 RUN apt-get install -y openjdk-7-jdk
 RUN apt-get install -y curl libcurl3 php5-curl 
 RUN apt-get install -y libxml2 libxslt-dev libxml2-dev 
-RUN apt-get install -y fastx-toolkit 
-###RUN apt-get install -y igv
-RUN apt-get install -y htmldoc html2tex
+RUN apt-get install -y fastx-toolkit
+RUN apt-get install -y htmldoc html2text
+RUN apt-get install -y bioperl
+
 
 
 # delly requirements 
