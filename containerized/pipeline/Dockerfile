@@ -314,12 +314,11 @@ RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.
 # hmmm... no version on tar.
 ADD annovar.latest.tar.gz /usr/local/pipeline/
 ##RUN tar xvf /usr/local/pipeline/annovar.latest.tar.gz
-RUN cd /usr/local/pipeline/annovar 
-RUN mv table_annovar.pl table_annovar.pl.original
-# get updated table_annovar.pl
-RUN wget http://www.openbioinformatics.org/annovar/download/table_annovar.pl
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline/annovar \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/annovar' /home/pipeman/.bashrc
+RUN cd /usr/local/pipeline/annovar \
+&& cp -v /usr/local/pipeline/annovar/table_annovar.pl table_annovar.pl.original \
+&& wget http://www.openbioinformatics.org/annovar/download/table_annovar.pl \
+&& chown -R pipeman:ngsgroup /usr/local/pipeline/annovar \
+&& sed -i '$aPATH=${PATH}:/usr/local/pipeline/annovar' /home/pipeman/.bashrc
 
 # TO Do : ADD scripts to then dowload ANNOVAR DATABASES
 # Alternative is mount annovar database from local machine -- prefer this option
