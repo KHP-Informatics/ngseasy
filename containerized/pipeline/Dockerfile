@@ -288,8 +288,17 @@ RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.
 # Available on reg:  http://www.openbioinformatics.org/annovar/download/Ht8qRwQSTi/annovar.latest.tar.gz
 # hmmm... no version on tar.
 ADD annovar.latest.tar.gz /usr/local/pipeline/
+RUN tar xvf /usr/local/pipeline/annovar.latest.tar.gz
+RUN cd /usr/local/pipeline/annovar 
+RUN mv table_annovar.pl table_annovar.pl.original
+# get updated table_annovar.pl
+RUN wget http://www.openbioinformatics.org/annovar/download/table_annovar.pl
 RUN chown -R pipeman:ngsgroup /usr/local/pipeline/annovar \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/annovar' /home/pipeman/.bashrc
+
+# TO Do : ADD scripts to then dowload ANNOVAR DATABASES
+# Alternative is mount annovar database from local machine -- prefer this option
+
 
 # + SnpEff
 RUN wget -O /tmp/snpEff_latest_core.zip http://sourceforge.net/projects/snpeff/files/snpEff_latest_core.zip \
