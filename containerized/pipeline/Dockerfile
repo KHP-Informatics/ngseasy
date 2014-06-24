@@ -294,7 +294,7 @@ RUN chown -R pipeman:ngsgroup /usr/local/pipeline/annovar \
 # + SnpEff
 RUN wget -O /tmp/snpEff_latest_core.zip http://sourceforge.net/projects/snpeff/files/snpEff_latest_core.zip \
     && unzip /tmp/snpEff_latest_core.zip -d /usr/local/pipeline/ \
-    && chown -R pipeman:ngsgroup /usr/local/pipeline/snpEff_latest_core \
+    && chown -R pipeman:ngsgroup /usr/local/pipeline/snpEff \
     && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/snpEff/snpEff.jar' /home/pipeman/.bashrc \
     && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/snpEff' /home/pipeman/.bashrc
 
