@@ -356,6 +356,8 @@ RUN wget -O /usr/local/pipeline/beagle/beagle.jar http://faculty.washington.edu/
 
 #----------------------  --------------------------------
 
+#-------------------------------PERMISSIONS--------------------------
+RUN chmod -R 755 /usr/local/pipeline/*
 
 
 
