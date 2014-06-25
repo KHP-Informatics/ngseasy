@@ -343,15 +343,10 @@ RUN wget -O /usr/local/pipeline/beagle/beagle.jar http://faculty.washington.edu/
     && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/beagle' /home/pipeman/.bashrc
 
 
-#---------------------- b27 reference genomes -----------------------------
-# HASH this out if you want to include reference data files indexed for novoalign, bwa, stampy and bowtie2
-# WARFNING: Lagre File
-# OPtion is to mouint this
-# docker run -v /*host*/reference_data/:/usr/local/pipeline/reference_data
-
-# ADD reference_data.tar.gz /usr/local/pipeline/ \
-# && chown -R pipeman:ngsgroup /usr/local/pipeline/reference_data
-
+#---------------------- b37 gatk resource -----------------------------
+# HASH this out if you want to include gatk resource data files
+ADD gatk_resource.tar.gz /usr/local/pipeline/gatk_resource \ 
+&& chown -R pipeman:ngsgroup /usr/local/pipeline/reference_data
 
 #------------------------- NGS PIPELINE ----------------------------------
 # needs updating 
