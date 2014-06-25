@@ -345,8 +345,8 @@ RUN wget -O /usr/local/pipeline/beagle/beagle.jar http://faculty.washington.edu/
 
 #---------------------- b37 gatk resource -----------------------------
 # HASH this out if you want to include gatk resource data files
-ADD gatk_resource.tar.gz /usr/local/pipeline/gatk_resource \ 
-&& chown -R pipeman:ngsgroup /usr/local/pipeline/reference_data
+ADD gatk_resources.tar.gz /usr/local/pipeline/gatk_resources \ 
+&& chown -R pipeman:ngsgroup /usr/local/pipeline/gatk_resources
 
 #------------------------- NGS PIPELINE ----------------------------------
 # needs updating 
