@@ -7,6 +7,15 @@
 
 
 #------------------------------------------------------------------------
+#
+#                            #######
+#     #    #   ####    ####  #          ##     ####    #   #
+#     ##   #  #    #  #      #         #  #   #         # #
+#     # #  #  #        ####  #####    #    #   ####      #
+#     #  # #  #  ###       # #        ######       #     #
+#     #   ##  #    #  #    # #        #    #  #    #     #
+#     #    #   ####    ####  #######  #    #   ####      #
+#
 # This dockerfile should build the enviroment required for the ngs 
 # pipeline. Alternatively you can just get the docker container pre-built
 # from our repository
