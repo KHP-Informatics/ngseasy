@@ -295,8 +295,15 @@ RUN git clone https://github.com/tobiasrausch/delly.git \
 #&& cmake .. -DCMAKE_BUILD_TYPE=release -DCMAKE_INSTALL_PREFIX=/usr/local/pipeline \
 #&& make \
 #&& sudo make install
-
-
+#Dependence over other Perl Modules
+#------------------------------------
+#use Statistics::Descriptive;
+#use Math::CDF;#
+#These are available at CPAN.
+#http://search.cpan.org/~colink/Statistics-Descriptive-2.6/Descriptive.pm
+#http://search.cpan.org/~callahan/Math-CDF-0.1/CDF.pm
+#use Poisson;
+#This is provided. Please make sure the "use lib" at the beginning of the perl scripts contains the correct path.
 
 #---------------------- Visualisations -----------------------------------
 
