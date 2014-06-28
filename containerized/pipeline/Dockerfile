@@ -283,7 +283,7 @@ RUN git clone https://github.com/tobiasrausch/delly.git \
 #usr/local/pipeline \
 #&& git clone git://github.com/genome/pindel.git \
 #&& cd pindel \
-#&& ./INSTALL /usr/local/pipeline/samtools-0.1.19/bin;
+#&& ./INSTALL /usr/local/pipeline/samtools-0.1.19;
 # TEST FOR UBUNTU BUILD ISSUES!
 
 #---------------------- Visualisations -----------------------------------
