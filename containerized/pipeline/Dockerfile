@@ -315,6 +315,9 @@ RUN git clone https://github.com/tobiasrausch/delly.git \
 #&& unzip /tmp/CNVnator_v0.3.zip -d /usr/local/pipeline/ \
 #&& chown -R pipeman:ngsgroup /usr/local/pipeline/CNVnator_v0.3'
 
+#------------------------m-HMM-----------------------------------------#
+# https://www.stt.msu.edu/users/hengwang/mHMM.html
+
 
 #---------------------- Visualisations -----------------------------------
 
