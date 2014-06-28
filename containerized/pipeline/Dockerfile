@@ -305,6 +305,15 @@ RUN git clone https://github.com/tobiasrausch/delly.git \
 #use Poisson;
 #This is provided. Please make sure the "use lib" at the beginning of the perl scripts contains the correct path.
 
+
+
+#---------------------------CNVnator--------------------------------#
+# test
+#RUN wget -O /tmp/CNVnator_v0.3.zip http://sv.gersteinlab.org/cnvnator/CNVnator_v0.3.zip \
+#&& unzip /tmp/CNVnator_v0.3.zip -d /usr/local/pipeline/ \
+#&& chown -R pipeman:ngsgroup /usr/local/pipeline/CNVnator_v0.3'
+
+
 #---------------------- Visualisations -----------------------------------
 
 # + R (replace with installing the dev, if there is need to compile packages)
