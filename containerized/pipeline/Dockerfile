@@ -286,6 +286,18 @@ RUN git clone https://github.com/tobiasrausch/delly.git \
 #&& ./INSTALL /usr/local/pipeline/samtools-0.1.19;
 # TEST FOR UBUNTU BUILD ISSUES!
 
+#----------------------------breakdancer-------------------------------------#
+#RUN cd /usr/local/pipeline \
+#&& git clone --recursive https://github.com/genome/breakdancer.git \
+#&& cd breakdancer \
+#&& mkdir build \
+#&& cd build \
+#&& cmake .. -DCMAKE_BUILD_TYPE=release -DCMAKE_INSTALL_PREFIX=/usr/local/pipeline \
+#&& make \
+#&& sudo make install
+
+
+
 #---------------------- Visualisations -----------------------------------
 
 # + R (replace with installing the dev, if there is need to compile packages)
