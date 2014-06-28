@@ -305,6 +305,8 @@ RUN git clone https://github.com/tobiasrausch/delly.git \
 #use Poisson;
 #This is provided. Please make sure the "use lib" at the beginning of the perl scripts contains the correct path.
 
+# http://sv.gersteinlab.org/breakseq/
+# http://root.cern.ch/drupal/content/production-version-534
 
 
 #---------------------------CNVnator--------------------------------#
