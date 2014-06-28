@@ -278,6 +278,14 @@ RUN git clone https://github.com/tobiasrausch/delly.git \
 #&& chown -R pipeman:ngsgroup /usr/local/pipeline/delly
 
 
+#----------------------------PINDEL-------------------------------------#
+# http://gmt.genome.wustl.edu/pindel/current/install.html
+#usr/local/pipeline \
+#&& git clone git://github.com/genome/pindel.git \
+#&& cd pindel \
+#&& ./INSTALL /usr/local/pipeline/samtools-0.1.19/bin;
+# TEST FOR UBUNTU BUILD ISSUES!
+
 #---------------------- Visualisations -----------------------------------
 
 # + R (replace with installing the dev, if there is need to compile packages)
