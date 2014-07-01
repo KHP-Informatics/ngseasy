@@ -282,8 +282,8 @@ RUN git clone https://github.com/tobiasrausch/delly.git \
 # http://gmt.genome.wustl.edu/pindel/current/install.html
 RUN cd /usr/local/pipeline \
 && git clone git://github.com/genome/pindel.git \
-cd pindel \
-./INSTALL /usr/local/pipeline/samtools-0.1.19;
+&& cd pindel \
+&& ./INSTALL /usr/local/pipeline/samtools-0.1.19;
 
 # TEST FOR UBUNTU BUILD ISSUES!
 
