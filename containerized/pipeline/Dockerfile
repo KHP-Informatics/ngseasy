@@ -311,10 +311,9 @@ RUN cd /usr/local/pipeline \
 
 
 #---------------------------CNVnator--------------------------------#
-# test
-#RUN wget -O /tmp/CNVnator_v0.3.zip http://sv.gersteinlab.org/cnvnator/CNVnator_v0.3.zip \
-#&& unzip /tmp/CNVnator_v0.3.zip -d /usr/local/pipeline/ \
-#&& chown -R pipeman:ngsgroup /usr/local/pipeline/CNVnator_v0.3'
+RUN wget -O /tmp/CNVnator_v0.3.zip http://sv.gersteinlab.org/cnvnator/CNVnator_v0.3.zip \
+&& unzip /tmp/CNVnator_v0.3.zip -d /usr/local/pipeline/ \
+&& chown -R pipeman:ngsgroup /usr/local/pipeline/CNVnator_v0.3
 
 #------------------------m-HMM-----------------------------------------#
 # https://www.stt.msu.edu/users/hengwang/mHMM.html
