@@ -320,8 +320,10 @@ RUN cd /usr/local/pipeline \
 # https://www.stt.msu.edu/users/hengwang/mHMM.html
 RUN cd /usr/local/pipeline/ \
 && wget https://www.stt.msu.edu/users/hengwang/mHMM%20Data/mHMM_1.0.tar.gz \
-&& R CMD INSTALL mHMM_1.0.tar.gz
-&& rm mHMM_1.0.tar.gz
+&& R CMD INSTALL mHMM_1.0.tar.gz \
+&& rm mHMM_1.0.tar.gz;
+
+
 #---------------------- Visualisations -----------------------------------
 
 # + R (replace with installing the dev, if there is need to compile packages)
