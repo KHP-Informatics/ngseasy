@@ -417,6 +417,17 @@ RUN wget -O /tmp/snpEff_latest_core.zip http://sourceforge.net/projects/snpeff/f
     && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/snpEff' /home/pipeman/.bashrc
 
 
+# + VEP
+#Download latest version (75)
+# Unpack
+RUN wget -O /tmp/ensembl-tools-release-75.zip https://github.com/Ensembl/ensembl-tools/archive/release/ensembl-tools-release-75.zip
+    && unzip /tmp/ensembl-tools-release-75.zip -d /usr/local/pipeline/ \
+    && cd /usr/local/pipeline/ \
+    && cd ensembl-tools-release-75/scripts/variant_effect_predictor/ \
+    && perl INSTALL.pl;
+
+
+
 #----------------------------- vcf phaseing -----------------------------------
 
 # used to phase vcf files for family and population based studies 
