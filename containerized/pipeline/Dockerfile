@@ -69,6 +69,8 @@
 # 3) $ sudo docker build --tag <repo-name:tag> .
 #------------------------------------------------------------------------
 
+## TO GET: SJN to add freebayes git clone --recursive git://github.com/ekg/freebayes.git
+
 # Base image will be Trusty
 FROM ubuntu:trusty
 
@@ -415,6 +417,17 @@ RUN wget -O /tmp/snpEff_latest_core.zip http://sourceforge.net/projects/snpeff/f
     && chown -R pipeman:ngsgroup /usr/local/pipeline/snpEff \
     && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/snpEff/snpEff.jar' /home/pipeman/.bashrc \
     && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/snpEff' /home/pipeman/.bashrc
+
+
+# + VEP
+#Download latest version (75)
+# Unpack
+RUN wget -O /tmp/ensembl-tools-release-75.zip https://github.com/Ensembl/ensembl-tools/archive/release/ensembl-tools-release-75.zip \
+    && unzip /tmp/ensembl-tools-release-75.zip -d /usr/local/pipeline/ \
+    && cd /usr/local/pipeline/ \
+    && cd ensembl-tools-release-75/scripts/variant_effect_predictor/ \
+    && perl INSTALL.pl;
+
 
 
 #----------------------------- vcf phaseing -----------------------------------
