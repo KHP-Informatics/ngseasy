@@ -69,6 +69,8 @@
 # 3) $ sudo docker build --tag <repo-name:tag> .
 #------------------------------------------------------------------------
 
+## TO GET: SJN to add freebayes git clone --recursive git://github.com/ekg/freebayes.git
+
 # Base image will be Trusty
 FROM ubuntu:trusty
 
