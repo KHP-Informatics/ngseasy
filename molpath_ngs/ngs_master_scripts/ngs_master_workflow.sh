@@ -19,8 +19,8 @@
 # -- DESC: NGS pipeline to perform SE/PE Alignments & GATK cleaning                         #
 #############################################################################################
 
-# called by the main dispatch: 
-#   Rscript call_ngs_master_workflow.R <patient.config> <pipeline_env.config> 
+# called by the main dispatch:
+#   Rscript call_ngs_master_workflow.R <patient.config> <pipeline_env.config>
 
 # For instructions on running the pipeline see the README file in this this directory:
 
@@ -34,7 +34,7 @@
 ##################
 ## pipeline dir ##
 ##################
-export ngs_pipeline=${18} #"/scratch/project/pipelines/workspace_public/git_projects/pipelines/ngs/molpath_ngs" 
+export ngs_pipeline=${18} #"/scratch/project/pipelines/workspace_public/git_projects/pipelines/ngs/molpath_ngs"
 
 echo "ngs_pipeline = " $ngs_pipeline
 
@@ -188,13 +188,27 @@ echo "moving to sample directory "  ${sample_dir}
 
 cd ${sample_dir}
 
+#------------------------------------------------------------------------------#
+
+################################
+## START TRIMMING/QC PIPELINE ##
+################################
+
+# TRIMMING (WITH TRIMMOMATIC)
+
+
+
+
+
+
+
+
 ##############################
 ## START ALIGNMENT PIPELINE ##
 ##############################
 
-
 #----------------------------------------------------------------------#
-# 1. Align PE or SE data 
+# 1. Align PE or SE data
 #----------------------------------------------------------------------#
 ##echo ">>>>>" `date` " :-> " "Aligning PE data "
 
@@ -234,10 +248,10 @@ qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N sam2bam.${sample_name} -hol
 qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N SortSam.${sample_name} -hold_jid sam2bam.${sample_name}  -l h_vmem=${sge_h_vmem}G -pe multi_thread 1 -M ${email_contact} -m beas ${ngs_pipeline}/ngs_SortSam.sh ${sample_name} ${sample_dir} ${sample_temp};
 
 #----------------------------------------------------------------------#
-# 4. AddOrReplaceReadGroups 
+# 4. AddOrReplaceReadGroups
 #----------------------------------------------------------------------#
 
-##echo ">>>>>" `date` " :-> " "Running AddOrReplaceReadGroups" 
+##echo ">>>>>" `date` " :-> " "Running AddOrReplaceReadGroups"
 
 qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N AddOrReplaceReadGroups.${sample_name} -hold_jid SortSam.${sample_name} -l h_vmem=${sge_h_vmem}G -pe multi_thread 1 -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AddOrReplaceReadGroups.sh ${sample_name} ${sample_dir} \
 ${sample_temp} ${mRGID} ${mRGLB} ${mRGPL} ${mRGPU} ${mRGSM} ${mRGCN} ${mRGDS} ${mRGDT};
@@ -252,7 +266,7 @@ ${sample_temp} ${mRGID} ${mRGLB} ${mRGPL} ${mRGPU} ${mRGSM} ${mRGCN} ${mRGDS} ${
 qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N MarkDuplicates.${sample_name} -hold_jid AddOrReplaceReadGroups.${sample_name} -l h_vmem=${sge_h_vmem}G  -pe multi_thread 1 -M ${email_contact} -m beas ${ngs_pipeline}/ngs_MarkDuplicates.sh ${sample_name} ${sample_dir} ${sample_temp};
 
 ##############################
-## END ALIGNMENT PIPELINE   ## 
+## END ALIGNMENT PIPELINE   ##
 ##############################
 
 #########################
@@ -307,7 +321,7 @@ qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N PrintReads_BQSR.${sample_na
 #----------------------------------------------------------------------#
 # 12. AnalyzeCovariates before & after recal
 #----------------------------------------------------------------------#
-##echo ">>>>>" `date` " :-> " "Running AnalyzeCovariates" 
+##echo ">>>>>" `date` " :-> " "Running AnalyzeCovariates"
 ### qsub -o ${SGE_OUT}  -e ${SGE_OUT}  -q ${queue_name} -N AnalyzeCovariates_before_and_after_BQSR.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AnalyzeCovariates_before_and_after_BQSR.sh \
 #### ${sample_name} ${sample_dir} ${sample_temp};
 
@@ -316,7 +330,7 @@ qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N PrintReads_BQSR.${sample_na
 ##############################################
 
 #----------------------------------------------------------------------#
-# 13. HaplotypeCaller 
+# 13. HaplotypeCaller
 #----------------------------------------------------------------------#
 #<<<<<<< HEAD
 
@@ -333,7 +347,7 @@ qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N VCFtoolsSiteFilter_Haplotyp
 ${sample_name} ${sample_dir} ${sample_temp};
 
 #----------------------------------------------------------------------#
-# 15. UnifiedGenotyper 
+# 15. UnifiedGenotyper
 #----------------------------------------------------------------------#
 
 qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N UnifiedGenotyper.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_UnifiedGenotyper.sh \
@@ -353,7 +367,7 @@ qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N VCFtoolsSiteFilter_UnifiedG
 #############################################################
 
 #----------------------------------------------------------------------#
-# 17. BedTools_DepthOfCoverage 
+# 17. BedTools_DepthOfCoverage
 #----------------------------------------------------------------------#
 
 qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N DepthOfCoverage.${sample_name} -hold_jid PrintReads_BQSR.${sample_name} -l h_vmem=${gatk_h_vmem}G -M ${email_contact} -m beas ${ngs_pipeline}/ngs_BedTools_DepthOfCoverage.sh \
