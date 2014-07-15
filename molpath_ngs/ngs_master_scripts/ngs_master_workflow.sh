@@ -194,7 +194,7 @@ cd ${sample_dir}
 ## START TRIMMING/QC PIPELINE ##
 ################################
 
-# TRIMMING (WITH TRIMMOMATIC)
+# TRIMMING and QUALITY FILTERING (WITH TRIMMOMATIC)
 
 
 
@@ -226,7 +226,7 @@ qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N novoalign.${sample_name} -l
 
 elif [ ${mPE} -eq 0 ] && [ ${mRGPL} == "IONTORRENT" ]; then
 
-echo " Reads are SE IONTORRENT"
+echo "Reads are SE IONTORRENT"
 
 qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.IONTORRENT.${qual_type}.SE.sh ${fastq_prefix} ${sample_name} ${sample_dir};
 
