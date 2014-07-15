@@ -14,7 +14,7 @@
 # ARG#2 = pipeline_env.conf, the configuration file for various pipeline resources
 
 # USAGE:
-# Rscript call_ngs_workflow.R patient_template.conf  pipeline_env.conf 
+# Rscript call_ngs_workflow.R patient_template.conf  pipeline_env.conf
 ##################################################################################
 
 
@@ -23,7 +23,7 @@ args <- commandArgs(trailingOnly=TRUE);
 
 config_file <- args[1]; #patients/sample information
 pipeline_env_config <- args[2] ; #config file with pipeline environment variables
-source(pipeline_env_config); #make available pipeline env vars 
+source(pipeline_env_config); #make available pipeline env vars
 
 d <- read.table(config_file, head=T,sep="\t",as.is=T,fill=T)
 
@@ -98,7 +98,7 @@ callPipe <- paste(
                 gatk_h_vmem,
                 gatk_java_mem,
                 ngstmp,
-                
+
                 paste("-M", email_user, sep=" "),
 
                 sep=" ")
