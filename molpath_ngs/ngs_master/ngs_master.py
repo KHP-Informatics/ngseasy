@@ -1,161 +1,175 @@
 #!/usr/bin/env python
 
+#$ -S /bin/bash
+#$ -cwd
+#$ -V
+#$ -m beas
+#$ -pe multi_thread 1
+#$ -l h_vmem=1G
+#$ -p -0.99999999999999999999999999999999999999999999999999999999999999999
+#$ -j y
+#------------------------------------------------------------------------#
+
+__doc__ = '''
+#############################################################################################
+# -- Authors: Stephen Newhouse, Amos Folarin, Aditi Gulati, David Brawand                                  #
+# -- Organisation: KCL/SLaM/NHS                                                             #
+# -- Email: stephen.j.newhouse@gmail.com, amosfolarin@gmail.com,aditi. gulati@nhs.net, dbrawand@nhs.net         #
+# -- Verion: 1.3                                                                            #
+# -- Date: 11/09/2013                                                                       #
+# -- DESC: NGS pipeline to perform SE/PE Alignments & GATK cleaning                         #
+#############################################################################################
+'''
+__author__ = "Stephen Newhouse, Amos Folarin, Aditi Gulati, David Brawand"
+__copyright__ = ""
+__credits__ = []
+__license__ = "LGPL"
+__version__ = "1.4"
+__maintainer__ = "David Brawand"
+__email__ = "stephen.j.newhouse@gmail.com, amosfolarin@gmail.com, aditi.gulati@nhs.net, dbrawand@nhs.net"
+__status__ = "Development"  # ["Prototype", "Development",  "Production"]
+
+
 import sys
 import os
 import re
 import json
 import logging
-from subprocess import PIPE, call
 
 from optparse import OptionParser
-from ruffus import *
-from drmaa-python import *
 
-from ngsNova.classes.Patient import Patients
+from ngsEasy.Patient import Patients
+from ngsEasy.helpers import syscall, sgecall
+#import ngsEasy.pipeline as mp  # adaptation as a ruffus pipeline (incompatible with the docker containerisation)
+import ngsEasy.molpath as mp  # the old school bash script based pipeline (all submitted at once)
+
+
+# setup pipeline environment (this has to be streamlined)
+def setupPipeline(config):
+    # set own path
+    os.environ["ngs_pipeline"] = os.path.abspath(os.path.dirname(sys.argv[0]))
+
+    # tmp alignment dir
+    os.environ["ngstmp"] = config['paths']['ngstmp']
+
+    # SGE
+    os.environ["queue_name"] = config['gridEngine']['queue']
+
+    # tools
+    os.environ["ngs_picard"] = config['software']['picard']
+    os.environ["ngs_gatk"] = config['software']['gatk']
+    os.environ["ngs_novo"] = config['software']['novo']
+    os.environ["ngs_samtools"] = config['software']['samtools']
+    os.environ["annovar"] = config['software']['annovar']
+    os.environ["java_v1_7"] = config['software']['java_v1_7']
+
+    # Resources
+    # genome/reference
+    os.environ["reference_genome_novoindex"] = config['reference']['genome']['novoindex']
+    os.environ["reference_genome_seq"] = config['reference']['genome']['sequence']
+    # known indel covariates for base recalibration
+    os.environ["b37_Mills_Devine_2hit_indels"] = config['reference']['indels'][0]
+    os.environ["b37_1000G_indels"] = config['reference']['indels'][1]
+    # known SNP covariates for base recalibration
+    os.environ["b37_1000G_omni2_5"] = config['reference']['snps'][0]
+    os.environ["b37_dbsnp"] = config['reference']['snps'][1]
+    os.environ["b37_hapmap_3_3"] = config['reference']['snps'][2]
+    os.environ["b37_1000G_snps"] = config['reference']['snps'][3]
+    os.environ["annovar_humandb"] = config['reference']['annotation']['annovar_humandb']
+
+    # mem and cpu vars (TO BE RENAMED AND CLEANED UP)
+    os.environ["novo_cpu"] = str(config['resources']['novo']['cpu'])
+    os.environ["novo_mem"] = str(config['resources']['novo']['mem'])
+    os.environ["sge_h_vmem"] = str(config['resources']['picard']['sge_h_vmem'])
+    os.environ["java_mem"] = str(config['resources']['picard']['java_mem'])
+    os.environ["gatk_h_vmem"] = str(config['resources']['gatk']['gatk_h_vmem'])
+    os.environ["gatk_java_mem"] = str(config['resources']['gatk']['gatk_java_mem'])
+    return
+
+# old style bash script dispatch (for testing ==> ported into a ruffus based pipeline)
+def molpathClassic(p):
+    print >> sys.stderr, "DISPATCHING", p
+
+    # create working directory
+    syscall('mkdir',p.wd())
+
+    # create SGE instance for mapping ()
+    sge = SGE( out=None, err=None, queue=None, email=None, sendemail='a')
+
+    # ALIGNMENT
+    sge.setResources(multithread=4, vmem=8)
+
+    # pipeline (auto-adds job dependencies / work only for linear pipeline)
+    mp.trimAdapters(p,sge)
+    mp.mapReads(p,sge)
+
+
+    sge.setResources(multithread=4, vmem=8)
+    mp.sam2bam(p,sge)
+    mp.sortBam(p,sge)
 
 
 
+    ## addreplaceReadgroups
+
+    ## mark duplicates
+
+    # GATK
+    ## RealignerTargetCreator
+    ## IndelRealigner
+    ## BaseRecalibrator PRE-recalibration
+    ## PrintReads (recalibration)
+    ## BaseRecalibrator POST-recalibration
+
+    # stampy/platypus
+
+    #
+
+
+    return
+
+
+
+# main
 if __name__=="__main__":
     # read requirements/includes
     usage = "usage: %prog [options] <sample descriptions>"
     parser = OptionParser(usage=usage)
-    parser.add_option("-p", dest="pipelineparameters", metavar="STRING", help="Pipeline parameter file in JSON format")
-    parser.add_option("-l", dest="logfile", default="ngs.log", metavar="STRING", help="logfile ()")
+    parser.add_option("-p", dest="pipepar", default='ngs_config.json',metavar="STRING", help="Pipeline parameters (ngs_config.json)")
+    parser.add_option("-l", dest="logfile", default=None,             metavar="STRING", help="logfile (default STDERR)")
     (options, args) = parser.parse_args()
- 
+    if len(args) == 0:
+        parser.print_help()
+        sys.exit("\nERROR: no sample file provided")
+
     # start logging instance
-    logging.basicConfig(filename=options.logfile, 
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', 
+    logging.basicConfig(
+            filename=options.logfile,
+            filemode='w',
+            format='%(asctime)s - %(levelname)s - %(message)s',
             datefmt='%m/%d/%Y %I:%M:%S %p',
-            filemode='w', level=logging.DEBUG)
+            level=logging.DEBUG)
 
     # read pipeline parameters
-    with open(options.pipelineparameters) as pp:
-        pipePar = json.load(pp)
-    
-    # read sample/patient data
-    with open(args[1]) as fh:
-        patients = Patients(fh)
+    logging.info("reading configuration from %s", options.pipepar)
+    with open(options.pipepar) as pp:
+        setupPipeline(json.load(pp))
 
-    for patient in patients:
+    # process patient files
+    for patientfile in args:
+        # read sample/patient data
+        with open(patientfile) as fh:
+            patients = Patients(fh)
 
+        # print patient data in readable format
+        for i, patient in enumerate(patients):
+            print i, patient
+            print repr(patient)
 
-
-
-
-
-'''                     
-#!/share/bin/Rscript --vanilla --default-packages=utils
-                
-
-##################################################################################
-# DESCRIPTION:
-# Main entry point for the pipeline
-# Use this script to initiate the pipeline, this will bascially read the config
-# and dispatch grid engine jobs to ngs_master_workflow.sh for each patient dataset
-##################################################################################
-
-##################################################################################
-# ARGUMENTS:
-# ARG#1 = patient_template.conf, the configuration file listing details of each patient see example files
-# ARG#2 = pipeline_env.conf, the configuration file for various pipeline resources
-
-# USAGE:
-# Rscript call_ngs_workflow.R patient_template.conf  pipeline_env.conf 
-##################################################################################
+            # setup pipeline jobs
+            molpathClassic(patient)
 
 
 
-args <- commandArgs(trailingOnly=TRUE);
-
-config_file <- args[1]; #patients/sample information
-pipeline_env_config <- args[2] ; #config file with pipeline environment variables
-source(pipeline_env_config); #make available pipeline env vars 
-
-d <- read.table(config_file, head=T,sep="\t",as.is=T,fill=T)
 
 
-for( i in 1:dim(d)[1] )
-{
-
-pipeline <- d$Pipeline[i] ## pipeline to call
-Fastq_prefix=d$Fastq_file_prefix[i]	## fastq prefix
-sample_name=d$ReadGroup_sample_RGSM[i] ##sample name
-qual_type=d$QUAL[i]  ## Base quality coding for novoalign ie STFQ, ILMFQ, ILM1.8
-RGID=d$ReadGroup_id_RGID[i] 	#Read Group ID Required.
-RGLB=d$ReadGroup_library_RGLB[i] 	#Read Group Library Required.
-RGPL=d$ReadGroup_platform_RGPL[i] 	#Read Group platform (e.g. illumina, solid) Required.
-RGPU=d$ReadGroup_platform_unit_RGPU[i] 	#Read Group platform unit (eg. run barcode) Required.
-RGSM=d$ReadGroup_sample_RGSM[i] 	#Read Group sample name Required.
-RGCN=d$ReadGroup_SeqCentre_RGCN[i] 	#Read Group sequencing center name Required.
-RGDS=d$ReadGroup_Desc_RGDS[i] 	#Read Group description Required.
-RGDT=d$ReadGroup_runDate_RGDT[i] 	#Read Group run date Required.
-isPE=d$PE[i] 	#Read Group run date Required.
-targetbed=d$bed_list[i]
-bedtype=d$bed_type[i]
-email_user=d$email_bioinf[i]
-fastq_dir=d$Fastq_dir[i]
-bamdir=d$BAM_dir[i]
-sleep_time=d$sleep ## time to wait before calling nest job. Format 10s, 10m, 10h. see man sleep
-
-#TODO pipeline directory defined twice (patient conf: pipelne_dir and pipeine env: ngs_pipeline)... resolve which setup... are we ever likely to run different pipelines on the same batch-submission of patients samples?
-
-callPipe <- paste(
-                paste(" sleep ",sleep_time ,"; qsub -N call_ngs.",RGID, sep=""),
-#####                paste(ngs_pipeline,"/","ngs_master_scripts","/",pipeline, sep=""),
-                paste("  ",pipeline, sep=""),
-		Fastq_prefix,
-                sample_name,
-                qual_type,
-                RGID,
-                RGLB,
-                RGPL,
-                RGPU,
-                RGSM,
-                RGCN,
-                RGDS,
-                RGDT,
-                isPE,
-                targetbed,
-                bedtype,
-                email_user,
-                fastq_dir,
-                bamdir,
-
-                ngs_pipeline,
-                queue_name,
-                ngs_picard,
-                ngs_gatk,
-                ngs_novo,
-                ngs_samtools,
-                reference_genome_novoindex,
-                reference_genome_seq,
-                b37_1000G_indels,
-                b37_Mills_Devine_2hit_indels,
-                b37_1000G_omni2_5,
-                b37_dbsnp,
-                b37_hapmap_3_3,
-                b37_1000G_snps,
-                annovar,
-                annovar_humandb,
-                java_v1_7,
-                novo_cpu,
-                novo_mem,
-                sge_h_vmem,
-                java_mem,
-                gatk_h_vmem,
-                gatk_java_mem,
-                ngstmp,
-                
-                paste("-M", email_user, sep=" "),
-
-                sep=" ")
-
-system(callPipe)
-
-cat(callPipe,"\r","\n")
-
-}
-
-
-'''

@@ -115,6 +115,7 @@ export ngstmp=${41}  #"/scratch/project/pipelines/ngs_temp"
 fastq_prefix=${1}
 sample_name=${2}.${5}.${6}
 qual_type=${3}  ## Base quality coding for novoalign ie STFQ, ILMFQ, ILM1.8
+
 mRGID=${4}	#Read Group ID Required.
 mRGLB=${5}	#Read Group Library Required.
 mRGPL=${6}	#Read Group platform (e.g. illumina, solid,IONTORRENT) Required.
@@ -123,6 +124,7 @@ mRGSM=${8}	#Read Group sample name Required.
 mRGCN=${9}	#Read Group sequencing center name Required.
 mRGDS=${10}	#Read Group description Required.
 mRGDT=${11}	#Read Group run date Required.
+
 mPE=${12} 	#Indicates PE or SE
 bed_list=${13}	#target bed for coverage
 bed_type=${14}  # region or whole_genome : needed for coverage
