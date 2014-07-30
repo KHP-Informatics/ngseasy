@@ -121,6 +121,12 @@ VOLUME ["/media/ngsEasy/data/reference"]
 
 
 #------------------------------------------------------------------------------
+# Put the Reference Genome here, compressed, the pipeilne must uncompress
+#------------------------------------------------------------------------------
+ADD reference_genomes.tar.gz /media/ngsEasy/data/reference_genomes.tar.gz
+
+
+#------------------------------------------------------------------------------
 # PORTs
 # ports are hard coded
 #------------------------------------------------------------------------------
@@ -137,7 +143,7 @@ EXPOSE 34567
 #------------------------------------------------------------------------------
 
 #default command for entrypoint
-CMD ["/usr/bin/du", "-sh" , "/media/ngsEasy/data/reference" ]
+CMD ["/usr/bin/du", "-sh" , "/media/ngsEasy/data/" ]
 
 #default entrypoint report value of CMD to terminal, can override with --entrypoint
 ENTRYPOINT ["/usr/bin/watch", "-n", "60"]
