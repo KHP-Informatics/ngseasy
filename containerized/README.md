@@ -69,14 +69,33 @@ The Tools included are as follows :-
 - BEDTOOLS
 - VCFTOOLS
 
+### VARIANT ANNOTATION
+- ANNOVAR
+- SNPEFF
+- VEP
+
 ******
 
 Getting the NGS Pipeline
 =========================
+
+```bash
+docker pull [CONTAINER]
+```
+
 ******
 
 Running the NGS Pipeline
 ==========================
+
+```bash
+docker run \
+-v ~/FASTQ_STAGGING:~/FASTQ_STAGGING \
+-v ~/reference_geneomes:~/reference_genomes \
+-v ~/ngs_projects:~/ngs_projects \
+-u pipeman -t [CONTAINER] ngs.config
+```
+
 ******
 
 User set up
