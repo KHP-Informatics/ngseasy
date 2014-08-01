@@ -79,8 +79,14 @@ The Tools included are as follows :-
 - SNPEFF
 - VEP
 
-### CNV CALLING
-- TBA
+### CNV/Structural Variant CALLING
+- TBA...
+- lumpy-sv https://github.com/arq5x/lumpy-sv
+- delly
+- m-HMM
+- CNVer
+- ExomeDepth
+
 
 ******
 
