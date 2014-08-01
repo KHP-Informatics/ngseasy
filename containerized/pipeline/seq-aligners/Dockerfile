@@ -220,7 +220,8 @@ RUN wget -O /tmp/stampy-latest.tgz  http://www.well.ox.ac.uk/~gerton/software/St
 # use ADD to copy the downloaded GATK binary from <buildcontext_path>/GenomeAnalysisTK-3.2-2.tar.bz2 to the /tmp dir in the container
 # NOTE: ADD automatically unpacks compressed files
 RUN wget -O /tmp/GenomeAnalysisTK-3.2-2.tar.bz2 https://www.dropbox.com/s/wey1edv9tqdc7so/GenomeAnalysisTK-3.2-2.tar.bz2 \
-  && tar xjvf /tmp/GenomeAnalysisTK-3.2-2.tar.bz2 -C /usr/local/pipeline/ \
+  && mkdir /usr/local/pipeline/GenomeAnalysisTK-3.2-2 \ 
+  && tar xjvf /tmp/GenomeAnalysisTK-3.2-2.tar.bz2 -C /usr/local/pipeline/GenomeAnalysisTK-3.2-2 \
   && chmod -R 755 /usr/local/pipeline/GenomeAnalysisTK-3.2-2 \
   && chown -R pipeman:ngsgroup /usr/local/pipeline/GenomeAnalysisTK-3.2-2 \
   && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar' /home/pipeman/.bashrc \
