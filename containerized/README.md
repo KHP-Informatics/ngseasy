@@ -79,8 +79,17 @@ The Tools included are as follows :-
 Getting the NGS Pipeline
 =========================
 
+Available NGSEASY containers:- 
+ 
+- afolarin/seq-alignment
+- afolarin/var-calling
+- afolarin/sv-calling
+- afolarin/var-anno
+- afolarin/vis-reports
+- delly
+
 ```bash
-docker pull [CONTAINER]
+sudo docker pull afolarin/seq-alignment
 ```
 
 ******
@@ -89,7 +98,7 @@ Running the NGS Pipeline
 ==========================
 
 ```bash
-docker run \
+sudo docker run \
 -v ~/FASTQ_STAGGING:~/FASTQ_STAGGING \
 -v ~/reference_geneomes:~/reference_genomes \
 -v ~/ngs_projects:~/ngs_projects \
@@ -105,6 +114,7 @@ User set up
 
 - FASTQ_STAGGING [FASTQ_STAGGING is to hold all incoming raw fastq files]
 - ngs_projects [out put directory for all ngs projects)
+- reference_genomes [get from URL and unpack. NB: XXX GB!]
 
 These folders are required by pipeline as they are hardcoded in the nsg scripts.
 
