@@ -95,8 +95,7 @@
 # Option2.  mount shared directory on host
 #   $ docker run -v /*host*/data/reference:/media/ngsEasy/data/reference
 
-# Base image will be Trusty
-#FROM ubuntu:trusty
+# Base image will be latest
 FROM ubuntu
 
 # Maintainer Amos Folarin
@@ -106,59 +105,6 @@ MAINTAINER Amos Folarin amosfolarin@gmail.com
 ENV HOME /root
 
 RUN apt-get update
-
-# Required basic stuff, make, gcc, wget etc
-RUN apt-get install -y gcc 
-RUN apt-get install -y g++
-RUN apt-get install -y python-dev
-RUN apt-get install -y make 
-RUN apt-get install -y tabix
-RUN apt-get install -y git-core 
-RUN apt-get install -y wget 
-RUN apt-get install -y unzip
-RUN apt-get install -y zlib1g-dev 
-RUN apt-get install -y libncurses5-dev
-RUN apt-get install -y sysvbanner
-RUN apt-get install -y openjdk-7-jre
-RUN apt-get install -y openjdk-7-jdk
-RUN apt-get install -y curl 
-RUN apt-get install -y libcurl3
-RUN apt-get install -y php5-curl 
-RUN apt-get install -y libxml2 
-RUN apt-get install -y libxslt-dev 
-RUN apt-get install -y libxml2-dev 
-RUN apt-get install -y fastx-toolkit
-RUN apt-get install -y htmldoc 
-RUN apt-get install -y html2text
-RUN apt-get install -y perl
-RUN apt-get install -y perl-modules
-RUN apt-get install -y bioperl
-RUN apt-get install -y tree
-RUN apt-get install -y tabix
-RUN apt-get install -y bzip2
-RUN apt-get install -y build-essential 
-RUN apt-get install -y cmake
-RUN apt-get install -y dpkg-dev 
-RUN apt-get install -y binutils
-RUN apt-get install -y libx11-dev
-RUN apt-get install -y libxpm-dev
-RUN apt-get install -y libxft-dev
-RUN apt-get install -y libxext-dev
-RUN apt-get install -y gfortran
-RUN apt-get install -y libssl-dev
-RUN apt-get install -y libpcre3-dev
-RUN apt-get install -y xlibmesa-glu-dev 
-RUN apt-get install -y libglew1.5-dev 
-RUN apt-get install -y libftgl-dev
-RUN apt-get install -y libmysqlclient-dev 
-RUN apt-get install -y libfftw3-dev 
-RUN apt-get install -y cfitsio-dev
-RUN apt-get install -y graphviz-dev 
-RUN apt-get install -y libavahi-compat-libdnssd-dev
-RUN apt-get install -y libldap2-dev 
-RUN apt-get install -y libkrb5-dev
-RUN apt-get install -y libgsl0-dev 
-RUN apt-get install -y libqt4-dev
 
 
 #------------------------------------------------------------------------
@@ -173,22 +119,6 @@ RUN usermod -G ngsgroup pipeman
 # give root access
 echo "pipeman	ALL=(ALL)	ALL" >>  /etc/sudoers && RUN echo "%ngsgroup	ALL=(ALL)	ALL" >>  /etc/sudoers
 
-#---------------------- Visualisations -----------------------------------
 
-# + R (replace with installing the dev, if there is need to compile packages)
-RUN sudo apt-get install -y r-base-dev r-cran-colorspace r-cran-date r-cran-lattice r-cran-hmisc
-RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("caret",dependencies=TRUE ,repos="http://cran.r-project.org")'
-RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("gdata",dependencies=TRUE ,repos="http://cran.r-project.org")'
-RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("gplots",dependencies=TRUE ,repos="http://cran.r-project.org")'
-RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("ggplot2",dependencies=TRUE ,repos="http://cran.r-project.org")'
-RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("RColorBrewer",dependencies=TRUE ,repos="http://cran.r-project.org")'
-RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("doMC",dependencies=TRUE ,repos="http://cran.r-project.org")'
-RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("caTools",dependencies=TRUE ,repos="http://cran.r-project.org")'
-RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("utils",dependencies=TRUE ,repos="http://cran.r-project.org")'
-RUN /usr/bin/Rscript --no-save --no-restore -e 'install.packages("lattice",dependencies=TRUE ,repos="http://cran.r-project.org")'
-
-#------------------------------------bioconductor---------------------------------
-# install bioconductor -- mod the biocLite.R script so it fires default bioc installation
-RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite()'
 
 
