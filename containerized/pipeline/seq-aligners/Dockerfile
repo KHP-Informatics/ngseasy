@@ -179,7 +179,7 @@ RUN cd /usr/local/pipeline/ \
 RUN wget -O /tmp/novocraftV3.02.07.Linux3.0.tar.gz https://www.dropbox.com/s/kbgds9e6ucog6oj/novocraftV3.02.07.Linux3.0.tar.gz \
   && tar xvf /tmp/novocraftV3.02.07.Linux3.0.tar.gz  -C /usr/local/pipeline/ \
   && cp -v /usr/local/pipeline/novocraft/novosort /usr/local/pipeline/novocraft/novosort_original \
-  && rm/usr/local/pipeline/novocraft/novosort \
+  && rm /usr/local/pipeline/novocraft/novosort \
   && wget -O /tmp/novosortV1.03.01.Linux3.0.tar.gz https://www.dropbox.com/s/1j4w9rpyoug1pbo/novosortV1.03.01.Linux3.0.tar.gz \
   && tar xvf /tmp/novosortV1.03.01.Linux3.0.tar.gz -C /usr/local/pipeline/novocraft \
   && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/novocraft' /home/pipeman/.bashrc \
