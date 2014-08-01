@@ -74,6 +74,9 @@ The Tools included are as follows :-
 - SNPEFF
 - VEP
 
+### CNV CALLING
+- TBA
+
 ******
 
 Getting the NGS Pipeline
