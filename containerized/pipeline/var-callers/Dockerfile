@@ -136,8 +136,10 @@ RUN apt-get install -y perl
 RUN apt-get install -y bioperl
 RUN apt-get install -y r-base-dev
 
+
+
 #---------------------- FREEBAYES  -------------------------------- 
-RUN cd /usr/local/pipeline \
+RUN mkdir /usr/local/pipeline && cd /usr/local/pipeline \
   && git clone --recursive git://github.com/ekg/freebayes.git \
   && cd /usr/local/pipeline/freebayes \
   && make \
