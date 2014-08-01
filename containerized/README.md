@@ -41,15 +41,46 @@ own versions of (below) in the build directory:
 
 Overview of Pipeline Components
 ================================
+The basic pipeline contains all the basic tools needed for manipulation and 
+quality control of raw fastq files (ILLUMINA focused), SAM/BAM manipulation,
+alignment, cleaning (based on GATK best practises [ADD LINK]) and first pass
+variant discovery. Separate containers are provided for indepth variant annotation,
+structural variant calling, basic reporting and visualisations.  
+
+The Tools included are as follows :- 
+
+### Fastq manipulation
+- FASTQC
+- SEQTK
+- TRIMMOMATIC
+
+### Alignmnet
+- BWA
+- BOWTIE2
+- STAMPY
+- NOVOALIGN
+
+### SAM/BAM Processing
+- GATK
+- PICARDTOOLS
+- SAMTOOLS
+
+### MISC
+- BEDTOOLS
+- VCFTOOLS
+
+******
 
 Getting the NGS Pipeline
 =========================
+******
 
 Running the NGS Pipeline
 ==========================
+******
 
 User set up
-------------
+========================
 
 1. On local machine, make the following directories:-
 
@@ -57,4 +88,6 @@ User set up
 - ngs_projects [out put directory for all ngs projects)
 
 These folders are required by pipeline as they are hardcoded in the nsg scripts.
+
+******
 
