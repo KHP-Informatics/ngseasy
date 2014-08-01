@@ -117,7 +117,7 @@ RUN usermod -G ngsgroup pipeman
 # USER pipeman
 
 # give root access
-echo "pipeman	ALL=(ALL)	ALL" >>  /etc/sudoers && RUN echo "%ngsgroup	ALL=(ALL)	ALL" >>  /etc/sudoers
+# echo "pipeman	ALL=(ALL)	ALL" >>  /etc/sudoers && echo "%ngsgroup	ALL=(ALL)	ALL" >>  /etc/sudoers
 
 
 
