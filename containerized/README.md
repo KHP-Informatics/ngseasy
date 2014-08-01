@@ -58,7 +58,7 @@ The Tools included are as follows :-
 - BWA
 - BOWTIE2
 - STAMPY
-- NOVOALIGN
+- NOVOALIGN [FULL VERSION NOT AVAILABLE FOR PUBLIC USE]
 
 ### SAM/BAM Processing
 - GATK
