@@ -69,6 +69,11 @@ The Tools included are as follows :-
 - BEDTOOLS
 - VCFTOOLS
 
+### VARIANT CALLING
+- GATK
+- SAMTOOLS
+- FREEBAYES
+
 ### VARIANT ANNOTATION
 - ANNOVAR
 - SNPEFF
