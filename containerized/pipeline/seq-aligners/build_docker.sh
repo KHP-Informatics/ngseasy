@@ -1,2 +1,2 @@
 #!/bin/sh
-docker build --force-rm=true --no-cache  -t ngseasy/seq-alignment .
+docker build --force-rm=true --no-cache --rm -t ngseasy/seq-alignment:x.1.0 .
