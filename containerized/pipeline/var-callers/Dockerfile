@@ -166,12 +166,12 @@ RUN wget -O /tmp/GenomeAnalysisTK-3.2-2.tar.bz2 https://www.dropbox.com/s/wey1ed
 
   
 #---------------------- b37 gatk resource -----------------------------
-RUN wget -O /tmp/gatk_resources.tar.gz https://www.dropbox.com/s/ff1b5l2xbhisidx/gatk_resources.tar.gz \
-  && tar xvf /tmp/gatk_resources.tar.gz -C /usr/local/pipeline/ \
-  && gunzip /usr/local/pipeline/gatk_resources/*.gz \ 
-  && chown -R pipeman:ngsgroup /usr/local/pipeline/gatk_resources \
-  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/gatk_resources' /home/pipeman/.bashrc \
-  && echo "alias ngsGATKresources='/usr/local/pipeline/gatk_resources'" >>  /home/pipeman/.bashrc
+#RUN wget -O /tmp/gatk_resources.tar.gz https://www.dropbox.com/s/ff1b5l2xbhisidx/gatk_resources.tar.gz \
+#  && tar xvf /tmp/gatk_resources.tar.gz -C /usr/local/pipeline/ \
+#  && gunzip /usr/local/pipeline/gatk_resources/*.gz \ 
+#  && chown -R pipeman:ngsgroup /usr/local/pipeline/gatk_resources \
+#  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/gatk_resources' /home/pipeman/.bashrc \
+#  && echo "alias ngsGATKresources='/usr/local/pipeline/gatk_resources'" >>  /home/pipeman/.bashrc
 
 
 #---------------------- SAM/BED/VCF Processing tools  --------------------------------    
