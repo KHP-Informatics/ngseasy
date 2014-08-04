@@ -187,8 +187,8 @@ RUN wget -O /tmp/novocraftV3.02.07.Linux3.0.tar.gz https://www.dropbox.com/s/kbg
   && echo "alias ngsNovoalign='/usr/local/pipeline/novocraft/novoalign'" >>  /home/pipeman/.bashrc
 
 # + get novoalign.lic 
-ADD novoalign.lic /usr/local/pipeline/novocraft/ \
-&& chown -R pipeman:ngsgroup /usr/local/pipeline/novocraft \
+ADD novoalign.lic /usr/local/pipeline/novocraft/
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline/novocraft
   
 # + bowtie
 RUN wget -O /tmp/bowtie2-2.2.3-linux-x86_64.zip http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.3/bowtie2-2.2.3-linux-x86_64.zip \
