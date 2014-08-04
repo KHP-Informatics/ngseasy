@@ -129,8 +129,16 @@ User set up
 - FASTQ_STAGGING [FASTQ_STAGGING is to hold all incoming raw fastq files]
 - ngs_projects [out put directory for all ngs projects)
 - reference_genomes [get from URL and unpack. NB: XXX GB!]
+- gatk_resources
+- humandb [annovar]
+- vep [VEP data base]
+- snpeff [snpeff database]
 
 These folders are required by pipeline as they are hardcoded in the nsg scripts.
+
+- Get reference genomes, gatk resouces, snp annotation databases from [ADD URL]
+- Un compress and save on local machine
+
 
 ******
 
