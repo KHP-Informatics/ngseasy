@@ -41,6 +41,8 @@ RUN apt-get install -y r-base-dev
 
 #------------------ Variant Annotation & Reports -------------------------
 
+RUN mkdir /usr/local/pipeline 
+
 # + BEDtools
 RUN cd /usr/local/pipeline \
     && git clone https://github.com/arq5x/bedtools2.git \
