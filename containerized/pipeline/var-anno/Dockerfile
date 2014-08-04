@@ -99,7 +99,7 @@ RUN cd \
   && tar zxvf ensembl-api.tar.gz \
   && tar zxvf bioperl-1.2.3.tar.gz \
   && cd \
-  && chmod -R 766 /src
+  && chmod -R 766 src
 
 ENV PERL5LIB ${PERL5LIB}:${HOME}/src/bioperl-1.2.3
 ENV PERL5LIB ${PERL5LIB}:${HOME}/src/ensembl/modules
