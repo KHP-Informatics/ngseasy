@@ -1,7 +1,7 @@
 #############################################################################################
 # -- Authors: Stepgen Newhouse, Amos Folarin, Aditi Gulati                                  #
 # -- Organisation: KCL/SLaM/NHS                                                             #
-# -- Email: stephen.j.newhouse@gmail.com, amosfolarin@gmail.com,aditi.gulati@nhs.ne         #
+# -- Email: stephen.j.newhouse@gmail.com, amosfolarin@gmail.com, aditi.gulati@nhs.ne        #
 # -- Verion: 1.3                                                                            #
 # -- Date: 11/09/2013                                                                       #
 # -- DESC: NGS pipeline to perform SE/PE Alignments & GATK cleaning                         #
@@ -15,11 +15,11 @@
 # ARG#2 = pipeline_env.conf, the configuration file for various pipeline resources
 
 # USAGE:
-# Rscript call_ngs_workflow.R patient_template.conf  pipeline_env.conf 
+# Rscript call_ngs_workflow.R patient_template.conf  pipeline_env.conf
 
 
-# The pipeline call_ngs_workflow.R is the entry point which packages parameters from the 
-# config file and calls the script defined by the [pipeline] field of the config file 
+# The pipeline call_ngs_workflow.R is the entry point which packages parameters from the
+# config file and calls the script defined by the [pipeline] field of the config file
 # typically this will be pipeline=ngs_master_workflow.sh.
 # qsub <pipeline> <fastq_prefix> <sample_name> <qual_type> <RGID> <RGLB> <RGPL> <RGPU> <RGSM> <RGCN> <RGDS> <RGDT> <PE> <bed_list> <emial> <fastq_dir> <bam_dir>
 
@@ -54,7 +54,7 @@
 # -- reference_genome_seq=string                reference genomes
 # -- b37_1000G_indels=string                    ref vcf files for gatk
 # -- b37_Mills_Devine_2hit_indels=string        ref vcf files for gatk
-# -- b37_1000G_omni2_5=string                   ref vcf files for gatk    
+# -- b37_1000G_omni2_5=string                   ref vcf files for gatk
 # -- b37_dbsnp=string                           ref vcf files for gatk
 # -- b37_hapmap_3_3                             ref vcf files for gatk
 # -- b37_1000G_snps                             ref vcf files for gatk
