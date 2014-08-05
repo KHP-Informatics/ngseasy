@@ -9,22 +9,20 @@
 #$ -j y
 #------------------------------------------------------------------------#
 
-
-#############################################################################################
-# -- Authors: Stephen Newhouse, Amos Folarin, Aditi Gulati                                  #
-# -- Organisation: KCL/SLaM/NHS                                                             #
-# -- Email: stephen.j.newhouse@gmail.com, amosfolarin@gmail.com,aditi.gulati@nhs.net         #
-# -- Verion: 1.3                                                                            #
-# -- Date: 11/09/2013                                                                       #
-# -- DESC: NGS pipeline to perform SE/PE Alignments & GATK cleaning                         #
-#############################################################################################
+#######################################################################################################
+# ADAPTED BY David Brawand FOR DIAGNOSTICS                                                            #
+#######################################################################################################
+# -- Authors: Stephen Newhouse, Amos Folarin, Aditi Gulati, David Brawand                             #
+# -- Organisation: KCL/SLaM/NHS                                                                       #
+# -- Email: stephen.j.newhouse@gmail.com, amosfolarin@gmail.com,aditi.gulati@nhs.net,dbrawand@nhs.net #
+# -- Verion: 1.9                                                                                      #
+# -- Date: 11/09/2013                                                                                 #
+# -- DESC: NGS pipeline to perform SE/PE Alignments, variant discovery and annotation                 #
+#######################################################################################################
 
 # called by the main dispatch:
 #   Rscript call_ngs_master_workflow.R <patient.config> <pipeline_env.config>
-
 # For instructions on running the pipeline see the README file in this this directory:
-
-
 
 
 #------------------------------------------------------------------------#
@@ -115,7 +113,6 @@ export ngstmp=${41}  #"/scratch/project/pipelines/ngs_temp"
 fastq_prefix=${1}
 sample_name=${2}.${5}.${6}
 qual_type=${3}  ## Base quality coding for novoalign ie STFQ, ILMFQ, ILM1.8
-
 mRGID=${4}	#Read Group ID Required.
 mRGLB=${5}	#Read Group Library Required.
 mRGPL=${6}	#Read Group platform (e.g. illumina, solid,IONTORRENT) Required.
@@ -124,7 +121,6 @@ mRGSM=${8}	#Read Group sample name Required.
 mRGCN=${9}	#Read Group sequencing center name Required.
 mRGDS=${10}	#Read Group description Required.
 mRGDT=${11}	#Read Group run date Required.
-
 mPE=${12} 	#Indicates PE or SE
 bed_list=${13}	#target bed for coverage
 bed_type=${14}  # region or whole_genome : needed for coverage
@@ -192,18 +188,10 @@ cd ${sample_dir}
 
 #------------------------------------------------------------------------------#
 
-################################
-## START TRIMMING/QC PIPELINE ##
-################################
-
-# TRIMMING and QUALITY FILTERING (WITH TRIMMOMATIC)
-
-
-
-
-
-
-
+#######################
+## START TRIMMING/QC ##
+#######################
+qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N trimmomatic.${sample_name} -l h_vmem=${sge_h_vmem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_AdapterTrimming.sh ${sample_name} ${sample_dir} ${fastq_dir}${fastq_prefix};
 
 ##############################
 ## START ALIGNMENT PIPELINE ##
@@ -212,27 +200,9 @@ cd ${sample_dir}
 #----------------------------------------------------------------------#
 # 1. Align PE or SE data
 #----------------------------------------------------------------------#
-##echo ">>>>>" `date` " :-> " "Aligning PE data "
 
-if [ ${mPE} -eq 1 ] && [ ${mRGPL} == "illumina" ]; then
-
-echo "Reads are PE ILLUMINA"
-
-qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.illumina.${qual_type}.PE.sh ${fastq_prefix} ${sample_name} ${sample_dir};
-
-elif [ ${mPE} -eq 0 ] && [ ${mRGPL} == "illumina" ]; then
-
-echo "Reads are SE ILLUMINA"
-
-qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.illumina.${qual_type}.SE.sh ${fastq_prefix} ${sample_name} ${sample_dir};
-
-elif [ ${mPE} -eq 0 ] && [ ${mRGPL} == "IONTORRENT" ]; then
-
-echo "Reads are SE IONTORRENT"
-
-qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.IONTORRENT.${qual_type}.SE.sh ${fastq_prefix} ${sample_name} ${sample_dir};
-
-fi
+# Illumina PE/SE
+qsub -o ${SGE_OUT} -e ${SGE_OUT} -q ${queue_name} -N novoalign.${sample_name} -l h_vmem=${novo_mem}G -pe multi_thread ${novo_cpu} -M ${email_contact} -m beas ${ngs_pipeline}/ngs_novoalign.sh ${sample_name} ${sample_dir};
 
 #----------------------------------------------------------------------#
 # 2. sam2bam
