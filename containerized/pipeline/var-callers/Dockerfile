@@ -189,7 +189,7 @@ RUN cd /usr/local/pipeline \
 	&& make \
 	&& cd /usr/local/pipeline/samtools \
 	&& make \
-	&& /usr/local/pipeline/htslib \
+	&& cd /usr/local/pipeline/htslib \
 	&& make \
 	&& chown -R pipeman:ngsgroup /usr/local/pipeline/samtools \
 	&& chown -R pipeman:ngsgroup /usr/local/pipeline/bcftools \
