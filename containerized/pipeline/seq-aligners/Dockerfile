@@ -99,44 +99,43 @@
 FROM afolarin/base-config
 
 # Maintainer Amos Folarin
-    MAINTAINER Amos Folarin amosfolarin@gmail.com
+MAINTAINER Amos Folarin amosfolarin@gmail.com
 
 # Set correct environment variables.
-    ENV HOME /root
+ENV HOME /root
 
 # install basic dependencies
-    RUN apt-get update
-
-    RUN apt-get install -y gcc 
-    RUN apt-get install -y g++
-    RUN apt-get install -y python-dev
-    RUN apt-get install -y make 
-    RUN apt-get install -y build-essential 
-    RUN apt-get install -y cmake
-    RUN apt-get install -y tabix
-    RUN apt-get install -y dpkg-dev 
-    RUN apt-get install -y binutils
-    RUN apt-get install -y gfortran
-    RUN apt-get install -y git-core 
-    RUN apt-get install -y wget 
-    RUN apt-get install -y unzip bzip2
-    RUN apt-get install -y zlib1g-dev 
-    RUN apt-get install -y libncurses5-dev
-    RUN apt-get install -y sysvbanner
-    RUN apt-get install -y openjdk-7-jre
-    RUN apt-get install -y openjdk-7-jdk
-    RUN apt-get install -y curl 
-    RUN apt-get install -y libcurl3
-    RUN apt-get install -y php5-curl 
-    RUN apt-get install -y libxml2 
-    RUN apt-get install -y libxslt-dev 
-    RUN apt-get install -y libxml2-dev 
-    RUN apt-get install -y fastx-toolkit
-    RUN apt-get install -y htmldoc 
-    RUN apt-get install -y html2text
-    RUN apt-get install -y perl
-    RUN apt-get install -y bioperl
-    RUN apt-get install -y r-base-dev
+RUN apt-get update
+RUN apt-get install -y gcc 
+RUN apt-get install -y g++
+RUN apt-get install -y python-dev
+RUN apt-get install -y make 
+RUN apt-get install -y build-essential 
+RUN apt-get install -y cmake
+RUN apt-get install -y tabix
+RUN apt-get install -y dpkg-dev 
+RUN apt-get install -y binutils
+RUN apt-get install -y gfortran
+RUN apt-get install -y git-core 
+RUN apt-get install -y wget 
+RUN apt-get install -y unzip bzip2
+RUN apt-get install -y zlib1g-dev 
+RUN apt-get install -y libncurses5-dev
+RUN apt-get install -y sysvbanner
+RUN apt-get install -y openjdk-7-jre
+RUN apt-get install -y openjdk-7-jdk
+RUN apt-get install -y curl 
+RUN apt-get install -y libcurl3
+RUN apt-get install -y php5-curl 
+RUN apt-get install -y libxml2 
+RUN apt-get install -y libxslt-dev 
+RUN apt-get install -y libxml2-dev 
+RUN apt-get install -y fastx-toolkit
+RUN apt-get install -y htmldoc 
+RUN apt-get install -y html2text
+RUN apt-get install -y perl
+RUN apt-get install -y bioperl
+RUN apt-get install -y r-base-dev
 
 
 #---------------------------------------------------------------------------------------
@@ -146,30 +145,30 @@ FROM afolarin/base-config
 #---------------------- Quality Control ----------------------------------
 
 # + Trimmomatic
-    RUN wget -O /tmp/Trimmomatic-0.32.zip http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.32.zip \
-        && unzip /tmp/Trimmomatic-0.32.zip -d /usr/local/pipeline/ \
-        && chown -R pipeman:ngsgroup /usr/local/pipeline/Trimmomatic-0.32 \
-        && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar' /home/pipeman/.bashrc \
-        && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Trimmomatic-0.32' /home/pipeman/.bashrc \
-        && echo "alias ngsTrimfq='/usr/local/pipeline/Trimmomatic-0.32'" >>  /home/pipeman/.bashrc
-        
+RUN wget -O /tmp/Trimmomatic-0.32.zip http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.32.zip \
+    && unzip /tmp/Trimmomatic-0.32.zip -d /usr/local/pipeline/ \
+    && chown -R pipeman:ngsgroup /usr/local/pipeline/Trimmomatic-0.32 \
+    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar' /home/pipeman/.bashrc \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Trimmomatic-0.32' /home/pipeman/.bashrc \
+    && echo "alias ngsTrimfq='/usr/local/pipeline/Trimmomatic-0.32'" >>  /home/pipeman/.bashrc
+    
 # + FastQC
-    RUN wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.2.zip \
-        && unzip /tmp/fastqc_v0.11.2.zip -d /usr/local/pipeline/ \
-        && chown -R pipeman:ngsgroup /usr/local/pipeline/FastQC \
-        && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/FastQC/jbzip2-0.9.jar:/usr/local/pipeline/FastQC/sam-1.103.jar' /home/pipeman/.bashrc \
-        && sed -i '$aPATH=${PATH}:/usr/local/pipeline/FastQC' /home/pipeman/.bashrc \
-        && echo "alias ngsFastqc='/usr/local/pipeline/FastQC'" >>  /home/pipeman/.bashrc    
+RUN wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.2.zip \
+    && unzip /tmp/fastqc_v0.11.2.zip -d /usr/local/pipeline/ \
+    && chown -R pipeman:ngsgroup /usr/local/pipeline/FastQC \
+    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/FastQC/jbzip2-0.9.jar:/usr/local/pipeline/FastQC/sam-1.103.jar' /home/pipeman/.bashrc \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/FastQC' /home/pipeman/.bashrc \
+    && echo "alias ngsFastqc='/usr/local/pipeline/FastQC'" >>  /home/pipeman/.bashrc    
 
 # + seqtk
-    RUN cd /usr/local/pipeline/ \
-    && git clone https://github.com/lh3/seqtk.git \
-    && chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk \
-    && cd seqtk/ \
-    && make \
-    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/seqtk' /home/pipeman/.bashrc \
-    && echo "alias ngsSeqtk='/usr/local/pipeline/seqtk'" >>  /home/pipeman/.bashrc \
-    && cd
+RUN cd /usr/local/pipeline/ \
+&& git clone https://github.com/lh3/seqtk.git \
+&& chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk \
+&& cd seqtk/ \
+&& make \
+&& sed  -i '$aPATH=${PATH}:/usr/local/pipeline/seqtk' /home/pipeman/.bashrc \
+&& echo "alias ngsSeqtk='/usr/local/pipeline/seqtk'" >>  /home/pipeman/.bashrc \
+&& cd
 
 #---------------------- Sequence Aligners --------------------------------
 # Aligner options: 1)*novoalign*  2)bowtie, 3)stampy, 4)bwa
@@ -177,19 +176,16 @@ FROM afolarin/base-config
 # + novoalign (registration required,  get compressed file and put in context dir for the build)
 # + get novoalign.lic from novoalign ~ $1000 and put in context dir for the build
 # + get updated version of novosort novosortV1.03.01.Linux3.0.tar.gz and put in context dir for the build
-    RUN wget -O /tmp/novocraftV3.02.07.Linux3.0.tar.gz https://www.dropbox.com/s/kbgds9e6ucog6oj/novocraftV3.02.07.Linux3.0.tar.gz \
-      && tar xvf /tmp/novocraftV3.02.07.Linux3.0.tar.gz  -C /usr/local/pipeline/ \
-      && cp -v /usr/local/pipeline/novocraft/novosort /usr/local/pipeline/novocraft/novosort_original \
-      && rm /usr/local/pipeline/novocraft/novosort \
-      && wget -O /tmp/novosortV1.03.01.Linux3.0.tar.gz https://www.dropbox.com/s/1j4w9rpyoug1pbo/novosortV1.03.01.Linux3.0.tar.gz \
-      && tar xvf /tmp/novosortV1.03.01.Linux3.0.tar.gz -C /usr/local/pipeline/novocraft \
-      && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/novocraft' /home/pipeman/.bashrc \
-      && chown -R pipeman:ngsgroup /usr/local/pipeline/novocraft \
-      && echo "alias ngsNovoalign='/usr/local/pipeline/novocraft/novoalign'" >>  /home/pipeman/.bashrc
+ADD ./novocraftV3.02.07.Linux3.0.tar.gz /usr/local/pipeline/ \
+  && cp -v /usr/local/pipeline/novocraft/novosort /usr/local/pipeline/novocraft/novosort_original \
+  && rm /usr/local/pipeline/novocraft/novosort \
+ADD ./novosortV1.03.01.Linux3.0.tar.gz /usr/local/pipeline/novocraft/ \
+  && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/novocraft' /home/pipeman/.bashrc \
+  && chown -R pipeman:ngsgroup /usr/local/pipeline/novocraft \
+  && echo "alias ngsNovoalign='/usr/local/pipeline/novocraft/novoalign'" >>  /home/pipeman/.bashrc
 
 # + get novoalign.lic 
-ADD novoalign.lic /usr/local/pipeline/novocraft/
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline/novocraft
+# ADD novoalign.lic /usr/local/pipeline/novocraft/
   
 # + bowtie
 RUN wget -O /tmp/bowtie2-2.2.3-linux-x86_64.zip http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.3/bowtie2-2.2.3-linux-x86_64.zip \
