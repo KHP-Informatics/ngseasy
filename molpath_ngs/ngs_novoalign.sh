@@ -38,7 +38,8 @@ else
     exit 1
 fi
 
-OUTFILE=${sample_name}.sam
+# outputfile
+OUTFILE=${sample_name}.aln.sam
 
 echo "----------------------------------------------------------------------------------------"
 echo " sampleDir        " $sample_dir
