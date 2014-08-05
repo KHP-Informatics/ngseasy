@@ -1,5 +1,5 @@
 #!/bin/sh
 
-docker ps -a | grep 'Exit' | awk '{print }' | xargs -r docker rm
+docker ps -a  | grep 'Exit' | awk '{print $1}' | xargs -r docker rm
 
-docker images | grep none | awk '{print }' | xargs -r docker rmi
+docker images -a  | grep none | awk '{print $3}' | xargs -r docker rmi
