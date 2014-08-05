@@ -1,2 +1,2 @@
 #!/bin/sh
-docker build --force-rm=true --no-cache -t snewhouse/seq-alignment:v1.0a .
+docker build --force-rm=true --no-cache --rm -t ngseasy/seq-alignment:p.1.0 .
