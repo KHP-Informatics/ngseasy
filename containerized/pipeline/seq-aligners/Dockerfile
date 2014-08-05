@@ -96,7 +96,7 @@
 #   $ docker run -v /*host*/data/reference:/media/ngsEasy/data/reference
 
 # Base image will be Trusty
-FROM snewhouse/base-config
+FROM afolarin/base-config
 
 # Maintainer Amos Folarin
 MAINTAINER Amos Folarin amosfolarin@gmail.com
