@@ -237,12 +237,33 @@ RUN wget -O /tmp/GenomeAnalysisTK-3.2-2.tar.bz2 https://www.dropbox.com/s/wey1ed
 
 #---------------------- SAM/BED/VCF Processing tools  --------------------------------    
 # + SAMtools
-RUN wget -O /tmp/samtools-0.1.19.tar.bz2 http://sourceforge.net/projects/samtools/files/samtools/0.1.19/samtools-0.1.19.tar.bz2 \
-    && tar xjvf /tmp/samtools-0.1.19.tar.bz2 -C /usr/local/pipeline/ \
-    && cd /usr/local/pipeline/samtools-0.1.19 && make \
-    && chown -R pipeman:ngsgroup /usr/local/pipeline/samtools-0.1.19 \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/samtools-0.1.19/bin' /home/pipeman/.bashrc \
-    && echo "alias ngsSamtools='/usr/local/pipeline/samtools-0.1.19/bin'" >>  /home/pipeman/.bashrc
+# + samtools, htslib and bcftools
+RUN cd /usr/local/pipeline \
+	&& git clone --branch=develop git://github.com/samtools/htslib.git \
+	&& git clone --branch=develop git://github.com/samtools/bcftools.git \
+	&& git clone --branch=develop git://github.com/samtools/samtools.git \
+	&& cd /usr/local/pipeline/bcftools \
+	&& make \
+	&& cd /usr/local/pipeline/samtools \
+	&& make \
+	&& /usr/local/pipeline/htslib \
+	&& make \
+	&& chown -R pipeman:ngsgroup /usr/local/pipeline/samtools \
+	&& chown -R pipeman:ngsgroup /usr/local/pipeline/bcftools \
+	&& chown -R pipeman:ngsgroup /usr/local/pipeline/htslib \
+	&& sed  -i '$aPATH=${PATH}:/usr/local/pipeline/samtools' /home/pipeman/.bashrc \
+	&& echo "alias ngsSAMtools='/usr/local/pipeline/samtools'" >>  /home/pipeman/.bashrc \
+        && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/bcftools' /home/pipeman/.bashrc \
+        && echo "alias ngsBCFtools='/usr/local/pipeline/bcftools'" >>  /home/pipeman/.bashrc \
+        && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/htslib' /home/pipeman/.bashrc \
+        && echo "alias ngsHTSlib='/usr/local/pipeline/htslib'" >>  /home/pipeman/.bashrc \
+
+#RUN wget -O /tmp/samtools-0.1.19.tar.bz2 http://sourceforge.net/projects/samtools/files/samtools/0.1.19/samtools-0.1.19.tar.bz2 \
+#    && tar xjvf /tmp/samtools-0.1.19.tar.bz2 -C /usr/local/pipeline/ \
+#    && cd /usr/local/pipeline/samtools-0.1.19 && make \
+#    && chown -R pipeman:ngsgroup /usr/local/pipeline/samtools-0.1.19 \
+#   && sed -i '$aPATH=${PATH}:/usr/local/pipeline/samtools-0.1.19/bin' /home/pipeman/.bashrc \
+#    && echo "alias ngsSamtools='/usr/local/pipeline/samtools-0.1.19/bin'" >>  /home/pipeman/.bashrc
 
 # + Picard
 RUN wget -O /tmp/picard-tools-1.115.zip http://sourceforge.net/projects/picard/files/picard-tools/1.115/picard-tools-1.115.zip \
