@@ -136,26 +136,7 @@ RUN apt-get install -y perl
 RUN apt-get install -y bioperl
 RUN apt-get install -y r-base-dev
 
-#---------------------- FREEBAYES  -------------------------------- 
-RUN mkdir /usr/local/pipeline \
-  && cd /usr/local/pipeline \
-  && git clone --recursive git://github.com/ekg/freebayes.git \
-  && cd /usr/local/pipeline/freebayes \
-  && make \
-  && chmod -R 755 /usr/local/pipeline/freebayes \
-  && chown -R pipeman:ngsgroup /usr/local/pipeline/freebayes \
-  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/freebayes/bin' /home/pipeman/.bashrc \
-  && echo "alias ngsFreebayes='/usr/local/pipeline/freebayes/bin'" >>  /home/pipeman/.bashrc
 
-#-----------------------------PLATYPUS-------------------------------
-RUN wget -O /tmp/Platypus-latest.tgz http://www.well.ox.ac.uk/bioinformatics/Software/Platypus-latest.tgz \
-  && tar xvf /tmp/Platypus-latest.tgz -C /usr/local/pipeline/ \
-  && cd /usr/local/pipeline/Platypus_0.7.4 \
-  && sh ./buildPlatypus.sh \
-  && chmod -R 755 /usr/local/pipeline/Platypus_0.7.4 \
-  && chown -R pipeman:ngsgroup /usr/local/pipeline/Platypus_0.7.4 \
-  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.4' /home/pipeman/.bashrc \
-  && echo "alias ngsPlatypus='/usr/local/pipeline/Platypus_0.7.4'" >>  /home/pipeman/.bashrc
 
 #---------------------- GATK --------------------------------
 
@@ -209,7 +190,26 @@ RUN cd /usr/local/pipeline \
         && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/htslib' /home/pipeman/.bashrc \
         && echo "alias ngsHTSlib='/usr/local/pipeline/htslib'" >>  /home/pipeman/.bashrc 
 
+#---------------------- FREEBAYES  -------------------------------- 
+RUN mkdir /usr/local/pipeline \
+  && cd /usr/local/pipeline \
+  && git clone --recursive git://github.com/ekg/freebayes.git \
+  && cd /usr/local/pipeline/freebayes \
+  && make \
+  && chmod -R 755 /usr/local/pipeline/freebayes \
+  && chown -R pipeman:ngsgroup /usr/local/pipeline/freebayes \
+  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/freebayes/bin' /home/pipeman/.bashrc \
+  && echo "alias ngsFreebayes='/usr/local/pipeline/freebayes/bin'" >>  /home/pipeman/.bashrc
 
+#-----------------------------PLATYPUS-------------------------------
+RUN wget -O /tmp/Platypus-latest.tgz http://www.well.ox.ac.uk/bioinformatics/Software/Platypus-latest.tgz \
+  && tar xvf /tmp/Platypus-latest.tgz -C /usr/local/pipeline/ \
+  && cd /usr/local/pipeline/Platypus_0.7.4 \
+  && sh ./buildPlatypus.sh \
+  && chmod -R 755 /usr/local/pipeline/Platypus_0.7.4 \
+  && chown -R pipeman:ngsgroup /usr/local/pipeline/Platypus_0.7.4 \
+  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.4' /home/pipeman/.bashrc \
+  && echo "alias ngsPlatypus='/usr/local/pipeline/Platypus_0.7.4'" >>  /home/pipeman/.bashrc
         
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 766 /usr/local/pipeline/***
