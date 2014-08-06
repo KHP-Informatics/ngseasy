@@ -53,6 +53,7 @@ The Tools included are as follows :-
 - FASTQC
 - SEQTK
 - TRIMMOMATIC
+- FASTX TOOLKIT
 
 ### Alignmnet
 - BWA
@@ -68,11 +69,13 @@ The Tools included are as follows :-
 ### MISC
 - BEDTOOLS
 - VCFTOOLS
+- BCFTOOLS
 
 ### VARIANT CALLING
 - GATK
-- SAMTOOLS
+- SAMTOOLS/BCFTOOLS
 - FREEBAYES
+- PLATYPUS
 
 ### VARIANT ANNOTATION
 - ANNOVAR
