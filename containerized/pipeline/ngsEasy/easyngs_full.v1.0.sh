@@ -414,3 +414,12 @@ java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysis
 # BAM to BED 
 /usr/local/pipeline/samtools-0.1.19/samtools view -b -h -q 20 -F 1796  ${SOUT}/alignments/${BAM_PREFIX}.bam  | /usr/local/pipeline/bedtools2/bin/bedtools bamtobed  -i stdin > ${SOUT}/reports/${BAM_PREFIX}.bed;
 
+## TO ADD ####################################################################################################
+CollectTargetedPcrMetrics
+fastq to BAM
+plots of coverage
+vcf reports
+var annotation
+multi sample calling
+bed files annotations 
+calling given snps only
