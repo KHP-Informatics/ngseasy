@@ -46,7 +46,8 @@ quality control of raw fastq files (ILLUMINA focused), SAM/BAM manipulation,
 alignment, cleaning (based on GATK best practises [ADD LINK]) and first pass
 variant discovery. Separate containers are provided for indepth variant annotation,
 structural variant calling, basic reporting and visualisations.  
-[ngsEASY](ngsEASY_pipeline_visualisation.png "Dockerized NGS Pipeline")
+
+![ngsEASY](ngsEASY_pipeline_visualisation.png "Dockerized NGS Pipeline")
 
 
 The Tools included are as follows :- 
