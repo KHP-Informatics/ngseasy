@@ -47,7 +47,7 @@ alignment, cleaning (based on GATK best practises [ADD LINK]) and first pass
 variant discovery. Separate containers are provided for indepth variant annotation,
 structural variant calling, basic reporting and visualisations.  
 
-![ngsEASY](ngsEASY_pipeline_visualisation.png "Dockerized NGS Pipeline")
+![ngsEASY](figs/ngsEASY_pipeline_visualisation.png "Dockerized NGS Pipeline")
 
 
 The Tools included are as follows :- 
