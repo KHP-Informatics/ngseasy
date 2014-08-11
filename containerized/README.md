@@ -86,8 +86,7 @@ The Tools included are as follows :-
 - VEP
 
 ### CNV/Structural Variant CALLING
-- TBA...
-- lumpy-sv https://github.com/arq5x/lumpy-sv
+- lumpy-sv
 - delly
 - m-HMM
 - CNVer
@@ -111,6 +110,10 @@ Available NGSEASY containers:-
 ```bash
 sudo docker pull afolarin/seq-alignment
 ```
+
+## NGSEASY-VM : An NGS Tool Box
+A virtual machine based on ubuntu 14.04 containing all these tools (and a few extras) is available on request.
+Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
 
 ******
 
