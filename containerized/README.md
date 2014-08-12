@@ -1,7 +1,7 @@
 NGS EASY v1.0
 ===================
 
-Dockerized ngs pipeline..under construction....  
+[Dockerized](https://www.docker.com/) and [Virtulaized](https://www.virtualbox.org/) ngs pipeline and tool-box
 
 As a multi-component system, NGS pipeline setup is traditionally heavy on 
 configuration. Our idea is to provide this in a simple encapsulated container. 
@@ -10,9 +10,30 @@ pipeline on a wide range of hardware (workstations to clusters to cloud), being
 able to stand-up a pipeline with minimal fuss is made straightforward with this 
 container.
 
+<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
 ### Authors
-Amos Folarin <amosfolarin@gmail.com> 
-Stephen J Newhouse <stephen.j.newhouse@gmail.com>
+- Amos Folarin <amosfolarin@gmail.com>  
+<a href="http://www.linkedin.com/pub/amos-folarin/34/b06/978">
+<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Amos's profile on LinkedIn">
+</a>
+
+- Stephen J Newhouse <stephen.j.newhouse@gmail.com>  
+<a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">
+<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
+</a>
+
+## Table of Contents
+[NOTICE TO USERS](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#notice-to-users-of-the-container-image)  
+[Software requiring registration](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#software-composing-the-pipeline-requiring-registration)  
+[Overview of Pipeline Components](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#overview-of-pipeline-components)  
+[NGS Tools](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#the-tools-included-are-as-follows--)  
+[Getting the NGS Pipeline](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#getting-the-ngs-pipeline)  
+[Running the NGS Pipeline](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#running-the-ngs-pipeline)  
+[NGSEASY-VM : An NGS Tool Box](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngseasy-vm--an-ngs-tool-box)  
+[User set up](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#user-set-up)  
+
 
 ******
 
@@ -47,7 +68,10 @@ alignment, cleaning (based on GATK best practises [ADD LINK]) and first pass
 variant discovery. Separate containers are provided for indepth variant annotation,
 structural variant calling, basic reporting and visualisations.  
 
-The Tools included are as follows :- 
+![ngsEASY](figs/ngsEASY_pipeline_visualisation.png "Dockerized NGS Pipeline")
+
+
+# The Tools included are as follows :- 
 
 ### Fastq manipulation
 - FASTQC
@@ -83,13 +107,18 @@ The Tools included are as follows :-
 - VEP
 
 ### CNV/Structural Variant CALLING
-- TBA...
-- lumpy-sv https://github.com/arq5x/lumpy-sv
+- lumpy-sv
 - delly
 - m-HMM
-- CNVer
+- CNVnator
 - ExomeDepth
 
+****
+
+##### To Add 
+- SegSeq
+- MuTect
+- MutSig
 
 ******
 
@@ -108,9 +137,7 @@ Available NGSEASY containers:-
 ```bash
 sudo docker pull afolarin/seq-alignment
 ```
-
 ******
-
 Running the NGS Pipeline
 ==========================
 
@@ -121,6 +148,12 @@ sudo docker run \
 -v ~/ngs_projects:~/ngs_projects \
 -u pipeman -t [CONTAINER] ngs.config
 ```
+******
+
+NGSEASY-VM : An NGS Tool Box
+================================
+A virtual machine based on ubuntu 14.04 containing all these tools (and a few extras) is available on request.
+Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
 
 ******
 
@@ -160,3 +193,4 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ```
 
+<img src='https://chart.googleapis.com/chart?cht=qr&chl=https%3A%2F%2Fgithub.com%2FKHP-Informatics%2Fngs%2Fblob%2Fdev%2Fcontainerized%2FREADME.md&chs=180x180&choe=UTF-8&chld=L|2' rel='nofollow' alt='qr code'><a href='http://www.qrcode-generator.de' border='0' style='cursor:default'  rel='nofollow'></a>
