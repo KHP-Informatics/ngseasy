@@ -11,7 +11,10 @@ able to stand-up a pipeline with minimal fuss is made straightforward with this
 container.
 
 ### Authors
-- Amos Folarin <amosfolarin@gmail.com> 
+- Amos Folarin <amosfolarin@gmail.com> <a href="http://www.linkedin.com/pub/amos-folarin/34/b06/978">
+<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Amos's profile on LinkedIn">
+</a>
+
 - Stephen J Newhouse <stephen.j.newhouse@gmail.com> <a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">
 <img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
 </a>
