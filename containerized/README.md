@@ -14,6 +14,16 @@ container.
 - Amos Folarin <amosfolarin@gmail.com> 
 - Stephen J Newhouse <stephen.j.newhouse@gmail.com>
 
+## Table of Contents
+[NOTICE TO USERS](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#notice-to-users-of-the-container-image)
+[Software requiring registration](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#software-composing-the-pipeline-requiring-registration)
+[Overview of Pipeline Components](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#overview-of-pipeline-components)
+[Getting the NGS Pipeline](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#getting-the-ngs-pipeline)
+[Running the NGS Pipeline](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#running-the-ngs-pipeline)
+[NGSEASY-VM : An NGS Tool Box](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngseasy-vm--an-ngs-tool-box)
+[User set up](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#user-set-up)
+
+
 ******
 
 # NOTICE TO USERS OF THE CONTAINER IMAGE 
