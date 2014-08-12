@@ -193,3 +193,4 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ```
 
+<img src='https://chart.googleapis.com/chart?cht=qr&chl=https%3A%2F%2Fgithub.com%2FKHP-Informatics%2Fngs%2Fblob%2Fdev%2Fcontainerized%2FREADME.md&chs=180x180&choe=UTF-8&chld=L|2' rel='nofollow' alt='qr code'><a href='http://www.qrcode-generator.de' border='0' style='cursor:default'  rel='nofollow'></a>
