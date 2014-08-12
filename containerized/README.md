@@ -116,13 +116,7 @@ Available NGSEASY containers:-
 ```bash
 sudo docker pull afolarin/seq-alignment
 ```
-
-## NGSEASY-VM : An NGS Tool Box
-A virtual machine based on ubuntu 14.04 containing all these tools (and a few extras) is available on request.
-Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
-
 ******
-
 Running the NGS Pipeline
 ==========================
 
@@ -133,6 +127,12 @@ sudo docker run \
 -v ~/ngs_projects:~/ngs_projects \
 -u pipeman -t [CONTAINER] ngs.config
 ```
+******
+
+NGSEASY-VM : An NGS Tool Box
+================================
+A virtual machine based on ubuntu 14.04 containing all these tools (and a few extras) is available on request.
+Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
 
 ******
 
