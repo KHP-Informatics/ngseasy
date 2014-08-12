@@ -89,7 +89,7 @@ The Tools included are as follows :-
 - lumpy-sv
 - delly
 - m-HMM
-- CNVer
+- CNVnator
 - ExomeDepth
 
 
