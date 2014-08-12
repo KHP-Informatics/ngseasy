@@ -1,7 +1,7 @@
 NGS EASY v1.0
 ===================
 
-[Dockerized](https://www.docker.com/) ngs pipeline..under construction....  
+[Dockerized](https://www.docker.com/) and [Virtulaized](https://www.virtualbox.org/) ngs pipeline and tool-box
 
 As a multi-component system, NGS pipeline setup is traditionally heavy on 
 configuration. Our idea is to provide this in a simple encapsulated container. 
@@ -11,8 +11,8 @@ able to stand-up a pipeline with minimal fuss is made straightforward with this
 container.
 
 ### Authors
-Amos Folarin <amosfolarin@gmail.com> 
-Stephen J Newhouse <stephen.j.newhouse@gmail.com>
+- Amos Folarin <amosfolarin@gmail.com> 
+- Stephen J Newhouse <stephen.j.newhouse@gmail.com>
 
 ******
 
