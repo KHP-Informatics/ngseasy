@@ -92,6 +92,12 @@ The Tools included are as follows :-
 - CNVnator
 - ExomeDepth
 
+****
+
+##### To Add 
+- SegSeq
+- MuTect
+- MutSig
 
 ******
 
