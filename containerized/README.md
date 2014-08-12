@@ -60,7 +60,7 @@ structural variant calling, basic reporting and visualisations.
 ![ngsEASY](figs/ngsEASY_pipeline_visualisation.png "Dockerized NGS Pipeline")
 
 
-The Tools included are as follows :- 
+# The Tools included are as follows :- 
 
 ### Fastq manipulation
 - FASTQC
