@@ -10,6 +10,9 @@ pipeline on a wide range of hardware (workstations to clusters to cloud), being
 able to stand-up a pipeline with minimal fuss is made straightforward with this 
 container.
 
+<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
 ### Authors
 - Amos Folarin <amosfolarin@gmail.com>  
 <a href="http://www.linkedin.com/pub/amos-folarin/34/b06/978">
@@ -20,11 +23,6 @@ container.
 <a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">
 <img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
 </a>
-
-<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-
-
 
 ## Table of Contents
 [NOTICE TO USERS](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#notice-to-users-of-the-container-image)  
