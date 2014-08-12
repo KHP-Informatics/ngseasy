@@ -31,9 +31,8 @@ container.
 [NGS Tools](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#the-tools-included-are-as-follows--)  
 [Getting the NGS Pipeline](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#getting-the-ngs-pipeline)  
 [Running the NGS Pipeline](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#running-the-ngs-pipeline)  
+[Dockerised NGSEASY set up](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#Dockerised-NGSEASY-set-up)  
 [NGSEASY-VM : An NGS Tool Box](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngseasy-vm--an-ngs-tool-box)  
-[User set up](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#user-set-up)  
-
 
 ******
 
@@ -150,14 +149,7 @@ sudo docker run \
 ```
 ******
 
-NGSEASY-VM : An NGS Tool Box
-================================
-A virtual machine based on ubuntu 14.04 containing all these tools (and a few extras) is available on request.
-Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
-
-******
-
-User set up
+Dockerised NGSEASY set up
 ========================
 
 1. On local machine, make the following directories:-
@@ -174,6 +166,15 @@ These folders are required by pipeline as they are hardcoded in the nsg scripts.
 
 - Get reference genomes, gatk resouces, snp annotation databases from [ADD URL]
 - Un compress and save on local machine
+
+NGSEASY-VM : An NGS Tool Box
+================================
+A virtual machine based on ubuntu 14.04 containing all these tools (and a few extras) is available on request.
+Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
+
+******
+
+
 
 
 ******
