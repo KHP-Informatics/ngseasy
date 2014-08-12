@@ -1,7 +1,7 @@
 NGS EASY v1.0
 ===================
 
-Dockerized ngs pipeline..under construction....  
+[Dockerized](https://www.docker.com/) ngs pipeline..under construction....  
 
 As a multi-component system, NGS pipeline setup is traditionally heavy on 
 configuration. Our idea is to provide this in a simple encapsulated container. 
