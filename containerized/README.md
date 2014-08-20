@@ -1,14 +1,16 @@
 NGS EASY v1.0
 ===================
 
-[Dockerized](https://www.docker.com/) and [Virtulaized](https://www.virtualbox.org/) ngs pipeline and tool-box
+[Dockerized](https://www.docker.com/) and [Virtulaized](https://www.virtualbox.org/) ngs pipeline and tool-box.  
 
 As a multi-component system, NGS pipeline setup is traditionally heavy on 
 configuration. Our idea is to provide this in a simple encapsulated container. 
 Users also typically wish to configure their own environments and run the 
 pipeline on a wide range of hardware (workstations to clusters to cloud), being 
 able to stand-up a pipeline with minimal fuss is made straightforward with this 
-container.
+container.  
+
+**With NGSEASY you can now have full suite of NGS tools up and running on any high end workstation in less than an hour**
 
 <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -24,28 +26,50 @@ container.
 <img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
 </a>
 
+- David Brawand <dbrawand@nhs.net>  
+- Aditi Gulati <aditigulati3@googlemail.com>  
+
+Lets us know if you want other tools added to NGSEASY  
+
 ## Table of Contents
-[NOTICE TO USERS](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#notice-to-users-of-the-container-image)  
+[NOTICE TO USERS](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#notice-to-users-of-the-container-image-or-vm)  
+
 [Software requiring registration](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#software-composing-the-pipeline-requiring-registration)  
+
 [Overview of Pipeline Components](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#overview-of-pipeline-components)  
+
 [NGS Tools](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#the-tools-included-are-as-follows--)  
-[Getting the NGS Pipeline](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#getting-the-ngs-pipeline)  
-[Running the NGS Pipeline](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#running-the-ngs-pipeline)  
-[Dockerised NGSEASY set up](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#Dockerised-NGSEASY-set-up)  
+
+[Dockerised NGSEASY set up](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#dockerised-ngseasy)  
+
+[Installing Docker](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#installing-docker)  
+
+[Getting the Dockerised NGSEASY Pipeline](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#getting-the-dockerised-ngseasy-pipeline)  
+
+[Running the Dockerised NGSEASY Pipeline](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#running-the-dockerised-ngseasy-pipeline)  
+
+[Local Machine Set up](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#local-machine-set-up)  
+
 [NGSEASY-VM : An NGS Tool Box](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngseasy-vm--an-ngs-tool-box)  
+
+[Installing Oracle VirtualBox](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#installing-oracle-virtualbox)  
+
+[Getting the ngseasy-vm](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#getting-the-ngseasy-vm)  
+
+[Installing the ngseasy-vm](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#installing-the-ngseasy-vm)  
 
 ******
 
-# NOTICE TO USERS OF THE CONTAINER IMAGE 
+# NOTICE TO USERS OF THE CONTAINER IMAGE OR VM
 
 While the software used to build the image is composed of free software versions
 some of the software has restrictions on use particularly for commercial 
 purposes. Therefore if you wish to use this for commercial purposes, then you 
-leagally have to approach the owners of the various components yourself!
+leagally have to approach the owners of the various components yourself!  
 
 This pipeline uses a number of pieces of software which require registration. 
 By using this you are agreeing to observe the Terms and Conditions of the 
-relevant pieces of software that compose this pipeline.
+relevant pieces of software that compose this pipeline.  
 
 # Software composing the pipeline requiring registration
 
@@ -56,6 +80,8 @@ own versions of (below) in the build directory:
    * Stampy http://www.well.ox.ac.uk/project-stampy
    * GATK https://www.broadinstitute.org/gatk/
    * ANNOVAR http://www.openbioinformatics.org/annovar/
+
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngs-easy-v10)
 
 ******
 
@@ -112,7 +138,9 @@ structural variant calling, basic reporting and visualisations.
 - CNVnator
 - ExomeDepth
 
-****
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngs-easy-v10)
+
+******
 
 ##### To Add 
 - SegSeq
@@ -121,10 +149,23 @@ structural variant calling, basic reporting and visualisations.
 
 ******
 
-Getting the NGS Pipeline
-=========================
+Dockerised NGSEASY
+==========================
+![docker](figs/Docker_container_engine_logo.png "Docker")  
 
-Available NGSEASY containers:- 
+## Installing Docker
+
+Follow the simple instructions in the links provided below  
+
+- [Mac](https://docs.docker.com/installation/mac/)  
+- [Windows](https://docs.docker.com/installation/windows/)
+- [Ubuntu](https://docs.docker.com/installation/ubuntulinux/)
+
+A full set of instructions for multiple operating systems are available on the [Docker website](https://docs.docker.com/installation/).
+
+## Getting the Dockerised NGSEASY Pipeline
+
+Available Dockerised NGSEASY containers at [Docker Hub](https://hub.docker.com/u/afolarin/)  
  
 - afolarin/seq-alignment
 - afolarin/var-calling
@@ -136,9 +177,8 @@ Available NGSEASY containers:-
 ```bash
 sudo docker pull afolarin/seq-alignment
 ```
-******
-Running the NGS Pipeline
-==========================
+
+## Running the Dockerised NGSEASY Pipeline
 
 ```bash
 sudo docker run \
@@ -147,12 +187,10 @@ sudo docker run \
 -v ~/ngs_projects:~/ngs_projects \
 -u pipeman -t [CONTAINER] ngs.config
 ```
-******
 
-Dockerised NGSEASY set up
-========================
+## Local Machine Set up
 
-1. On local machine, make the following directories:-
+1. On your local machine, make the following directories:-
 
 - FASTQ_STAGGING [FASTQ_STAGGING is to hold all incoming raw fastq files]
 - ngs_projects [out put directory for all ngs projects)
@@ -167,15 +205,81 @@ These folders are required by pipeline as they are hardcoded in the nsg scripts.
 - Get reference genomes, gatk resouces, snp annotation databases from [ADD URL]
 - Un compress and save on local machine
 
-NGSEASY-VM : An NGS Tool Box
-================================
-A virtual machine based on ubuntu 14.04 containing all these tools (and a few extras) is available on request.
-Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngs-easy-v10)
 
 ******
 
+NGSEASY-VM : An NGS Tool Box
+================================
+![VirtualBox](figs/add-virtualbox.png "VirtualBox")  
+
+A virtual machine based on [Ubuntu 14.04 LTS](http://www.ubuntu.com/desktop), containing all these [NGS Tools](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#the-tools-included-are-as-follows--) (and a few extras) is available. The virtual machine contains indexed reference genomes (b37) for all the installed aligners and the [GATK Resources Budle](https://www.broadinstitute.org/gatk/download).  
+
+Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
+
+## 1. Installing Oracle VirtualBox
+
+The latest Oracle VM VirtualBox is available [here](http://www.oracle.com/technetwork/server-storage/virtualbox/downloads/index.html#vbox)
+
+Remember to install the latest [Oracle VM VirtualBox Extension Pack](http://www.oracle.com/technetwork/server-storage/virtualbox/downloads/index.html#extpack)
+
+A full set of instructions are available here:-  
+
+- [Oracle VirtualBox](http://www.oracle.com/technetwork/server-storage/virtualbox/downloads/index.html)  
+- [VirtualBox User Manual](http://download.virtualbox.org/virtualbox/UserManual.pdf)  
+- [VirtualBox Installation Details](https://www.virtualbox.org/manual/ch02.html)  
 
 
+## 2. Getting the ngseasy-vm
+
+Download the ngseasy-vm [ngseasy-vm.vdi]() and save this anywhere on your local machine.  
+
+**NOTE:** This file is XXXGB in size.  
+
+## 3. Installing the ngseasy-vm
+
+Create a new virtual machine from the downloaded [ngseasy-vm.vdi]().  
+
+**Step 1.** Fire up VirtualBox and click **New**  
+**Step 2.** The **Create Virtual Machine** window will appear  
+**Step 3.** You will presented with 3 options that need to be set as  
+
+> Name: **ngseasy**  
+> Type: **Linux**  
+> Version: **Ubuntu (64 bit)** 
+ 
+**Step 4.** Click **Next** . This will take you to the **Memory Size** window  
+**Step 5.** Select the amount of memmory (RAM) in megabytes to be allocated to the virtual machine (recommended 8GB). The size you 
+allocate will depend on the available RAM on your machine. Adjust this vaule as needed. Click **Next**  
+**Step 6.** This will take you to the **Hard drive** window. This is the important step. You will be presented with 3 options:-  
+
+> Do not add a virtual hard drive  
+> Create a virtual hard drive  
+> Use an existing virtual hard drive file  
+
+**Step 7.** Select **Use an existing virtual hard drive file**.   
+**Step 8.** Click on the folder icon and point to the **ngseasy-vm.vdi** file.  
+**Step 9.** Step  Click **Create**  
+
+Once the new virtual machine is created, that virtual machine should fire up as expected 
+and regardless of platform (I have tested this going from Linux to Linux, Linux to Windows, and Windows to Linux hosts).  
+
+Before starting the virtual machine you can go to the **Settings** tab and alter the amount or RAM, CPUs assigned to the machine.
+There is also the functionality to mount shared drives between the host OS and the virtual machine. In the **General** > **Advanced** tab,
+ensure thet the **Shared Clipboard** and **Drang n Drop** are both set to **Bidirectional**.
+
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngs-easy-v10)
+
+******
+
+Minimum Hardware Requirements
+===============================
+- 64 bit computer and operating system is recommended for more than 2 GB RAM
+- 8GB RAM
+- 8 Cores
+- Minimum 100GB storage
+
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngs-easy-v10)
 
 ******
 
@@ -193,5 +297,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ```
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngs-easy-v10)
 
-<img src='https://chart.googleapis.com/chart?cht=qr&chl=https%3A%2F%2Fgithub.com%2FKHP-Informatics%2Fngs%2Fblob%2Fdev%2Fcontainerized%2FREADME.md&chs=180x180&choe=UTF-8&chld=L|2' rel='nofollow' alt='qr code'><a href='http://www.qrcode-generator.de' border='0' style='cursor:default'  rel='nofollow'></a>
+******
+
