@@ -114,7 +114,7 @@ RUN apt-get update
 RUN useradd -m -s /bin/bash pipeman && cd /home/pipeman && echo "#bash config file for user pipeman" >> /home/pipeman/.bashrc
 RUN groupadd ngsgroup
 RUN usermod -G ngsgroup pipeman
-RUN mkdir /usr/local/pipeline
+RUN mkdir /usr/local/pipeline && chown pipeman:ngsgroup /usr/local/pipeline && chmod 775 /usr/local/pipeline
 
 
 
