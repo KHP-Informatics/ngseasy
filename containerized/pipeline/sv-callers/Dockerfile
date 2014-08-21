@@ -68,7 +68,7 @@ RUN cd /usr/local/pipeline/ \
 
 #---------------------------------sv-callers-------------------------------------#
 # + DELLY - split read PE mapping
- # install bamtools
+# install bamtools
 RUN cd /usr/local/pipeline \
 && git clone https://github.com/pezmaster31/bamtools.git \
 && cd bamtools/\
@@ -78,16 +78,16 @@ RUN cd /usr/local/pipeline \
 && make;
 
 # set environment
-ENV BOOST_ROOT=/usr
-ENV BAMTOOLS_ROOT=/usr/local/pipeline/bamtools
-ENV SEQTK_ROOT=/usr/local/pipeline/seqtk
-ENV LD_LIBRARY_PATH=/usr/local/pipeline/bamtools/lib
+ENV BOOST_ROOT /usr
+ENV BAMTOOLS_ROOT /usr/local/pipeline/bamtools
+ENV SEQTK_ROOT /usr/local/pipeline/seqtk
+ENV LD_LIBRARY_PATH /usr/local/pipeline/bamtools/lib
 
-RUN echo "export BOOST_ROOT=/usr" >>  /home/pipeman/.bashrc
-RUN echo "export BAMTOOLS_ROOT=/usr/local/pipeline/bamtools" >>  /home/pipeman/.bashrc
-RUN echo "export SEQTK_ROOT=/usr/local/pipeline/seqtk" >>  /home/pipeman/.bashrc
-RUN echo "export LD_LIBRARY_PATH=/usr/local/pipeline/bamtools/lib" >>  /home/pipeman/.bashrc
-RUN source /home/pipeman/.bashrc
+RUN echo "export BOOST_ROOT=/usr" >>  /home/pipeman/.bashrc \
+&& echo "export BAMTOOLS_ROOT=/usr/local/pipeline/bamtools" >>  /home/pipeman/.bashrc \
+&& echo "export SEQTK_ROOT=/usr/local/pipeline/seqtk" >>  /home/pipeman/.bashrc \
+&& echo "export LD_LIBRARY_PATH=/usr/local/pipeline/bamtools/lib" >>  /home/pipeman/.bashrc \
+&& source /home/pipeman/.bashrc
 
 # install delly
 RUN cd /usr/local/pipeline \
