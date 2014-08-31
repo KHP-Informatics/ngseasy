@@ -211,12 +211,13 @@ done
 sudo docker run \
 -v ~/fastq_raw:~/fastq_raw \
 -v ~/reference_geneomes:~/reference_genomes \
+-v ~/gatk_resources:~/gatk_resources \
 -v ~/ngs_projects:~/ngs_projects \
 -u pipeman \
--t alignment-public:v1.2 run-ea-ngs.sh ngs.config
+-t snewhouse/alignment-public:v1.2 run-ea-ngs.sh ngs.config
 ```
 
-``-v`` used to mount host directories containing fastq, reference genomes and project output.
+``-v`` used to mount host directories containing fastq, reference genomes, gatk resources and project output.
 The ``-u pipeman`` ensures it is run using the ``pipeman`` user.
 
 ## Local Machine Set up
