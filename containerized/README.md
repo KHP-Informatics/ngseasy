@@ -208,7 +208,7 @@ done
 ## Running the Dockerised NGSEASY Pipeline
 
 ```bash
-sudo docker run \
+sudo docker run -d -P \
 -v ~/fastq_raw:~/fastq_raw \
 -v ~/reference_geneomes:~/reference_genomes \
 -v ~/gatk_resources:~/gatk_resources \
