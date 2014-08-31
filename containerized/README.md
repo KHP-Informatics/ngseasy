@@ -183,8 +183,7 @@ repo='snewhouse'
 
 for i in \
 fastqc:v1.0 \
-alignment-public:v1.1 \
-alignment-private:v1.1 \
+alignment-public:v1.2 \
 var-callers:v1.1 \
 var-anno:v1.1 \
 sv-delly:v1.1 \
@@ -210,11 +209,15 @@ done
 
 ```bash
 sudo docker run \
--v ~/FASTQ_STAGGING:~/FASTQ_STAGGING \
+-v ~/fastq_raw:~/fastq_raw \
 -v ~/reference_geneomes:~/reference_genomes \
 -v ~/ngs_projects:~/ngs_projects \
--u pipeman -t [IMAGEID] ngs.config
+-u pipeman \
+-t alignment-public:v1.2 run-ea-ngs.sh ngs.config
 ```
+
+``-v`` used to mount host directories containing fastq, reference genomes and project output.
+The ``-u pipeman`` ensures it is run using the ``pipeman`` user.
 
 ## Local Machine Set up
 
