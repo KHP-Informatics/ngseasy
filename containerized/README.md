@@ -175,7 +175,35 @@ Available Dockerised NGSEASY containers at [Docker Hub](https://hub.docker.com/u
 - delly
 
 ```bash
-sudo docker pull afolarin/seq-alignment
+
+#!/bin/bash
+
+# get ngseasy from DockerHub
+repo='snewhouse'
+
+for i in \
+fastqc:v1.0 \
+alignment-public:v1.1 \
+alignment-private:v1.1 \
+var-callers:v1.1 \
+var-anno:v1.1 \
+sv-delly:v1.1 \
+sv-lumpy:v1.1 \
+sv-mhmm:v1.0 \
+sv-cnmops:v1.0 \
+sv-exomedepth:v1.0 \
+bedtools:v1.0 \
+bwa:v1.0 \
+bowtie2:v1.0 \
+gatk:v1.0 \
+picard:v1.0 \
+samtools:v1.0 \
+stampy:v1.0 \
+vcftools:v1.0 \
+freebayes:v1.0 \
+platypus:v1.0;do
+sudo docker pull ${repo}/ngseasy-${i};
+done
 ```
 
 ## Running the Dockerised NGSEASY Pipeline
@@ -185,7 +213,7 @@ sudo docker run \
 -v ~/FASTQ_STAGGING:~/FASTQ_STAGGING \
 -v ~/reference_geneomes:~/reference_genomes \
 -v ~/ngs_projects:~/ngs_projects \
--u pipeman -t [CONTAINER] ngs.config
+-u pipeman -t [IMAGEID] ngs.config
 ```
 
 ## Local Machine Set up
