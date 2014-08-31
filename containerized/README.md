@@ -132,10 +132,10 @@ structural variant calling, basic reporting and visualisations.
 - VEP
 
 ### CNV/Structural Variant CALLING
-- lumpy-sv
+- lumpy
 - delly
 - m-HMM
-- CNVnator
+- cn.MOPS
 - ExomeDepth
 
 [Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngs-easy-v10)
@@ -165,14 +165,19 @@ A full set of instructions for multiple operating systems are available on the [
 
 ## Getting the Dockerised NGSEASY Pipeline
 
-Available Dockerised NGSEASY containers at [Docker Hub](https://hub.docker.com/u/afolarin/)  
- 
-- afolarin/seq-alignment
-- afolarin/var-calling
-- afolarin/sv-calling
-- afolarin/var-anno
-- afolarin/vis-reports
-- delly
+Available NGSeasy images at [afolarin/ Docker Hub](https://hub.docker.com/u/afolarin/) and [snewhouse/ Docker Hub](https://hub.docker.com/u/snewhouse/)
+
+#### Getting the main NGSeasy suite of tools
+
+[snewhouse/ngseasy-alignment-public:v1.2](https://registry.hub.docker.com/u/snewhouse/ngseasy-alignment-public/)
+
+This is a large image (4.989 GB) containing all the tools needed to go from raw ``.fastq`` files to aligned ``.BAM`` to SNP and small INDEL variant calls ``.vcf`` .
+
+```bash
+sudo docker pull snewhouse/ngseasy-alignment-public:v1.2
+```
+
+#### Getting All NGSeasy images
 
 ```bash
 
