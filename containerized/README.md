@@ -219,7 +219,7 @@ sudo docker run -d -P \
 -v ~/gatk_resources:~/gatk_resources \
 -v ~/ngs_projects:~/ngs_projects \
 -u pipeman \
--t snewhouse/alignment-public:v1.2 run-ea-ngs.sh ngs.config
+-t snewhouse/alignment-public:v1.2 /sbin/my_init -- bash run-ea-ngs.sh ngs.config
 ```
 
 ``-v`` used to mount host directories containing fastq, reference genomes, gatk resources and project output.
