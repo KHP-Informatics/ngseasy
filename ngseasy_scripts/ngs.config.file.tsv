@@ -1,0 +1,3 @@
+example_small	NA12878	NA12878.WEX_1000r_1.fq.gz	NA12878.WEX_1000r_2.fq.gz	../ngs_projects	NA12878_EXOME	ILLUMINA	WEX	ensgenes_protein_coding_genes.bed	full_no_gatk.sh	bowtie2	platypus	EMIT_ALL_CONFIDENT_SITES	TRUE	8
+example_small	NA12878	NA12878.WEX_1000r_1.fq.gz	NA12878.WEX_1000r_2.fq.gz	../ngs_projects	NA12878_EXOME	ILLUMINA	WEX	ensgenes_protein_coding_genes.bed	full_no_gatk.sh	bwa	platypus	EMIT_ALL_CONFIDENT_SITES	TRUE	8
+example_small	NA12878	NA12878.WEX_1000r_1.fq.gz	NA12878.WEX_1000r_2.fq.gz	../ngs_projects	NA12878_EXOME	ILLUMINA	WEX	ensgenes_protein_coding_genes.bed	full_no_gatk.sh	stampy	platypus	EMIT_ALL_CONFIDENT_SITES	TRUE	8

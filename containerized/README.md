@@ -286,6 +286,8 @@ ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
 git clone XXXXXX
 ```
 
+
+
 **the scripts will eventually be bundled with each docker image**
 [Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
 
