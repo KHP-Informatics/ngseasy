@@ -1,4 +1,4 @@
-NGS EASY v1.0
+NGSeasy v1.0
 ===================
 
 [Dockerized](https://www.docker.com/) and [Virtulaized](https://www.virtualbox.org/) ngs pipeline and tool-box.  
@@ -10,7 +10,9 @@ pipeline on a wide range of hardware (workstations to clusters to cloud), being
 able to stand-up a pipeline with minimal fuss is made straightforward with this 
 container.  
 
-**With NGSEASY you can now have full suite of NGS tools up and running on any high end workstation in less than an hour**
+**With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**
+
+******
 
 <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -26,10 +28,7 @@ container.
 <img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
 </a>
 
-- David Brawand <dbrawand@nhs.net>  
-- Aditi Gulati <aditigulati3@googlemail.com>  
-
-Lets us know if you want other tools added to NGSEASY  
+Lets us know if you want other tools added to NGSeasy  
 
 ## Table of Contents
 [NOTICE TO USERS](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#notice-to-users-of-the-container-image-or-vm)  
@@ -269,7 +268,7 @@ ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
 **b37 Resources: the Standard Data Set**
 - Reference sequence (standard 1000 Genomes fasta) along with fai and dict files  
 - dbSNP in VCF. This includes two files:  
--- The most recent dbSNP release  
+  - The most recent dbSNP release  
 This file subsetted to only sites discovered in or before dbSNPBuildID 129, which excludes the impact of the 1000 Genomes project and is useful for evaluation of dbSNP rate and Ti/Tv values at novel sites.
 - HapMap genotypes and sites VCFs
 - OMNI 2.5 genotypes for 1000 Genomes samples, as well as sites, VCF
