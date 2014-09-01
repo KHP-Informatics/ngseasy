@@ -265,6 +265,24 @@ I would recommend using a separate program like [FileZilla](https://filezilla-pr
 ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
 ```
 
+### From GATK Web
+**b37 Resources: the Standard Data Set**
+- Reference sequence (standard 1000 Genomes fasta) along with fai and dict files  
+- dbSNP in VCF. This includes two files:  
+-- The most recent dbSNP release  
+This file subsetted to only sites discovered in or before dbSNPBuildID 129, which excludes the impact of the 1000 Genomes project and is useful for evaluation of dbSNP rate and Ti/Tv values at novel sites.
+- HapMap genotypes and sites VCFs
+- OMNI 2.5 genotypes for 1000 Genomes samples, as well as sites, VCF
+- The current best set of known indels to be used for local realignment (note that we don't use dbSNP for this anymore); use both files:
+- 1000G_phase1.indels.b37.vcf (currently from the 1000 Genomes Phase I indel calls)
+- Mills_and_1000G_gold_standard.indels.b37.sites.vcf
+- A large-scale standard single sample BAM file for testing:
+- NA12878.HiSeq.WGS.bwa.cleaned.recal.hg19.20.bam containing ~64x reads of NA12878 on chromosome 20
+- The results of the latest UnifiedGenotyper with default arguments run on this data set (NA12878.HiSeq.WGS.bwa.cleaned.recal.hg19.20.vcf)  
+
+Additionally, these files all have supplementary indices, statistics, and other QC data available.
+
+
 [Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngs-easy-v10)
 
 ******
