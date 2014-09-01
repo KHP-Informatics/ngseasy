@@ -268,7 +268,7 @@ ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
 **b37 Resources: the Standard Data Set**
 - Reference sequence (standard 1000 Genomes fasta) along with fai and dict files  
 - dbSNP in VCF. This includes two files:  
--- The most recent dbSNP release  
+  - The most recent dbSNP release  
 This file subsetted to only sites discovered in or before dbSNPBuildID 129, which excludes the impact of the 1000 Genomes project and is useful for evaluation of dbSNP rate and Ti/Tv values at novel sites.
 - HapMap genotypes and sites VCFs
 - OMNI 2.5 genotypes for 1000 Genomes samples, as well as sites, VCF
