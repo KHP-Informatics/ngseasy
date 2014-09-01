@@ -206,35 +206,23 @@ sudo docker pull ${repo}/ngseasy-${i};
 done
 ```
 
-## Running the Dockerised NGSEASY Pipeline
-
-```bash
-sudo docker run -d -P \
--v ~/fastq_raw:~/fastq_raw \
--v ~/reference_geneomes:~/reference_genomes \
--v ~/gatk_resources:~/gatk_resources \
--v ~/ngs_projects:~/ngs_projects \
--u pipeman \
--t snewhouse/alignment-public:v1.2 /sbin/my_init -- bash run-ea-ngs.sh ngs.config
-```
-
-``-v`` used to mount host directories containing fastq, reference genomes, gatk resources and project output.
-The ``-u pipeman`` ensures it is run using the ``pipeman`` user.
-
 ## Local Machine Set up
 
 ### Download NGSeasy resources 
 
-This is a XXGB ``ngseasy_resources.tar.gz`` file containing :-  
+This is a %6GB ``ngseasy_resources.tar.gz`` file containing :-  
 
-- b37 reference genomes indexed for use with all provided aligners (BWA, Bowtie2, Stampy, Novoalign)
-- annotation bed files for use with pipeline scripts
-- ANNOVAR humandb 
-- gatk resources bundle
-- Example 75bp PE Illumina Whole Exome Sequence fastq data for **NA12878**
+- ``reference_genomes_b37.tgz`` b37 reference genomes indexed for use with all provided aligners (BWA, Bowtie2, Stampy, Novoalign) and annotation bed files for use with pipeline scripts
+- ``humandb.tgz`` ANNOVAR humandb 
+- ``gatk_resources.tar.gz`` gatk resources bundle
+- ``fastq_example.tgz`` Example 75bp PE Illumina Whole Exome Sequence fastq data for **NA12878**
 
 ```bash
-tar ngseasy_resources.tar.gz
+tar -xfv ngseasy_resources.tar.gz
+cp -rf ngseasy_resources/reference_genomes_b37 ~/reference_genomes_b37
+cp -rf  ngseasy_resources/gatk_resources ~/humandb
+cp -rf  ngseasy_resources/gatk_resources ~/gatk_resources
+cp -rf  ngseasy_resources/fastq_example ~/fastq_raw
 ```
 
 **On your local machine, ensure the following directories exist:-**
@@ -289,6 +277,34 @@ ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
 - NA12878.knowledgebase.snapshot.20131119.b37.vcf  
 - NA12878.knowledgebase.snapshot.20131119.b37.vcf.idx  
 
+
+## Get NGSeasy Scripts
+
+```bash
+git clone XXXXXX
+```
+
+**the scripts will eventually be bundled with each docker image**
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngs-easy-v10)
+
+**********
+
+Running the Dockerised NGSEASY Pipeline
+==========================================
+
+```bash
+sudo docker run -d -P \
+-v ~/fastq_raw:/home/pipeman/fastq_raw \
+-v ~/reference_geneomes:/usr/local/pipeman/reference_genomes \
+-v ~/gatk_resources:/usr/local/pipeman/gatk_resources \
+-v ~/ngs_projects:/home/pipeman/ngs_projects \
+-v ~/ngseay_scripts:/usr/local/pipeman/ngseasy_scripts \
+-u pipeman \
+-t snewhouse/alignment-public:v1.2 /sbin/my_init -- bash run-ea-ngs.sh ngs.config
+```
+
+``-v`` used to mount host directories containing fastq, reference genomes, gatk resources and project output.
+The ``-u pipeman`` ensures it is run using the ``pipeman`` user.
 
 [Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngs-easy-v10)
 
