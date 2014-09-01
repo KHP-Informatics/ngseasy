@@ -227,7 +227,7 @@ The ``-u pipeman`` ensures it is run using the ``pipeman`` user.
 
 This is a XXGB ``ngseasy_resources.tar.gz`` file containing :-  
 
-- reference genomes indexed for use with all provided aligners
+- b37 reference genomes indexed for use with all provided aligners (BWA, Bowtie2, Stampy, Novoalign)
 - annotation bed files for use with pipeline scripts
 - ANNOVAR humandb 
 - gatk resources bundle
@@ -241,7 +241,7 @@ tar ngseasy_resources.tar.gz
 
 - ``fastq_raw`` [to hold all incoming raw fastq files]
 - ``ngs_projects`` [out put directory for all ngs projects]
-- ``reference_genomes`` [get from URL and unpack. NB: XXX GB!]
+- ``reference_genomes_b37`` [get from URL and unpack. NB: XXX GB!]
 - ``gatk_resources`` [vcf and annotation files used by GATK]
 - ``humandb`` [annovar databases]
 
@@ -263,6 +263,32 @@ I would recommend using a separate program like [FileZilla](https://filezilla-pr
 ```
 ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
 ```
+**Contents**
+- 1000G_omni2.5.b37.vcf  
+- 1000G_omni2.5.b37.vcf.idx  
+- 1000G_phase1.indels.b37.vcf  
+- 1000G_phase1.indels.b37.vcf.idx  
+- 1000G_phase1.snps.high_confidence.b37.vcf  
+- 1000G_phase1.snps.high_confidence.b37.vcf.idx  
+- CEUTrio.HiSeq.WGS.b37.bestPractices.b37.vcf  
+- CEUTrio.HiSeq.WGS.b37.bestPractices.b37.vcf.idx  
+- CEUTrio.HiSeq.WGS.b37.NA12878.vcf  
+- CEUTrio.HiSeq.WGS.b37.NA12878.vcf.idx  
+- dbsnp_138.b37.excluding_sites_after_129.vcf  
+- dbsnp_138.b37.excluding_sites_after_129.vcf.idx  
+- dbsnp_138.b37.vcf  
+- dbsnp_138.b37.vcf.idx  
+- hapmap_3.3.b37.vcf  
+- hapmap_3.3.b37.vcf.idx  
+- Mills_and_1000G_gold_standard.indels.b37.vcf  
+- Mills_and_1000G_gold_standard.indels.b37.vcf.idx  
+- NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.sites.vcf  
+- NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.sites.vcf.idx  
+- NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.vcf  
+- NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.vcf.idx  
+- NA12878.knowledgebase.snapshot.20131119.b37.vcf  
+- NA12878.knowledgebase.snapshot.20131119.b37.vcf.idx  
+
 
 [Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngs-easy-v10)
 
