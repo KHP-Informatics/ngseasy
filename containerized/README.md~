@@ -217,6 +217,7 @@ This is a %6GB ``ngseasy_resources.tar.gz`` file containing :-
 - ``gatk_resources.tar.gz`` gatk resources bundle
 - ``fastq_example.tgz`` Example 75bp PE Illumina Whole Exome Sequence fastq data for **NA12878**
 
+**In Linux**
 ```bash
 tar -xfv ngseasy_resources.tar.gz
 cp -rf ngseasy_resources/reference_genomes_b37 ~/reference_genomes_b37
