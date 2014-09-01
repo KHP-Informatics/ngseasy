@@ -180,15 +180,12 @@ sudo docker pull snewhouse/ngseasy-alignment-public:v1.2
 #### Getting All NGSeasy images
 
 ```bash
-
 #!/bin/bash
-
 # get ngseasy from DockerHub
 repo='snewhouse'
 
-for i in \
+for i in alignment-public:v1.2 \
 fastqc:v1.0 \
-alignment-public:v1.2 \
 var-callers:v1.1 \
 var-anno:v1.1 \
 sv-delly:v1.1 \
@@ -227,20 +224,46 @@ The ``-u pipeman`` ensures it is run using the ``pipeman`` user.
 
 ## Local Machine Set up
 
-1. On your local machine, make the following directories:-
+### Download NGSeasy resources 
 
-- FASTQ_STAGGING [FASTQ_STAGGING is to hold all incoming raw fastq files]
-- ngs_projects [out put directory for all ngs projects)
-- reference_genomes [get from URL and unpack. NB: XXX GB!]
-- gatk_resources
-- humandb [annovar]
-- vep [VEP data base]
-- snpeff [snpeff database]
+This is a XXGB ``ngseasy_resources.tar.gz`` file containing :-  
 
-These folders are required by pipeline as they are hardcoded in the nsg scripts.
+- reference genomes indexed for use with all provided aligners
+- annotation bed files for use with pipeline scripts
+- ANNOVAR humandb 
+- gatk resources bundle
+- Example 75bp PE Illumina Whole Exome Sequence fastq data for **NA12878**
 
-- Get reference genomes, gatk resouces, snp annotation databases from [ADD URL]
-- Un compress and save on local machine
+```bash
+tar ngseasy_resources.tar.gz
+```
+
+**On your local machine, ensure the following directories exist:-**
+
+- ``fastq_raw`` [to hold all incoming raw fastq files]
+- ``ngs_projects`` [out put directory for all ngs projects]
+- ``reference_genomes`` [get from URL and unpack. NB: XXX GB!]
+- ``gatk_resources`` [vcf and annotation files used by GATK]
+- ``humandb`` [annovar databases]
+
+These folders are required by pipeline as they are hardcoded in the NGSeasy scripts. I would recommend installing these in your ``HOME`` directory.
+
+### Getting the GATK Resources Bundle for yourself
+
+(What's in the resource bundle and how can I get it?](https://www.broadinstitute.org/gatk/guide/article.php?id=1213)
+
+```bash
+## FTP Login Details
+location: ftp.broadinstitute.org
+username: gsapubftp-anonymous
+password: <blank>
+```
+I would recommend using a separate program like [FileZilla](https://filezilla-project.org/), which will make it much easier for you to set up and manage your file transfers
+
+**Path to gatk_resources.tgz**
+```
+ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
+```
 
 [Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev/containerized/README.md#ngs-easy-v10)
 
