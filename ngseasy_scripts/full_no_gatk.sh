@@ -79,6 +79,7 @@ qcdPeFASTQ2=${SOUT}/fastq/${rawFASTQ2}_2.filtered.fq.gz
 qcdSeFASTQ1=${SOUT}/fastq/${rawFASTQ1}_1.unpaired.fq.gz
 qcdSeFASTQ2=${SOUT}/fastq/${rawFASTQ2}_2.unpaired.fq.gz
 
+if [ ${ALIGNER} != "novoalign" ]; then
 # run Trimmomatic
 java -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar PE \
 -threads ${NCPU} \
@@ -92,6 +93,10 @@ LEADING:3 \
 TRAILING:3 \
 SLIDINGWINDOW:4:15 \
 MINLEN:50;
+else
+cp ${SOUT}/fastq/${rawFASTQ1}_1.fq.gz ${qcdPeFASTQ1}
+cp ${SOUT}/fastq/${rawFASTQ1}_2.fq.gz ${qcdPeFASTQ2}
+fi
 
 echo  " Run Pre-Alignment QC on Filtered/Trimmed Fastq files " `date`
 # FASTQC on paired trimmed files
@@ -107,7 +112,7 @@ ${qcdPeFASTQ1} ${qcdPeFASTQ2};
 
 echo  " Start Alignment" `date`
 
-if [ "${ALIGNER}" == "bwa" ]; then
+if [ ${ALIGNER} == "bwa" ]; then
 # BWA alignment
 echo  " Running bwa " `date`
 /usr/local/pipeline/bwa-0.7.10/bwa mem -M -t ${NCPU} ${REFGenomes}/human_g1k_v37.fasta ${qcdPeFASTQ1} ${qcdPeFASTQ2} \
@@ -115,23 +120,23 @@ echo  " Running bwa " `date`
 /usr/local/pipeline/samtools-0.1.19/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
 /usr/local/pipeline/samtools-0.1.19/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
 /usr/local/pipeline/samtools-0.1.19/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
-elif [ "${ALIGNER}" == "bowtie2" ]; then
+elif [ ${ALIGNER} == "bowtie2" ]; then
 echo  " Running bowtie2 " `date`
 # Bowtie2 alignment
 /usr/local/pipeline/bowtie2-2.2.3/bowtie2 -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 -x ${REFGenomes}/human_g1k_v37 -1 ${qcdPeFASTQ1} -2 ${qcdPeFASTQ2} -S ${SOUT}/alignments/${BAM_PREFIX}.raw.sam; # 5GB RAM
 /usr/local/pipeline/samtools-0.1.19/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam > ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
 /usr/local/pipeline/samtools-0.1.19/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
 /usr/local/pipeline/samtools-0.1.19/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
-elif [ "${ALIGNER}" == "novoalign" ]; then
+elif [ ${ALIGNER} == "novoalign" ]; then
 echo  " Running novolaign " `date`
 # Novoalign alignment 
 # TO DO: Use raw${SOUT}/fastq/${FASTQ1} ${SOUT}/fastq/${FASTQ2} as novoalign does this all internally if provideing adapter lists
 # ADD -a @ADAPTERS
-ngsNovoalign -d ${REFGenomes}/human_g1k_v37.fasta -f ${qcdPeFASTQ1} ${qcdPeFASTQ2} -F STDFQ --Q2Off --3Prime -g 40 -x 6 -r All -i PE 300,150 -c ${NCPU} -k -K ${SOUT}/alignments/${BAM_PREFIX}.K.stats -o SAM > ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
+/usr/local/pipeline/novocraft -d ${REFGenomes}/human_g1k_v37.fasta -f ${qcdPeFASTQ1} ${qcdPeFASTQ2} -F STDFQ --Q2Off --3Prime -g 40 -x 6 -r All -i PE 300,150 -c ${NCPU} -k -K ${SOUT}/alignments/${BAM_PREFIX}.K.stats -o SAM > ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
 /usr/local/pipeline/samtools-0.1.19/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
 /usr/local/pipeline/samtools-0.1.19/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
 /usr/local/pipeline/samtools-0.1.19/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
-elif [ "${ALIGNER}" == "stampy" ]; then
+elif [ ${ALIGNER} == "stampy" ]; then
 echo  " Running stampy " `date`
 # stampy alignment
 echo  " Running stampy bwa "
@@ -340,7 +345,7 @@ echo  " Start SNP and Small INDEL Calling " `date`
 KNOWN_SNPS_b138=/usr/local/pipeline/gatk_resources/dbsnp_138.b37.vcf
 
 echo  " Starting Variant Calling using Freebayes " `date`
-if [ "${VARCALLER}" == "freebayes" ]; then
+if [ ${VARCALLER} == "freebayes" ]; then
 /usr/local/pipeline/freebayes/bin/freebayes \
 -f ${REFGenomes}/human_g1k_v37.fasta \
 -b ${SOUT}/alignments/${BAM_PREFIX}.bam \
@@ -349,7 +354,7 @@ if [ "${VARCALLER}" == "freebayes" ]; then
 --min-base-quality 20 \
 --genotype-qualities > ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ;
 cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/
-elif [ "${VARCALLER}" == "platypus" ]; then
+elif [ ${VARCALLER} == "platypus" ]; then
 echo  " Starting Variant Calling using Platypus " `date`
 if [ ${NGS_TYPE} == "TGS" ];then
 python /usr/local/pipeline/Platypus_0.7.4/Platypus.py callVariants \
@@ -365,7 +370,7 @@ python /usr/local/pipeline/Platypus_0.7.4/Platypus.py callVariants \
 --refFile=${REFGenomes}/human_g1k_v37.fasta \
 --output=${SOUT}/alignments/${BAM_PREFIX}..raw.snps.indels.${VARCALLER}.vcf;
 cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/
-elif [ "${VARCALLER}" == "gatk_ug" ]; then
+elif [ ${VARCALLER} == "gatk_ug" ]; then
 # UnifiedGenotyper EMIT_ALL_CONFIDENT_SITES
 echo  " Running GATK UnifiedGenotyper " `date`
 java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T UnifiedGenotyper -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU} \
@@ -402,7 +407,7 @@ java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysis
 --annotation VariantType;
 # copy vcf to cohort vcf directory
 cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/
-elif [ "${VARCALLER}" == "gatk_hc" ]; then 
+elif [ ${VARCALLER} == "gatk_hc" ]; then 
 echo  " Running GATK HaplotypeCaller " `date`
 ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
 java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T HaplotypeCaller -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU} \
@@ -438,7 +443,7 @@ java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysis
 --annotation VariantType;
 # copy vcf to cohort vcf directory
 cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/
-elif [ "${VARCALLER}" == "gatk_hc_gvcf" ]; then
+elif [ ${VARCALLER} == "gatk_hc_gvcf" ]; then
 echo  " Running GATK HaplotypeCaller GVCF " `date` 
 ## HaplotypeCaller GVCF
 java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T HaplotypeCaller -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU} \

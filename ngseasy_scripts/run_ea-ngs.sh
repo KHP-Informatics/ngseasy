@@ -212,8 +212,10 @@ echo  " Sample Prefix : [${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}.${D
 echo ""
 echo  " Selected Pipeline : [$PIPELINE]"
 echo ""
-echo  " SYSTEM COMMAND: sh /usr/local/pipeline/ngseasy_scripts/${PIPELINE} $f1 $f2 $f3 $f4 $f5 $f6 $f7 $f8 $f9 $f10 $f11 $f12 $f13 $f14 $f15 " `date`
-
+echo  " SYSTEM COMMAND: sh /usr/local/pipeline/ngseasy_scripts/${PIPELINE} $f1 $f2 $f3 $f4 $f5 $f6 $f7 $f8 $f9 $f10 $f11 $f12 $f13 $f14 $f15 " 
+`date`
+echo ""
+echo ""
 #------------------------------------------------------------#
 # run command 
 #------------------------------------------------------------#  

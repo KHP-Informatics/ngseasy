@@ -23,31 +23,22 @@ cd ngseasy
 
 # get latest code
 git clone https://github.com/KHP-Informatics/ngs.git
-cd ngs
 git checkout dev2
 git pull origin dev2
-mv -v ngseasy_scripts ../
-cd ../
 
 # make ngs_projects
 mkdir ngs_projects
 
-# copy scripts to 
-cp -v ngseasy_scripts/run_ngseasy_dockers.sh ./ngs_projects/
-cp -v ngseasy_scripts/ngs.config.file.tsv ./ngs_projects/
-
 # get ngseasy_resources
-wget --no-check-cert 
+wget 
 tar xvf ngseasy_resources.tar.gz
-mv ngseasy_resources/** ./
-rm -rf ngseasy_resources
 
 # permissions
 chmod -R 755 ./
 ```
 
-Edit ``run_ngseasy_dockers.sh``
-
+Copy ``run_ngseasy_dockers.sh`` to ``ngs_projects``  
+Copy ``config`` file to ``ngs_projects``  
 
 **GCE**
 **************
