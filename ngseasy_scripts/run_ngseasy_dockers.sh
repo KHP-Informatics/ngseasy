@@ -2,6 +2,7 @@
 
 config_tsv=${1} 
 
+
 sudo docker run -P \
 -v /media/D/docker_ngs/ngseasy/fastq_raw:/home/pipeman/fastq_raw \
 -v /media/D/docker_ngs/ngseasy/reference_genomes_b37:/home/pipeman/reference_genomes_b37 \
