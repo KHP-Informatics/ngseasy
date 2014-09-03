@@ -21,55 +21,55 @@ Get ``ngseasy_scripts``
 mkdir ngseasy
 cd ngseasy
 
-# get latest code
+# get latest ngseasy_scripts code
 git clone https://github.com/KHP-Informatics/ngs.git
 cd ngs
 git checkout dev2
 git pull origin dev2
 mv -v ngseasy_scripts ../
+
+# move up to ngseasy
 cd ../
 
 # make ngs_projects
 mkdir ngs_projects
 
-# copy scripts to 
+# copy scripts to ngs_projects
 cp -v ngseasy_scripts/run_ngseasy_dockers.sh ./ngs_projects/
 cp -v ngseasy_scripts/ngs.config.file.tsv ./ngs_projects/
 
 # get ngseasy_resources (Dropbox for a limited time only)
 wget --no-check-cert https://www.dropbox.com/s/9pw3ml75pdnufjl/ngseasy_resources.tar.gz?dl=0
 tar xvf ngseasy_resources.tar.gz
-mv ngseasy_resources/** ./
+
+# move contents to ngseasy/
+mv -v ngseasy_resources/** ../
+
+# un pack them
+tar xvf reference_genomes_b37.tgz
+tar xvf gatk_resources.tar.gz
+
+# clean up
 rm -rf ngseasy_resources
 
 # permissions
 chmod -R 755 ./
 ```
 
-Edit ``run_ngseasy_dockers.sh``
+**You should have the following directories**
 
-
-**GCE**
-**************
-```
-https://console.developers.google.com/project/apps~secure-electron-631/compute/instancesDetail/zones/europe-west1-b/instances/bigdockerbox
-```
-
-```bash
-gcloud compute --project "secure-electron-631" ssh --zone "europe-west1-b" "bigdockerbox"
-```
+- fastq_raw
+- gatk_resources
+- reference_genomes_b37
+- ngs_projects
+- ngseasy_scripts
+- ngs
 
 **Set Up Config File**
 ************************
 
 In Excel make config file and save as [TAB] Delimited file with ``.tsv`` extenstion.  
 See Example.
-
-**Call the pipeline**
-********************
-```sh
-sh run_ngseasy_dockers.sh ngs.config.file.tsv
-```
 
 **Inside run_ngseasy_dockers.sh**
 ********************
@@ -86,6 +86,26 @@ sudo docker run -P \
 -i -t snewhouse/ngseasy-alignment-public:v1.2 /sbin/my_init -- /bin/bash  /home/pipeman/ngseasy_scripts/run_ea-ngs.sh /home/pipeman/ngs_projects/${config_tsv};
 ```
 Need **FULL PATHS** so ``../DIR`` should be ``/HOME/DIR``
+
+Edit ``run_ngseasy_dockers.sh``
+
+**Call the pipeline**
+********************
+```sh
+bash run_ngseasy_dockers.sh ngs.config.file.tsv
+```
+
+**GCE**
+**************
+```
+https://console.developers.google.com/project/apps~secure-electron-631/compute/instancesDetail/zones/europe-west1-b/instances/bigdockerbox
+```
+
+```bash
+gcloud compute --project "secure-electron-631" ssh --zone "europe-west1-b" "bigdockerbox"
+```
+
+
 
 ### Misc
 
