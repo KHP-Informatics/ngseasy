@@ -36,8 +36,8 @@ mkdir ngs_projects
 cp -v ngseasy_scripts/run_ngseasy_dockers.sh ./ngs_projects/
 cp -v ngseasy_scripts/ngs.config.file.tsv ./ngs_projects/
 
-# get ngseasy_resources
-wget --no-check-cert 
+# get ngseasy_resources (Dropbox for a limited time only)
+wget --no-check-cert https://www.dropbox.com/s/9pw3ml75pdnufjl/ngseasy_resources.tar.gz?dl=0
 tar xvf ngseasy_resources.tar.gz
 mv ngseasy_resources/** ./
 rm -rf ngseasy_resources
