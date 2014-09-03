@@ -74,7 +74,7 @@ echo " NGSeasy: START Pre-Alignment QC " `date`
 echo "................................................"
 echo ""
 
-if [ ! -d ${SOUT}/fastq/${rawFASTQ1}_1.fq_fastqc ] && [ ! -d ${SOUT}/fastq/${rawFASTQ1}_2.fq_fastqc ]
+if [ ! -d ${SOUT}/fastq/${rawFASTQ1}_1.fq_fastqc/ ] && [ ! -d ${SOUT}/fastq/${rawFASTQ2}_2.fq_fastqc/ ]
 then
   echo " NGSeasy: Run Pre-Alignment QC on raw Fastq files " `date`
 
@@ -163,7 +163,7 @@ echo " NGSeasy: Start Alignment [${ALIGNER}] " `date`
 echo "................................................"
 echo ""
 
-if [ "${ALIGNER}" == "bwa" ]
+if [ "${ALIGNER}" == "bwa" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.sort.bam ]
 then
   # BWA alignment
   echo " NGSeasy: Running bwa " `date`
@@ -171,8 +171,8 @@ then
    /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
-
-elif [ "${ALIGNER}" == "bowtie2" ]
+   
+elif [ "${ALIGNER}" == "bowtie2" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.sort.bam ]
 then
   echo " NGSeasy: Running bowtie2 " `date`
     # Bowtie2 alignment
@@ -181,7 +181,7 @@ then
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
 
-elif [ "${ALIGNER}" == "novoalign" ]
+elif [ "${ALIGNER}" == "novoalign" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.sort.bam ]
 then
   echo " NGSeasy: Running novolaign " `date`
     # Novoalign alignment 
@@ -192,7 +192,7 @@ then
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
 
-elif [ "${ALIGNER}" == "stampy" ]
+elif [ "${ALIGNER}" == "stampy" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.sort.bam ]
 then
   echo " NGSeasy: Running stampy " `date`
   # stampy alignment
@@ -236,21 +236,18 @@ python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
     rm ${SOUT}/alignments/${BAM_PREFIX}.raw.sam
     rm ${SOUT}/alignments/${BAM_PREFIX}.raw.bam
     rm ${SOUT}/alignments/${BAM_PREFIX}.tmp
-    
-  echo " NGSeasy: $ALIGNER Complete " ``date``
 
-else
-  echo " NGSeasy: Something Went wrong! Aligner not found! Check your config file "
-  exit 1
 fi
+
+echo " NGSeasy: $ALIGNER Complete " `date`
 
 ##---------------------- RAW ALIGNMENT PROCESSING ---------------------------------------------------------------------------------------##
 
-echo " NGSeasy: Getting Platform Unit Information " 
+echo " NGSeasy: Getting Platform Unit Information "  `date`
   
   platform_unit=`zcat ${qcdPeFASTQ1} | head -1 | perl -p -i -e 's/:/\t/' | cut -f 1 | perl -p -i -e 's/@//g'`
 
-echo " NGSeasy: Getting Platform Unit Information = [$platform_unit]" 
+echo " NGSeasy: Platform Unit: [$platform_unit]" 
   
 echo " NGSeasy: Adding Read Group Information " `date`
 
@@ -444,7 +441,7 @@ echo "................................................"
 echo " NGSeasy: START SNP and Small INDEL Calling " `date`
 echo "................................................"
 echo ""
-echo " NGSeasy: NOTE: All tools are set to call variants over targeted regions created from BAM file to help speed things up (BED file format or GATK interval lists) "
+echo " NGSeasy: NOTE: All tools are set to call variants over targeted regions created from BAM file to help speed things up  "
 echo ""
 
   KNOWN_SNPS_b138=/usr/local/pipeline/gatk_resources/dbsnp_138.b37.vcf
@@ -473,7 +470,7 @@ then
     if [ ${NGS_TYPE} == "TGS" ]
     then
     echo " NGSeasy: NGS_TYPE is Targeted so no duplicate filtering  " `date`
-    # for exome/whole genome data (no duplicate filtering)
+    # for exome/whole genome data no duplicate filtering
       python /usr/local/pipeline/Platypus_0.7.4/Platypus.py callVariants \
       --nCPU ${NCPU} \
       --bamFiles=${SOUT}/alignments/${BAM_PREFIX}.bam \
@@ -537,7 +534,7 @@ then
 
 elif [ "${VARCALLER}" == "gatk_hc" ]
 then 
-  echo " NGSeasy: Running GATK HaplotypeCaller (THIS TAKES A LOOOONG TIME) " `date`
+  echo " NGSeasy: Running GATK HaplotypeCaller THIS TAKES A LOOOONG TIME " `date`
   ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
   java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T HaplotypeCaller -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU} \
   -I ${SOUT}/alignments/${BAM_PREFIX}.bam \
@@ -576,7 +573,7 @@ then
   
 elif [ ${VARCALLER} == "gatk_hc_gvcf" ]
 then
-  echo " NGSeasy: Running GATK HaplotypeCaller GVCF (THIS TAKES A VERY LOOOONG TIME)" `date` 
+  echo " NGSeasy: Running GATK HaplotypeCaller GVCF THIS TAKES A VERY LOOOONG TIME" `date` 
   ## HaplotypeCaller GVCF
   java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T HaplotypeCaller -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU} \
   -I ${SOUT}/alignments/${BAM_PREFIX}.bam \
