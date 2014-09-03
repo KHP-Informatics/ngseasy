@@ -9,6 +9,7 @@ sudo docker run -P \
 -v /media/D/docker_ngs/ngseasy/ngs_projects:/home/pipeman/ngs_projects \
 -v /media/D/docker_ngs/ngseasy/ngseasy_scripts:/home/pipeman/ngseasy_scripts \
 -i -t snewhouse/ngseasy-alignment-public:v1.2 /sbin/my_init -- /bin/bash  /home/pipeman/ngseasy_scripts/run_ea-ngs.sh /home/pipeman/ngs_projects/${config_tsv}; 
-chmod -R 755 /media/D/docker_ngs/ngseasy/ngs_projects;
+
+
 
 

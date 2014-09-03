@@ -122,7 +122,8 @@ echo ""
   
   if [ ! -d $PROJECT_DIR/${POJECT_ID} ]
     then
-    echo  " Project Directory Does not exist Setting up correct Project Directory"
+    echo  " Project Directory Does not exist. Setting up correct Project Directory"
+    echo ""
     echo  " Making Directory : [$PROJECT_DIR/${POJECT_ID}/]"
     echo  " Making Directory : [$PROJECT_DIR/${POJECT_ID}/config_files]"
     echo  " Making Directory : [$PROJECT_DIR/${POJECT_ID}/cohort_vcfs]"
@@ -135,7 +136,8 @@ echo ""
 
   if [ ! -d $PROJECT_DIR/${POJECT_ID}/$SAMPLE_ID ]  
     then
-    echo  " Sample Directory Does not exist Setting up correct Sample Directory"
+    echo  " Sample Directory Does not exist. Setting up correct Sample Directory"
+    echo ""
         mkdir ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
         mkdir ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/fastq
         mkdir ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/tmp
@@ -178,7 +180,7 @@ echo  " Genotyping Mode (GATK Specific) : [$GTMODEGATK]"
 echo  " Clean up TRUE/FALE : [$CLEANUP]"
 echo  " Number of cpu : [$NCPU]"
 echo  " Output Directory : [${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}]"
-echo  " Sample Prefix : [${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}.${DATE}]"
+echo  " Sample Prefix : [${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}]"
 echo  " Fastq Directory : [$FASTQDIR]"
 echo ""
 echo  " NOTE: Paths are relative to the Structure set up in the Docker Image."
@@ -208,12 +210,12 @@ echo ""
     
 echo  " Processing Sample : [$SAMPLE_ID]"
 echo  " Sample Data will be saved into : [${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/]"
-echo  " Sample Prefix : [${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}.${DATE}]"
+echo  " Sample Prefix : [${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}]"
 echo ""
 echo  " Selected Pipeline : [$PIPELINE]"
 echo ""
 echo  " SYSTEM COMMAND: sh /usr/local/pipeline/ngseasy_scripts/${PIPELINE} $f1 $f2 $f3 $f4 $f5 $f6 $f7 $f8 $f9 $f10 $f11 $f12 $f13 $f14 $f15 " 
-`date`
+date
 echo ""
 echo ""
 #------------------------------------------------------------#
