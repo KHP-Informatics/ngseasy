@@ -49,15 +49,6 @@ chmod -R 755 ./
 Edit ``run_ngseasy_dockers.sh``
 
 
-**GCE**
-**************
-```
-https://console.developers.google.com/project/apps~secure-electron-631/compute/instancesDetail/zones/europe-west1-b/instances/bigdockerbox
-```
-
-```bash
-gcloud compute --project "secure-electron-631" ssh --zone "europe-west1-b" "bigdockerbox"
-```
 
 **Set Up Config File**
 ************************
