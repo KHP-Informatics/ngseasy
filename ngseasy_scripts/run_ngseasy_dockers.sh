@@ -47,11 +47,11 @@ done
 
 
 #check exists.
-[[! -e ${2}/fastq_raw ]] && (echo ${2}/fastq_raw does not exist && exit 1)
-[[! -e ${2}/reference_genomes_b37 ]] && (echo ${2}/reference_genomes_b37 does not exist && exit 1)
-[[! -e ${2}/gatk_resources ]] && (echo ${2}/gatk_resources does not exist && exit 1)
-[[! -e ${2}/ngs_projects ]] && (echo ${2}/ngs_projects does not exist && exit 1)
-[[! -e ${2}/ngseasy_scripts ]] && (echo ${2}/ngseasy_scripts does not exist && exit 1)
+[[! -e ${host_vol_dir}/fastq_raw ]] && (echo ${2}/fastq_raw does not exist && exit 1)
+[[! -e ${host_vol_dir}/reference_genomes_b37 ]] && (echo ${2}/reference_genomes_b37 does not exist && exit 1)
+[[! -e ${host_vol_dir}/gatk_resources ]] && (echo ${2}/gatk_resources does not exist && exit 1)
+[[! -e ${host_vol_dir}/ngs_projects ]] && (echo ${2}/ngs_projects does not exist && exit 1)
+[[! -e ${host_vol_dir}/ngseasy_scripts ]] && (echo ${2}/ngseasy_scripts does not exist && exit 1)
 
 
 
