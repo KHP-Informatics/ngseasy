@@ -289,15 +289,12 @@ java -XX:ParallelGCThreads=${NCPU} -Xmx6g -jar /usr/local/pipeline/picardtools/p
   RGDT=${DATE} \
   INPUT=${SOUT}/alignments/${BAM_PREFIX}.sort.bam \
   OUTPUT=${SOUT}/alignments/${BAM_PREFIX}.addrg.bam;
-
-else
-  echo " NGSeasy: Whoops! Missing Input file for AddOrReplaceReadGroup....check your data " `date`
-  exit 1
 fi
 
 # MarkDuplicates
-  
-if [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.bam ]
+echo " NGSeasy: START MarkDuplicates " `date`  
+
+if [ ! -e ${SOUT}/alignments/${BAM_PREFIX}.dupemk_metrics ]
 then
 echo " NGSeasy: Marking Duplicate Reads " `date`
 
@@ -311,28 +308,34 @@ echo " NGSeasy: Marking Duplicate Reads " `date`
   INPUT=${SOUT}/alignments/${BAM_PREFIX}.addrg.bam \
   OUTPUT=${SOUT}/alignments/${BAM_PREFIX}.bam \
   METRICS_FILE=${SOUT}/alignments/${BAM_PREFIX}.dupemk_metrics;
-
-else
-  echo " NGSeasy: Whoops! Missing Input file for MarkDuplicates....check your data " `date`
-  exit 1
 fi
 
-# FindCoveredIntervals: these are used in GATK Calling to help speed things up
+  # FindCoveredIntervals: these are used in GATK Calling to help speed things up
 
+echo " NGSeasy: START FindCoveredIntervals " `date`  
+if [ ! -s ${SOUT}/reports/${BAM_PREFIX}.CoveredIntervals_x4.list ]
+then
 echo " NGSeasy: Finding Covered Intervals : minimum coverage of 4 " `date`
   java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T FindCoveredIntervals -R ${REFGenomes}/human_g1k_v37.fasta \
   -I ${SOUT}/alignments/${BAM_PREFIX}.bam  \
   -o ${SOUT}/reports/${BAM_PREFIX}.CoveredIntervals_x4.list \
   --coverage_threshold 4;
-
+fi
+  
+  
 # BAM to BED
+echo " NGSeasy: START bamtobed " `date`  
+
+if [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.merged.bed ]
+then
 echo " NGSeasy: Converting Aligned BAM To BED File " `date`
 # pulls out paired only reads with min qual 10. Set low as donwstream tools filter these regions
  /usr/local/pipeline/samtools/samtools view -b -h -q 10 -F 1796 ${SOUT}/alignments/${BAM_PREFIX}.bam | /usr/local/pipeline/bedtools2/bin/bedtools bamtobed -i stdin > ${SOUT}/alignments/${SOUT}/alignments/${BAM_PREFIX}.bed;
 
 echo " NGSeasy: Converting Aligned BED To MERGED BED File " `date` 
  /usr/local/pipeline/bedtools2/bin/bedtools merge -i ${SOUT}/alignments/${BAM_PREFIX}.bed > ${SOUT}/alignments/${BAM_PREFIX}.merged.bed;
-  
+fi
+
 
 echo ""
 echo "................................................"
@@ -347,7 +350,7 @@ echo " NGSeasy: START Post Alignmnet QC " `date`
 echo "................................................"
 echo ""
 
-if [ ! -s ${SOUT}/reports/${BAM_PREFIX}.alignment_summary_metrics ] && [ ! -s ${SOUT}/reports/${BAM_PREFIX}.alignment_summary_metrics_alt ] && [ ! -s ${SOUT}/reports/${BAM_PREFIX}.wgs_coverage ]
+if [ ! -s ${SOUT}/reports/${BAM_PREFIX}.alignment_summary_metrics ]
 then 
 
   echo " NGSeasy: Running Post Alignmnet QC " `date`
