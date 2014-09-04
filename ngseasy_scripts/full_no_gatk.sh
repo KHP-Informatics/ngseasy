@@ -295,7 +295,7 @@ fi
 
 # MarkDuplicates
   
-if [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.bam ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.dupemk_metrics ]
+if [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.bam ]
 then
 echo " NGSeasy: Marking Duplicate Reads " `date`
 
