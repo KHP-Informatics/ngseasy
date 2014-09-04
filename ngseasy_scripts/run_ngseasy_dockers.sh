@@ -25,7 +25,7 @@ EOF
 
 
 #get options for command line args
-while  getopts "hp:r:w:o:g:" opt
+while  getopts "h:c:d:" opt
 do
 
     case ${opt} in
@@ -45,17 +45,43 @@ do
     esac
 done
 
-
 #check exists.
-[[! -e ${host_vol_dir}/fastq_raw ]] && (echo ${2}/fastq_raw does not exist && usage() && exit 1)
-[[! -e ${host_vol_dir}/reference_genomes_b37 ]] && (echo ${2}/reference_genomes_b37 does not exist && usage() && exit 1)
-[[! -e ${host_vol_dir}/gatk_resources ]] && (echo ${2}/gatk_resources does not exist && usage() && exit 1)
-[[! -e ${host_vol_dir}/ngs_projects ]] && (echo ${2}/ngs_projects does not exist && usage() && exit 1)
-[[! -e ${host_vol_dir}/ngseasy_scripts ]] && (echo ${2}/ngseasy_scripts does not exist && usage() && exit 1)
+if [[! -e ${host_vol_dir}/fastq_raw ]] 
+then
+	echo " ${host_vol_dir}/fastq_raw does not exist ";
+	usage;
+	exit 1;
+fi
 
+if [[! -e ${host_vol_dir}/reference_genomes_b37 ]]
+then
+	echo "${host_vol_dir}/reference_genomes_b37 does not exist"
+	usage
+	exit 1
+fi
 
+if [[! -e ${host_vol_dir}/gatk_resources ]]
+then
+	echo ${host_vol_dir}/gatk_resources does not exist" 
+	usage
+	exit 1
+fi
 
+if [[! -e ${host_vol_dir}/ngs_projects ]] 
+then
+	echo "${host_vol_dir}/ngs_projects does not exist"
+	usage
+	exit 1
+fi
 
+if [[! -e ${host_vol_dir}/ngseasy_scripts ]]
+then
+	echo "${host_vol_dir}/ngseasy_scripts does not exist"
+	usage
+	exit
+fi
+
+# run docker 
 sudo docker run -P \
          -v ${host_vol_dir}/ngseasy/fastq_raw:/home/pipeman/fastq_raw \
          -v ${host_vol_dir}/ngseasy/reference_genomes_b37:/home/pipeman/reference_genomes_b37 \
