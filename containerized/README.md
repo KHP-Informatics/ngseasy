@@ -320,7 +320,7 @@ NGSEASY-VM : An NGS Tool Box
 
 A virtual machine based on [Ubuntu 14.04 LTS](http://www.ubuntu.com/desktop), containing all these [NGS Tools](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#the-tools-included-are-as-follows--) (and a few extras) is available. The virtual machine contains indexed reference genomes (b37) for all the installed aligners and the [GATK Resources Budle](https://www.broadinstitute.org/gatk/download).  
 
-Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
+Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM [ngseasy-vm-v1.0.vdi]() you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
 
 ## 1. Installing Oracle VirtualBox
 
@@ -337,13 +337,13 @@ A full set of instructions are available here:-
 
 ## 2. Getting the ngseasy-vm
 
-Download the ngseasy-vm [ngseasy-vm.vdi]() and save this anywhere on your local machine.  
+Download the ngseasy-vm [ngseasy-vm-v1.0.vdi]() and save this anywhere on your local machine.  
 
 **NOTE:** This file is XXXGB in size.  
 
 ## 3. Installing the ngseasy-vm
 
-Create a new virtual machine from the downloaded [ngseasy-vm.vdi]().  
+Create a new virtual machine from the downloaded [ngseasy-vm-v1.0.vdi]().  
 
 **Step 1.** Fire up VirtualBox and click **New**  
 **Step 2.** The **Create Virtual Machine** window will appear  
