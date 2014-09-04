@@ -15,9 +15,6 @@
 # amosfolarin@gmail.com
 #
 #------------------------------------------------------------#
-
-
-
 #------------------------------------------------------------#
 # USEAGE
 #------------------------------------------------------------#
@@ -25,17 +22,6 @@
 # sh run_ea-ngs.sh <config.file>
 #
 #------------------------------------------------------------#
-
-
-echo  "#------------------------------------------------------------#"
-echo  " Starting NGSeasy : NGS made easy!!!!"
-echo  " Version 1.0"
-echo  " Authors: Amos Folarin <amosfolarin@gmail.com>"
-echo  " Authors: Stephen Newhouse <stephen.j.newhouse@gmail.com>"
-echo  " USAGE:  sh run_ea-ngs.sh <config.file>"
-echo  " Run Date : `date +"%d-%m-%y"`"
-echo  "#------------------------------------------------------------#"
-echo ""
   
 #------------------------------------------------------------#
 # Config file
@@ -55,7 +41,7 @@ echo  " Checking [${config_file}] format"
   numsamples=`wc -l ${config_file} | awk '{print $1}'`
 echo  " Number of samples : [$numsamples]"
     
-  if [ $numfeilds -ne 15 ]
+  if [ "$numfeilds" -ne "15" ]
     then
     echo  " WARNING! Number of fields not equal to 15 for one of your samples You appear to have missing data in [${config_file}]"
     echo  " Check  [${config_file}] format"
@@ -127,9 +113,11 @@ echo ""
     echo  " Making Directory : [$PROJECT_DIR/${POJECT_ID}/]"
     echo  " Making Directory : [$PROJECT_DIR/${POJECT_ID}/config_files]"
     echo  " Making Directory : [$PROJECT_DIR/${POJECT_ID}/cohort_vcfs]"
+    
         mkdir $PROJECT_DIR/${POJECT_ID}/
         mkdir ${PROJECT_DIR}/${POJECT_ID}/config_files
         mkdir ${PROJECT_DIR}/${POJECT_ID}/cohort_vcfs
+        
   else
     echo  " Project Directory Exists"
   fi
@@ -144,14 +132,16 @@ echo ""
         mkdir ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/alignments
         mkdir ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/vcf
         mkdir ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/reports
+        
     echo  " Making Sample Directory : [${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}]"
     echo  " Making Sample Directory : [${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/fastq]"
     echo  " Making Sample Directory : [${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/tmp]"
     echo  " Making Sample Directory : [${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/alignments]"
     echo  " Making Sample Directory : [${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/vcf]"
     echo  " Making Sample Directory : [${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/reports]"
-      else
-    echo  " Sample Directory Exists"
+  
+  else
+    echo  " Sample Directory Exists "
   fi
   
 #------------------------------------------------------------#
@@ -162,7 +152,7 @@ echo  "#------------------------------------------------------------#"
 echo  " Pipeline Settings "
 echo  "#------------------------------------------------------------#"
 echo ""
-  DATE=`date +"%d%m%y"`
+DATE=`date +"%d%m%y"`
 echo  " Run Date : [$DATE]"
 echo  " Project_Id : [$POJECT_ID]" 
 echo  " Sample_Id  : [$SAMPLE_ID]"
@@ -195,23 +185,18 @@ echo ""
 #------------------------------------------------------------#
 
 echo  "#------------------------------------------------------------#"
-echo  " Run NGS Pipeline "
+echo  " Call NGS Pipeline "
 echo  "#------------------------------------------------------------#"
 echo ""
   
 echo  " Saving Sample configuration settings to : [${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}.${DATE}.config.file]"
-echo  "$DATE $f1 $f2 $f3 $f4 $f5 $f6 $f7 $f8 $f9 $f10 $f11 $f12 $f13 $f14 $f15 ${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}.${DATE} ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}" \
-  >  ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}.${DATE}.config.file
-echo ""
+echo  "$DATE $f1 $f2 $f3 $f4 $f5 $f6 $f7 $f8 $f9 $f10 $f11 $f12 $f13 $f14 $f15 ${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}.${DATE} ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}" >  ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}.${DATE}.config.file
   
 echo  " Saving Project configuration settings to : [${PROJECT_DIR}/${POJECT_ID}/config_files/master.config.file]"
 echo  "$DATE $f1 $f2 $f3 $f4 $f5 $f6 $f7 $f8 $f9 $f10 $f11 $f12 $f13 $f14 $f15 ${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}.${DATE} ${PROJECT_DIR}/${POJECT_ID}" >> ${PROJECT_DIR}/${POJECT_ID}/config_files/project.config.file;
-echo ""
-    
 echo  " Processing Sample : [$SAMPLE_ID]"
 echo  " Sample Data will be saved into : [${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/]"
 echo  " Sample Prefix : [${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}]"
-echo ""
 echo  " Selected Pipeline : [$PIPELINE]"
 echo ""
 echo  " SYSTEM COMMAND: bash /usr/local/pipeline/ngseasy_scripts/${PIPELINE} $f1 $f2 $f3 $f4 $f5 $f6 $f7 $f8 $f9 $f10 $f11 $f12 $f13 $f14 $f15 " 

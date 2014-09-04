@@ -141,10 +141,18 @@ structural variant calling, basic reporting and visualisations.
 
 ******
 
-##### To Add 
-- SegSeq
-- MuTect
-- MutSig
+**Software Versions**
+************************
+- Trimmomatic-0.32
+- bwa-0.7.10
+- bowtie2-2.2.3
+- novocraftV3.02.07.Linux3.0
+- stampy-1.0.23
+- samtools-0.1.19
+- picard-tools-1.115
+- GenomeAnalysisTK-3.2-2
+- Platypus_0.7.4
+- fastqc_v0.11.2
 
 ******
 
@@ -208,23 +216,86 @@ done
 
 ## Local Machine Set up
 
-### Download NGSeasy resources 
+**Get the NGSeasy Reasources and Scripts**
+****************************
 
-This is a %6GB ``ngseasy_resources.tar.gz`` file containing :-  
+```sh
+# make ngseasy directory
+mkdir ngseasy
+cd ngseasy
+
+# get latest ngseasy_scripts code
+# the scripts will eventually be bundled with each docker image
+git clone https://github.com/KHP-Informatics/ngs.git
+cd ngs
+git checkout dev2
+git pull origin dev2
+mv -v ngseasy_scripts ../ 
+
+# move up to ngseasy
+cd ../
+
+# make ngs_projects
+mkdir ngs_projects
+
+# copy scripts to ngs_projects
+cp -v ngseasy_scripts/run_ngseasy_dockers.sh ./ngs_projects/
+cp -v ngseasy_scripts/ngs.config.file.tsv ./ngs_projects/
+
+# get ngseasy_resources (Dropbox for a limited time only)
+wget --no-check-cert https://www.dropbox.com/s/9pw3ml75pdnufjl/ngseasy_resources.tar.gz?dl=0
+tar xvf ngseasy_resources.tar.gz
+
+# move contents to ngseasy/
+mv -v ngseasy_resources/** ../
+
+# un pack them
+tar xvf reference_genomes_b37.tgz
+tar xvf gatk_resources.tar.gz
+
+# clean up
+rm -rf ngseasy_resources
+
+# permissions
+chmod -R 755 ./
+```
+
+**You should have the following directories**
+
+- fastq_raw
+- gatk_resources
+- reference_genomes_b37
+- ngs_projects
+- ngseasy_scripts
+- ngs
+
+**Set Up Config File**
+************************
+
+In Excel make config file and save as [TAB] Delimited file with ``.tsv`` extenstion.  
+See Example provided. 
+
+
+**Download NGSeasy resources**
+
+This is a 25GB ``ngseasy_resources.tar.gz`` file containing :-  
 
 - ``reference_genomes_b37.tgz`` b37 reference genomes indexed for use with all provided aligners (BWA, Bowtie2, Stampy, Novoalign) and annotation bed files for use with pipeline scripts
-- ``humandb.tgz`` ANNOVAR humandb 
 - ``gatk_resources.tar.gz`` gatk resources bundle
 - ``fastq_example.tgz`` Example 75bp PE Illumina Whole Exome Sequence fastq data for **NA12878**
+
+**Get Annovar Databases**
+Coming soon....
+- ``humandb.tgz`` ANNOVAR humandb 
 
 **In Linux**
 
 ```bash
 tar -xfv ngseasy_resources.tar.gz
-cp -rf ngseasy_resources/reference_genomes_b37 ~/reference_genomes_b37
-cp -rf  ngseasy_resources/gatk_resources ~/humandb
-cp -rf  ngseasy_resources/gatk_resources ~/gatk_resources
-cp -rf  ngseasy_resources/fastq_example ~/fastq_raw
+cp -rfv	 ngseasy_resources/reference_genomes_b37 ~/reference_genomes_b37
+cp -rfv  ngseasy_resources/gatk_resources ~/humandb
+cp -rfv  ngseasy_resources/gatk_resources ~/gatk_resources
+cp -rfv  ngseasy_resources/fastq_example ~/fastq_raw
 ```
 
 **On your local machine, ensure the following directories exist:-**
@@ -280,15 +351,8 @@ ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
 - NA12878.knowledgebase.snapshot.20131119.b37.vcf.idx  
 
 
-## Get NGSeasy Scripts
-
-```bash
-git clone XXXXXX
-```
 
 
-
-**the scripts will eventually be bundled with each docker image**
 [Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
 
 **********
@@ -320,7 +384,7 @@ NGSEASY-VM : An NGS Tool Box
 
 A virtual machine based on [Ubuntu 14.04 LTS](http://www.ubuntu.com/desktop), containing all these [NGS Tools](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#the-tools-included-are-as-follows--) (and a few extras) is available. The virtual machine contains indexed reference genomes (b37) for all the installed aligners and the [GATK Resources Budle](https://www.broadinstitute.org/gatk/download).  
 
-Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
+Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM [ngseasy-vm-v1.0.vdi]() you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
 
 ## 1. Installing Oracle VirtualBox
 
@@ -337,13 +401,13 @@ A full set of instructions are available here:-
 
 ## 2. Getting the ngseasy-vm
 
-Download the ngseasy-vm [ngseasy-vm.vdi]() and save this anywhere on your local machine.  
+Download the ngseasy-vm [ngseasy-vm-v1.0.vdi]() and save this anywhere on your local machine.  
 
 **NOTE:** This file is XXXGB in size.  
 
 ## 3. Installing the ngseasy-vm
 
-Create a new virtual machine from the downloaded [ngseasy-vm.vdi]().  
+Create a new virtual machine from the downloaded [ngseasy-vm-v1.0.vdi]().  
 
 **Step 1.** Fire up VirtualBox and click **New**  
 **Step 2.** The **Create Virtual Machine** window will appear  
