@@ -141,10 +141,18 @@ structural variant calling, basic reporting and visualisations.
 
 ******
 
-##### Coming soon.... 
-- SegSeq
-- MuTect
-- MutSig
+**Software Versions**
+************************
+- Trimmomatic-0.32
+- bwa-0.7.10
+- bowtie2-2.2.3
+- novocraftV3.02.07.Linux3.0
+- stampy-1.0.23
+- samtools-0.1.19
+- picard-tools-1.115
+- GenomeAnalysisTK-3.2-2
+- Platypus_0.7.4
+- fastqc_v0.11.2
 
 ******
 

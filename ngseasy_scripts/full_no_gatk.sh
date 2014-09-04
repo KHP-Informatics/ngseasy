@@ -266,7 +266,7 @@ echo " NGSeasy: Basic $ALIGNER Complete " `date`
 
 # AddOrReplaceReadGroups
 
-if [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.sort.bam ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.addrg.bam ]
+if [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.addrg.bam ]
 then
 echo " NGSeasy: Adding Read Group Information " `date`
 echo " NGSeasy: Getting Platform Unit Information "  `date`
@@ -295,7 +295,7 @@ fi
 
 # MarkDuplicates
   
-if [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.addrg.bam ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.dupemk_metrics ]
+if [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.bam ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.dupemk_metrics ]
 then
 echo " NGSeasy: Marking Duplicate Reads " `date`
 
