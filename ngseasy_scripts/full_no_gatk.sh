@@ -432,7 +432,8 @@ echo " NGSeasy: Running bedtools genomecov [-bga] " `date`
 else
   echo " NGSeasy: bedtools genomecov " `date`
 fi
- 
+
+# Picardt tools CollectTargetedPcrMetric
 echo " NGSeasy: Run CollectTargetedPcrMetric " `date`
 echo " NGSeasy: This requires a Custom or Exome BED File provided by the user or manufacturer of your NGS Exome Library " 
 
