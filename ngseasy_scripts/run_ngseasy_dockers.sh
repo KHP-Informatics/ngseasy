@@ -1,9 +1,9 @@
 #!/bin/bash
-
+set -x
 
 #variables 
-config_tsv="" 
-host_vol_dir=""
+#config_tsv="" 
+#host_vol_dir=""
 
 #usage printing func
 usage()
@@ -34,52 +34,60 @@ do
         exit 0
         ;;
         
-        -c)
+        c)
         config_tsv=${OPTARG}
         ;;
         
-        -d)
+        d)
         host_vol_dir=${OPTARG}
         ;;
 
     esac
 done
 
+
+echo "${host_vol_dir}"
+
+echo "${config_tsv}"
+
+
 #check exists.
-if [[! -e ${host_vol_dir}/fastq_raw ]] 
+if [[ ! -e ${host_vol_dir}/fastq_raw ]] 
 then
-	echo " ${host_vol_dir}/fastq_raw does not exist ";
+	echo " ${host_vol_dir}/fastq_raw does not exist "
 	usage;
 	exit 1;
 fi
 
-if [[! -e ${host_vol_dir}/reference_genomes_b37 ]]
+if [[ ! -e ${host_vol_dir}/reference_genomes_b37 ]]
 then
 	echo "${host_vol_dir}/reference_genomes_b37 does not exist"
 	usage
 	exit 1
 fi
 
-if [[! -e ${host_vol_dir}/gatk_resources ]]
+if [[ ! -e ${host_vol_dir}/gatk_resources ]]
 then
-	echo ${host_vol_dir}/gatk_resources does not exist" 
+	echo "${host_vol_dir}/gatk_resources does not exist" 
 	usage
 	exit 1
 fi
 
-if [[! -e ${host_vol_dir}/ngs_projects ]] 
+if [[ ! -e ${host_vol_dir}/ngs_projects ]] 
 then
 	echo "${host_vol_dir}/ngs_projects does not exist"
 	usage
 	exit 1
 fi
 
-if [[! -e ${host_vol_dir}/ngseasy_scripts ]]
+if [[ ! -e ${host_vol_dir}/ngseasy_scripts ]]
 then
 	echo "${host_vol_dir}/ngseasy_scripts does not exist"
 	usage
-	exit
+	exit 1
 fi
+
+echo " Run Docker Image "
 
 # run docker 
 sudo docker run -P \
@@ -88,7 +96,7 @@ sudo docker run -P \
          -v ${host_vol_dir}/ngseasy/gatk_resources:/home/pipeman/gatk_resources \
          -v ${host_vol_dir}/ngseasy/ngs_projects:/home/pipeman/ngs_projects \
          -v ${host_vol_dir}/ngseasy/ngseasy_scripts:/home/pipeman/ngseasy_scripts \
-         -i -t snewhouse/ngseasy-alignment-public:v1.2 /sbin/my_init -- /bin/bash  /home/pipeman/ngseasy_scripts/run_ea-ngs.sh /home/pipeman/ngs_projects/${config_tsv}; 
+         -i -t snewhouse/ngseasy-alignment-public:v1.2 /sbin/my_init -- /bin/bash /home/pipeman/ngseasy_scripts/run_ea-ngs.sh /home/pipeman/ngs_projects/${config_tsv}; 
 
 
 
