@@ -17,7 +17,7 @@ ARGUMENTS:
 -c      Config pipeline file
 -d      Base directory for (fastq_raw, reference_genomes_b37, gatk_resources, ngs_projects, ngseasy_scripts)
 EXAMPLE USAGE:
-run_ngseasy_dockers.sh -c myNewProjectName -d /media/D/docker_ngs/ngseasy/
+run_ngseasy_dockers.sh -c myconfigfile.tsv -d /media/D/docker_ngs/ngseasy/
 
 
 EOF
@@ -47,11 +47,11 @@ done
 
 
 #check exists.
-[[! -e ${host_vol_dir}/fastq_raw ]] && (echo ${2}/fastq_raw does not exist && exit 1)
-[[! -e ${host_vol_dir}/reference_genomes_b37 ]] && (echo ${2}/reference_genomes_b37 does not exist && exit 1)
-[[! -e ${host_vol_dir}/gatk_resources ]] && (echo ${2}/gatk_resources does not exist && exit 1)
-[[! -e ${host_vol_dir}/ngs_projects ]] && (echo ${2}/ngs_projects does not exist && exit 1)
-[[! -e ${host_vol_dir}/ngseasy_scripts ]] && (echo ${2}/ngseasy_scripts does not exist && exit 1)
+[[! -e ${host_vol_dir}/fastq_raw ]] && (echo ${2}/fastq_raw does not exist && usage() && exit 1)
+[[! -e ${host_vol_dir}/reference_genomes_b37 ]] && (echo ${2}/reference_genomes_b37 does not exist && usage() && exit 1)
+[[! -e ${host_vol_dir}/gatk_resources ]] && (echo ${2}/gatk_resources does not exist && usage() && exit 1)
+[[! -e ${host_vol_dir}/ngs_projects ]] && (echo ${2}/ngs_projects does not exist && usage() && exit 1)
+[[! -e ${host_vol_dir}/ngseasy_scripts ]] && (echo ${2}/ngseasy_scripts does not exist && usage() && exit 1)
 
 
 
