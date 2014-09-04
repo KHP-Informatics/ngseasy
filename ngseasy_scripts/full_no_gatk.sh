@@ -518,7 +518,7 @@ echo " NGSeasy: Starting Variant Calling using Freebayes " `date`
     --targets ${SOUT}/alignments/${SOUT}/alignments/${BAM_PREFIX}.merged.bed \
     --genotype-qualities > ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ;
     
-    cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/
+    cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
   
 elif [ "${VARCALLER}" == "platypus" ]
 then
@@ -536,7 +536,7 @@ then
       --filterDuplicates=0 \
       --regions=${SOUT}/reports/${BAM_PREFIX}.CoveredIntervals_x4.list;
       
-      cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/
+      cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
       
      else
 	python /usr/local/pipeline/Platypus_0.7.8/Platypus.py callVariants \
@@ -546,7 +546,7 @@ then
 	  --output=${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
 	  --regions=${SOUT}/reports/${BAM_PREFIX}.CoveredIntervals_x4.list;
 	  
-	  cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
+	  cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
     fi
 	  
 elif [ ${VARCALLER} == "gatk_ug" ]
@@ -587,7 +587,7 @@ then
   --annotation VariantType;
   
   # copy vcf to cohort vcf directory
-  cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/
+  cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
 
 elif [ "${VARCALLER}" == "gatk_hc" ]
 then 
@@ -626,7 +626,7 @@ then
   --annotation VariantType;
   
   # copy vcf to cohort vcf directory
-  cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/
+  cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
   
 elif [ ${VARCALLER} == "gatk_hc_gvcf" ]
 then
@@ -667,7 +667,7 @@ then
   ## -minPruning 10 -dcov 250
 
   # copy vcf to cohort vcf directory
-  cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.g.vcf ${PROJECT_DIR}/cohort_vcfs/
+  cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
 
 else 
   echo " NGSeasy: Something Went wrong! Check your config file "
