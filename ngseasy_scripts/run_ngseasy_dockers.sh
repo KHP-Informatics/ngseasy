@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+# set -x
 
 #variables 
 #config_tsv="" 
@@ -91,11 +91,11 @@ echo " Run Docker Image "
 
 # run docker 
 sudo docker run -P \
-         -v ${host_vol_dir}/ngseasy/fastq_raw:/home/pipeman/fastq_raw \
-         -v ${host_vol_dir}/ngseasy/reference_genomes_b37:/home/pipeman/reference_genomes_b37 \
-         -v ${host_vol_dir}/ngseasy/gatk_resources:/home/pipeman/gatk_resources \
-         -v ${host_vol_dir}/ngseasy/ngs_projects:/home/pipeman/ngs_projects \
-         -v ${host_vol_dir}/ngseasy/ngseasy_scripts:/home/pipeman/ngseasy_scripts \
+         -v ${host_vol_dir}/fastq_raw:/home/pipeman/fastq_raw \
+         -v ${host_vol_dir}/reference_genomes_b37:/home/pipeman/reference_genomes_b37 \
+         -v ${host_vol_dir}/gatk_resources:/home/pipeman/gatk_resources \
+         -v ${host_vol_dir}/ngs_projects:/home/pipeman/ngs_projects \
+         -v ${host_vol_dir}/ngseasy_scripts:/home/pipeman/ngseasy_scripts \
          -i -t snewhouse/ngseasy-alignment-public:v1.2 /sbin/my_init -- /bin/bash /home/pipeman/ngseasy_scripts/run_ea-ngs.sh /home/pipeman/ngs_projects/${config_tsv}; 
 
 
