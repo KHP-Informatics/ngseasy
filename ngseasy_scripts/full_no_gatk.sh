@@ -1,11 +1,16 @@
 #!/bin/bash
+
 # Stephen Newhouse <stephen.j.newhouse@gmail.com>
 # UNDER HEAVY DEVELOPMENT
-
 echo ""
-echo "................................................"
-echo " NGSeasy: START NGSeasy Pipleine " `date`
-echo "................................................"
+echo ""
+echo  "#------------------------------------------------------------#"
+echo  " Starting NGSeasy : NGS made easy!!!!"
+echo  " Version 1.0"
+echo  " Authors: Amos Folarin <amosfolarin@gmail.com>"
+echo  " Authors: Stephen Newhouse <stephen.j.newhouse@gmail.com>"
+echo  " Run Date : `date +"%d-%m-%y"`"
+echo  "#------------------------------------------------------------#"
 echo ""
 
 # refgenomes and contaminant lists
@@ -13,7 +18,9 @@ echo ""
   adapter_fa='/home/pipeman/reference_genomes_b37/contaminant_list.fa'
   gatk_resources='/home/pipeman/gatk_resources'
   FASTQDIR='/home/pipeman/fastq_raw'
-
+  KNOWN_SNPS_b138=/usr/local/pipeline/gatk_resources/dbsnp_138.b37.vcf
+  echo " NGSeasy: Note:- Using ${KNOWN_SNPS_b138} for SNP annotations in GATK.\n Edit bash script if you want to change this " `date`
+  
 #---------------------------------------------CONFIG------------------------------------------------#
 # get the following from the config file
 
@@ -35,22 +42,37 @@ echo ""
   CLEANUP=${14}
   NCPU=${15}
 
+  
+echo ""
+echo "................................................"
+echo " NGSeasy: START NGSeasy Pipleine [${PIPELINE}]" `date`
+echo "................................................"
+echo ""
 
 ##############################
 ## BEGING FULL NGS PIPELINE ##
 ##############################
 
-## OUTPUT SAMPLE DIR
-  SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
-  echo " NGSeasy: Setting OUTPUT directory [${SOUT}]"
-
 ## BAM PREFIX 
   BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}
   echo " NGSeasy: Setting BAM_PREFIX directory [$BAM_PREFIX]"
   echo ""
+ 
+## OUTPUT SAMPLE DIR
+ SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
+  
+if [ ! -e ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID} ]
+then
+  echo " NGSeasy: Cant Find Project directory. This is then end. Please Stop and check everything is ok " `date`
+  exit 1
+
+else 
+  echo " NGSeasy: Setting OUTPUT directory [${SOUT}]"
+fi
+  
 ##---------------------- FASTQ-QC ----------------------## 
 
-if [ ! -d ${SOUT}/fastq/${FASTQ1} ] && [ ! -d ${SOUT}/fastq/${FASTQ2} ]
+  if [ ! -s ${SOUT}/fastq/${FASTQ1} ] && [ ! -s ${SOUT}/fastq/${FASTQ2} ]
 then
   echo " NGSeasy: Copying fastq files from ${FASTQDIR}/ to ${SOUT}/fastq/ " `date`
     cp ${FASTQDIR}/${FASTQ1} ${SOUT}/fastq/${FASTQ1}
@@ -58,11 +80,12 @@ then
 
 else
   echo " NGSeasy: Fastq Files exist in  ${SOUT}/fastq/ " `date`
+  ls ${SOUT}/fastq/
 fi
 
-    ## set new names for copied fastq files
-    rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _1.fq.gz`
-    rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _2.fq.gz`
+## set new names for copied fastq files
+  rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _1.fq.gz`
+  rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _2.fq.gz`
     
 echo " NGSeasy: Fastq Basename : [$rawFASTQ1] "
 
@@ -74,7 +97,8 @@ echo " NGSeasy: START Pre-Alignment QC " `date`
 echo "................................................"
 echo ""
 
-if [ ! -d ${SOUT}/fastq/${rawFASTQ1}_1.fq_fastqc/ ] && [ ! -d ${SOUT}/fastq/${rawFASTQ2}_2.fq_fastqc/ ]
+# check if qc'd data alread exists 
+if [ ! -s ${SOUT}/fastq/${rawFASTQ1}_1.fq_fastqc.zip ] && [ ! -s ${SOUT}/fastq/${rawFASTQ2}_2.fq_fastqc.zip ]
 then
   echo " NGSeasy: Run Pre-Alignment QC on raw Fastq files " `date`
 
@@ -108,11 +132,8 @@ echo ""
 if [ ! -s ${qcdPeFASTQ1} ] && [ ! -s ${qcdPeFASTQ2} ]
 then
 
-  if [ "$ALIGNER" != "novoalign" ]
-  then
-
   # skip next step if using novoalign or ya really cant be bothered - saves about an hour
-  echo " NGSeasy: Running Trimmomatic " `date`
+  echo " NGSeasy: Running Trimmomatic: A flexible read trimming tool for NGS data " `date`
 
     # run Trimmomatic
     java -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar PE \
@@ -138,15 +159,12 @@ then
     --dir ${SOUT}/tmp \
     --outdir ${SOUT}/fastq \
     ${qcdPeFASTQ1} ${qcdPeFASTQ2};
-    
-  else
-  echo " NGSeasy: Skipping Filtering/Trimming as Aligner is [novoalign] " `date`
-    cp ${SOUT}/fastq/${rawFASTQ1}_1.fq.gz ${qcdPeFASTQ1}
-    cp ${SOUT}/fastq/${rawFASTQ1}_2.fq.gz ${qcdPeFASTQ2}
-  fi
 
 else
   echo " NGSeasy: QC'd Fastq files Already Exist " `date`
+  echo "................................................"
+  zcat ${qcdPeFASTQ1} | head -4
+  echo "................................................"
 fi
 
 echo ""
@@ -168,6 +186,7 @@ then
   # BWA alignment
   echo " NGSeasy: Running bwa " `date`
     /usr/local/pipeline/bwa-0.7.10/bwa mem -M -t ${NCPU} ${REFGenomes}/human_g1k_v37.fasta ${qcdPeFASTQ1} ${qcdPeFASTQ2} > ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
+  echo " NGSeasy: SAM to BAM and INDEX  " `date`  
    /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
@@ -177,6 +196,7 @@ then
   echo " NGSeasy: Running bowtie2 " `date`
     # Bowtie2 alignment
    /usr/local/pipeline/bowtie2-2.2.3/bowtie2 --local --threads ${NCPU} -x ${REFGenomes}/human_g1k_v37 -1 ${qcdPeFASTQ1} -2 ${qcdPeFASTQ2} -S ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
+  echo " NGSeasy: SAM to BAM and INDEX " `date`
    /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam > ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
@@ -187,7 +207,8 @@ then
     # Novoalign alignment 
     # TO DO: Use raw${SOUT}/fastq/${FASTQ1} ${SOUT}/fastq/${FASTQ2} as novoalign does this all internally if provideing adapter lists
     # ADD -a @ADAPTERS
-    /usr/local/pipeline/novocraft/novoalign -d ${REFGenomes}/human_g1k_v37.fasta -f ${qcdPeFASTQ1} ${qcdPeFASTQ2} -F STDFQ --Q2Off --3Prime -g 40 -x 6 -r All -i PE 300,150 -c ${NCPU} -k -K ${SOUT}/alignments/${BAM_PREFIX}.K.stats -o SAM > ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
+   /usr/local/pipeline/novocraft/novoalign -d ${REFGenomes}/human_g1k_v37.fasta -f ${qcdPeFASTQ1} ${qcdPeFASTQ2} -F STDFQ --Q2Off --3Prime -g 40 -x 6 -r All -i PE 300,150 -c ${NCPU} -k -K ${SOUT}/alignments/${BAM_PREFIX}.K.stats -o SAM > ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
+  echo " NGSeasy: SAM to BAM and INDEX  " `date`
    /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
@@ -195,7 +216,7 @@ then
 elif [ "${ALIGNER}" == "stampy" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.sort.bam ]
 then
   echo " NGSeasy: Running stampy " `date`
-  # stampy alignment
+
   echo " NGSeasy: Running stampy bwa "
     /usr/local/pipeline/bwa-0.7.10/bwa mem -M -t ${NCPU} ${REFGenomes}/human_g1k_v37.fasta ${qcdPeFASTQ1} ${qcdPeFASTQ2} \
     > ${SOUT}/alignments/${BAM_PREFIX}.tmp.sam;
@@ -207,9 +228,9 @@ then
   echo " NGSeasy: Running sort bam stampy bwa "
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.tmp.bam ${SOUT}/alignments/${BAM_PREFIX}.tmpsort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.tmpsort.bam;
-    rm ${SOUT}/alignments/${BAM_PREFIX}.tmp.bam
+   rm ${SOUT}/alignments/${BAM_PREFIX}.tmp.bam
 
-  echo " NGSeasy: Running Stampy aligner on bwa bam"
+  echo " NGSeasy: Running Stampy aligner on bwa bam "
   
 python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
     -g human_g1k_v37 \
@@ -239,20 +260,20 @@ python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
 
 fi
 
-echo " NGSeasy: $ALIGNER Complete " `date`
+echo " NGSeasy: Basic $ALIGNER Complete " `date`
 
 ##---------------------- RAW ALIGNMENT PROCESSING ---------------------------------------------------------------------------------------##
 
-echo " NGSeasy: Getting Platform Unit Information "  `date`
-  
-  platform_unit=`zcat ${qcdPeFASTQ1} | head -1 | perl -p -i -e 's/:/\t/' | cut -f 1 | perl -p -i -e 's/@//g'`
+# AddOrReplaceReadGroups
 
-echo " NGSeasy: Platform Unit: [$platform_unit]" 
-  
+if [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.sort.bam ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.addrg.bam ]
+then
 echo " NGSeasy: Adding Read Group Information " `date`
+echo " NGSeasy: Getting Platform Unit Information "  `date`
+  platform_unit=`zcat ${qcdPeFASTQ1} | head -1 | perl -p -i -e 's/:/\t/' | cut -f 1 | perl -p -i -e 's/@//g'`
+echo " NGSeasy: Platform Unit: [$platform_unit]"  `date`
 
-  # AddOrReplaceReadGroups
-  java -XX:ParallelGCThreads=${NCPU} -Xmx6g -jar /usr/local/pipeline/picardtools/picard-tools-1.115/AddOrReplaceReadGroups.jar \
+java -XX:ParallelGCThreads=${NCPU} -Xmx6g -jar /usr/local/pipeline/picardtools/picard-tools-1.115/AddOrReplaceReadGroups.jar \
   TMP_DIR=${SOUT}/tmp \
   VALIDATION_STRINGENCY=SILENT \
   MAX_RECORDS_IN_RAM=100000 \
@@ -267,8 +288,17 @@ echo " NGSeasy: Adding Read Group Information " `date`
   INPUT=${SOUT}/alignments/${BAM_PREFIX}.sort.bam \
   OUTPUT=${SOUT}/alignments/${BAM_PREFIX}.addrg.bam;
 
+else
+  echo " NGSeasy: Whoops! Missing Input file for AddOrReplaceReadGroup....check your data " `date`
+  exit 1
+fi
+
+# MarkDuplicates
+  
+if [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.addrg.bam ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.dupemk_metrics ]
+then
 echo " NGSeasy: Marking Duplicate Reads " `date`
-  # MarkDuplicates
+
   java -XX:ParallelGCThreads=${NCPU} -Xmx6g -jar /usr/local/pipeline/picardtools/picard-tools-1.115/MarkDuplicates.jar \
   TMP_DIR=${SOUT}/tmp \
   VALIDATION_STRINGENCY=SILENT \
@@ -278,32 +308,28 @@ echo " NGSeasy: Marking Duplicate Reads " `date`
   ASSUME_SORTED=true \
   INPUT=${SOUT}/alignments/${BAM_PREFIX}.addrg.bam \
   OUTPUT=${SOUT}/alignments/${BAM_PREFIX}.bam \
-  METRICS_FILE=${SOUT}/alignments/${BAM_PREFIX}.dupemk;
+  METRICS_FILE=${SOUT}/alignments/${BAM_PREFIX}.dupemk_metrics;
 
-echo " NGSeasy: Removing Intermediate SAM/BAM Files " `date`
-
-  rm -v ${SOUT}/alignments/${BAM_PREFIX}.addrg.ba*
-  rm -v ${SOUT}/alignments/${BAM_PREFIX}.sort.ba*
-  rm -v ${SOUT}/alignments/${BAM_PREFIX}.raw.sam
+else
+  echo " NGSeasy: Whoops! Missing Input file for MarkDuplicates....check your data " `date`
+  exit 1
+fi
 
 # FindCoveredIntervals: these are used in GATK Calling to help speed things up
+
 echo " NGSeasy: Finding Covered Intervals : minimum coverage of 4 " `date`
   java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T FindCoveredIntervals -R ${REFGenomes}/human_g1k_v37.fasta \
-  -I ${SOUT}/alignments/${SOUT}/alignments/${BAM_PREFIX}.bam  \
+  -I ${SOUT}/alignments/${BAM_PREFIX}.bam  \
   -o ${SOUT}/reports/${BAM_PREFIX}.CoveredIntervals_x4.list \
   --coverage_threshold 4;
 
 # BAM to BED
-echo " NGSeasy: Converting BAM To BED " `date`
-
+echo " NGSeasy: Converting Aligned BAM To BED File " `date`
 # pulls out paired only reads with min qual 10. Set low as donwstream tools filter these regions
- /usr/local/pipeline/samtools/samtools \
-  view \
-  -b -h -q 10 -F 1796 \
-  ${SOUT}/alignments/${SOUT}/alignments/${BAM_PREFIX}.bam  | /usr/local/pipeline/bedtools2/bin/bedtools bamtobed  -i stdin \
-  > ${SOUT}/alignments/${SOUT}/alignments/${BAM_PREFIX}.bed;
-  
-  /usr/local/pipeline/bedtools2/bin/bedtools merge -i ${SOUT}/alignments/${SOUT}/alignments/${BAM_PREFIX}.bed > ${SOUT}/alignments/${SOUT}/alignments/${BAM_PREFIX}.merged.bed
+ /usr/local/pipeline/samtools/samtools view -b -h -q 10 -F 1796 ${SOUT}/alignments/${BAM_PREFIX}.bam | /usr/local/pipeline/bedtools2/bin/bedtools bamtobed -i stdin > ${SOUT}/alignments/${SOUT}/alignments/${BAM_PREFIX}.bed;
+
+echo " NGSeasy: Converting Aligned BED To MERGED BED File " `date` 
+ /usr/local/pipeline/bedtools2/bin/bedtools merge -i ${SOUT}/alignments/${BAM_PREFIX}.bed > ${SOUT}/alignments/${BAM_PREFIX}.merged.bed;
   
 
 echo ""
@@ -319,6 +345,10 @@ echo " NGSeasy: START Post Alignmnet QC " `date`
 echo "................................................"
 echo ""
 
+if [ ! -s ${SOUT}/reports/${BAM_PREFIX}.alignment_summary_metrics ] && [ ! -s ${SOUT}/reports/${BAM_PREFIX}.alignment_summary_metrics_alt ] && [ ! -s ${SOUT}/reports/${BAM_PREFIX}.wgs_coverage ]
+then 
+
+  echo " NGSeasy: Running Post Alignmnet QC " `date`
 # CollectMultipleMetrics
   echo " NGSeasy: CollectMultipleMetrics " `date`
  
@@ -370,13 +400,39 @@ echo ""
     java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T FlagStat -R ${REFGenomes}/human_g1k_v37.fasta \
     -I ${SOUT}/alignments/${BAM_PREFIX}.bam  \
     -o ${SOUT}/reports/${BAM_PREFIX}.FlagStat;
+    
+else
+    echo " NGSeasy: Post Alignmnet QC Already Run " `date` 
+fi
+
+echo ""
+echo "................................................"
+echo " NGSeasy: END Post Alignmnet QC " `date`
+echo "................................................"
+echo ""
 
 ## Depending in NGS type Run PicardTools CollectTargetedPcrMetrics
 ## NB This is rough and ready quicl fix to get coverage ver genome bins, annotated exomes and targetd sequene files
 
-echo " NGSeasy: Run CollectTargetedPcrMetric " `date`
+echo "................................................"
+echo " NGSeasy: START Post Alignmnet Coverage Calculations " `date`
+echo "................................................"
+echo ""
 
-if [ "${NGS_TYPE}" == "TGS" ]
+if [ ! -s ${SOUT}/reports/${BAM_PREFIX}.genomecov.bed ]
+then
+echo " NGSeasy: Running bedtools genomecov [-bga] " `date`
+
+  /usr/local/pipeline/bedtools2/bin/bedtools genomecov -ibam ${SOUT}/alignments/${BAM_PREFIX}.bam -bga > ${SOUT}/reports/${BAM_PREFIX}.genomecov.bed;
+
+else
+  echo " NGSeasy: bedtools genomecov " `date`
+fi
+ 
+echo " NGSeasy: Run CollectTargetedPcrMetric " `date`
+echo " NGSeasy: This requires a Custom or Exome BED File provided by the user or manufacturer of your NGS Exome Library " 
+
+if [ "${NGS_TYPE}" == "TGS" ] && [ -s ${BED_ANNO} ] && [ ! -s ${SOUT}/reports/${BAM_PREFIX}.target_coverage ]
 then
   echo " NGSeasy: Finding TGS coverage over target regions in ${BED_ANNO} " `date`
   
@@ -392,7 +448,7 @@ then
     METRIC_ACCUMULATION_LEVEL=ALL_READS \
     PER_TARGET_COVERAGE=${SOUT}/reports/${BAM_PREFIX}.per_target_coverage;
     
-elif [ "${NGS_TYPE}" == "WEX" ]
+elif [ "${NGS_TYPE}" == "WEX" ]  && [ -s ${BED_ANNO} ] && [ ! -s ${SOUT}/reports/${BAM_PREFIX}.target_coverage ]
 then
   echo " NGSeasy: Finding WEX Coverage over annotated exons/genes from ensembl " `date`
     java -XX:ParallelGCThreads=${NCPU} -Xmx6g -jar /usr/local/pipeline/picardtools/picard-tools-1.115/CollectTargetedPcrMetrics.jar \
@@ -402,12 +458,12 @@ then
     INPUT=${SOUT}/alignments/${BAM_PREFIX}.bam \
     OUTPUT=${SOUT}/reports/${BAM_PREFIX}.target_coverage \
     REFERENCE_SEQUENCE=${REFGenomes}/human_g1k_v37.fasta \
-    AMPLICON_INTERVALS=${REFGenomes}/ensgenes_protein_coding_genes.bed \
-    TARGET_INTERVALS=${REFGenomes}/ensgenes_protein_coding_genes.bed \
+    AMPLICON_INTERVALS=${REFGenomes}/${BED_ANNO} \
+    TARGET_INTERVALS=${REFGenomes}/${BED_ANNO} \
     METRIC_ACCUMULATION_LEVEL=ALL_READS \
     PER_TARGET_COVERAGE=${SOUT}/reports/${BAM_PREFIX}.per_target_coverage;
     
-elif [ "${NGS_TYPE}" == "WGS" ]
+elif [ "${NGS_TYPE}" == "WGS" ] && [ ! -s ${SOUT}/reports/${BAM_PREFIX}.target_coverage ]
 then
   echo " NGSeasy: Finding WGS Coverage over 500bp windows " `date`
     java -XX:ParallelGCThreads=${NCPU} -Xmx6g -jar /usr/local/pipeline/picardtools/picard-tools-1.115/CollectTargetedPcrMetrics.jar \
@@ -424,16 +480,31 @@ then
 
 else
 
-  echo " NGSeasy: Something Went wrong! NGS_TYPE not found! Check your config file "
-  exit 1 
-
+  echo " NGSeasy: Whoops! Something Went wrong! NGS_TYPE and Annotation Files not found! Check your config file and data...or not..."
+  echo " NGSeasy: Skipping Collect Targeted Pcr Metrics...."
+  echo " NGSeasy: You may want to run this manually later....it is quite nice"
+  echo ""
 fi
 
-echo ""
 echo "................................................"
-echo " NGSeasy: END Post Alignmnet QC " `date`
+echo " NGSeasy: END Post Alignmnet Coverage Calculations " `date`
 echo "................................................"
 echo ""
+
+
+##---------------------- CLEANUP ----------------------------------------------------------------##
+
+if [ "${CLEANUP}" == "TRUE" ]
+then
+echo " NGSeasy: Removing Intermediate SAM/BAM Files " `date`
+
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.addrg.ba*
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.sort.ba*
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.raw.sam
+  
+else
+  echo " NGSeasy: Keepping all Intermediate SAM/BAM Files " `date`
+fi
  
 
 ##---------------------- VARIANT CALLING SINGLE SAMPLE ----------------------------------------------------------------##
@@ -443,10 +514,6 @@ echo "................................................"
 echo ""
 echo " NGSeasy: NOTE: All tools are set to call variants over targeted regions created from BAM file to help speed things up  "
 echo ""
-
-  KNOWN_SNPS_b138=/usr/local/pipeline/gatk_resources/dbsnp_138.b37.vcf
-  
-echo " NGSeasy: Using ${KNOWN_SNPS_b138} for SNP annotations in GATK " `date`
 
 if [ "${VARCALLER}" == "freebayes" ]
 then
@@ -471,7 +538,7 @@ then
     then
     echo " NGSeasy: NGS_TYPE is Targeted so no duplicate filtering  " `date`
     # for exome/whole genome data no duplicate filtering
-      python /usr/local/pipeline/Platypus_0.7.4/Platypus.py callVariants \
+      python /usr/local/pipeline/Platypus_0.7.8/Platypus.py callVariants \
       --nCPU ${NCPU} \
       --bamFiles=${SOUT}/alignments/${BAM_PREFIX}.bam \
       --refFile=${REFGenomes}/human_g1k_v37.fasta \
@@ -482,7 +549,7 @@ then
       cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/
       
      else
-	python /usr/local/pipeline/Platypus_0.7.4/Platypus.py callVariants \
+	python /usr/local/pipeline/Platypus_0.7.8/Platypus.py callVariants \
 	  --nCPU ${NCPU} \
 	  --bamFiles=${SOUT}/alignments/${BAM_PREFIX}.bam \
 	  --refFile=${REFGenomes}/human_g1k_v37.fasta \
