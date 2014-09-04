@@ -336,7 +336,6 @@ echo " NGSeasy: Converting Aligned BED To MERGED BED File " `date`
  /usr/local/pipeline/bedtools2/bin/bedtools merge -i ${SOUT}/alignments/${BAM_PREFIX}.bed > ${SOUT}/alignments/${BAM_PREFIX}.merged.bed;
 fi
 
-
 echo ""
 echo "................................................"
 echo " NGSeasy: END Alignment [${ALIGNER}] " `date`
@@ -496,21 +495,6 @@ echo " NGSeasy: END Post Alignmnet Coverage Calculations " `date`
 echo "................................................"
 echo ""
 
-
-##---------------------- CLEANUP ----------------------------------------------------------------##
-
-if [ "${CLEANUP}" == "TRUE" ]
-then
-echo " NGSeasy: Removing Intermediate SAM/BAM Files " `date`
-
-  rm -v ${SOUT}/alignments/${BAM_PREFIX}.addrg.ba*
-  rm -v ${SOUT}/alignments/${BAM_PREFIX}.sort.ba*
-  rm -v ${SOUT}/alignments/${BAM_PREFIX}.raw.sam
-  
-else
-  echo " NGSeasy: Keepping all Intermediate SAM/BAM Files " `date`
-fi
- 
 
 ##---------------------- VARIANT CALLING SINGLE SAMPLE ----------------------------------------------------------------##
 echo "................................................"
@@ -688,8 +672,23 @@ else
   echo " NGSeasy: Something Went wrong! Check your config file "
   exit 1 
 fi
-
 ## TO ADD:- LCR filters and HIGH COV LOW MAP Q FILTERS AND ANNOTATIONS
+
+##---------------------- CLEANUP ----------------------------------------------------------------##
+
+if [ "${CLEANUP}" == "TRUE" ]
+then
+echo " NGSeasy: Removing Intermediate SAM/BAM Files " `date`
+
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.addrg.ba*
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.sort.ba*
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.raw.sam
+  
+else
+  echo " NGSeasy: Keepping all Intermediate SAM/BAM Files " `date`
+fi
+ 
+
 echo ""
 echo "................................................"
 echo " NGSeasy: END SNP and Small INDEL Calling " `date`
