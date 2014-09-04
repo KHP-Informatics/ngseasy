@@ -326,14 +326,14 @@ fi
 # BAM to BED
 echo " NGSeasy: START bamtobed " `date`  
 
-if [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.merged.bed ]
+if [ ! -s ${SOUT}/reports/${BAM_PREFIX}.merged.bed ]
 then
 echo " NGSeasy: Converting Aligned BAM To BED File " `date`
 # pulls out paired only reads with min qual 10. Set low as donwstream tools filter these regions
- /usr/local/pipeline/samtools/samtools view -b -h -q 10 -F 1796 ${SOUT}/alignments/${BAM_PREFIX}.bam | /usr/local/pipeline/bedtools2/bin/bedtools bamtobed -i stdin > ${SOUT}/alignments/${SOUT}/alignments/${BAM_PREFIX}.bed;
+ /usr/local/pipeline/samtools/samtools view -b -h -q 10 -F 1796 ${SOUT}/alignments/${BAM_PREFIX}.bam | /usr/local/pipeline/bedtools2/bin/bedtools bamtobed -i stdin > ${SOUT}/reports/${BAM_PREFIX}.bed;
 
 echo " NGSeasy: Converting Aligned BED To MERGED BED File " `date` 
- /usr/local/pipeline/bedtools2/bin/bedtools merge -i ${SOUT}/alignments/${BAM_PREFIX}.bed > ${SOUT}/alignments/${BAM_PREFIX}.merged.bed;
+ /usr/local/pipeline/bedtools2/bin/bedtools merge -i ${SOUT}/reports/${BAM_PREFIX}.bed > ${SOUT}/reports/${BAM_PREFIX}.merged.bed;
 fi
 
 echo ""
