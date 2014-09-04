@@ -266,7 +266,9 @@ echo " NGSeasy: Basic $ALIGNER Complete " `date`
 
 # AddOrReplaceReadGroups
 
-if [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.addrg.bam ]
+echo " NGSeasy: START AddOrReplaceReadGroups " `date`
+
+if [ ! -e ${SOUT}/alignments/${BAM_PREFIX}.addrg.bam ]
 then
 echo " NGSeasy: Adding Read Group Information " `date`
 echo " NGSeasy: Getting Platform Unit Information "  `date`
