@@ -158,7 +158,7 @@ structural variant calling, basic reporting and visualisations.
 
 Dockerised NGSEASY
 ==========================
-![docker](figs/Docker_container_engine_logo.png "Docker")  
+![docker](figs/ngsEASY_atomic_pipeline_visualisation.png "Docker")  
 
 ## Installing Docker
 
@@ -181,7 +181,7 @@ Available NGSeasy images at our [compbio Docker Hub](https://hub.docker.com/u/co
 This is a large image (4.989 GB) containing all the tools needed to go from raw ``.fastq`` files to aligned ``.BAM`` to SNP and small INDEL variant calls ``.vcf`` .
 
 ```bash
-sudo docker pull snewhouse/ngseasy-alignment-public:v1.2
+sudo docker pull compbio/ngseasy-alignment-public:v1.2
 ```
 
 #### Getting All NGSeasy images

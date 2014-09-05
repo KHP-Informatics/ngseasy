@@ -158,7 +158,7 @@ structural variant calling, basic reporting and visualisations.
 
 Dockerised NGSEASY
 ==========================
-![docker](figs/Docker_container_engine_logo.png "Docker")  
+![docker](figs/ngsEASY_atomic_pipeline_visualisation.png "Docker")  
 
 ## Installing Docker
 
@@ -172,16 +172,16 @@ A full set of instructions for multiple operating systems are available on the [
 
 ## Getting the Dockerised NGSEASY Pipeline
 
-Available NGSeasy images at [afolarin/ Docker Hub](https://hub.docker.com/u/afolarin/) and [snewhouse/ Docker Hub](https://hub.docker.com/u/snewhouse/)
+Available NGSeasy images at our [compbio Docker Hub](https://hub.docker.com/u/compbio)
 
 #### Getting the main NGSeasy suite of tools
 
-[snewhouse/ngseasy-alignment-public:v1.2](https://registry.hub.docker.com/u/snewhouse/ngseasy-alignment-public/)
+[compbio/ngseasy-alignment-public:v1.2](https://registry.hub.docker.com/u/compbio/ngseasy-alignment-public/)
 
 This is a large image (4.989 GB) containing all the tools needed to go from raw ``.fastq`` files to aligned ``.BAM`` to SNP and small INDEL variant calls ``.vcf`` .
 
 ```bash
-sudo docker pull snewhouse/ngseasy-alignment-public:v1.2
+sudo docker pull compbio/ngseasy-alignment-public:v1.2
 ```
 
 #### Getting All NGSeasy images
