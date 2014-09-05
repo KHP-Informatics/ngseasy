@@ -186,8 +186,9 @@ then
   # BWA alignment
   echo " NGSeasy: Running bwa " `date`
     /usr/local/pipeline/bwa-0.7.10/bwa mem -M -t ${NCPU} ${REFGenomes}/human_g1k_v37.fasta ${qcdPeFASTQ1} ${qcdPeFASTQ2} > ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
-  echo " NGSeasy: SAM to BAM and INDEX  " `date`  
-   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
+
+ echo " NGSeasy: SAM to BAM and INDEX  " `date` 
+   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam > ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    
@@ -196,6 +197,7 @@ then
   echo " NGSeasy: Running bowtie2 " `date`
     # Bowtie2 alignment
    /usr/local/pipeline/bowtie2-2.2.3/bowtie2 --local --threads ${NCPU} -x ${REFGenomes}/human_g1k_v37 -1 ${qcdPeFASTQ1} -2 ${qcdPeFASTQ2} -S ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
+
   echo " NGSeasy: SAM to BAM and INDEX " `date`
    /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam > ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
@@ -208,8 +210,9 @@ then
     # TO DO: Use raw${SOUT}/fastq/${FASTQ1} ${SOUT}/fastq/${FASTQ2} as novoalign does this all internally if provideing adapter lists
     # ADD -a @ADAPTERS
    /usr/local/pipeline/novocraft/novoalign -d ${REFGenomes}/human_g1k_v37.fasta -f ${qcdPeFASTQ1} ${qcdPeFASTQ2} -F STDFQ --Q2Off --3Prime -g 40 -x 6 -r All -i PE 300,150 -c ${NCPU} -k -K ${SOUT}/alignments/${BAM_PREFIX}.K.stats -o SAM > ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
+
   echo " NGSeasy: SAM to BAM and INDEX  " `date`
-   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
+   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam > ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
 
@@ -249,7 +252,7 @@ python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
     -f sam
 
   echo " NGSeasy: Running Stampy sam to bam "
-   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
+   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam > ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
 
