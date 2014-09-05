@@ -225,7 +225,7 @@ then
     > ${SOUT}/alignments/${BAM_PREFIX}.tmp.sam;
 
   echo " NGSeasy: Running sam to bam stampy bwa "
-   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.tmp.sam ${SOUT}/alignments/${BAM_PREFIX}.tmp.bam;
+   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.tmp.sam > ${SOUT}/alignments/${BAM_PREFIX}.tmp.bam;
     rm ${SOUT}/alignments/${BAM_PREFIX}.tmp.sam
 
   echo " NGSeasy: Running sort bam stampy bwa "
