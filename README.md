@@ -186,38 +186,32 @@ sudo docker pull snewhouse/ngseasy-alignment-public:v1.2
 
 #### Getting All NGSeasy images
 
-```bash
-#!/bin/bash
-# get ngseasy from DockerHub
-repo='snewhouse'
+All Images can be pulled down from [Docker Hub](https://hub.docker.com/u/compbio/) using the script [get_NGSeasy.sh](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/get_NGSeasy.sh)
 
-for i in alignment-public:v1.2 \
-fastqc:v1.0 \
-var-callers:v1.1 \
-var-anno:v1.1 \
-sv-delly:v1.1 \
-sv-lumpy:v1.1 \
-sv-mhmm:v1.0 \
-sv-cnmops:v1.0 \
-sv-exomedepth:v1.0 \
-bedtools:v1.0 \
-bwa:v1.0 \
-bowtie2:v1.0 \
-gatk:v1.0 \
-picard:v1.0 \
-samtools:v1.0 \
-stampy:v1.0 \
-vcftools:v1.0 \
-freebayes:v1.0 \
-platypus:v1.0;do
-sudo docker pull ${repo}/ngseasy-${i};
-done
-```
 
 ## Local Machine Set up
 
 **Get the NGSeasy Reasources and Scripts**
 ****************************
+
+**SFTP**
+
+**location:** upload.brc.iop.kcl.ac.uk
+**user:** ngseasy
+**password:** ngseasy
+
+```bash
+$ sftp  ngseasy@upload.brc.iop.kcl.ac.uk
+ngseasy@upload.brc.iop.kcl.ac.uk's password: 
+Connected to upload.brc.iop.kcl.ac.uk.
+sftp> ls
+NGSeasy  
+sftp> cd NGSeasy
+sftp> ls
+ngseasy-vm-v1.0.vdi          ngseasy_resources.tar.gz     
+sftp> get -r *
+```
+
 
 ```sh
 # make ngseasy directory
@@ -324,34 +318,6 @@ I would recommend using a separate program like [FileZilla](https://filezilla-pr
 ```
 ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
 ```
-**Contents**
-- 1000G_omni2.5.b37.vcf  
-- 1000G_omni2.5.b37.vcf.idx  
-- 1000G_phase1.indels.b37.vcf  
-- 1000G_phase1.indels.b37.vcf.idx  
-- 1000G_phase1.snps.high_confidence.b37.vcf  
-- 1000G_phase1.snps.high_confidence.b37.vcf.idx  
-- CEUTrio.HiSeq.WGS.b37.bestPractices.b37.vcf  
-- CEUTrio.HiSeq.WGS.b37.bestPractices.b37.vcf.idx  
-- CEUTrio.HiSeq.WGS.b37.NA12878.vcf  
-- CEUTrio.HiSeq.WGS.b37.NA12878.vcf.idx  
-- dbsnp_138.b37.excluding_sites_after_129.vcf  
-- dbsnp_138.b37.excluding_sites_after_129.vcf.idx  
-- dbsnp_138.b37.vcf  
-- dbsnp_138.b37.vcf.idx  
-- hapmap_3.3.b37.vcf  
-- hapmap_3.3.b37.vcf.idx  
-- Mills_and_1000G_gold_standard.indels.b37.vcf  
-- Mills_and_1000G_gold_standard.indels.b37.vcf.idx  
-- NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.sites.vcf  
-- NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.sites.vcf.idx  
-- NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.vcf  
-- NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.vcf.idx  
-- NA12878.knowledgebase.snapshot.20131119.b37.vcf  
-- NA12878.knowledgebase.snapshot.20131119.b37.vcf.idx  
-
-
-
 
 [Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
 
