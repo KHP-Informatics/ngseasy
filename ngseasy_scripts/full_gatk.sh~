@@ -186,9 +186,8 @@ then
   # BWA alignment
   echo " NGSeasy: Running bwa " `date`
     /usr/local/pipeline/bwa-0.7.10/bwa mem -M -t ${NCPU} ${REFGenomes}/human_g1k_v37.fasta ${qcdPeFASTQ1} ${qcdPeFASTQ2} > ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
-
- echo " NGSeasy: SAM to BAM and INDEX  " `date` 
-   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam > ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
+  echo " NGSeasy: SAM to BAM and INDEX  " `date`  
+   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    
@@ -197,7 +196,6 @@ then
   echo " NGSeasy: Running bowtie2 " `date`
     # Bowtie2 alignment
    /usr/local/pipeline/bowtie2-2.2.3/bowtie2 --local --threads ${NCPU} -x ${REFGenomes}/human_g1k_v37 -1 ${qcdPeFASTQ1} -2 ${qcdPeFASTQ2} -S ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
-
   echo " NGSeasy: SAM to BAM and INDEX " `date`
    /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam > ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
@@ -210,9 +208,8 @@ then
     # TO DO: Use raw${SOUT}/fastq/${FASTQ1} ${SOUT}/fastq/${FASTQ2} as novoalign does this all internally if provideing adapter lists
     # ADD -a @ADAPTERS
    /usr/local/pipeline/novocraft/novoalign -d ${REFGenomes}/human_g1k_v37.fasta -f ${qcdPeFASTQ1} ${qcdPeFASTQ2} -F STDFQ --Q2Off --3Prime -g 40 -x 6 -r All -i PE 300,150 -c ${NCPU} -k -K ${SOUT}/alignments/${BAM_PREFIX}.K.stats -o SAM > ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
-
   echo " NGSeasy: SAM to BAM and INDEX  " `date`
-   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam > ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
+   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
 
@@ -225,7 +222,7 @@ then
     > ${SOUT}/alignments/${BAM_PREFIX}.tmp.sam;
 
   echo " NGSeasy: Running sam to bam stampy bwa "
-   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.tmp.sam > ${SOUT}/alignments/${BAM_PREFIX}.tmp.bam;
+   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.tmp.sam ${SOUT}/alignments/${BAM_PREFIX}.tmp.bam;
     rm ${SOUT}/alignments/${BAM_PREFIX}.tmp.sam
 
   echo " NGSeasy: Running sort bam stampy bwa "
@@ -236,8 +233,8 @@ then
   echo " NGSeasy: Running Stampy aligner on bwa bam "
   
 python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
-    -g ${REFGenomes}/human_g1k_v37 \
-    -h ${REFGenomes}/human_g1k_v37 \
+    -g human_g1k_v37 \
+    -h human_g1k_v37 \
     -t ${NCPU} \
     --bamsortprefix ${SOUT}/tmp \
     --bamkeepgoodreads \
@@ -252,7 +249,7 @@ python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
     -f sam
 
   echo " NGSeasy: Running Stampy sam to bam "
-   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam > ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
+   /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
 
@@ -309,7 +306,7 @@ echo " NGSeasy: Marking Duplicate Reads " `date`
   REMOVE_DUPLICATES=false \
   ASSUME_SORTED=true \
   INPUT=${SOUT}/alignments/${BAM_PREFIX}.addrg.bam \
-  OUTPUT=${SOUT}/alignments/${BAM_PREFIX}.bam \
+  OUTPUT=${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam \
   METRICS_FILE=${SOUT}/alignments/${BAM_PREFIX}.dupemk_metrics;
 fi
 
@@ -320,7 +317,7 @@ if [ ! -s ${SOUT}/reports/${BAM_PREFIX}.CoveredIntervals_x4.list ]
 then
 echo " NGSeasy: Finding Covered Intervals : minimum coverage of 4 " `date`
   java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T FindCoveredIntervals -R ${REFGenomes}/human_g1k_v37.fasta \
-  -I ${SOUT}/alignments/${BAM_PREFIX}.bam  \
+  -I ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam  \
   -o ${SOUT}/reports/${BAM_PREFIX}.CoveredIntervals_x4.list \
   --coverage_threshold 4;
 fi
@@ -333,7 +330,7 @@ if [ ! -s ${SOUT}/reports/${BAM_PREFIX}.merged.bed ]
 then
 echo " NGSeasy: Converting Aligned BAM To BED File " `date`
 # pulls out paired only reads with min qual 10. Set low as donwstream tools filter these regions
- /usr/local/pipeline/samtools/samtools view -b -h -q 10 -F 1796 ${SOUT}/alignments/${BAM_PREFIX}.bam | /usr/local/pipeline/bedtools2/bin/bedtools bamtobed -i stdin > ${SOUT}/reports/${BAM_PREFIX}.bed;
+ /usr/local/pipeline/samtools/samtools view -b -h -q 10 -F 1796 ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam | /usr/local/pipeline/bedtools2/bin/bedtools bamtobed -i stdin > ${SOUT}/reports/${BAM_PREFIX}.bed;
 
 echo " NGSeasy: Converting Aligned BED To MERGED BED File " `date` 
  /usr/local/pipeline/bedtools2/bin/bedtools merge -i ${SOUT}/reports/${BAM_PREFIX}.bed > ${SOUT}/reports/${BAM_PREFIX}.merged.bed;
@@ -342,6 +339,86 @@ fi
 echo ""
 echo "................................................"
 echo " NGSeasy: END Alignment [${ALIGNER}] " `date`
+echo "................................................"
+echo ""
+
+##---------------------- GATK CLEANING ----------------------##
+
+echo "................................................"
+echo " NGSeasy: START GATK CLEANING " `date`
+echo "................................................"
+echo ""
+
+if [ ! -e ${SOUT}/alignments/${BAM_PREFIX}.realn.bam ]
+then
+
+# RealignerTargetCreator
+## gunzip /usr/local/pipeline/gatk_resources/Mills_and_1000G_gold_standard.indels.b37***
+KNOWN_INDELS=/usr/local/pipeline/gatk_resources/Mills_and_1000G_gold_standard.indels.b37.vcf # CHECK IT CAN READ gz'd files
+echo " NGSeasy: Running RealignerTargetCreator " `date`
+# RealignerTargetCreator
+java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T RealignerTargetCreator -R ${REFGenomes}/human_g1k_v37.fasta -nt ${NCPU} \
+--known ${KNOWN_INDELS} \
+-I ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam \
+-o ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam.IndelRealigner.intervals;
+
+# IndelRealigner
+echo " NGSeasy: Running IndelRealigner " `date`
+java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T IndelRealigner -R ${REFGenomes}/human_g1k_v37.fasta \
+-known ${KNOWN_INDELS} \
+-I ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam \
+-targetIntervals ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam.IndelRealigner.intervals \
+-o ${SOUT}/alignments/${BAM_PREFIX}.realn.bam \
+--consensusDeterminationModel USE_READS \
+-LOD 0.4;
+# index bam file
+/usr/local/pipeline/samtools/samtools index ${SOUT}/alignments/${BAM_PREFIX}.realn.bam; 
+fi
+
+
+##---------------------- GATK BASE RECALIBRATION ----------------------##
+
+if [ ! -e ${SOUT}/alignments/${BAM_PREFIX}.bam.BaseRecalibrator.table ]
+then
+KNOWN_INDELS=/usr/local/pipeline/gatk_resources/Mills_and_1000G_gold_standard.indels.b37.vcf # CHECK IT CAN READ gz'd files
+KNOWN_SNPS_1000G=/usr/local/pipeline/gatk_resources/1000G_phase1.snps.high_confidence.b37.vcf
+KNOWN_SNPS_b138=/usr/local/pipeline/gatk_resources/dbsnp_138.b37.vcf
+
+echo " NGSeasy: Running BaseRecalibrator " `date`
+# BaseRecalibrator pre recal
+java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T BaseRecalibrator -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU}  \
+-I ${SOUT}/alignments/${BAM_PREFIX}.realn.bam \
+-o ${SOUT}/alignments/${BAM_PREFIX}.realn.bam.BaseRecalibrator.table \
+--knownSites ${KNOWN_INDELS} \
+--knownSites ${KNOWN_SNPS_1000G} \
+--knownSites ${KNOWN_SNPS_b138};
+
+echo " NGSeasy: Running PrintReads BQSR recalibration " `date`
+# PrintReads BQSR recalibration
+java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T PrintReads -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU} \
+--baq RECALCULATE \
+--baqGapOpenPenalty 40 \
+--BQSR ${SOUT}/alignments/${BAM_PREFIX}.realn.bam.BaseRecalibrator.table \
+-I ${SOUT}/alignments/${BAM_PREFIX}.realn.bam \
+-o ${SOUT}/alignments/${BAM_PREFIX}.bam;
+# index bam file
+/usr/local/pipeline/samtools/samtools index ${SOUT}/alignments/${BAM_PREFIX}.bam; 
+
+echo " NGSeasy: Running BaseRecalibrator " `date`
+# BaseRecalibrator post recal
+java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T BaseRecalibrator -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU} \
+-I ${SOUT}/alignments/${BAM_PREFIX}.bam \
+-o ${SOUT}/alignments/${BAM_PREFIX}.bam.BaseRecalibrator.table \
+--knownSites ${KNOWN_INDELS} \
+--knownSites ${KNOWN_SNPS_1000G} \
+--knownSites ${KNOWN_SNPS_b138};
+
+# index bam file
+/usr/local/pipeline/samtools/samtools index ${SOUT}/alignments/${BAM_PREFIX}.bam;
+fi
+
+echo "................................................"
+echo " NGSeasy: END GATK CLEANING " `date`
 echo "................................................"
 echo ""
 
@@ -629,7 +706,7 @@ then
   --annotation VariantType;
   
   # copy vcf to cohort vcf directory
-  cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
+  ccp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
   
 elif [ ${VARCALLER} == "gatk_hc_gvcf" ]
 then
