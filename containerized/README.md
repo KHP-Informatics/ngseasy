@@ -92,7 +92,7 @@ alignment, cleaning (based on GATK best practises [ADD LINK]) and first pass
 variant discovery. Separate containers are provided for indepth variant annotation,
 structural variant calling, basic reporting and visualisations.  
 
-![ngsEASY](figs/ngsEASY_pipeline_visualisation.png "Dockerized NGS Pipeline")
+![ngsEASY](figs/ngsEASY_atomic_pipeline_visualisation.png "Dockerized NGS Pipeline")
 
 
 # The Tools included are as follows :- 
@@ -156,7 +156,7 @@ structural variant calling, basic reporting and visualisations.
 
 ******
 
-Dockerised NGSEASY
+Dockerised NGSeasy
 ==========================
 ![docker](figs/Docker_container_engine_logo.png "Docker")  
 
@@ -172,76 +172,125 @@ A full set of instructions for multiple operating systems are available on the [
 
 ## Getting the Dockerised NGSEASY Pipeline
 
-Available NGSeasy images at [afolarin/ Docker Hub](https://hub.docker.com/u/afolarin/) and [snewhouse/ Docker Hub](https://hub.docker.com/u/snewhouse/)
+Available NGSeasy images at our [compbio Docker Hub](https://hub.docker.com/u/compbio)
 
 #### Getting the main NGSeasy suite of tools
 
-[snewhouse/ngseasy-alignment-public:v1.2](https://registry.hub.docker.com/u/snewhouse/ngseasy-alignment-public/)
+[compbio/ngseasy-alignment-public:v1.2](https://registry.hub.docker.com/u/compbio/ngseasy-alignment-public/)
 
 This is a large image (4.989 GB) containing all the tools needed to go from raw ``.fastq`` files to aligned ``.BAM`` to SNP and small INDEL variant calls ``.vcf`` .
 
 ```bash
-sudo docker pull snewhouse/ngseasy-alignment-public:v1.2
+sudo docker pull compbio/ngseasy-alignment-public:v1.2
 ```
 
 #### Getting All NGSeasy images
 
-```bash
-#!/bin/bash
-# get ngseasy from DockerHub
-repo='snewhouse'
+All Images can be pulled down from [Docker Hub](https://hub.docker.com/u/compbio/) using the script [get_NGSeasy.sh](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/get_NGSeasy.sh)
 
-for i in alignment-public:v1.2 \
-fastqc:v1.0 \
-var-callers:v1.1 \
-var-anno:v1.1 \
-sv-delly:v1.1 \
-sv-lumpy:v1.1 \
-sv-mhmm:v1.0 \
-sv-cnmops:v1.0 \
-sv-exomedepth:v1.0 \
-bedtools:v1.0 \
-bwa:v1.0 \
-bowtie2:v1.0 \
-gatk:v1.0 \
-picard:v1.0 \
-samtools:v1.0 \
-stampy:v1.0 \
-vcftools:v1.0 \
-freebayes:v1.0 \
-platypus:v1.0;do
-sudo docker pull ${repo}/ngseasy-${i};
-done
-```
 
 ## Local Machine Set up
 
-**Get the NGSeasy Reasources and Scripts**
-****************************
+**Getting the NGSeasy Reasources and Scripts**
+************************************************
+
+## SFTP Login Details
+
+**location:** upload.brc.iop.kcl.ac.uk  
+**Port:** 51515  
+**user:** ngseasy  
+**password:** ngseasy  
+
+```bash
+$ sftp  ngseasy@upload.brc.iop.kcl.ac.uk
+ngseasy@upload.brc.iop.kcl.ac.uk's password: 
+Connected to upload.brc.iop.kcl.ac.uk.
+sftp> ls
+NGSeasy  
+sftp> cd NGSeasy
+sftp> ls
+ngseasy-vm-v1.0.vdi          ngseasy_resources.tar.gz     
+sftp> get -r *
+```
+I would recommend using a separate program like [FileZilla](https://filezilla-project.org/), which will make it much easier for you to set up and manage your file transfers
+
+****************
+
+**Eaxample Set up and  Running NGSeasy**
+****************************************
+The commands below walk you through a getting, setting up and running an NGSeasy pipeline.
+
+**1.** Make a directory on your local machine for storing data, NGSeasy scripts and run files generated from the pipeline.
 
 ```sh
 # make ngseasy directory
-mkdir ngseasy
-cd ngseasy
+mkdir /media/ngseasy
+```
 
+**2.** Get the latest NGSeasy pipeline scripts from GitHub
+
+```sh
 # get latest ngseasy_scripts code
-# the scripts will eventually be bundled with each docker image
+cd /media/ngseasy
 git clone https://github.com/KHP-Informatics/ngs.git
 cd ngs
-git checkout dev2
-git pull origin dev2
-mv -v ngseasy_scripts ../ 
+# move scripts to top level folder
+mv -v ngseasy_scripts /media/ngseasy/
+```
 
+**3.** Get the latest NGSeasy Resources
+
+This is a 25GB ``ngseasy_resources.tar.gz`` file containing :-  
+
+- ``reference_genomes_b37.tgz`` b37 reference genomes indexed for use with all provided aligners (BWA, Bowtie2, Stampy, Novoalign) and annotation bed files for use with pipeline scripts
+- ``gatk_resources.tar.gz`` gatk resources bundle
+- ``fastq_example.tgz`` Example 75bp PE Illumina Whole Exome Sequence fastq data for **NA12878**
+
+**__Annovar Databases Comming Soon__**
+__Coming soon....__  
+- ``humandb.tgz`` ANNOVAR humandb  
+
+
+```sh
+cd  /media/ngseasy/
+wget 
+tar -xrfv ngseasy_resources.tar.gz
+mv -v /media/ngseasy/ngseasy_resources/reference_genomes_b37 /media/ngseasy/
+mv -v /media/ngseasy/ngseasy_resources/gatk_resources /media/ngseasy/
+mv -v /media/ngseasy/ngseasy_resources/gatk_resources /media/ngseasy/
+mv -v /media/ngseasy/ngseasy_resources/fastq_example /media/ngseasy/
+```
+
+**4.** Make ``ngs_projects`` NGS projects directory
+```sh
 # move up to ngseasy
-cd ../
+cd /media/ngseasy
 
 # make ngs_projects
-mkdir ngs_projects
+mkdir /media/ngseasy/ngs_projects
+```
 
+**On your local machine, ensure the following directories exist:-**
+
+- ``fastq_raw`` [to hold all incoming raw fastq files]
+- ``ngs_projects`` [out put directory for all ngs projects]
+- ``reference_genomes_b37`` [get from URL and unpack. NB: XXX GB!]
+- ``gatk_resources`` [vcf and annotation files used by GATK]
+- ``ngs_projects`` [xxx]
+- ``ngs`` []
+
+These folders are required by pipeline as they are hardcoded in the NGSeasy scripts.
+
+**4.** Copy ``run_ngseasy_dockers.sh`` to ``ngs_projects`
 # copy scripts to ngs_projects
-cp -v ngseasy_scripts/run_ngseasy_dockers.sh ./ngs_projects/
-cp -v ngseasy_scripts/ngs.config.file.tsv ./ngs_projects/
+cp -v ngseasy_scripts/run_ngseasy_dockers.sh /media/ngseasy/ngs_projects
 
+**5.** Make config file and copy to ``ngs_projects``
+```sh
+cp -v ngseasy_scripts/ngs.config.file.tsv /media/ngseasy/ngs_projects
+```
+
+```sh
 # get ngseasy_resources (Dropbox for a limited time only)
 wget --no-check-cert https://www.dropbox.com/s/9pw3ml75pdnufjl/ngseasy_resources.tar.gz?dl=0
 tar xvf ngseasy_resources.tar.gz
@@ -276,37 +325,8 @@ In Excel make config file and save as [TAB] Delimited file with ``.tsv`` extenst
 See Example provided. 
 
 
-**Download NGSeasy resources**
+ 
 
-This is a 25GB ``ngseasy_resources.tar.gz`` file containing :-  
-
-- ``reference_genomes_b37.tgz`` b37 reference genomes indexed for use with all provided aligners (BWA, Bowtie2, Stampy, Novoalign) and annotation bed files for use with pipeline scripts
-- ``gatk_resources.tar.gz`` gatk resources bundle
-- ``fastq_example.tgz`` Example 75bp PE Illumina Whole Exome Sequence fastq data for **NA12878**
-
-**Get Annovar Databases**
-Coming soon....
-- ``humandb.tgz`` ANNOVAR humandb 
-
-**In Linux**
-
-```bash
-tar -xfv ngseasy_resources.tar.gz
-cp -rfv	 ngseasy_resources/reference_genomes_b37 ~/reference_genomes_b37
-cp -rfv  ngseasy_resources/gatk_resources ~/humandb
-cp -rfv  ngseasy_resources/gatk_resources ~/gatk_resources
-cp -rfv  ngseasy_resources/fastq_example ~/fastq_raw
-```
-
-**On your local machine, ensure the following directories exist:-**
-
-- ``fastq_raw`` [to hold all incoming raw fastq files]
-- ``ngs_projects`` [out put directory for all ngs projects]
-- ``reference_genomes_b37`` [get from URL and unpack. NB: XXX GB!]
-- ``gatk_resources`` [vcf and annotation files used by GATK]
-- ``humandb`` [annovar databases]
-
-These folders are required by pipeline as they are hardcoded in the NGSeasy scripts. I would recommend installing these in your ``HOME`` directory.
 
 ### Getting the GATK Resources Bundle for yourself
 
@@ -324,34 +344,6 @@ I would recommend using a separate program like [FileZilla](https://filezilla-pr
 ```
 ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
 ```
-**Contents**
-- 1000G_omni2.5.b37.vcf  
-- 1000G_omni2.5.b37.vcf.idx  
-- 1000G_phase1.indels.b37.vcf  
-- 1000G_phase1.indels.b37.vcf.idx  
-- 1000G_phase1.snps.high_confidence.b37.vcf  
-- 1000G_phase1.snps.high_confidence.b37.vcf.idx  
-- CEUTrio.HiSeq.WGS.b37.bestPractices.b37.vcf  
-- CEUTrio.HiSeq.WGS.b37.bestPractices.b37.vcf.idx  
-- CEUTrio.HiSeq.WGS.b37.NA12878.vcf  
-- CEUTrio.HiSeq.WGS.b37.NA12878.vcf.idx  
-- dbsnp_138.b37.excluding_sites_after_129.vcf  
-- dbsnp_138.b37.excluding_sites_after_129.vcf.idx  
-- dbsnp_138.b37.vcf  
-- dbsnp_138.b37.vcf.idx  
-- hapmap_3.3.b37.vcf  
-- hapmap_3.3.b37.vcf.idx  
-- Mills_and_1000G_gold_standard.indels.b37.vcf  
-- Mills_and_1000G_gold_standard.indels.b37.vcf.idx  
-- NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.sites.vcf  
-- NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.sites.vcf.idx  
-- NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.vcf  
-- NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.vcf.idx  
-- NA12878.knowledgebase.snapshot.20131119.b37.vcf  
-- NA12878.knowledgebase.snapshot.20131119.b37.vcf.idx  
-
-
-
 
 [Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
 
