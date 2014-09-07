@@ -219,30 +219,36 @@ I would recommend using a separate program like [FileZilla](https://filezilla-pr
 The commands below walk you through a getting, setting up and running an NGSeasy pipeline.
 
 1. Make a directory on your local machine for storing data, NGSeasy scripts and run files generated from the pipeline.
+
 ```sh
 # make ngseasy directory
-mkdir ngseasy
-cd ngseasy
+mkdir /media/ngseasy
 ```
 
 2. Get the latest NGSeasy pipeline scripts from GitHub
+
 ```sh
 # get latest ngseasy_scripts code
+cd /media/ngseasy
 git clone https://github.com/KHP-Informatics/ngs.git
 cd ngs
-mv -v ngseasy_scripts ../ 
+# move scripts to top level folder
+mv -v ngseasy_scripts /media/ngseasy/
 ```
 
+```sh
 # move up to ngseasy
-cd ../
+cd /media/ngseasy
 
 # make ngs_projects
-mkdir ngs_projects
+mkdir /media/ngseasy/ngs_projects
 
 # copy scripts to ngs_projects
-cp -v ngseasy_scripts/run_ngseasy_dockers.sh ./ngs_projects/
-cp -v ngseasy_scripts/ngs.config.file.tsv ./ngs_projects/
+cp -v ngseasy_scripts/run_ngseasy_dockers.sh /media/ngseasy/ngs_projects
+cp -v ngseasy_scripts/ngs.config.file.tsv /media/ngseasy/ngs_projects
+```
 
+```sh
 # get ngseasy_resources (Dropbox for a limited time only)
 wget --no-check-cert https://www.dropbox.com/s/9pw3ml75pdnufjl/ngseasy_resources.tar.gz?dl=0
 tar xvf ngseasy_resources.tar.gz
