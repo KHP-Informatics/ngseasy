@@ -317,6 +317,10 @@ cp -v /media/ngseasy/ngseasy_scripts/run_ngseasy_dockers.sh /media/ngseasy/ngs_p
 
 **5.** Set Up Config File and copy to ``ngs_projects``
 
+```sh
+cp -v ngseasy_scripts/ngs.config.file.tsv /media/ngseasy/ngs_projects
+```
+
 In Excel make config file and save as [TAB] Delimited file with ``.tsv`` extenstion.  
 See Example provided. This sets up Information related to: Project Name, Sample Name, Library Type, Pipeline to call, NCPU.
 
@@ -337,13 +341,9 @@ PIPELINE|string|NGSeasy Pipeline Script|
 ALIGNER|string|Aligner|
 VARCALLER|string|Variant Caller|
 GTMODEGATK|string|GATK Variant Caller Mode|
-CLEANUP|string|Clean Up Files Boolean|
+CLEANUP|string|Clean Up Files (TRUE/FALSE)|
 NCPU|number|Number of cores to call|
-|--------|--------|--------|
 
-```sh
-cp -v ngseasy_scripts/ngs.config.file.tsv /media/ngseasy/ngs_projects
-```
 
 **6.** Get Main NGSeasy Docker Image (if you haven't already done this!)
 
