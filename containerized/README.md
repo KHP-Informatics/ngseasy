@@ -3,6 +3,8 @@ NGSeasy v1.0
 
 [Dockerized](https://www.docker.com/) and [Virtulaized](https://www.virtualbox.org/) ngs pipeline and tool-box.  
 
+**With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**
+
 As a multi-component system, NGS pipeline setup is traditionally heavy on 
 configuration. Our idea is to provide this in a simple encapsulated container. 
 Users also typically wish to configure their own environments and run the 
@@ -10,7 +12,9 @@ pipeline on a wide range of hardware (workstations to clusters to cloud), being
 able to stand-up a pipeline with minimal fuss is made straightforward with this 
 container.  
 
-**With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**
+- Planned Updates every 6 months to included latest available software versions.
+- New Human Genomes
+- Cancer Pipelines
 
 ******
 
