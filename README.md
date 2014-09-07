@@ -170,14 +170,12 @@ Follow the simple instructions in the links provided below
 
 A full set of instructions for multiple operating systems are available on the [Docker website](https://docs.docker.com/installation/).
 
-## Getting the Dockerised NGSEASY Pipeline
+## Getting the Dockerised NGSeasy Pipeline
 ********************************************
 
-Available NGSeasy images at our [compbio Docker Hub](https://hub.docker.com/u/compbio)
+Available NGSeasy Docker images at [compbio Docker Hub](https://hub.docker.com/u/compbio)
 
-#### Getting the main NGSeasy suite of tools
-**********************************************
-
+**ngseasy-alignment-public:v1.2**
 Docker Hub: [compbio/ngseasy-alignment-public:v1.2](https://registry.hub.docker.com/u/compbio/ngseasy-alignment-public/)
 
 This is a large image (4.989 GB) containing all the tools needed to go from raw ``.fastq`` files to aligned ``.BAM`` to SNP and small INDEL variant calls ``.vcf`` .
@@ -186,7 +184,8 @@ This is a large image (4.989 GB) containing all the tools needed to go from raw 
 sudo docker pull compbio/ngseasy-alignment-public:v1.2
 ```
 
-#### Getting All NGSeasy images
+## Getting All NGSeasy images
+********************************
 
 All Images can be pulled down from [Docker Hub](https://hub.docker.com/u/compbio/) using the script [get_NGSeasy.sh](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/get_NGSeasy.sh)
 
@@ -196,7 +195,14 @@ All Images can be pulled down from [Docker Hub](https://hub.docker.com/u/compbio
 **Getting the NGSeasy Reasources and Scripts**
 ************************************************
 
-## SFTP Login Details
+This is a 25GB ``ngseasy_resources.tar.gz`` file containing :-  
+
+- ``reference_genomes_b37.tgz`` b37 reference genomes indexed for use with all provided aligners (BWA, Bowtie2, Stampy, Novoalign) and annotation bed files for use with pipeline scripts
+- ``gatk_resources.tar.gz`` gatk resources bundle
+- ``fastq_example.tgz`` Example 75bp PE Illumina Whole Exome Sequence fastq data for **NA12878**
+- Annotation Databases Coming in the next update 
+ 
+**NGSeasy Resources: SFTP Login Details**
 
 **location:** upload.brc.iop.kcl.ac.uk  
 **Port:** 51515  
@@ -215,6 +221,12 @@ ngseasy-vm-v1.0.vdi          ngseasy_resources.tar.gz
 sftp> get -r *
 ```
 I would recommend using a separate program like [FileZilla](https://filezilla-project.org/), which will make it much easier for you to set up and manage your file transfers
+
+**NGSeasy pipeline scripts
+
+```sh
+git clone https://github.com/KHP-Informatics/ngs.git
+```
 
 ****************
 
@@ -241,17 +253,6 @@ mv -v ngseasy_scripts /media/ngseasy/
 ```
 
 **3.** Get the latest NGSeasy Resources
-
-This is a 25GB ``ngseasy_resources.tar.gz`` file containing :-  
-
-- ``reference_genomes_b37.tgz`` b37 reference genomes indexed for use with all provided aligners (BWA, Bowtie2, Stampy, Novoalign) and annotation bed files for use with pipeline scripts
-- ``gatk_resources.tar.gz`` gatk resources bundle
-- ``fastq_example.tgz`` Example 75bp PE Illumina Whole Exome Sequence fastq data for **NA12878**
-
-**__Annovar Databases Comming Soon__**
-__Coming soon....__  
-- ``humandb.tgz`` ANNOVAR humandb  
-
 
 ```sh
 cd  /media/ngseasy/
