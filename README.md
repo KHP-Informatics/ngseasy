@@ -88,7 +88,7 @@ Overview of Pipeline Components
 ================================
 The basic pipeline contains all the basic tools needed for manipulation and 
 quality control of raw fastq files (ILLUMINA focused), SAM/BAM manipulation,
-alignment, cleaning (based on GATK best practises [ADD LINK]) and first pass
+alignment, cleaning (based on GATK best practises [http://www.broadinstitute.org/gatk/guide/best-practices]) and first pass
 variant discovery. Separate containers are provided for indepth variant annotation,
 structural variant calling, basic reporting and visualisations.  
 
@@ -253,8 +253,12 @@ __Coming soon....__
 
 ```sh
 cd  /media/ngseasy/
-wget 
+
+# get ngseasy_resources (on Dropbox for a limited time only) or sftp (as above)
+wget --no-check-cert https://www.dropbox.com/s/9pw3ml75pdnufjl/ngseasy_resources.tar.gz
+
 tar -xrfv ngseasy_resources.tar.gz
+
 mv -v /media/ngseasy/ngseasy_resources/reference_genomes_b37 /media/ngseasy/
 mv -v /media/ngseasy/ngseasy_resources/gatk_resources /media/ngseasy/
 mv -v /media/ngseasy/ngseasy_resources/gatk_resources /media/ngseasy/
@@ -272,16 +276,15 @@ mkdir /media/ngseasy/ngs_projects
 
 **On your local machine, ensure the following directories exist:-**
 
-- ``fastq_raw`` [to hold all incoming raw fastq files]
+- ``fastq_raw`` [To hold all incoming raw fastq files]
 - ``ngs_projects`` [out put directory for all ngs projects]
 - ``reference_genomes_b37`` [get from URL and unpack. NB: XXX GB!]
 - ``gatk_resources`` [vcf and annotation files used by GATK]
-- ``ngs_projects`` [xxx]
-- ``ngs`` []
+- ``ngs`` [GitHub Clone]
 
 These folders are required by pipeline as they are hardcoded in the NGSeasy scripts.
 
-**4.** Copy ``run_ngseasy_dockers.sh`` to ``ngs_projects`
+**5.** Copy ``run_ngseasy_dockers.sh`` to ``ngs_projects`
 # copy scripts to ngs_projects
 cp -v ngseasy_scripts/run_ngseasy_dockers.sh /media/ngseasy/ngs_projects
 
