@@ -191,14 +191,13 @@ This is a large image (4.989 GB) containing all the tools needed to go from raw 
 sudo docker pull compbio/ngseasy-alignment-public:v1.2
 ```
 
-## Getting All NGSeasy images
-********************************
+Getting All NGSeasy images, Reasources and Scripts
+------------------------------
 
 All Images can be pulled down from [Docker Hub](https://hub.docker.com/u/compbio/) using the script [get_NGSeasy.sh](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/get_NGSeasy.sh)
 
 
-**Getting the NGSeasy Reasources and Scripts**
-************************************************
+**NGSeasy Reasources**
 
 This is a 25GB ``ngseasy_resources.tar.gz`` file containing :-  
 
@@ -207,7 +206,7 @@ This is a 25GB ``ngseasy_resources.tar.gz`` file containing :-
 - ``fastq_example.tgz`` Example 75bp PE Illumina Whole Exome Sequence fastq data for **NA12878**
 - Annotation Databases Coming in the next update 
  
-**NGSeasy Resources: SFTP Login Details**
+**SFTP Login Details**
 
 ```
 location: upload.brc.iop.kcl.ac.uk  
@@ -231,7 +230,7 @@ sftp> get -r *
 I would recommend using a separate program like [FileZilla](https://filezilla-project.org/), which will make it much easier for you to set up and manage your file transfers
 
 **NGSeasy pipeline scripts**
-*******************************
+
 
 Clone latest NGSeasy scripts from out GitHub repository
 ```sh
@@ -364,8 +363,8 @@ bash run_ngseasy_docker.sh -c ngs.config.file.tsv -d /media/ngseasy
 
 [Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
 
-**Putting it all together**
-****************************
+Putting it all together
+----------------------------
 
 ```bash
 # Make NGSeasy Directory
