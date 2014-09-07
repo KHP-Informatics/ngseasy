@@ -5,18 +5,28 @@ NGSeasy v1.0
 
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**
 
-As a multi-component system, NGS pipeline setup is traditionally heavy on 
-configuration. Our idea is to provide this in a simple encapsulated container. 
-Users also typically wish to configure their own environments and run the 
-pipeline on a wide range of hardware (workstations to clusters to cloud), being 
-able to stand-up a pipeline with minimal fuss is made straightforward with this 
-container.  
+We present NGSeasy (Easy Analysis of Next Generation Sequencing), a flexible and easy-to-use NGS pipeline for automated alignment, quality control, variant calling and annotation. The pipeline allows users with minimal computational/bioinformatic skills to set up and run an NGS analysis on their own samples, in less than an afternoon, on any operating system (Windows, iOS or Linux) or infrastructure (workstation, cluster or cloud).
 
-- Planned Updates every 6 months to included latest available software versions.
-- New Human Genomes
+NGS pipelines typically utilize a large and varied range of software components and incur a substantial configuration burden during deployment which limits their portability to different computational environments. NGSeasy simplifies this by providing the pipeline components encapsulated in Docker™ containers and bundles in a wide choice of tools for each module. Each module of the pipeline represents one functional grouping of tools (e.g. sequence alignment, variant calling etc.).
+
+Deploying the pipeline is as simple as pulling the container images from the public repository into any host running Docker. NGSeasy can be deployed on any medium to high-end workstation, high performance computer cluster and compute clouds (public/private cloud computing) - enabling instant access to elastic scalability without investment overheads for additional compute hardware.
+
+- **NGSeasy updates every 6 months:**
+- Indexed Reference Genomes
 - Cancer Pipelines
 - Annotation Pipelines
 - Visualisation Pipelines
+
+**Lets us know if you want other tools added to NGSeasy**
+
+Running NGS analysis in the public cloud has become increasingly attractive as the current trend in price reduction of cloud providers (EC2, Google Compute, Azure) continues. The capacity to elastically scale and transparently utilize different cloud providers has driven our choice of lightweight virtualization of NGSeasy with Docker. 
+
+- The full pipeline and scripts can be downloaded in less than an hour (with good internet). 
+- ngseasy_resources.tar.gz: contains example Exome Data (NA12878, 75bp Illumina PE), b37 - Reference Genomes Indexed for use with provided aligners and GATK Resources.    
+- Within a few easy steps (outlined above) users can be up and running immediately .
+- Using 8 x 2.60GHz CPUs users can go from raw FASTQ > VCF in ~ 2-3 hours.  
+- Successfully tested on Windows 7/8, Mac OS 10.** and Linux Workstations (Ubuntu & Debian).  
+- Makes open and reproducible research straight forward for the greater scientific community.  
 
 ******
 
@@ -35,8 +45,7 @@ container.
 <a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">
 <img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
 </a>
-
-Lets us know if you want other tools added to NGSeasy  
+  
 
 ***********
 
@@ -432,6 +441,9 @@ NGSeasy Pipeline Scripts
 
 ***************************
 
+
+
+************************
 
 ### Getting the GATK Resources Bundle for yourself
 
