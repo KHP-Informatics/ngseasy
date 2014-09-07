@@ -197,7 +197,7 @@ All Images can be pulled down from [Docker Hub](https://hub.docker.com/u/compbio
 ## SFTP Login Details
 
 **location:** upload.brc.iop.kcl.ac.uk  
-**Port:** 51515
+**Port:** 51515  
 **user:** ngseasy  
 **password:** ngseasy  
 
@@ -214,12 +214,17 @@ sftp> get -r *
 ```
 I would recommend using a separate program like [FileZilla](https://filezilla-project.org/), which will make it much easier for you to set up and manage your file transfers
 
+**Eaxample Set up and  Running NGSeasy**
+****************************************
+The commands below walk you through a getting, setting up and running an NGSeasy pipeline.
 
 ```sh
 # make ngseasy directory
 mkdir ngseasy
 cd ngseasy
+```
 
+```sh
 # get latest ngseasy_scripts code
 # the scripts will eventually be bundled with each docker image
 git clone https://github.com/KHP-Informatics/ngs.git
