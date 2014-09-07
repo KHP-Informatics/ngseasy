@@ -197,6 +197,7 @@ All Images can be pulled down from [Docker Hub](https://hub.docker.com/u/compbio
 ## SFTP Login Details
 
 **location:** upload.brc.iop.kcl.ac.uk  
+**Port:** 51515
 **user:** ngseasy  
 **password:** ngseasy  
 
