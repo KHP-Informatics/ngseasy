@@ -34,6 +34,8 @@ container.
 
 Lets us know if you want other tools added to NGSeasy  
 
+***********
+
 ## Table of Contents
 [NOTICE TO USERS](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#notice-to-users-of-the-container-image-or-vm)  
 
@@ -98,7 +100,6 @@ structural variant calling, basic reporting and visualisations.
 
 ![ngsEASY](figs/ngsEASY_atomic_pipeline_visualisation.png "Dockerized NGS Pipeline")
 
-
 # The Tools included are as follows :- 
 
 ### Fastq manipulation
@@ -139,11 +140,7 @@ structural variant calling, basic reporting and visualisations.
 - delly
 - m-HMM
 - cn.MOPS
-- ExomeDepth
-
-[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
-
-******
+- ExomeDepth  
 
 **Software Versions**
 ************************
@@ -156,7 +153,9 @@ structural variant calling, basic reporting and visualisations.
 - picard-tools-1.115
 - GenomeAnalysisTK-3.2-2
 - Platypus_0.7.4
-- fastqc_v0.11.2
+- fastqc_v0.11.2  
+
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
 
 ******
 
@@ -176,6 +175,10 @@ A full set of instructions for multiple operating systems are available on the [
 
 ## Getting the Dockerised NGSeasy Pipeline
 ********************************************
+
+We have adapted the current best practices from the Genome Analysis Toolkit (GATK, http://www.broadinstitute.org/gatk/guide/best-practices)  for processing raw alignments in SAM/BAM format and variant calling. The current workflow, has been optimised for Illumina platforms, but can easily be adapted for other sequencing platforms, with minimal effort.  
+
+As the containers themselves can be run as executables with pre-specified cpu and RAM resources, the orchestration of the pipeline can be placed under the control of conventional load balancers if this mode is required.  
 
 Available NGSeasy Docker images at [compbio Docker Hub](https://hub.docker.com/u/compbio)
 
