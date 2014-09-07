@@ -1,29 +1,8 @@
 NGSeasy v1.0
 ===================
-
-[Dockerized](https://www.docker.com/) and [Virtulaized](https://www.virtualbox.org/) ngs pipeline and tool-box.  
+**A [Dockerized](https://www.docker.com/) and [Virtulaized](https://www.virtualbox.org/) ngs pipeline and tool-box.** 
 
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**
-
-As a multi-component system, NGS pipeline setup is traditionally heavy on 
-configuration. Our idea is to provide this in a simple encapsulated container. 
-Users also typically wish to configure their own environments and run the 
-pipeline on a wide range of hardware (workstations to clusters to cloud), being 
-able to stand-up a pipeline with minimal fuss is made straightforward with this 
-container.  
-
-- Planned Updates every 6 months to included latest available software versions.
-- New Human Genomes
-- Cancer Pipelines
-- Annotation Pipelines
-- Visualisation Pipelines
-
-******
-
-<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-
-********
 
 ### Authors
 - Amos Folarin <amosfolarin@gmail.com>  
@@ -36,7 +15,21 @@ container.
 <img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
 </a>
 
-Lets us know if you want other tools added to NGSeasy  
+****************
+
+We present **NGSeasy (Easy Analysis of Next Generation Sequencing)**, a flexible and easy-to-use NGS pipeline for automated alignment, quality control, variant calling and annotation. The pipeline allows users with minimal computational/bioinformatic skills to set up and run an NGS analysis on their own samples, in less than an afternoon, on any operating system (Windows, iOS or Linux) or infrastructure (workstation, cluster or cloud).
+
+NGS pipelines typically utilize a large and varied range of software components and incur a substantial configuration burden during deployment which limits their portability to different computational environments. NGSeasy simplifies this by providing the pipeline components encapsulated in Docker™ containers and bundles in a wide choice of tools for each module. Each module of the pipeline represents one functional grouping of tools (e.g. sequence alignment, variant calling etc.).
+
+Deploying the pipeline is as simple as pulling the container images from the public repository into any host running Docker. NGSeasy can be deployed on any medium to high-end workstation, high performance computer cluster and compute clouds (public/private cloud computing) - enabling instant access to elastic scalability without investment overheads for additional compute hardware and makes open and reproducible research straight forward for the greater scientific community.
+
+- **NGSeasy updates every 6 months:**
+- Indexed Reference Genomes
+- Cancer Pipelines
+- Annotation Pipelines
+- Visualisation Pipelines
+
+**Lets us know if you want other tools added to NGSeasy**
 
 ***********
 
@@ -182,7 +175,10 @@ We have adapted the current best practices from the Genome Analysis Toolkit (GAT
 
 As the containers themselves can be run as executables with pre-specified cpu and RAM resources, the orchestration of the pipeline can be placed under the control of conventional load balancers if this mode is required.  
 
-**Available NGSeasy Docker images** at [compbio Docker Hub](https://hub.docker.com/u/compbio)
+*****************
+
+### Available NGSeasy Docker images
+Available to download at our [compbio Docker Hub](https://hub.docker.com/u/compbio)
 
 ### The Main Power Tool!
 **ngseasy-alignment-public:v1.2**
@@ -245,7 +241,7 @@ git clone https://github.com/KHP-Informatics/ngs.git
 ****************
 
 
-Running the Dockerised NGSEASY Pipeline
+Running the Dockerised NGSeasy Pipeline
 ==========================================
 **With NGSeasy and the simple steps outlined below, you can now have the full suite of NGS tools up and running on any high end workstation in an afternoon**
 
@@ -403,6 +399,39 @@ $ bash run_ngseasy_docker.sh -c ngs.config.file.tsv -d /media/ngseasy
 
 **************************
 
+NGSeasy Pipeline Scripts
+=========================
+
+**Main Pipeline Calling**
+- run_ngseasy_dockers.sh
+- run_ea-ngs.sh 
+
+**Full Pipeline from Fastq to VCF**
+- full_gatk.sh
+- full_no_gatk.sh
+
+**NGSeasy Components**
+- fastqc_and_trimm.sh
+- alignment.sh
+- post_alignment_coverage.sh
+- post_alignment_qc.sh
+- variant_calling_multiple_samples.sh
+- variant_calling_single_sample.sh
+- sv-cnmops.sz
+- sv-delly.sh
+- sv-ensemble.sh
+- sv-exomedepth.sh
+- sv-lumpy.sh
+- sv-mhmm.sh
+
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+
+***************************
+
+
+
+************************
+
 ### Getting the GATK Resources Bundle for yourself
 
 [What's in the resource bundle and how can I get it?](https://www.broadinstitute.org/gatk/guide/article.php?id=1213)
@@ -425,14 +454,11 @@ ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
 **********
 
 
-
-******
-
 NGSEASY-VM : An NGS Tool Box
 ================================
 ![VirtualBox](figs/add-virtualbox.png "VirtualBox")  
 
-A virtual machine based on [Ubuntu 14.04 LTS](http://www.ubuntu.com/desktop), containing all these [NGS Tools](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#the-tools-included-are-as-follows--) (and a few extras) is available. The virtual machine contains indexed reference genomes (b37) for all the installed aligners and the [GATK Resources Budle](https://www.broadinstitute.org/gatk/download).  
+A virtual machine based on [Ubuntu 14.04 LTS](http://www.ubuntu.com/desktop), containing all these [NGS Tools](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#the-tools-included-are-as-follows--) (and a few extras) is available. The virtual machine contains indexed reference genomes (b37) for all the installed aligners and the [GATK Resources Budle](https://www.broadinstitute.org/gatk/download), and includes the latest version of Docker.
 
 Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM [ngseasy-vm-v1.0.vdi]() you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
 
