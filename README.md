@@ -156,7 +156,7 @@ structural variant calling, basic reporting and visualisations.
 
 ******
 
-Dockerised NGSEASY
+Dockerised NGSeasy
 ==========================
 ![docker](figs/Docker_container_engine_logo.png "Docker")  
 
@@ -194,7 +194,7 @@ All Images can be pulled down from [Docker Hub](https://hub.docker.com/u/compbio
 **Get the NGSeasy Reasources and Scripts**
 ****************************
 
-**SFTP**
+## SFTP Login Details
 
 **location:** upload.brc.iop.kcl.ac.uk
 **user:** ngseasy
@@ -211,6 +211,7 @@ sftp> ls
 ngseasy-vm-v1.0.vdi          ngseasy_resources.tar.gz     
 sftp> get -r *
 ```
+I would recommend using a separate program like [FileZilla](https://filezilla-project.org/), which will make it much easier for you to set up and manage your file transfers
 
 
 ```sh
