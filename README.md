@@ -241,10 +241,14 @@ git clone https://github.com/KHP-Informatics/ngs.git
 
 ****************
 
-**Example Set up and  Running NGSeasy**
-=========================================
 
-The commands below walk you through getting, setting up and running an NGSeasy pipeline.
+Running the Dockerised NGSEASY Pipeline
+==========================================
+**With NGSeasy and the simple steps outlined below, you can now have the full suite of NGS tools up and running on any high end workstation in an afternoon**
+
+The commands below walk you through getting, setting up and running an NGSeasy pipeline.  
+
+**Example Set up and  Running NGSeasy**
 
 **1.** Make a directory on your local machine for storing data, NGSeasy scripts and run files generated from the pipeline.
 
@@ -275,7 +279,7 @@ wget --no-check-cert https://www.dropbox.com/s/9pw3ml75pdnufjl/ngseasy_resources
 # Un pack resources 
 tar -xrfv ngseasy_resources.tar.gz
 
-# move to top level ngseays dir
+# move [fastq_raw], [reference_genomes_b37] and [gatk_resources] to /media/ngseasy/
 mv -v /media/ngseasy/ngseasy_resources/reference_genomes_b37 /media/ngseasy/
 mv -v /media/ngseasy/ngseasy_resources/gatk_resources /media/ngseasy/
 mv -v /media/ngseasy/ngseasy_resources/gatk_resources /media/ngseasy/
@@ -319,8 +323,9 @@ In Excel make config file and save as [TAB] Delimited file with ``.tsv`` extenst
 See Example provided. 
 
 
- Running the Dockerised NGSEASY Pipeline
-==========================================
+# Get Main NGSeasy Docker Image
+$ sudo docker pull compbio/ngseasy-alignment-public:v1.2
+
 
 ```bash
 sudo docker run -d -P \
