@@ -357,44 +357,34 @@ sudo docker pull compbio/ngseasy-alignment-public:v1.2
 **7.** Run an NGSeasy Pipeline
 
 ```sh
-bash run_ngseasy_docker.sh -c ngs.config.file.tsv -d /media/NGSeasy
-```
+cd /media/ngseasy
 
-```bash
-sudo docker run -d -P \
--v ~/fastq_raw:/home/pipeman/fastq_raw \
--v ~/reference_geneomes:/usr/local/pipeman/reference_genomes \
--v ~/gatk_resources:/usr/local/pipeman/gatk_resources \
--v ~/ngs_projects:/home/pipeman/ngs_projects \
--v ~/ngseay_scripts:/usr/local/pipeman/ngseasy_scripts \
--u pipeman \
--t snewhouse/alignment-public:v1.2 /sbin/my_init -- bash run-ea-ngs.sh ngs.config
-```
+bash run_ngseasy_docker.sh -c ngs.config.file.tsv -d /media/ngseasy
 
-``-v`` used to mount host directories containing fastq, reference genomes, gatk resources and project output.
+```
 
 
 [Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
 
-**putting it all together**
+**Putting it all together**
 ****************************
 
 ```
 # Make NGSeasy Directory
-$ mkdir /media/NGSeasy
+$ mkdir /media/ngseasy
 
 # Get NGSeasy scripts
-$ cd NGSeasy
+$ cd /media/ngseasy
 $ git clone https://github.com/KHP-Informatics/ngs.git
-$ cp -v ./ngs/ngseasy_scripts /media/NGSeasy/
+$ cp -v ./ngs/ngseasy_scripts /media/ngseasy
 
 # get ngseasy_resources (on Dropbox for a limited time only) or sftp (as above)
 $ wget --no-check-cert https://www.dropbox.com/s/9pw3ml75pdnufjl/ngseasy_resources.tar.gz?dl=0;
 $ tar -xrvf ngseasy_resources.tar.gz
-$ mv -v ./ngseasy_resources/** /media/NGSeasy/
+$ mv -v ./ngseasy_resources/** /media/ngseasy
 # copies to [fastq_raw], [reference_genomes_b37] and [gatk_resources] to NGSeasy/
 # Make local directory for NGS Projects
-$ mkdir /media/NGSeasy/ngs_projects
+$ mkdir /media/ngseasy/ngs_projects
 
 # In Excel, setup config file and save as tab delimited text file *.tsv. See Example provided. This sets up Information related to: Project Name, Sample Name, Library Type, Pipeline to call, NCPU etc etc
 
@@ -403,9 +393,11 @@ $ sudo docker pull compbio/ngseasy-alignment-public:v1.2
 
 # Run NGSeasy
 $ cd ngs_projects
-$ bash run_ngseasy_docker.sh -c ngs.config.file.tsv -d /media/NGSeasy
+$ bash run_ngseasy_docker.sh -c ngs.config.file.tsv -d /media/ngseasy
 
 ```
+
+**And its as simple as that!**
 
 [Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
 
