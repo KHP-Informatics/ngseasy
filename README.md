@@ -307,8 +307,13 @@ mkdir /media/ngseasy/ngs_projects
 **NB:** These folders are required by pipeline as they are hardcoded in the NGSeasy scripts.
 
 **5.** Copy ``run_ngseasy_dockers.sh`` to ``ngs_projects`
-# copy scripts to ngs_projects
-cp -v ngseasy_scripts/run_ngseasy_dockers.sh /media/ngseasy/ngs_projects
+
+``run_ngseasy_dockers.sh`` calls and runs the NGSeasy pipelines
+
+```sh
+# copy run_ngseasy_dockers.sh to ngs_projects
+cp -v /media/ngseasy/ngseasy_scripts/run_ngseasy_dockers.sh /media/ngseasy/ngs_projects
+```
 
 **5.** Set Up Config File and copy to ``ngs_projects``
 
@@ -317,21 +322,24 @@ See Example provided. This sets up Information related to: Project Name, Sample 
 
 The [config.file] should contain the following 15 columns for each sample to be run through a pipeline:- 
 
-POJECT_ID
-SAMPLE_ID
-FASTQ1
-FASTQ2
-PROJECT_DIR
-DNA_PREP_LIBRARY_ID
-NGS_PLATFORM
-NGS_TYPE
-BED_ANNO
-PIPELINE
-ALIGNER
-VARCALLER
-GTMODEGATK
-CLEANUP
-NCPU
+|Variable|type|Description|
+|--------|--------|--------|
+POJECT_ID|string|Project ID|
+SAMPLE_ID|string|Sample ID|
+FASTQ1|string|Raw fastq file name read 1|
+FASTQ2|string|Raw fastq file name read 1|
+PROJECT_DIR|string|Project Directory|
+DNA_PREP_LIBRARY_ID|string|DNA Libray Prep ID|
+NGS_PLATFORM|string|Platform Name|
+NGS_TYPE|string|Experiment type|
+BED_ANNO|string|Annotation Bed File
+PIPELINE|string|NGSeasy Pipeline Script|
+ALIGNER|string|Aligner|
+VARCALLER|string|Variant Caller|
+GTMODEGATK|string|GATK Variant Caller Mode|
+CLEANUP|string|Clean Up Files Boolean|
+NCPU|number|Number of cores to call|
+|--------|--------|--------|
 
 ```sh
 cp -v ngseasy_scripts/ngs.config.file.tsv /media/ngseasy/ngs_projects
