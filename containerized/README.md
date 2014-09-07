@@ -222,8 +222,10 @@ sftp> get -r *
 ```
 I would recommend using a separate program like [FileZilla](https://filezilla-project.org/), which will make it much easier for you to set up and manage your file transfers
 
-**NGSeasy pipeline scripts
+**NGSeasy pipeline scripts**
+*******************************
 
+Clone latest NGSeasy scripts from out GitHub repository
 ```sh
 git clone https://github.com/KHP-Informatics/ngs.git
 ```
@@ -232,7 +234,7 @@ git clone https://github.com/KHP-Informatics/ngs.git
 
 **Eaxample Set up and  Running NGSeasy**
 ****************************************
-The commands below walk you through a getting, setting up and running an NGSeasy pipeline.
+The commands below walk you through getting, setting up and running an NGSeasy pipeline.
 
 **1.** Make a directory on your local machine for storing data, NGSeasy scripts and run files generated from the pipeline.
 
@@ -260,8 +262,10 @@ cd  /media/ngseasy/
 # get ngseasy_resources (on Dropbox for a limited time only) or sftp (as above)
 wget --no-check-cert https://www.dropbox.com/s/9pw3ml75pdnufjl/ngseasy_resources.tar.gz
 
+# Un pack resources 
 tar -xrfv ngseasy_resources.tar.gz
 
+# move to top level ngseays dir
 mv -v /media/ngseasy/ngseasy_resources/reference_genomes_b37 /media/ngseasy/
 mv -v /media/ngseasy/ngseasy_resources/gatk_resources /media/ngseasy/
 mv -v /media/ngseasy/ngseasy_resources/gatk_resources /media/ngseasy/
@@ -277,12 +281,13 @@ cd /media/ngseasy
 mkdir /media/ngseasy/ngs_projects
 ```
 
-**On your local machine, ensure the following directories exist:-**
+**On your local machine, you should now have the following directories:-**
 
 - ``fastq_raw`` [To hold all incoming raw fastq files]
 - ``ngs_projects`` [out put directory for all ngs projects]
 - ``reference_genomes_b37`` [get from URL and unpack. NB: XXX GB!]
 - ``gatk_resources`` [vcf and annotation files used by GATK]
+- ``ngseasy_scripts`` [copy of latest pipeline scripts]
 - ``ngs`` [GitHub Clone]
 
 These folders are required by pipeline as they are hardcoded in the NGSeasy scripts.
