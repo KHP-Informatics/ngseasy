@@ -173,7 +173,7 @@ Follow the simple instructions in the links provided below
 
 A full set of instructions for multiple operating systems are available on the [Docker website](https://docs.docker.com/installation/).
 
-## Getting the Dockerised NGSeasy Pipeline
+Getting the Dockerised NGSeasy Pipeline
 -------------------------------------------
 
 We have adapted the current best practices from the Genome Analysis Toolkit (GATK, http://www.broadinstitute.org/gatk/guide/best-practices)  for processing raw alignments in SAM/BAM format and variant calling. The current workflow, has been optimised for Illumina platforms, but can easily be adapted for other sequencing platforms, with minimal effort.  
