@@ -34,29 +34,29 @@ Deploying the pipeline is as simple as pulling the container images from the pub
 ***********
 
 ## Table of Contents
-[NOTICE TO USERS](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#notice-to-users-of-the-container-image-or-vm)  
+[NOTICE TO USERS](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#notice-to-users-of-the-container-image-or-vm)  
 
-[Software requiring registration](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#software-composing-the-pipeline-requiring-registration)  
+[Software requiring registration](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#software-composing-the-pipeline-requiring-registration)  
 
-[Overview of Pipeline Components](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#overview-of-pipeline-components)  
+[Overview of Pipeline Components](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#overview-of-pipeline-components)  
 
-[NGS Tools](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#the-tools-included-are-as-follows--)  
+[NGS Tools](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#the-tools-included-are-as-follows--)  
 
-[Dockerised NGSEASY set up](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#dockerised-ngseasy)  
+[Dockerised NGSEASY set up](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#dockerised-ngseasy)  
 
-[Installing Docker](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#installing-docker)  
+[Installing Docker](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#installing-docker)  
 
-[Getting the Dockerised NGSEASY Pipeline](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#getting-the-dockerised-ngseasy-pipeline)  
+[Getting the Dockerised NGSEASY Pipeline](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#getting-the-dockerised-ngseasy-pipeline)  
 
-[Running the Dockerised NGSEASY Pipeline](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#running-the-dockerised-ngseasy-pipeline)  
+[Running the Dockerised NGSEASY Pipeline](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#running-the-dockerised-ngseasy-pipeline)  
 
-[NGSEASY-VM : An NGS Tool Box](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngseasy-vm--an-ngs-tool-box)  
+[NGSEASY-VM : An NGS Tool Box](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#ngseasy-vm--an-ngs-tool-box)  
 
-[Installing Oracle VirtualBox](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#installing-oracle-virtualbox)  
+[Installing Oracle VirtualBox](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#installing-oracle-virtualbox)  
 
-[Getting the ngseasy-vm](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#getting-the-ngseasy-vm)  
+[Getting the ngseasy-vm](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#getting-the-ngseasy-vm)  
 
-[Installing the ngseasy-vm](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#installing-the-ngseasy-vm)  
+[Installing the ngseasy-vm](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#installing-the-ngseasy-vm)  
 
 ******
 
@@ -81,7 +81,7 @@ own versions of (below) in the build directory:
    * GATK https://www.broadinstitute.org/gatk/
    * ANNOVAR http://www.openbioinformatics.org/annovar/
 
-[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#ngs-easy-v10)
 
 ******
 
@@ -150,7 +150,7 @@ structural variant calling, basic reporting and visualisations.
 - Platypus_0.7.4
 - fastqc_v0.11.2  
 
-[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#ngs-easy-v10)
 
 ******
 
@@ -193,7 +193,7 @@ sudo docker pull compbio/ngseasy-alignment-public:v1.2
 Getting All NGSeasy images, Reasources and Scripts
 ------------------------------
 
-All Images can be pulled down from [Docker Hub](https://hub.docker.com/u/compbio/) using the script [get_NGSeasy.sh](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/get_NGSeasy.sh)
+All Images can be pulled down from [Docker Hub](https://hub.docker.com/u/compbio/) using the script [get_NGSeasy.sh](https://github.com/KHP-Informatics/ngs/blob/master/containerized/get_NGSeasy.sh)
 
 
 **NGSeasy Reasources**
@@ -236,7 +236,7 @@ Clone latest NGSeasy scripts from out GitHub repository
 git clone https://github.com/KHP-Informatics/ngs.git
 ```
 
-[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#ngs-easy-v10)
 
 ****************
 
@@ -360,7 +360,7 @@ bash run_ngseasy_docker.sh -c ngs.config.file.tsv -d /media/ngseasy
 ```
 
 
-[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#ngs-easy-v10)
 
 Putting it all together
 ----------------------------
@@ -395,7 +395,7 @@ $ bash run_ngseasy_docker.sh -c ngs.config.file.tsv -d /media/ngseasy
 
 **And its as simple as that!**
 
-[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#ngs-easy-v10)
 
 **************************
 
@@ -424,7 +424,7 @@ NGSeasy Pipeline Scripts
 - sv-lumpy.sh
 - sv-mhmm.sh
 
-[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#ngs-easy-v10)
 
 ***************************
 
@@ -449,7 +449,7 @@ I would recommend using a separate program like [FileZilla](https://filezilla-pr
 ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
 ```
 
-[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#ngs-easy-v10)
 
 **********
 
@@ -458,7 +458,7 @@ NGSEASY-VM : An NGS Tool Box
 ================================
 ![VirtualBox](figs/add-virtualbox.png "VirtualBox")  
 
-A virtual machine based on [Ubuntu 14.04 LTS](http://www.ubuntu.com/desktop), containing all these [NGS Tools](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#the-tools-included-are-as-follows--) (and a few extras) is available. The virtual machine contains indexed reference genomes (b37) for all the installed aligners and the [GATK Resources Budle](https://www.broadinstitute.org/gatk/download), and includes the latest version of Docker.
+A virtual machine based on [Ubuntu 14.04 LTS](http://www.ubuntu.com/desktop), containing all these [NGS Tools](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#the-tools-included-are-as-follows--) (and a few extras) is available. The virtual machine contains indexed reference genomes (b37) for all the installed aligners and the [GATK Resources Budle](https://www.broadinstitute.org/gatk/download), and includes the latest version of Docker.
 
 Using [VirtualBox](https://www.virtualbox.org/) and our NGSEASY-VM [ngseasy-vm-v1.0.vdi]() you can have a full suite of NGS tools up and running on any high end workstation in less than an hour.
 
@@ -513,7 +513,7 @@ Before starting the virtual machine you can go to the **Settings** tab and alter
 There is also the functionality to mount shared drives between the host OS and the virtual machine. In the **General** > **Advanced** tab,
 ensure thet the **Shared Clipboard** and **Drang n Drop** are both set to **Bidirectional**.
 
-[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#ngs-easy-v10)
 
 ******
 
@@ -524,7 +524,7 @@ Minimum Hardware Requirements
 - 8 Cores
 - Minimum 100GB storage
 
-[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#ngs-easy-v10)
 
 ******
 
@@ -542,7 +542,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ```
-[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/master/containerized/README.md#ngs-easy-v10)
 
 ******
 
