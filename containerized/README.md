@@ -171,12 +171,14 @@ Follow the simple instructions in the links provided below
 A full set of instructions for multiple operating systems are available on the [Docker website](https://docs.docker.com/installation/).
 
 ## Getting the Dockerised NGSEASY Pipeline
+********************************************
 
 Available NGSeasy images at our [compbio Docker Hub](https://hub.docker.com/u/compbio)
 
 #### Getting the main NGSeasy suite of tools
+**********************************************
 
-[compbio/ngseasy-alignment-public:v1.2](https://registry.hub.docker.com/u/compbio/ngseasy-alignment-public/)
+Docker Hub: [compbio/ngseasy-alignment-public:v1.2](https://registry.hub.docker.com/u/compbio/ngseasy-alignment-public/)
 
 This is a large image (4.989 GB) containing all the tools needed to go from raw ``.fastq`` files to aligned ``.BAM`` to SNP and small INDEL variant calls ``.vcf`` .
 
