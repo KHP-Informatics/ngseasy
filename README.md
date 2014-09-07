@@ -19,15 +19,7 @@ container.
 ******
 
 <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script> | <a href="https://developers.facebook.com/docs/plugins/" class="fb-share-button">Facebook</a>
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.0";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
 ********
 
@@ -73,7 +65,7 @@ Lets us know if you want other tools added to NGSeasy
 
 ******
 
-# NOTICE TO USERS OF THE CONTAINER IMAGE OR VM
+## NOTICE TO USERS OF THE CONTAINER IMAGE OR VM
 
 While the software used to build the image is composed of free software versions
 some of the software has restrictions on use particularly for commercial 
@@ -84,7 +76,7 @@ This pipeline uses a number of pieces of software which require registration.
 By using this you are agreeing to observe the Terms and Conditions of the 
 relevant pieces of software that compose this pipeline.  
 
-# Software composing the pipeline requiring registration
+### Software composing the pipeline requiring registration
 
 If you want to build the image from the Dockerfile then you need to get your 
 own versions of (below) in the build directory:
@@ -151,7 +143,7 @@ structural variant calling, basic reporting and visualisations.
 - ExomeDepth  
 
 **Software Versions**
-************************
+
 - Trimmomatic-0.32
 - bwa-0.7.10
 - bowtie2-2.2.3
@@ -182,7 +174,7 @@ Follow the simple instructions in the links provided below
 A full set of instructions for multiple operating systems are available on the [Docker website](https://docs.docker.com/installation/).
 
 ## Getting the Dockerised NGSeasy Pipeline
-********************************************
+-------------------------------------------
 
 We have adapted the current best practices from the Genome Analysis Toolkit (GATK, http://www.broadinstitute.org/gatk/guide/best-practices)  for processing raw alignments in SAM/BAM format and variant calling. The current workflow, has been optimised for Illumina platforms, but can easily be adapted for other sequencing platforms, with minimal effort.  
 
