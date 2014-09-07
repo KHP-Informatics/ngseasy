@@ -218,20 +218,20 @@ I would recommend using a separate program like [FileZilla](https://filezilla-pr
 ****************************************
 The commands below walk you through a getting, setting up and running an NGSeasy pipeline.
 
+1. Make a directory on your local machine for storing data, NGSeasy scripts and run files generated from the pipeline.
 ```sh
 # make ngseasy directory
 mkdir ngseasy
 cd ngseasy
 ```
 
+2. Get the latest NGSeasy pipeline scripts from GitHub
 ```sh
 # get latest ngseasy_scripts code
-# the scripts will eventually be bundled with each docker image
 git clone https://github.com/KHP-Informatics/ngs.git
 cd ngs
-git checkout dev2
-git pull origin dev2
 mv -v ngseasy_scripts ../ 
+```
 
 # move up to ngseasy
 cd ../
