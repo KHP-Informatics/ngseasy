@@ -15,6 +15,8 @@ container.
 - Planned Updates every 6 months to included latest available software versions.
 - New Human Genomes
 - Cancer Pipelines
+- Annotation Pipelines
+- Visualisation Pipelines
 
 ******
 
