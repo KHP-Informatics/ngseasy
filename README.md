@@ -92,7 +92,7 @@ alignment, cleaning (based on GATK best practises [ADD LINK]) and first pass
 variant discovery. Separate containers are provided for indepth variant annotation,
 structural variant calling, basic reporting and visualisations.  
 
-![ngsEASY](figs/ngsEASY_pipeline_visualisation.png "Dockerized NGS Pipeline")
+![ngsEASY](figs/ngsEASY_atomic_pipeline_visualisation.png "Dockerized NGS Pipeline")
 
 
 # The Tools included are as follows :- 
@@ -158,7 +158,7 @@ structural variant calling, basic reporting and visualisations.
 
 Dockerised NGSEASY
 ==========================
-![docker](figs/ngsEASY_atomic_pipeline_visualisation.png "Docker")  
+![docker](figs/Docker_container_engine_logo.png "Docker")  
 
 ## Installing Docker
 
