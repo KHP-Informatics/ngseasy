@@ -53,8 +53,6 @@ Lets us know if you want other tools added to NGSeasy
 
 [Running the Dockerised NGSEASY Pipeline](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#running-the-dockerised-ngseasy-pipeline)  
 
-[Local Machine Set up](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#local-machine-set-up)  
-
 [NGSEASY-VM : An NGS Tool Box](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngseasy-vm--an-ngs-tool-box)  
 
 [Installing Oracle VirtualBox](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#installing-oracle-virtualbox)  
@@ -196,8 +194,6 @@ sudo docker pull compbio/ngseasy-alignment-public:v1.2
 
 All Images can be pulled down from [Docker Hub](https://hub.docker.com/u/compbio/) using the script [get_NGSeasy.sh](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/get_NGSeasy.sh)
 
-
-## Local Machine Set up
 
 **Getting the NGSeasy Reasources and Scripts**
 ************************************************
