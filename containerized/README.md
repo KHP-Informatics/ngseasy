@@ -211,10 +211,13 @@ This is a 25GB ``ngseasy_resources.tar.gz`` file containing :-
  
 **NGSeasy Resources: SFTP Login Details**
 
+```
 **location:** upload.brc.iop.kcl.ac.uk  
 **Port:** 51515  
 **user:** ngseasy  
 **password:** ngseasy  
+```
+
 
 ```bash
 $ sftp  ngseasy@upload.brc.iop.kcl.ac.uk
@@ -351,7 +354,11 @@ NCPU|number|Number of cores to call|
 sudo docker pull compbio/ngseasy-alignment-public:v1.2
 ```
 
-**7.** Run
+**7.** Run an NGSeasy Pipeline
+
+```sh
+bash run_ngseasy_docker.sh -c ngs.config.file.tsv -d /media/NGSeasy
+```
 
 ```bash
 sudo docker run -d -P \
@@ -365,10 +372,42 @@ sudo docker run -d -P \
 ```
 
 ``-v`` used to mount host directories containing fastq, reference genomes, gatk resources and project output.
-The ``-u pipeman`` ensures it is run using the ``pipeman`` user.
+
 
 [Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
 
+**putting it all together**
+****************************
+
+```
+# Make NGSeasy Directory
+$ mkdir /media/NGSeasy
+
+# Get NGSeasy scripts
+$ cd NGSeasy
+$ git clone https://github.com/KHP-Informatics/ngs.git
+$ cp -v ./ngs/ngseasy_scripts /media/NGSeasy/
+
+# get ngseasy_resources (on Dropbox for a limited time only) or sftp (as above)
+$ wget --no-check-cert https://www.dropbox.com/s/9pw3ml75pdnufjl/ngseasy_resources.tar.gz?dl=0;
+$ tar -xrvf ngseasy_resources.tar.gz
+$ mv -v ./ngseasy_resources/** /media/NGSeasy/
+# copies to [fastq_raw], [reference_genomes_b37] and [gatk_resources] to NGSeasy/
+# Make local directory for NGS Projects
+$ mkdir /media/NGSeasy/ngs_projects
+
+# In Excel, setup config file and save as tab delimited text file *.tsv. See Example provided. This sets up Information related to: Project Name, Sample Name, Library Type, Pipeline to call, NCPU etc etc
+
+# Get Main NGSeasy Docker Image
+$ sudo docker pull compbio/ngseasy-alignment-public:v1.2
+
+# Run NGSeasy
+$ cd ngs_projects
+$ bash run_ngseasy_docker.sh -c ngs.config.file.tsv -d /media/NGSeasy
+
+```
+
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
 
 **************************
 
