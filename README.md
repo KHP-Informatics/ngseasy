@@ -233,7 +233,8 @@ git clone https://github.com/KHP-Informatics/ngs.git
 ****************
 
 **Eaxample Set up and  Running NGSeasy**
-****************************************
+=========================================
+
 The commands below walk you through getting, setting up and running an NGSeasy pipeline.
 
 **1.** Make a directory on your local machine for storing data, NGSeasy scripts and run files generated from the pipeline.
