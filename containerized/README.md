@@ -230,9 +230,11 @@ Clone latest NGSeasy scripts from out GitHub repository
 git clone https://github.com/KHP-Informatics/ngs.git
 ```
 
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+
 ****************
 
-**Eaxample Set up and  Running NGSeasy**
+**Example Set up and  Running NGSeasy**
 =========================================
 
 The commands below walk you through getting, setting up and running an NGSeasy pipeline.
@@ -285,13 +287,13 @@ mkdir /media/ngseasy/ngs_projects
 **On your local machine, you should now have the following directories:-**
 
 - ``fastq_raw`` [To hold all incoming raw fastq files]
-- ``ngs_projects`` [out put directory for all ngs projects]
-- ``reference_genomes_b37`` [get from URL and unpack. NB: XXX GB!]
+- ``ngs_projects`` [Output directory for all NGS projects/runs]
+- ``reference_genomes_b37`` [b37 Reference Genomes indexed for BWA/Bowtie2/Stampy/Novovalign]
 - ``gatk_resources`` [vcf and annotation files used by GATK]
 - ``ngseasy_scripts`` [copy of latest pipeline scripts]
-- ``ngs`` [GitHub Clone]
+- ``ngs`` [GitHub Clone]  
 
-These folders are required by pipeline as they are hardcoded in the NGSeasy scripts.
+**NB:** These folders are required by pipeline as they are hardcoded in the NGSeasy scripts.
 
 **5.** Copy ``run_ngseasy_dockers.sh`` to ``ngs_projects`
 # copy scripts to ngs_projects
@@ -302,33 +304,6 @@ cp -v ngseasy_scripts/run_ngseasy_dockers.sh /media/ngseasy/ngs_projects
 cp -v ngseasy_scripts/ngs.config.file.tsv /media/ngseasy/ngs_projects
 ```
 
-```sh
-# get ngseasy_resources (Dropbox for a limited time only)
-wget --no-check-cert https://www.dropbox.com/s/9pw3ml75pdnufjl/ngseasy_resources.tar.gz?dl=0
-tar xvf ngseasy_resources.tar.gz
-
-# move contents to ngseasy/
-mv -v ngseasy_resources/** ../
-
-# un pack them
-tar xvf reference_genomes_b37.tgz
-tar xvf gatk_resources.tar.gz
-
-# clean up
-rm -rf ngseasy_resources
-
-# permissions
-chmod -R 755 ./
-```
-
-**You should have the following directories**
-
-- fastq_raw
-- gatk_resources
-- reference_genomes_b37
-- ngs_projects
-- ngseasy_scripts
-- ngs
 
 **Set Up Config File**
 ************************
@@ -337,8 +312,27 @@ In Excel make config file and save as [TAB] Delimited file with ``.tsv`` extenst
 See Example provided. 
 
 
- 
+ Running the Dockerised NGSEASY Pipeline
+==========================================
 
+```bash
+sudo docker run -d -P \
+-v ~/fastq_raw:/home/pipeman/fastq_raw \
+-v ~/reference_geneomes:/usr/local/pipeman/reference_genomes \
+-v ~/gatk_resources:/usr/local/pipeman/gatk_resources \
+-v ~/ngs_projects:/home/pipeman/ngs_projects \
+-v ~/ngseay_scripts:/usr/local/pipeman/ngseasy_scripts \
+-u pipeman \
+-t snewhouse/alignment-public:v1.2 /sbin/my_init -- bash run-ea-ngs.sh ngs.config
+```
+
+``-v`` used to mount host directories containing fastq, reference genomes, gatk resources and project output.
+The ``-u pipeman`` ensures it is run using the ``pipeman`` user.
+
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+
+
+**************************
 
 ### Getting the GATK Resources Bundle for yourself
 
@@ -361,24 +355,7 @@ ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
 
 **********
 
-Running the Dockerised NGSEASY Pipeline
-==========================================
 
-```bash
-sudo docker run -d -P \
--v ~/fastq_raw:/home/pipeman/fastq_raw \
--v ~/reference_geneomes:/usr/local/pipeman/reference_genomes \
--v ~/gatk_resources:/usr/local/pipeman/gatk_resources \
--v ~/ngs_projects:/home/pipeman/ngs_projects \
--v ~/ngseay_scripts:/usr/local/pipeman/ngseasy_scripts \
--u pipeman \
--t snewhouse/alignment-public:v1.2 /sbin/my_init -- bash run-ea-ngs.sh ngs.config
-```
-
-``-v`` used to mount host directories containing fastq, reference genomes, gatk resources and project output.
-The ``-u pipeman`` ensures it is run using the ``pipeman`` user.
-
-[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
 
 ******
 
