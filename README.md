@@ -191,8 +191,8 @@ All Images can be pulled down from [Docker Hub](https://hub.docker.com/u/compbio
 
 ## Local Machine Set up
 
-**Get the NGSeasy Reasources and Scripts**
-****************************
+**Getting the NGSeasy Reasources and Scripts**
+************************************************
 
 ## SFTP Login Details
 
@@ -213,6 +213,8 @@ ngseasy-vm-v1.0.vdi          ngseasy_resources.tar.gz
 sftp> get -r *
 ```
 I would recommend using a separate program like [FileZilla](https://filezilla-project.org/), which will make it much easier for you to set up and manage your file transfers
+
+****************
 
 **Eaxample Set up and  Running NGSeasy**
 ****************************************
@@ -236,7 +238,30 @@ cd ngs
 mv -v ngseasy_scripts /media/ngseasy/
 ```
 
-**3.** Make ``ngs_projects`` NGS projects directory
+**3.** Get the latest NGSeasy Resources
+
+This is a 25GB ``ngseasy_resources.tar.gz`` file containing :-  
+
+- ``reference_genomes_b37.tgz`` b37 reference genomes indexed for use with all provided aligners (BWA, Bowtie2, Stampy, Novoalign) and annotation bed files for use with pipeline scripts
+- ``gatk_resources.tar.gz`` gatk resources bundle
+- ``fastq_example.tgz`` Example 75bp PE Illumina Whole Exome Sequence fastq data for **NA12878**
+
+**__Annovar Databases Comming Soon__**
+__Coming soon....__  
+- ``humandb.tgz`` ANNOVAR humandb  
+
+
+```sh
+cd  /media/ngseasy/
+wget 
+tar -xrfv ngseasy_resources.tar.gz
+mv -v /media/ngseasy/ngseasy_resources/reference_genomes_b37 /media/ngseasy/
+mv -v /media/ngseasy/ngseasy_resources/gatk_resources /media/ngseasy/
+mv -v /media/ngseasy/ngseasy_resources/gatk_resources /media/ngseasy/
+mv -v /media/ngseasy/ngseasy_resources/fastq_example /media/ngseasy/
+```
+
+**4.** Make ``ngs_projects`` NGS projects directory
 ```sh
 # move up to ngseasy
 cd /media/ngseasy
@@ -244,6 +269,17 @@ cd /media/ngseasy
 # make ngs_projects
 mkdir /media/ngseasy/ngs_projects
 ```
+
+**On your local machine, ensure the following directories exist:-**
+
+- ``fastq_raw`` [to hold all incoming raw fastq files]
+- ``ngs_projects`` [out put directory for all ngs projects]
+- ``reference_genomes_b37`` [get from URL and unpack. NB: XXX GB!]
+- ``gatk_resources`` [vcf and annotation files used by GATK]
+- ``ngs_projects`` [xxx]
+- ``ngs`` []
+
+These folders are required by pipeline as they are hardcoded in the NGSeasy scripts.
 
 **4.** Copy ``run_ngseasy_dockers.sh`` to ``ngs_projects`
 # copy scripts to ngs_projects
@@ -289,37 +325,8 @@ In Excel make config file and save as [TAB] Delimited file with ``.tsv`` extenst
 See Example provided. 
 
 
-**Download NGSeasy resources**
+ 
 
-This is a 25GB ``ngseasy_resources.tar.gz`` file containing :-  
-
-- ``reference_genomes_b37.tgz`` b37 reference genomes indexed for use with all provided aligners (BWA, Bowtie2, Stampy, Novoalign) and annotation bed files for use with pipeline scripts
-- ``gatk_resources.tar.gz`` gatk resources bundle
-- ``fastq_example.tgz`` Example 75bp PE Illumina Whole Exome Sequence fastq data for **NA12878**
-
-**Get Annovar Databases**
-Coming soon....
-- ``humandb.tgz`` ANNOVAR humandb 
-
-**In Linux**
-
-```bash
-tar -xfv ngseasy_resources.tar.gz
-cp -rfv	 ngseasy_resources/reference_genomes_b37 ~/reference_genomes_b37
-cp -rfv  ngseasy_resources/gatk_resources ~/humandb
-cp -rfv  ngseasy_resources/gatk_resources ~/gatk_resources
-cp -rfv  ngseasy_resources/fastq_example ~/fastq_raw
-```
-
-**On your local machine, ensure the following directories exist:-**
-
-- ``fastq_raw`` [to hold all incoming raw fastq files]
-- ``ngs_projects`` [out put directory for all ngs projects]
-- ``reference_genomes_b37`` [get from URL and unpack. NB: XXX GB!]
-- ``gatk_resources`` [vcf and annotation files used by GATK]
-- ``humandb`` [annovar databases]
-
-These folders are required by pipeline as they are hardcoded in the NGSeasy scripts. I would recommend installing these in your ``HOME`` directory.
 
 ### Getting the GATK Resources Bundle for yourself
 
