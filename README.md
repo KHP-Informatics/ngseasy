@@ -403,6 +403,36 @@ $ bash run_ngseasy_docker.sh -c ngs.config.file.tsv -d /media/ngseasy
 
 **************************
 
+NGSeasy Pipeline Scripts
+=========================
+
+**Main Pipeline Calling**
+- run_ngseasy_dockers.sh
+- run_ea-ngs.sh 
+
+**Full Pipeline from Fastq to VCF**
+- full_gatk.sh
+- full_no_gatk.sh
+
+**NGSeasy Components**
+- fastqc_and_trimm.sh
+- alignment.sh
+- post_alignment_coverage.sh
+- post_alignment_qc.sh
+- variant_calling_multiple_samples.sh
+- variant_calling_single_sample.sh
+- sv-cnmops.sz
+- sv-delly.sh
+- sv-ensemble.sh
+- sv-exomedepth.sh
+- sv-lumpy.sh
+- sv-mhmm.sh
+
+[Back to The Begining](https://github.com/KHP-Informatics/ngs/blob/dev2/containerized/README.md#ngs-easy-v10)
+
+***************************
+
+
 ### Getting the GATK Resources Bundle for yourself
 
 [What's in the resource bundle and how can I get it?](https://www.broadinstitute.org/gatk/guide/article.php?id=1213)
@@ -424,9 +454,6 @@ ftp://ftp.broadinstitute.org/distribution/gsa/gatk_resources.tgz
 
 **********
 
-
-
-******
 
 NGSEASY-VM : An NGS Tool Box
 ================================
