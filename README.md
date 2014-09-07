@@ -369,7 +369,7 @@ bash run_ngseasy_docker.sh -c ngs.config.file.tsv -d /media/ngseasy
 **Putting it all together**
 ****************************
 
-```
+```bash
 # Make NGSeasy Directory
 $ mkdir /media/ngseasy
 
