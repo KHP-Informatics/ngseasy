@@ -310,22 +310,40 @@ mkdir /media/ngseasy/ngs_projects
 # copy scripts to ngs_projects
 cp -v ngseasy_scripts/run_ngseasy_dockers.sh /media/ngseasy/ngs_projects
 
-**5.** Make config file and copy to ``ngs_projects``
+**5.** Set Up Config File and copy to ``ngs_projects``
+
+In Excel make config file and save as [TAB] Delimited file with ``.tsv`` extenstion.  
+See Example provided. This sets up Information related to: Project Name, Sample Name, Library Type, Pipeline to call, NCPU.
+
+The [config.file] should contain the following 15 columns for each sample to be run through a pipeline:- 
+
+POJECT_ID
+SAMPLE_ID
+FASTQ1
+FASTQ2
+PROJECT_DIR
+DNA_PREP_LIBRARY_ID
+NGS_PLATFORM
+NGS_TYPE
+BED_ANNO
+PIPELINE
+ALIGNER
+VARCALLER
+GTMODEGATK
+CLEANUP
+NCPU
+
 ```sh
 cp -v ngseasy_scripts/ngs.config.file.tsv /media/ngseasy/ngs_projects
 ```
 
+**6.** Get Main NGSeasy Docker Image (if you haven't already done this!)
 
-**Set Up Config File**
-************************
+```sh
+sudo docker pull compbio/ngseasy-alignment-public:v1.2
+```
 
-In Excel make config file and save as [TAB] Delimited file with ``.tsv`` extenstion.  
-See Example provided. 
-
-
-# Get Main NGSeasy Docker Image
-$ sudo docker pull compbio/ngseasy-alignment-public:v1.2
-
+**7.** Run
 
 ```bash
 sudo docker run -d -P \
