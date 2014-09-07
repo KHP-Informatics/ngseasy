@@ -212,13 +212,13 @@ This is a 25GB ``ngseasy_resources.tar.gz`` file containing :-
 **NGSeasy Resources: SFTP Login Details**
 
 ```
-**location:** upload.brc.iop.kcl.ac.uk  
-**Port:** 51515  
-**user:** ngseasy  
-**password:** ngseasy  
+location: upload.brc.iop.kcl.ac.uk  
+Port: 51515  
+user: ngseasy  
+password: ngseasy  
 ```
 
-
+Example:- 
 ```bash
 $ sftp  ngseasy@upload.brc.iop.kcl.ac.uk
 ngseasy@upload.brc.iop.kcl.ac.uk's password: 
@@ -318,7 +318,7 @@ mkdir /media/ngseasy/ngs_projects
 cp -v /media/ngseasy/ngseasy_scripts/run_ngseasy_dockers.sh /media/ngseasy/ngs_projects
 ```
 
-**5.** Set Up Config File and copy to ``ngs_projects``
+**6.** Set Up Config File and copy to ``ngs_projects``
 
 ```sh
 cp -v ngseasy_scripts/ngs.config.file.tsv /media/ngseasy/ngs_projects
@@ -348,13 +348,13 @@ CLEANUP|string|Clean Up Files (TRUE/FALSE)|
 NCPU|number|Number of cores to call|
 
 
-**6.** Get Main NGSeasy Docker Image (if you haven't already done this!)
+**7.** Get Main NGSeasy Docker Image (if you haven't already done this!)
 
 ```sh
 sudo docker pull compbio/ngseasy-alignment-public:v1.2
 ```
 
-**7.** Run an NGSeasy Pipeline
+**8.** Run an NGSeasy Pipeline
 
 ```sh
 cd /media/ngseasy
@@ -382,7 +382,7 @@ $ cp -v ./ngs/ngseasy_scripts /media/ngseasy
 $ wget --no-check-cert https://www.dropbox.com/s/9pw3ml75pdnufjl/ngseasy_resources.tar.gz?dl=0;
 $ tar -xrvf ngseasy_resources.tar.gz
 $ mv -v ./ngseasy_resources/** /media/ngseasy
-# copies to [fastq_raw], [reference_genomes_b37] and [gatk_resources] to NGSeasy/
+# copies to [fastq_raw], [reference_genomes_b37] and [gatk_resources] to ngseasy/
 # Make local directory for NGS Projects
 $ mkdir /media/ngseasy/ngs_projects
 
