@@ -175,7 +175,10 @@ We have adapted the current best practices from the Genome Analysis Toolkit (GAT
 
 As the containers themselves can be run as executables with pre-specified cpu and RAM resources, the orchestration of the pipeline can be placed under the control of conventional load balancers if this mode is required.  
 
-**Available NGSeasy Docker images** at [compbio Docker Hub](https://hub.docker.com/u/compbio)
+*****************
+
+### Available NGSeasy Docker images
+Available to download at our [compbio Docker Hub](https://hub.docker.com/u/compbio)
 
 ### The Main Power Tool!
 **ngseasy-alignment-public:v1.2**
