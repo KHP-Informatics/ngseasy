@@ -10,12 +10,10 @@ NGSeasy v1.0
 <a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">
 <img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
 </a>
-******
-<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
 ****************
 
-A [Dockerized](https://www.docker.com/) and [Virtulaized](https://www.virtualbox.org/) ngs pipeline and tool-box.  
+**A [Dockerized](https://www.docker.com/) and [Virtulaized](https://www.virtualbox.org/) ngs pipeline and tool-box.** 
 
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**
 
@@ -30,7 +28,8 @@ Deploying the pipeline is as simple as pulling the container images from the pub
 - Cancer Pipelines
 - Annotation Pipelines
 - Visualisation Pipelines
-- **Lets us know if you want other tools added to NGSeasy**
+
+**Lets us know if you want other tools added to NGSeasy**
 
 ***********
 
