@@ -321,7 +321,7 @@ cp -v ngseasy_scripts/ngs.config.file.tsv /media/ngseasy/ngs_projects
 ```
 
 In Excel make config file and save as [TAB] Delimited file with ``.tsv`` extenstion.  
-See Example provided. This sets up Information related to: Project Name, Sample Name, Library Type, Pipeline to call, NCPU.
+See Example provided and [GoogleDoc](https://docs.google.com/spreadsheets/d/1kp1Nyw0x3zXqO2Wm2Z25ErJ0Z-Uoab8tjRPq9h4sonk/edit?usp=sharing). Remove the header from this file before running the pipeline. This sets up Information related to: Project Name, Sample Name, Library Type, Pipeline to call, NCPU.
 
 The [config.file] should contain the following 15 columns for each sample to be run through a pipeline:- 
 
