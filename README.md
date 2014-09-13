@@ -1,8 +1,11 @@
-NGSeasy v1.0
+NGSeasy-v1.0 (beta/dev)
 ===================
 **A [Dockerized](https://www.docker.com/) and [Virtulaized](https://www.virtualbox.org/) ngs pipeline and tool-box.** 
 
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**
+
+**Note:** NGSeasy is under continous development and the dev version evolves quickly. NGSeasy-v1.0 Full Production release will be available Dec 2014
+
 
 ### Authors
 - Amos Folarin <amosfolarin@gmail.com>  
