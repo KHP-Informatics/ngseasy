@@ -566,7 +566,7 @@ then
   -dcov 250 \
   --genotype_likelihoods_model BOTH \
   --genotyping_mode DISCOVERY \
-  --output_mode ${GTMODE} \
+  --output_mode ${GTMODEGATK} \
   --annotation AlleleBalance \
   --annotation BaseCounts \
   --annotation BaseQualityRankSumTest \
@@ -605,7 +605,7 @@ then
   --dbsnp ${KNOWN_SNPS_b138} \
   -dcov 250 \
   --genotyping_mode DISCOVERY \
-  --output_mode ${GTMODE} \
+  --output_mode ${GTMODEGATK} \
   --annotation AlleleBalance \
   --annotation BaseCounts \
   --annotation BaseQualityRankSumTest \
