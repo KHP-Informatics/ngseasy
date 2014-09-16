@@ -44,20 +44,18 @@ RUN cd /usr/local/pipeline \
         && echo "alias ngsHTSlib='/usr/local/pipeline/htslib'" >>  /home/pipeman/.bashrc 
 
 
-# mrsFast
+
+## mrsFast
 RUN cd  /usr/local/pipeline && \
-  git clone git://git.code.sf.net/p/mrsfast/code mrsfast && \
-  cd mrsfast && \
+  wget http://sourceforge.net/projects/mrfast/files/mrfast/mrfast-2.6.0.2.tar.gz && \
+  tar -xvf mrfast-2.6.0.2.tar.gz && \
+  rm mrfast-2.6.0.2.tar.gz && \
+  cd mrfast-2.6.0.2 && \
   make && \
-  cd /usr/local/pipeline && \
-  wget http://sourceforge.net/projects/mrsfast/files/mrsfast-ultra-3.3.1/mrsfast-ultra-3.3.1.zip && \
-  unzip mrsfast-ultra-3.3.1.zip && \
-  cd mrsfast-ultra-3.3.1 && \
-  make && \ 
-  sed -i '$aPATH=${PATH}:/usr/local/pipeline/mrsfast' /home/pipeman/.bashrc && \
-  sed -i '$aPATH=${PATH}:/usr/local/pipeline/mrsfast-ultra-3.3.1' /home/pipeman/.bashrc
-
-
+  sed -i '$aPATH=${PATH}:/usr/local/pipeline/mrfast-2.6.0.2' /home/pipeman/.bashrc
+  
+  
+  
 RUN chmod -R 766 /usr/local/pipeline/***
 RUN chown -R pipeman:ngsgroup /usr/local/pipeline
  
