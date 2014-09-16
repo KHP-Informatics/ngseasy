@@ -558,7 +558,6 @@ then
   echo " NGSeasy: Running GATK UnifiedGenotyper " `date`
   java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T UnifiedGenotyper -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU} \
   -I ${SOUT}/alignments/${BAM_PREFIX}.bam \
-#  -L ${SOUT}/reports/${BAM_PREFIX}.CoveredIntervals_x4.list \
   -o ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
@@ -598,7 +597,6 @@ then
   ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
   java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T HaplotypeCaller -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU} \
   -I ${SOUT}/alignments/${BAM_PREFIX}.bam \
-#  -L ${SOUT}/reports/${BAM_PREFIX}.CoveredIntervals_x4.list \
   -o ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
@@ -637,7 +635,6 @@ then
   ## HaplotypeCaller GVCF
   java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T HaplotypeCaller -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU} \
   -I ${SOUT}/alignments/${BAM_PREFIX}.bam \
-#  -L ${SOUT}/reports/${BAM_PREFIX}.CoveredIntervals_x4.list \
   -o ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.g.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
