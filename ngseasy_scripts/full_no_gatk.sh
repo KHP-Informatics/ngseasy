@@ -602,6 +602,7 @@ then
   -stand_emit_conf 10 \
   --dbsnp ${KNOWN_SNPS_b138} \
   -dcov 250 \
+  -pairHMM VECTOR_LOGLESS_CACHING \
   --genotyping_mode DISCOVERY \
   --output_mode ${GTMODEGATK} \
   --annotation AlleleBalance \
@@ -640,6 +641,7 @@ then
   -stand_emit_conf 10 \
   --dbsnp ${KNOWN_SNPS_b138} \
   -dcov 250 \
+  -pairHMM VECTOR_LOGLESS_CACHING \
   --emitRefConfidence GVCF \
   --variant_index_type LINEAR \
   --variant_index_parameter 128000 \
