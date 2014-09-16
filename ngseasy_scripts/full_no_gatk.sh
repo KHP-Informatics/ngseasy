@@ -18,7 +18,7 @@ echo ""
   adapter_fa='/home/pipeman/reference_genomes_b37/contaminant_list.fa'
   gatk_resources='/home/pipeman/gatk_resources'
   FASTQDIR='/home/pipeman/fastq_raw'
-  KNOWN_SNPS_b138=/usr/local/pipeline/gatk_resources/dbsnp_138.b37.vcf
+  KNOWN_SNPS_b138=${gatk_resources}/dbsnp_138.b37.vcf
   echo " NGSeasy: Note:- Using ${KNOWN_SNPS_b138} for SNP annotations in GATK.\n Edit bash script if you want to change this " `date`
   
 #---------------------------------------------CONFIG------------------------------------------------#
