@@ -181,7 +181,7 @@ echo " NGSeasy: Start Alignment [${ALIGNER}] " `date`
 echo "................................................"
 echo ""
 
-if [ "${ALIGNER}" == "bwa" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.sort.bam ]
+if [ "${ALIGNER}" == "bwa" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.bam ]
 then
   # BWA alignment
   echo " NGSeasy: Running bwa " `date`
@@ -192,7 +192,7 @@ then
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    
-elif [ "${ALIGNER}" == "bowtie2" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.sort.bam ]
+elif [ "${ALIGNER}" == "bowtie2" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.bam ]
 then
   echo " NGSeasy: Running bowtie2 " `date`
     # Bowtie2 alignment
@@ -203,7 +203,7 @@ then
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
 
-elif [ "${ALIGNER}" == "novoalign" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.sort.bam ]
+elif [ "${ALIGNER}" == "novoalign" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.bam ]
 then
   echo " NGSeasy: Running novolaign " `date`
     # Novoalign alignment 
@@ -216,7 +216,7 @@ then
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
    /usr/local/pipeline/samtools/samtools index     ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
 
-elif [ "${ALIGNER}" == "stampy" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.sort.bam ]
+elif [ "${ALIGNER}" == "stampy" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.bam ]
 then
   echo " NGSeasy: Running stampy " `date`
 
@@ -518,7 +518,7 @@ echo " NGSeasy: Starting Variant Calling using Freebayes " `date`
     --min-coverage 4 \
     --min-mapping-quality 30 \
     --min-base-quality 20 \
-    --targets ${SOUT}/alignments/${SOUT}/alignments/${BAM_PREFIX}.merged.bed \
+    --targets ${SOUT}/reports/${BAM_PREFIX}.merged.bed \
     --genotype-qualities > ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ;
     
     cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
