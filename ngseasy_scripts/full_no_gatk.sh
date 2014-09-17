@@ -562,7 +562,8 @@ then
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
   --dbsnp ${KNOWN_SNPS_b138} \
-  -dcov 250 \
+  -dcov 250 -minPruning 10 \
+  --unsafe ALL \
   --genotype_likelihoods_model BOTH \
   --genotyping_mode DISCOVERY \
   --output_mode ${GTMODEGATK} \
@@ -601,7 +602,8 @@ then
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
   --dbsnp ${KNOWN_SNPS_b138} \
-  -dcov 250 \
+  -dcov 250 -minPruning 10 \
+  --unsafe ALL \
   -pairHMM VECTOR_LOGLESS_CACHING \
   --genotyping_mode DISCOVERY \
   --output_mode ${GTMODEGATK} \
@@ -640,7 +642,8 @@ then
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
   --dbsnp ${KNOWN_SNPS_b138} \
-  -dcov 250 \
+  -dcov 250 -minPruning 10 \
+  --unsafe ALL \
   -pairHMM VECTOR_LOGLESS_CACHING \
   --emitRefConfidence GVCF \
   --variant_index_type LINEAR \
