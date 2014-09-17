@@ -7,7 +7,8 @@ NGSeasy
 ### Versions
 **Note:** NGSeasy is under continous development and the dev version evolves quickly. NGSeasy-v1.0 Full Production release will be available Dec 2014  
 
-[NGSeasy-v0.9](https://github.com/KHP-Informatics/ngs/tree/release-1.0b) - NGSeasy Beta
+[NGSeasy-v0.9](https://github.com/KHP-Informatics/ngs/tree/release-0.9) - NGSeasy Beta
+[NGSeasy-v0.9.1](https://github.com/KHP-Informatics/ngs/tree/release-0.9.1) - NGSeasy Beta
 
 ### Authors
 - Amos Folarin <amosfolarin@gmail.com>  

@@ -207,10 +207,16 @@ elif [ "${ALIGNER}" == "novoalign" ] && [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.
 then
   echo " NGSeasy: Running novolaign " `date`
     # Novoalign alignment 
-    # TO DO: Use raw${SOUT}/fastq/${FASTQ1} ${SOUT}/fastq/${FASTQ2} as novoalign does this all internally if provideing adapter lists
-    # ADD -a @ADAPTERS
-   /usr/local/pipeline/novocraft/novoalign -d ${REFGenomes}/human_g1k_v37.fasta -f ${qcdPeFASTQ1} ${qcdPeFASTQ2} -F STDFQ --Q2Off --3Prime -g 40 -x 6 -r All -i PE 300,150 -c ${NCPU} -k -K ${SOUT}/alignments/${BAM_PREFIX}.K.stats -o SAM > ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
-
+   /usr/local/pipeline/novocraft/novoalign \
+   -d ${REFGenomes}/human_g1k_v37.novoIndex \
+   -f ${qcdPeFASTQ1} ${qcdPeFASTQ2} \
+   -F STDFQ \
+   --Q2Off \
+   --3Prime \
+   -g 40 -x 6 \
+   -r All \
+   -i PE 300,150 -c ${NCPU} -k -K ${SOUT}/alignments/${BAM_PREFIX}.K.stats -o SAM > ${SOUT}/alignments/${BAM_PREFIX}.raw.sam;
+   
   echo " NGSeasy: SAM to BAM and INDEX  " `date`
    /usr/local/pipeline/samtools/samtools view -bhS ${SOUT}/alignments/${BAM_PREFIX}.raw.sam > ${SOUT}/alignments/${BAM_PREFIX}.raw.bam;
    /usr/local/pipeline/samtools/samtools sort -f   ${SOUT}/alignments/${BAM_PREFIX}.raw.bam ${SOUT}/alignments/${BAM_PREFIX}.sort.bam;
