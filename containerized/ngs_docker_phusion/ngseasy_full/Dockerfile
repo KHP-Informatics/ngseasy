@@ -160,12 +160,12 @@ RUN cd /usr/local/pipeline \
 #-----------------------------PLATYPUS-------------------------------
 RUN wget -O /tmp/Platypus-latest.tgz http://www.well.ox.ac.uk/bioinformatics/Software/Platypus-latest.tgz \
   && tar xvf /tmp/Platypus-latest.tgz -C /usr/local/pipeline/ \
-  && cd /usr/local/pipeline/Platypus_0.7.8 \
+  && cd /usr/local/pipeline/Platypus_0.7.9.1 \
   && sh ./buildPlatypus.sh \
-  && chmod -R 755 /usr/local/pipeline/Platypus_0.7.8 \
-  && chown -R pipeman:ngsgroup /usr/local/pipeline/Platypus_0.7.8 \
-  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.8' /home/pipeman/.bashrc \
-  && echo "alias ngsPlatypus='/usr/local/pipeline/Platypus_0.7.8'" >>  /home/pipeman/.bashrc
+  && chmod -R 755 /usr/local/pipeline/Platypus_0.7.9.1 \
+  && chown -R pipeman:ngsgroup /usr/local/pipeline/Platypus_0.7.9.1 \
+  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.9.1' /home/pipeman/.bashrc \
+  && echo "alias ngsPlatypus='/usr/local/pipeline/Platypus_0.7.9.1'" >>  /home/pipeman/.bashrc
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 766 /usr/local/pipeline/***
