@@ -96,7 +96,7 @@ sudo docker run -P \
          -v ${host_vol_dir}/gatk_resources:/home/pipeman/gatk_resources \
          -v ${host_vol_dir}/ngs_projects:/home/pipeman/ngs_projects \
          -v ${host_vol_dir}/ngseasy_scripts:/home/pipeman/ngseasy_scripts \
-         -i -t snewhouse/ngseasy-alignment-public:v1.2 /sbin/my_init -- /bin/bash /home/pipeman/ngseasy_scripts/run_ea-ngs.sh /home/pipeman/ngs_projects/${config_tsv}; 
+         -i -t compbio/ngseasy-alignment-public:v1.2 /sbin/my_init -- /bin/bash /home/pipeman/ngseasy_scripts/run_ea-ngs.sh /home/pipeman/ngs_projects/${config_tsv}; 
 
 
 
