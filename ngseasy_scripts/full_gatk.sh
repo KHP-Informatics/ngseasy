@@ -619,7 +619,7 @@ then
     then
     echo " NGSeasy: NGS_TYPE is Targeted so no duplicate filtering  " `date`
     # for exome/whole genome data no duplicate filtering
-      python /usr/local/pipeline/Platypus_0.7.8/Platypus.py callVariants \
+      python /usr/local/pipeline/Platypus_0.7.9.1/Platypus.py callVariants \
       --nCPU ${NCPU} \
       --bamFiles=${SOUT}/alignments/${BAM_PREFIX}.bam \
       --refFile=${REFGenomes}/human_g1k_v37.fasta \
@@ -630,7 +630,7 @@ then
       cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
       
      else
-	python /usr/local/pipeline/Platypus_0.7.8/Platypus.py callVariants \
+	python /usr/local/pipeline/Platypus_0.7.9.1/Platypus.py callVariants \
 	  --nCPU ${NCPU} \
 	  --bamFiles=${SOUT}/alignments/${BAM_PREFIX}.bam \
 	  --refFile=${REFGenomes}/human_g1k_v37.fasta \
