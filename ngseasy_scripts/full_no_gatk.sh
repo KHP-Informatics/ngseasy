@@ -347,6 +347,8 @@ echo " NGSeasy: Converting Aligned BED To MERGED BED File " `date`
  /usr/local/pipeline/bedtools2/bin/bedtools merge -i ${SOUT}/reports/${BAM_PREFIX}.bed > ${SOUT}/reports/${BAM_PREFIX}.merged.bed;
 fi
 
+cp -v ${SOUT}/alignments/${BAM_PREFIX}.bam ${SOUT}/alignments/${BAM_PREFIX}.bam.bai
+
 echo ""
 echo "................................................"
 echo " NGSeasy: END Alignment [${ALIGNER}] " `date`

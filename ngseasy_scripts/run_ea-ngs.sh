@@ -132,6 +132,7 @@ echo ""
         mkdir ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/alignments
         mkdir ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/vcf
         mkdir ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/reports
+        mkdir ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/config_files
         
     echo  " Making Sample Directory : [${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}]"
     echo  " Making Sample Directory : [${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}/fastq]"

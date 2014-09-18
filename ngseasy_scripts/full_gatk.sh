@@ -432,7 +432,7 @@ echo " NGSeasy: END GATK CLEANING " `date`
 echo "................................................"
 echo ""
 
-
+cp -v ${SOUT}/alignments/${BAM_PREFIX}.bam ${SOUT}/alignments/${BAM_PREFIX}.bam.bai
 
 ##---------------------- POST ALIGNMENT QC ----------------------##
 
