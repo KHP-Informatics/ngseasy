@@ -266,6 +266,8 @@ python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
     rm ${SOUT}/alignments/${BAM_PREFIX}.raw.sam
     rm ${SOUT}/alignments/${BAM_PREFIX}.raw.bam
     rm ${SOUT}/alignments/${BAM_PREFIX}.tmp
+    rm ${SOUT}/alignments/${BAM_PREFIX}.tmpsort.bam
+
 
 fi
 
@@ -303,7 +305,7 @@ fi
 # MarkDuplicates
 echo " NGSeasy: START MarkDuplicates " `date`  
 
-if [ ! -e ${SOUT}/alignments/${BAM_PREFIX}.dupemk_metrics ]
+if [ ! -e ${SOUT}/reports/${BAM_PREFIX}.dupemk_metrics ]
 then
 echo " NGSeasy: Marking Duplicate Reads " `date`
 
@@ -316,7 +318,7 @@ echo " NGSeasy: Marking Duplicate Reads " `date`
   ASSUME_SORTED=true \
   INPUT=${SOUT}/alignments/${BAM_PREFIX}.addrg.bam \
   OUTPUT=${SOUT}/alignments/${BAM_PREFIX}.bam \
-  METRICS_FILE=${SOUT}/alignments/${BAM_PREFIX}.dupemk_metrics;
+  METRICS_FILE=${SOUT}/reports/${BAM_PREFIX}.dupemk_metrics;
 fi
 
   # FindCoveredIntervals: these are used in GATK Calling to help speed things up
@@ -344,6 +346,8 @@ echo " NGSeasy: Converting Aligned BAM To BED File " `date`
 echo " NGSeasy: Converting Aligned BED To MERGED BED File " `date` 
  /usr/local/pipeline/bedtools2/bin/bedtools merge -i ${SOUT}/reports/${BAM_PREFIX}.bed > ${SOUT}/reports/${BAM_PREFIX}.merged.bed;
 fi
+
+cp -v ${SOUT}/alignments/${BAM_PREFIX}.bam ${SOUT}/alignments/${BAM_PREFIX}.bam.bai
 
 echo ""
 echo "................................................"
@@ -511,8 +515,6 @@ echo "................................................"
 echo " NGSeasy: START SNP and Small INDEL Calling " `date`
 echo "................................................"
 echo ""
-echo " NGSeasy: NOTE: All tools are set to call variants over targeted regions created from BAM file to help speed things up  "
-echo ""
 
 if [ "${VARCALLER}" == "freebayes" ]
 then
@@ -524,10 +526,10 @@ echo " NGSeasy: Starting Variant Calling using Freebayes " `date`
     --min-coverage 4 \
     --min-mapping-quality 30 \
     --min-base-quality 20 \
-    --targets ${SOUT}/reports/${BAM_PREFIX}.merged.bed \
-    --genotype-qualities > ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ;
+    --genotype-qualities > ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ;
     
-    cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
+  # copy vcf to cohort vcf directory
+  cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${POJECT_ID}/cohort_vcfs/;
   
 elif [ "${VARCALLER}" == "platypus" ]
 then
@@ -537,25 +539,26 @@ then
     then
     echo " NGSeasy: NGS_TYPE is Targeted so no duplicate filtering  " `date`
     # for exome/whole genome data no duplicate filtering
-      python /usr/local/pipeline/Platypus_0.7.8/Platypus.py callVariants \
+      python /usr/local/pipeline/Platypus_0.7.9.1/Platypus.py callVariants \
       --nCPU ${NCPU} \
       --bamFiles=${SOUT}/alignments/${BAM_PREFIX}.bam \
       --refFile=${REFGenomes}/human_g1k_v37.fasta \
-      --output=${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
-      --filterDuplicates=0 \
-      --regions=${SOUT}/reports/${BAM_PREFIX}.CoveredIntervals_x4.list;
+      --output=${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+      --filterDuplicates=0;
       
-      cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
+  # copy vcf to cohort vcf directory
+  cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${POJECT_ID}/cohort_vcfs/;
       
      else
-	python /usr/local/pipeline/Platypus_0.7.8/Platypus.py callVariants \
+	python /usr/local/pipeline/Platypus_0.7.9.1/Platypus.py callVariants \
 	  --nCPU ${NCPU} \
 	  --bamFiles=${SOUT}/alignments/${BAM_PREFIX}.bam \
 	  --refFile=${REFGenomes}/human_g1k_v37.fasta \
-	  --output=${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
-	  --regions=${SOUT}/reports/${BAM_PREFIX}.CoveredIntervals_x4.list;
+	  --output=${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf;
 	  
-	  cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
+	    # copy vcf to cohort vcf directory
+  cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${POJECT_ID}/cohort_vcfs/;
+  
     fi
 	  
 elif [ ${VARCALLER} == "gatk_ug" ]
@@ -568,7 +571,7 @@ then
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
   --dbsnp ${KNOWN_SNPS_b138} \
-  -dcov 250 -minPruning 10 \
+  -dcov 250 -minPruning 4 \
   --unsafe ALL \
   --genotype_likelihoods_model BOTH \
   --genotyping_mode DISCOVERY \
@@ -596,7 +599,7 @@ then
   --annotation VariantType;
   
   # copy vcf to cohort vcf directory
-  cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
+  cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${POJECT_ID}/cohort_vcfs/;
 
 elif [ "${VARCALLER}" == "gatk_hc" ]
 then 
@@ -608,7 +611,7 @@ then
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
   --dbsnp ${KNOWN_SNPS_b138} \
-  -dcov 250 -minPruning 10 \
+  -dcov 250 -minPruning 4 \
   --unsafe ALL \
   -pairHMM VECTOR_LOGLESS_CACHING \
   --genotyping_mode DISCOVERY \
@@ -636,7 +639,7 @@ then
   --annotation VariantType;
   
   # copy vcf to cohort vcf directory
-  cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
+  cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${POJECT_ID}/cohort_vcfs/;
   
 elif [ ${VARCALLER} == "gatk_hc_gvcf" ]
 then
@@ -648,7 +651,7 @@ then
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
   --dbsnp ${KNOWN_SNPS_b138} \
-  -dcov 250 -minPruning 10 \
+  -dcov 250 -minPruning 4 \
   --unsafe ALL \
   -pairHMM VECTOR_LOGLESS_CACHING \
   --emitRefConfidence GVCF \
@@ -678,7 +681,7 @@ then
   ## -minPruning 10 -dcov 250
 
   # copy vcf to cohort vcf directory
-  cp -v ${SOUT}/alignments/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/cohort_vcfs/;
+  cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${POJECT_ID}/cohort_vcfs/;
 
 else 
   echo " NGSeasy: Something Went wrong! Check your config file "
@@ -692,9 +695,16 @@ if [ "${CLEANUP}" == "TRUE" ]
 then
 echo " NGSeasy: Removing Intermediate SAM/BAM Files " `date`
 
-  rm -v ${SOUT}/alignments/${BAM_PREFIX}.addrg.ba*
-  rm -v ${SOUT}/alignments/${BAM_PREFIX}.sort.ba*
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.realn.bam
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.addrg.bam
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.sort.bam
   rm -v ${SOUT}/alignments/${BAM_PREFIX}.raw.sam
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.raw.bam
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.realn.bam.bai
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam.bai
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.addrg.bam.bai
+  rm -v ${SOUT}/alignments/${BAM_PREFIX}.sort.bam.bai
   
 else
   echo " NGSeasy: Keepping all Intermediate SAM/BAM Files " `date`
