@@ -8,9 +8,10 @@ NGSeasy
 *****************
 **Note:** NGSeasy is under continous development and the dev version evolves quickly. NGSeasy-v1.0 Full Production release will be available Dec 2014  
 
-[NGSeasy-v0.9.2](https://github.com/KHP-Informatics/ngs/tree/release-0.9.2) - NGSeasy: Latest Release
+[NGSeasy-v0.9.3](https://github.com/KHP-Informatics/ngs/tree/release-0.9.3) - NGSeasy: Latest Release  
 
 ### Releases
+[NGSeasy-v0.9.3](https://github.com/KHP-Informatics/ngs/tree/release-0.9.3) - NGSeasy: Minor Bug Fixes [full_no_gatk.sh]  
 [NGSeasy-v0.9.2](https://github.com/KHP-Informatics/ngs/tree/release-0.9.2) - NGSeasy: Beta NovoIndex Fix  
 [NGSeasy-v0.9.1](https://github.com/KHP-Informatics/ngs/tree/release-0.9.1) - NGSeasy: Beta added gatk cleaning steps  
 [NGSeasy-v0.9](https://github.com/KHP-Informatics/ngs/tree/release-0.9)     - NGSeasy: Beta  
