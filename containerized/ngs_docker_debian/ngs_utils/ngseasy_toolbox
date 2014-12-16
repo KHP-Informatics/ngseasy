@@ -1,5 +1,5 @@
 #------------------------------------------------#
-# NGSeasy Dev 
+# NGSeasy Dev Tool Box
 #------------------------------------------------#
 
 # Base image
@@ -30,7 +30,25 @@ RUN wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/pro
   && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar' /home/pipeman/.bashrc \
   && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Trimmomatic-0.32' /home/pipeman/.bashrc \
   && echo "alias ngsTrimfq='/usr/local/pipeline/Trimmomatic-0.32'" >>  /home/pipeman/.bashrc \
-  && cp -v /usr/local/pipeline/Trimmomatic-0.32/* /usr/local/bin
+  && cp -v /usr/local/pipeline/Trimmomatic-0.32/* /usr/local/bin \
+  && cd /usr/local/pipeline/ \
+  && git clone https://github.com/lh3/seqtk.git \
+  && chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk \
+  && cd /usr/local/pipeline/seqtk/ \
+  && make \
+  && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/seqtk' /home/pipeman/.bashrc \
+  && echo "alias ngsSeqtk='/usr/local/pipeline/seqtk'" >>  /home/pipeman/.bashrc \
+  && cp -v /usr/local/pipeline/seqtk/* /usr/local/bin
+  
+# picard ----------------------------------------------------------------------
+RUN wget -O /tmp/picard-tools-1.119.zip http://sourceforge.net/projects/picard/files/picard-tools/1.119/picard-tools-1.119.zip \
+    && mkdir /usr/local/pipeline/picardtools \
+    && unzip /tmp/picard-tools-1.119.zip -d /usr/local/pipeline/picardtools/ \
+    && chown -R pipeman:ngsgroup /usr/local/pipeline/picardtools \
+    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/picardtools/picard-tools-1.119/snappy-java-1.0.3-rc3.jar' /home/pipeman/.bashrc \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/picardtools/picard-tools-1.119' /home/pipeman/.bashrc \
+    && echo "alias ngsPicard='/usr/local/pipeline/picardtools/picard-tools-1.119'" >>  /home/pipeman/.bashrc \
+    && cp -v /usr/local/pipeline/picardtools/picard-tools-1.119/* /usr/local/bin
   
 # Aligners ---------------------------------------------------------------------
 # bwa, stampy, bowtie2
@@ -81,9 +99,33 @@ RUN cd /usr/local/pipeline \
   && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.9.1' /home/pipeman/.bashrc \
   && echo "alias ngsPlatypus='/usr/local/pipeline/Platypus_0.7.9.1'" >>  /home/pipeman/.bashrc \
   && cp -v /usr/local/pipeline/Platypus_0.7.9.1/* /usr/local/bin \
+  &&  mkdir /usr/local/pipeline/bcbio \
+  && cd /usr/local/pipeline/bcbio \
+  && wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.1.9/bcbio.variation-0.1.9-standalone.jar \
+  && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/bcbio/bcbio.variation-0.1.9-standalone.jar' /home/pipeman/.bashrc \
+  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' /home/pipeman/.bashrc \
+  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' ~/.bashrc \
+  && echo "alias ngsBCBIOVAR'/usr/local/pipeline/bcbio/'" >>  /home/pipeman/.bashrc \
+  && cp -v /usr/local/pipeline/bcbio/* /usr/local/bin 
 
 
+#-------------------------------PERMISSIONS--------------------------
+RUN chmod -R 777 /usr/local/pipeline
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline
 
+#---------------------------------------------------------------------
+#Cleanup the temp dir
+RUN rm -rf /tmp/*
+
+#open ports private only
+EXPOSE 80
+
+# Use baseimage-docker's bash.
+CMD ["/bin/bash"]
+
+#Clean up APT when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get autoclean && apt-get autoremove -y && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 
 
