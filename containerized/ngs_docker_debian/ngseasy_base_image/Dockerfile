@@ -66,13 +66,13 @@ RUN apt-get update \
 
 # http://www.methods.co.nz/asciidoc/INSTALL.html
 # sometimes Docker build winges about bot seeing a2x
-RUN cd /usr/bin && \
-  hg clone https://asciidoc.googlecode.com/hg/ && \
-  cd hg && \
-  autoconf && \
-  ./configure && \
-  make && \
-  sudo make install
+#RUN cd /usr/bin && \
+#  hg clone https://asciidoc.googlecode.com/hg/ && \
+#  cd hg && \
+#  autoconf && \
+#  ./configure && \
+#  make && \
+#  sudo make install
 
  #---------------------------------JAVA-------------------------------------------------------------------------------------#  
 # Remain current and upgrade java
