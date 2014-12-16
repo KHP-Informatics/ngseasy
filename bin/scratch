@@ -1,0 +1,66 @@
+## Depending in NGS type Run PicardTools CollectTargetedPcrMetrics
+## NB This is rough and ready quicl fix to get coverage ver genome bins, annotated exomes and targetd sequene files
+
+
+# Picardt tools CollectTargetedPcrMetric
+echo " NGSeasy: Run CollectTargetedPcrMetric " `date`
+echo " NGSeasy: This requires a Custom or Exome BED File provided by the user or manufacturer of your NGS Exome Library " 
+
+if [ "${NGS_TYPE}" == "TGS" ] && [ -s ${BED_ANNO} ] && [ ! -s ${SOUT}/reports/${BAM_PREFIX}.target_coverage ]
+then
+  echo " NGSeasy: Finding TGS coverage over target regions in ${BED_ANNO} " `date`
+  
+    java -XX:ParallelGCThreads=${NCPU} -Xmx6g -jar /usr/local/pipeline/picardtools/picard-tools-1.115/CollectTargetedPcrMetrics.jar \
+    TMP_DIR=${SOUT}/tmp \
+    VALIDATION_STRINGENCY=SILENT \
+    MAX_RECORDS_IN_RAM=100000 \
+    INPUT=${SOUT}/alignments/${BAM_PREFIX}.bam \
+    OUTPUT=${SOUT}/reports/${BAM_PREFIX}.target_coverage \
+    REFERENCE_SEQUENCE=${REFGenomes}/human_g1k_v37.fasta \
+    AMPLICON_INTERVALS=${BED_ANNO} \
+    TARGET_INTERVALS=${BED_ANNO} \
+    METRIC_ACCUMULATION_LEVEL=ALL_READS \
+    PER_TARGET_COVERAGE=${SOUT}/reports/${BAM_PREFIX}.per_target_coverage;
+    
+elif [ "${NGS_TYPE}" == "WEX" ]  && [ -s ${BED_ANNO} ] && [ ! -s ${SOUT}/reports/${BAM_PREFIX}.target_coverage ]
+then
+  echo " NGSeasy: Finding WEX Coverage over annotated exons/genes from ensembl " `date`
+    java -XX:ParallelGCThreads=${NCPU} -Xmx6g -jar /usr/local/pipeline/picardtools/picard-tools-1.115/CollectTargetedPcrMetrics.jar \
+    TMP_DIR=${SOUT}/tmp \
+    VALIDATION_STRINGENCY=SILENT \
+    MAX_RECORDS_IN_RAM=100000 \
+    INPUT=${SOUT}/alignments/${BAM_PREFIX}.bam \
+    OUTPUT=${SOUT}/reports/${BAM_PREFIX}.target_coverage \
+    REFERENCE_SEQUENCE=${REFGenomes}/human_g1k_v37.fasta \
+    AMPLICON_INTERVALS=${REFGenomes}/${BED_ANNO} \
+    TARGET_INTERVALS=${REFGenomes}/${BED_ANNO} \
+    METRIC_ACCUMULATION_LEVEL=ALL_READS \
+    PER_TARGET_COVERAGE=${SOUT}/reports/${BAM_PREFIX}.per_target_coverage;
+    
+elif [ "${NGS_TYPE}" == "WGS" ] && [ ! -s ${SOUT}/reports/${BAM_PREFIX}.target_coverage ]
+then
+  echo " NGSeasy: Finding WGS Coverage over 500bp windows " `date`
+    java -XX:ParallelGCThreads=${NCPU} -Xmx6g -jar /usr/local/pipeline/picardtools/picard-tools-1.115/CollectTargetedPcrMetrics.jar \
+    TMP_DIR=${SOUT}/tmp \
+    VALIDATION_STRINGENCY=SILENT \
+    MAX_RECORDS_IN_RAM=100000 \
+    INPUT=${SOUT}/alignments/${BAM_PREFIX}.bam \
+    OUTPUT=${SOUT}/reports/${BAM_PREFIX}.target_coverage \
+    REFERENCE_SEQUENCE=${REFGenomes}/human_g1k_v37.fasta \
+    AMPLICON_INTERVALS=${REFGenomes}/human_g1k_v37_0.5Kwindows.bed \
+    TARGET_INTERVALS=${REFGenomes}/human_g1k_v37_0.5Kwindows.bed \
+    METRIC_ACCUMULATION_LEVEL=ALL_READS \
+    PER_TARGET_COVERAGE=${SOUT}/reports/${BAM_PREFIX}.per_target_coverage;
+
+else
+
+  echo " NGSeasy: Whoops! Something Went wrong! NGS_TYPE and Annotation Files not found! Check your config file and data...or not..."
+  echo " NGSeasy: Skipping Collect Targeted Pcr Metrics...."
+  echo " NGSeasy: You may want to run this manually later....it is quite nice"
+  echo ""
+fi
+
+echo "................................................"
+echo " NGSeasy: END Post Alignmnet Coverage Calculations " `date`
+echo "................................................"
+echo ""
