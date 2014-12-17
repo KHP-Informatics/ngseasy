@@ -167,14 +167,23 @@ RUN mkdir /usr/local/pipeline && \
     cd /usr/local/pipeline/vcflib && \
     chmod -R 777 ./* && \
     make && \
-    cp /usr/local/pipeline/vcflib/bin/* /usr/local/bin/
- 
-  #  cd /usr/local/pipeline/ && \
-  #  git clone --recursive https://github.com/ekg/ogap.git && \
-  #  cd ogap && \
-  #  make all && \
-  #  chmod -R 777 ./* && \
-  #  cp -v ogap /usr/local/bin/
+    cp /usr/local/pipeline/vcflib/bin/* /usr/local/bin/ && \
+    cd /usr/local/pipeline/ && \
+    git clone https://github.com/lh3/seqtk.git && \
+    chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk && \
+    cd seqtk/ && \
+    chmod -R 777 ./* && \
+    make && \
+    cp -v seqtk /usr/local/bin/ && \
+    cp -v trimadap /usr/local/bin/ && \
+    sed  -i '$aPATH=${PATH}:/usr/local/pipeline/seqtk' /home/pipeman/.bashrc && \
+    echo "alias ngsSeqtk='/usr/local/pipeline/seqtk'" >>  /home/pipeman/.bashrc \
+    cd /usr/local/pipeline/ && \
+    git clone --recursive https://github.com/ekg/ogap.git && \
+    cd ogap && \
+    make all && \
+    chmod -R 777 ./* && \
+    cp -v ogap /usr/local/bin/
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline 
