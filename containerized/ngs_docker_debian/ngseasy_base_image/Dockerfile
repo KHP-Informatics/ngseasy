@@ -183,7 +183,13 @@ RUN mkdir /usr/local/pipeline && \
     cd ogap && \
     make all && \
     chmod -R 777 ./* && \
-    cp -v ogap /usr/local/bin/
+    cp -v ogap /usr/local/bin/ && \
+    cd /usr/local/pipeline/
+    git clone --recursive git://github.com/ekg/freebayes.git && \
+    cd freebayes && \
+    make all && \
+    chmod -R 777 ./* && \
+    cp bin/bamleftalign /usr/local/bin/
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline 
