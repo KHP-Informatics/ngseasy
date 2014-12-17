@@ -1,0 +1,181 @@
+#!/bin/bash -x
+# Collection of NGSeasy Functions
+# Stephen Newhouse <stephen.j.newhouse@gmail.com>
+# Version 0.9.0
+
+##--------------------------------------------------##
+## NGS MarkDuplicates
+##--------------------------------------------------##
+
+#usage printing func
+usage()
+{
+cat << EOF
+  This script sets up the NGSeasy docker GATK container and runs RealignerTargetCreator then IndelRealigner on raw BAM files
+  See NGSEasy containerized instructions.
+
+  ARGUMENTS:
+  -h      Flag: Show this help message
+  -c      NGSeasy project and run configureation file
+  -d      NGSeasy project directory
+
+  EXAMPLE USAGE:
+    
+    ngseasy_indel_realn -c config.file.tsv -d project_directory
+
+EOF
+}
+
+#get options for command line args
+  while  getopts "hc:d:" opt
+  do
+
+      case ${opt} in
+	  h)
+	  usage #print help
+	  exit 0
+	  ;;
+	  
+	  c)
+	  config_tsv=${OPTARG}
+	  ;;
+
+	  d)
+	  project_directory=${OPTARG}
+	  ;; 
+      esac
+  done
+
+#check config file exists.
+if [ ! -e "${config_tsv}" ] 
+then
+	    echo "ERROR :  ${config_tsv} does not exist....exiting "
+	    usage;
+	    exit 1;
+fi
+
+#check exists.
+if [ ! -d "${project_directory}" ]
+  then
+    echo "ERROR : project_directory ${project_directory} does not exist "
+    usage;
+    exit 1;
+fi
+
+#---------------------------------------------------------------------------------#
+#Read config file 
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
+do
+# set varibales  
+  DATE=`date +"%d%m%y"`
+  POJECT_ID=$f1
+  SAMPLE_ID=$f2
+  FASTQ1=$f3
+  FASTQ2=$f4
+  PROJECT_DIR=$f5 
+  DNA_PREP_LIBRARY_ID=$f6
+  NGS_PLATFORM=$f7
+  NGS_TYPE=$f8
+  BED_ANNO=$f9
+  PIPELINE=$f10
+  ALIGNER=$f11
+  VARCALLER=$f12
+  GTMODEGATK=$f13
+  CLEANUP=$f14
+  NCPU=$f15
+	VERSION=$f16
+  NGSUSER=$f17
+
+
+#Logfile 
+LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
+
+#OUTPUT SAMPLE DIR 
+SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
+
+#------------------------Container I/O--------------------------------#
+#run compbio/ngseasy-fastq
+#Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
+DOCKERHOME="/home/pipeman/ngs_projects"
+
+#Docker OUTPUT SAMPLE DIR 
+SOUTDocker=${DOCKERHOME}/${POJECT_ID}/${SAMPLE_ID}
+
+#bamprefix
+BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}
+
+#known indels
+KNOWN_INDELS=/home/pipeman/gatk_resources/Mills_and_1000G_gold_standard.indels.b37.vcf
+
+#---------------------------------------------------------------------------------#
+if [ ! -e ${SOUT}/alignments/${BAM_PREFIX}.realn.bam ]
+then
+
+#RealignerTargetCreator
+	logger_ngseasy " START RealignerTargetCreator  "  ${LOGFILE}
+
+  docker run \
+  -P \
+  --name RealignerTargetCreator_${SAMPLE_ID} \
+  --volumes-from volumes_container \
+  -t compbio/ngseasy-gatk:${VERSION} \
+  java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar \
+  -T RealignerTargetCreator \
+  -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
+  -nt ${NCPU} \
+  --known ${KNOWN_INDELS} \
+  -I ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
+  -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam.IndelRealigner.intervals;
+
+  docker logs RealignerTargetCreator_${SAMPLE_ID} >> ${LOGFILE}.log
+
+  docker rm RealignerTargetCreator_${SAMPLE_ID}
+
+	logger_ngseasy " END RealignerTargetCreator  "  ${LOGFILE}
+
+#IndelRealigner
+	logger_ngseasy " START IndelRealigner  "  ${LOGFILE}
+
+  docker run \
+  -P \
+  --name IndelRealignerr_${SAMPLE_ID} \
+  --volumes-from volumes_container \
+  -t compbio/ngseasy-gatk:${VERSION} \
+  java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar \
+  -T IndelRealigner \
+  -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
+  -known ${KNOWN_INDELS} \
+  -I ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
+  -targetIntervals ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam.IndelRealigner.intervals \
+  -o ${SOUTDocker}/alignments/${BAM_PREFIX}.realn.bam \
+  --consensusDeterminationModel USE_READS \
+  -LOD 0.4;
+
+  docker logs IndelRealignerr_${SAMPLE_ID} >> ${LOGFILE}.log
+
+  docker rm IndelRealignerr_${SAMPLE_ID}
+
+#index bam
+	logger_ngseasy " START samtools index [${SOUTDocker}/alignments/${BAM_PREFIX}.realn.bam]  "  ${LOGFILE}
+
+  docker run \
+  -P \
+  --name samtools_index_${SAMPLE_ID} \
+  --volumes-from volumes_container \
+  -t compbio/ngseasy-samtools:${VERSION} \
+  /usr/local/pipeline/samtools/samtools index ${SOUTDocker}/alignments/${BAM_PREFIX}.realn.bam
+
+  docker logs samtools_index_${SAMPLE_ID} >> ${LOGFILE}.log
+
+  docker rm samtools_index_${SAMPLE_ID}
+
+    logger_ngseasy " END IndelRealigner  "  ${LOGFILE}
+
+else
+	logger_ngseasy " [${SOUT}/alignments/${BAM_PREFIX}.realn.bam]  already exists"  ${LOGFILE}
+fi
+
+#------permissions------------#
+chmod -R 777 ${SOUT}/*
+
+done < ${config_tsv}

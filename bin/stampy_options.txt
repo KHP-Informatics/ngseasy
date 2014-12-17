@@ -1,0 +1,93 @@
+Usage: /usr/local/pipeline/stampy-1.0.23/stampy.py [options] [files]
+
+Command options (one required)
+ -G PREFIX, --build-genome=PREFIX   Build genome index PREFIX.stidx from fasta file(s) on command line
+ -H PREFIX, --build-hash=PREFIX     Build hash PREFIX.sthash
+ -M FILE, --map=FILE[,FILE]         Map fastq/fasta/BAM file(s)
+ -S FILE, --simulate=FILE           Simulate reads following empirical qualities from read FILE
+ -P FILE, --parse=FILE              Parse simulated SAM file, and report statistics
+ -A FILE                            Convert qualities; strip adapters
+
+Mapping options:
+ -g PREFIX, --genome=PREFIX         Use genome index file PREFIX.stidx
+ -h PREFIX, --hash=PREFIX           Use hash file PREFIX.sthash
+ -t N, --threads=N                  Number of threads to use [1]
+ --numrecords=N                     Number of records to process [all]
+ --processpart=A/B                  Process the Ath read (pair) in every block of B read (pairs) [1/1]
+ --minposterior=N                   Minimum read mapping phred posterior [no filtering]
+ --maxscore=N                       Maximum read likelihood phred score [no filtering]
+ --qualitybase=C                    Character or ASCII for quality score 0 in input [33 or !]
+ --logit                            Qualities are logit (log p/1-p) rather than phred (log p) scores [phred]
+ --solexa, --solexaold, --sanger    Short for: --qualitybase=@; --qualitybase=@ --logit; default
+ --substitutionrate=F               Set substitution rate for mapping and simulation [0.001]
+ --gapopen=N                        Gap open penalty (phred score) [40]
+ --gapextend=N                      Gap extension penalty (phred score) [3]
+ --insertsize=N                     (Initial) mean insert size for paired-end reads [250]
+ --insertsd=N                       (Initial) standard deviation for insert size [60]
+ --insertsize2=N                    (Initial) mean insert size for mate pairs [-2000]
+ --insertsd2=N                      (Initial) standard deviation for mate pairs [-1 = deactivated]
+ --maxpairseeds=N                   Number of ambiguous single mappings to take forward for paired realignment [25]
+ --noautosense                      Do not auto-sense insert size distribution(s) [False]
+ --sensitive                        More sensitive; about 25-50% slower
+ --fast                             Less sensitive; about 50% (paired-end) to 100% (single-ended) faster
+ --bwaoptions=opts                  Options and <prefix> for BWA pre-mapper (quote multiple options)
+ --bwamaxmismatch=N                 Max number of mismatches for BWA maps; -1=auto [-1]
+ --bwatmpdir=S                      Set directory for BWA temporary files
+ --bwa=F                            Set BWA executable [default: bwa]
+ --bwamark                          Include/mark BWA-mapped reads with XP:Z:BWA tag (produces more output lines)
+
+Output options:
+ -o FILE, --output=FILE             Write mapping output to FILE [stdout]
+ -f FMT, --outputformat=FMT         Select mapping output format (sam,maqtxt,maqmap,maqmapN) [sam]
+ --rightmost                        Flush gaps to rightmost position in reference coordinates [leftmost]
+ --xa-max                           Number of alternative hits to output for single/concordant paired reads [0, max 20]
+ --xa-max-discordant                Number of alternative hits to output for discordant paired reads [0]
+ --overwrite                        Allow overwriting of output files
+ --baq                              (SAM format) Compute base-alignment quality (BAQ; BQ tag)
+ --alignquals                       (SAM format) Compute posterior alignment probabilities (YQ tag)
+ --xcigar                           (SAM format) Compute the extended CIGAR string (XC tag)
+ --readgroup=ID:id,tag:value,...    (SAM format) Set readgroup tags (ID,SM,LB,DS,PU,PI,CN,DT,PL); ,, quotes ,
+ --norefoutput                      (SAM format) Use = signs at read positions that match the reference
+ --comment=comment1%comment2%...    (SAM format) Add @COmments.  % separate lines; commas are converted into tabs
+ --comment=@F                       (SAM format) Add @COmments from file F
+
+Simulation options (use with -S):
+ --seed=N                           Set random number seed [1]
+ --simulate-minindellen=N           Minimum indel length to simulate; negative is deletion [0]
+ --simulate-maxindellen=N           Maximum indel length to simulate; negative is deletion [0]
+ --simulate-duplications            For insertions, simulate duplications rather than (default) random sequence insertion
+ --simulate-numsubstitutions=N      Insert N substitutions in read (pairs) (default = Poisson distribution)
+
+Advanced options:
+ --maxcount=N                       (-H) Maximum multiplicity of repeat words [200]
+ --assembly=S                       (-G) Set assembly identifier (appears in @SQ field (AS tag) in SAM output)
+ --species=S                        (-G) Set species identifier (appears in @SQ field (SP tag) in SAM output)
+ --referenceuri=S                   (-G) Set URI for the reference (appears in @SQ field (UR tag) in SAM output)
+ --noparseNCBI                      (-G) Don't parse but just copy gi|nnn|ref|xxx| labels in NCBI fasta files
+ --strip-adapter                    (-A) Strip adapters from fastq files
+ --inputformat=FMT                  Read input format (fasta, fastq, sam, bam) [fastq]
+ --banding=N                        Band size for banded alignment; -1=none [60]
+ --fastaqual=N                      Base quality for fasta input [30]
+ --maxbasequal=N                    Maximum accepted base quality [50]
+ --svprior=N                        Prior probability of read pair bridging a SV (phred score) [55]
+ --longindelprior=N                 Prior probability of read pair bridging a long indel (phred score) [40]
+ --baseentropy=N                    Entropy of inserted nucleotides (phred score) [5]
+ --remote=U                         Command to get input reads from URL %s; shortcuts are 'wget' and 'scp'
+ --keepreforder                     (-M) (default) Use reference order in .fa/.stidx file, rather than alphabetical
+ --alphabetical                     (-M) Order reference identifiers alphabetically
+ --labelfilter=R                    (-M) Only map reads / read pairs whose label match the regular expression R
+ --casava8                          (-M) Parse Casava v1.8 FastQ headers; include but do not map filtered reads
+ --separator1=c                     (-M) Use 'c' as separator for Casava data columns [:]
+ --separator2=c                     (-M) use 'c' as separator between first 7 columns, and the auxiliary columns [ ]
+ --gatkcigarworkaround              (-M) Remove adjacent I/D CIGAR operators (valid in SAM spec, but trips up GATK)
+ --unclipq                          (-M X.bam / -M --bamoptions) Undo soft clipping over low Q bases (-1=disable) [10]
+ --bamsortprefix=S                  (-M X.bam) Temporary storage for sorting [--output argument, or /tmp/bamsort]
+ --bamsortbuflen=N                  (-M X.bam) Entries in memory sort buffer [10000]
+ --bamsortmemory=N                  (-M X.bam) Value for option -m to samtools sort [200000000]
+ --bamkeepgoodreads                 (-M X.bam) If set, do not re-map already well-mapped reads from BAM [False]
+
+General options:
+ -?, --help                         Display this help page
+ -v N, --verbosity=N                Set verbosity level to N [2]
+ --logfile=FILE                     Send logging information to FILE  [stderr]
+

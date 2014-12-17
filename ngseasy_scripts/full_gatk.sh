@@ -242,8 +242,8 @@ then
   echo " NGSeasy: Running Stampy aligner on bwa bam "
   
 python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
-    -g ${REFGenomes}/human_g1k_v37 \
-    -h ${REFGenomes}/human_g1k_v37 \
+    -G ${REFGenomes}/human_g1k_v37 \
+    -H ${REFGenomes}/human_g1k_v37 \
     -t ${NCPU} \
     --bamsortprefix ${SOUT}/tmp \
     --bamkeepgoodreads \

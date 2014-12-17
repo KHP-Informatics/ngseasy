@@ -1,0 +1,9 @@
+#!/bin/bash
+#Credits: http://unix.stackexchange.com/questions/11856/sort-but-keep-header-line-at-the-top/11859#11859
+#Operate on the body of a file but not the header
+
+body() {
+    IFS= read -r header
+    printf '%s\n' "$header"
+    "$@"
+}

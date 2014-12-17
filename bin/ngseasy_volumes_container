@@ -1,0 +1,93 @@
+#!/bin/bash
+# Collection of NGSeasy Functions
+# Stephen Newhouse <stephen.j.newhouse@gmail.com>
+# Version 0.9.0
+##--------------------------------------------------##
+## create and run data_volumes container 
+##--------------------------------------------------##
+
+
+#usage printing func
+usage()
+{
+cat << EOF
+  This script sets up the docker volumes container:
+  See NGSEasy containerized instructions.
+
+  ARGUMENTS:
+  
+  -h      Flag: Show this help message
+  -d      Base directory for (fastq_raw, reference_genomes_b37, gatk_resources, ngs_projects, ngs/bin)
+  
+  EXAMPLE USAGE:
+  
+  ngseasy_volumes_container -d /media/D/ngs_projects
+
+EOF
+}
+
+#get options for command line args
+  while  getopts "h:d:" opt
+  do
+
+      case ${opt} in
+	  h)
+	  usage #print help
+	  exit 0
+	  ;;
+	  
+	  d)
+	  host_vol_dir=${OPTARG}
+	  ;;
+
+      esac
+  done
+
+#check exists.
+  if [[ ! -d ${host_vol_dir} ]] 
+  then
+	  echo " ERROR : ${host_vol_dir} does not exist "
+	  usage;
+	  exit 1;
+  fi
+
+#check exists.
+  if [[ ! -d ${host_vol_dir}/fastq_raw ]] 
+  then
+	  echo " ERROR : ${host_vol_dir}/fastq_raw does not exist "
+	  usage;
+	  exit 1;
+  fi 
+
+#check exists.
+  if [[ ! -d ${host_vol_dir}/reference_genomes_b37 ]] 
+  then
+	  echo " ERROR : ${host_vol_dir}/reference_genomes_b37 does not exist "
+	  usage;
+	  exit 1;
+  fi   
+
+#check exists.
+  if [[ ! -d ${host_vol_dir}/gatk_resources ]] 
+  then
+	  echo " ERROR : ${host_vol_dir}/gatk_resources does not exist "
+	  usage;
+	  exit 1;
+  fi   
+ 
+  
+#run docker image  
+# HOST_VOL_DIR=/media/ngs_projects
+
+  docker run \
+  -d \
+  -P \
+  -v ${host_vol_dir}/fastq_raw:/home/pipeman/fastq_raw \
+  -v ${host_vol_dir}/reference_genomes_b37:/home/pipeman/reference_genomes_b37 \
+  -v ${host_vol_dir}/gatk_resources:/home/pipeman/gatk_resources \
+  -v ${host_vol_dir}:/home/pipeman/ngs_projects \
+  -v ${host_vol_dir}/ngseasy/ngs/bin:/home/pipeman/ngseasy_scripts \
+  --name volumes_container \
+  -t compbio/ngseasy-base:wheezy
+
+

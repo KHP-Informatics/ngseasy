@@ -279,7 +279,7 @@ echo " NGSeasy: Basic $ALIGNER Complete " `date`
 
 echo " NGSeasy: START AddOrReplaceReadGroups " `date`
 
-if [ ! -e ${SOUT}/alignments/${BAM_PREFIX}.addrg.bam ]
+if [ ! -e ${SOUT}/alignments/${BAM_PREFIX}.bam ]
 then
 echo " NGSeasy: Adding Read Group Information " `date`
 echo " NGSeasy: Getting Platform Unit Information "  `date`
@@ -321,7 +321,7 @@ echo " NGSeasy: Marking Duplicate Reads " `date`
   METRICS_FILE=${SOUT}/reports/${BAM_PREFIX}.dupemk_metrics;
 fi
 
-  # FindCoveredIntervals: these are used in GATK Calling to help speed things up
+# FindCoveredIntervals: these are used in GATK Calling to help speed things up
 
 echo " NGSeasy: START FindCoveredIntervals " `date`  
 if [ ! -s ${SOUT}/reports/${BAM_PREFIX}.CoveredIntervals_x4.list ]
@@ -347,7 +347,12 @@ echo " NGSeasy: Converting Aligned BED To MERGED BED File " `date`
  /usr/local/pipeline/bedtools2/bin/bedtools merge -i ${SOUT}/reports/${BAM_PREFIX}.bed > ${SOUT}/reports/${BAM_PREFIX}.merged.bed;
 fi
 
-cp -v ${SOUT}/alignments/${BAM_PREFIX}.bam ${SOUT}/alignments/${BAM_PREFIX}.bam.bai
+
+#if [ ! -s ${SOUT}/alignments/${BAM_PREFIX}.bam.bai ]
+#then
+cp -v ${SOUT}/alignments/${BAM_PREFIX}.bai ${SOUT}/alignments/${BAM_PREFIX}.bam.bai
+#fi
+
 
 echo ""
 echo "................................................"
@@ -516,6 +521,7 @@ echo " NGSeasy: START SNP and Small INDEL Calling " `date`
 echo "................................................"
 echo ""
 
+
 if [ "${VARCALLER}" == "freebayes" ]
 then
 
@@ -523,8 +529,8 @@ echo " NGSeasy: Starting Variant Calling using Freebayes " `date`
   /usr/local/pipeline/freebayes/bin/freebayes \
     -f ${REFGenomes}/human_g1k_v37.fasta \
     -b ${SOUT}/alignments/${BAM_PREFIX}.bam \
-    --min-coverage 4 \
-    --min-mapping-quality 30 \
+    --min-coverage 10 \
+    --min-mapping-quality 20 \
     --min-base-quality 20 \
     --genotype-qualities > ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ;
     
@@ -535,7 +541,7 @@ elif [ "${VARCALLER}" == "platypus" ]
 then
 
   echo " NGSeasy: Starting Variant Calling using Platypus " `date`
-    if [ ${NGS_TYPE} == "TGS" ]
+    if [ "${NGS_TYPE}" == "TGS" ] || [ "${NGS_TYPE}" == "WEX" ]
     then
     echo " NGSeasy: NGS_TYPE is Targeted so no duplicate filtering  " `date`
     # for exome/whole genome data no duplicate filtering
@@ -544,7 +550,7 @@ then
       --bamFiles=${SOUT}/alignments/${BAM_PREFIX}.bam \
       --refFile=${REFGenomes}/human_g1k_v37.fasta \
       --output=${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
-      --filterDuplicates=0;
+      --filterDuplicates=0 --minReads=10 --minMapQual=20 --minBaseQual=20;
       
   # copy vcf to cohort vcf directory
   cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${POJECT_ID}/cohort_vcfs/;
@@ -554,24 +560,30 @@ then
 	  --nCPU ${NCPU} \
 	  --bamFiles=${SOUT}/alignments/${BAM_PREFIX}.bam \
 	  --refFile=${REFGenomes}/human_g1k_v37.fasta \
-	  --output=${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf;
+	  --output=${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+	  --filterDuplicates=1 --minReads=10 --minMapQual=30 --minBaseQual=20;
 	  
 	    # copy vcf to cohort vcf directory
   cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${POJECT_ID}/cohort_vcfs/;
   
     fi
 	  
-elif [ ${VARCALLER} == "gatk_ug" ]
+elif [ "${VARCALLER}" == "gatk_ug" ]
 then
+#filter bam files paired FILTER IF BWA AND IF CALLING IS USING GATK HC
+ /usr/local/pipeline/samtools/samtools view -b -h -q 20 -F 1796 ${SOUT}/alignments/${BAM_PREFIX}.bam  > ${SOUT}/alignments/${BAM_PREFIX}.filtered.bam 
+ /usr/local/pipeline/samtools/samtools index ${SOUT}/alignments/${BAM_PREFIX}.filtered.bam;
+ cp -v ${SOUT}/alignments/${BAM_PREFIX}.filtered.bai ${SOUT}/alignments/${BAM_PREFIX}.filtered.bam.bai;
+
   # UnifiedGenotyper EMIT_ALL_CONFIDENT_SITES
   echo " NGSeasy: Running GATK UnifiedGenotyper " `date`
   java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T UnifiedGenotyper -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU} \
-  -I ${SOUT}/alignments/${BAM_PREFIX}.bam \
+  -I ${SOUT}/alignments/${BAM_PREFIX}.filtered.bam \
   -o ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
   --dbsnp ${KNOWN_SNPS_b138} \
-  -dcov 250 -minPruning 4 \
+  -dcov 250 \
   --unsafe ALL \
   --genotype_likelihoods_model BOTH \
   --genotyping_mode DISCOVERY \
@@ -604,14 +616,21 @@ then
 elif [ "${VARCALLER}" == "gatk_hc" ]
 then 
   echo " NGSeasy: Running GATK HaplotypeCaller THIS TAKES A LOOOONG TIME " `date`
+   /usr/local/pipeline/samtools/samtools view -b -h -q 20 -F 1796 ${SOUT}/alignments/${BAM_PREFIX}.bam  > ${SOUT}/alignments/${BAM_PREFIX}.filtered.bam 
+ /usr/local/pipeline/samtools/samtools index ${SOUT}/alignments/${BAM_PREFIX}.filtered.bam;
+ cp -v ${SOUT}/alignments/${BAM_PREFIX}.filtered.bai ${SOUT}/alignments/${BAM_PREFIX}.filtered.bam.bai;
+
   ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
-  java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T HaplotypeCaller -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU} \
-  -I ${SOUT}/alignments/${BAM_PREFIX}.bam \
+  java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar \
+  -T HaplotypeCaller \
+  -R ${REFGenomes}/human_g1k_v37.fasta \
+  -nct ${NCPU} \
+  -I ${SOUT}/alignments/${BAM_PREFIX}.filtered.bam \
   -o ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
   --dbsnp ${KNOWN_SNPS_b138} \
-  -dcov 250 -minPruning 4 \
+  -dcov 250 -minPruning 10 \
   --unsafe ALL \
   -pairHMM VECTOR_LOGLESS_CACHING \
   --genotyping_mode DISCOVERY \
@@ -641,17 +660,20 @@ then
   # copy vcf to cohort vcf directory
   cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${POJECT_ID}/cohort_vcfs/;
   
-elif [ ${VARCALLER} == "gatk_hc_gvcf" ]
+elif [ "${VARCALLER}" == "gatk_hc_gvcf" ]
 then
   echo " NGSeasy: Running GATK HaplotypeCaller GVCF THIS TAKES A VERY LOOOONG TIME" `date` 
+ /usr/local/pipeline/samtools/samtools view -b -h -q 20 -F 1796 ${SOUT}/alignments/${BAM_PREFIX}.bam  > ${SOUT}/alignments/${BAM_PREFIX}.filtered.bam 
+ /usr/local/pipeline/samtools/samtools index ${SOUT}/alignments/${BAM_PREFIX}.filtered.bam;
+ cp -v ${SOUT}/alignments/${BAM_PREFIX}.filtered.bai ${SOUT}/alignments/${BAM_PREFIX}.filtered.bam.bai;
   ## HaplotypeCaller GVCF
   java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.2-2/GenomeAnalysisTK.jar -T HaplotypeCaller -R ${REFGenomes}/human_g1k_v37.fasta -nct ${NCPU} \
-  -I ${SOUT}/alignments/${BAM_PREFIX}.bam \
+  -I ${SOUT}/alignments/${BAM_PREFIX}.filtered.bam \
   -o ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.g.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
   --dbsnp ${KNOWN_SNPS_b138} \
-  -dcov 250 -minPruning 4 \
+  -dcov 250 -minPruning 10 \
   --unsafe ALL \
   -pairHMM VECTOR_LOGLESS_CACHING \
   --emitRefConfidence GVCF \

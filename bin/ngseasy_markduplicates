@@ -1,0 +1,147 @@
+#!/bin/bash -x
+# Collection of NGSeasy Functions
+# Stephen Newhouse <stephen.j.newhouse@gmail.com>
+# Version 0.9.0
+
+##--------------------------------------------------##
+## NGS MarkDuplicates
+##--------------------------------------------------##
+
+#usage printing func
+usage()
+{
+cat << EOF
+  This script sets up the NGSeasy docker picardtools container and runs MarkDuplicates on raw BAM files
+  See NGSEasy containerized instructions.
+
+  ARGUMENTS:
+  -h      Flag: Show this help message
+  -c      NGSeasy project and run configureation file
+  -d      NGSeasy project directory
+
+  EXAMPLE USAGE:
+    
+    ngseasy_markduplicates -c config.file.tsv -d project_directory
+
+EOF
+}
+
+#get options for command line args
+  while  getopts "hc:d:" opt
+  do
+
+      case ${opt} in
+	  h)
+	  usage #print help
+	  exit 0
+	  ;;
+	  
+	  c)
+	  config_tsv=${OPTARG}
+	  ;;
+
+	  d)
+	  project_directory=${OPTARG}
+	  ;; 
+      esac
+  done
+
+#check config file exists.
+if [ ! -e "${config_tsv}" ] 
+then
+	    echo "ERROR :  ${config_tsv} does not exist....exiting "
+	    usage;
+	    exit 1;
+fi
+
+#check exists.
+if [ ! -d "${project_directory}" ]
+  then
+    echo "ERROR : project_directory ${project_directory} does not exist "
+    usage;
+    exit 1;
+fi
+
+#---------------------------------------------------------------------------------#
+#Read config file 
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
+do
+# set varibales  
+  DATE=`date +"%d%m%y"`
+  POJECT_ID=$f1
+  SAMPLE_ID=$f2
+  FASTQ1=$f3
+  FASTQ2=$f4
+  PROJECT_DIR=$f5 
+  DNA_PREP_LIBRARY_ID=$f6
+  NGS_PLATFORM=$f7
+  NGS_TYPE=$f8
+  BED_ANNO=$f9
+  PIPELINE=$f10
+  ALIGNER=$f11
+  VARCALLER=$f12
+  GTMODEGATK=$f13
+  CLEANUP=$f14
+  NCPU=$f15
+	VERSION=$f16
+  NGSUSER=$f17
+
+
+#Logfile 
+LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
+
+#OUTPUT SAMPLE DIR 
+SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
+
+# Trimmomatic paired output
+qcdPeFASTQ1=${SOUT}/fastq/${rawFASTQ1}_1.filtered.fq.gz;
+
+#------------------------Container I/O--------------------------------#
+#run compbio/ngseasy-fastq
+#Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
+DOCKERHOME="/home/pipeman/ngs_projects"
+
+#Docker OUTPUT SAMPLE DIR 
+SOUTDocker=${DOCKERHOME}/${POJECT_ID}/${SAMPLE_ID}
+
+#bamprefix
+BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}
+
+#picardtools
+if [ ! -e ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam ]
+then
+  
+	logger_ngseasy " START MarkDuplicates  "  ${LOGFILE}
+
+  docker run \
+  -P \
+  --name MarkDuplicates_${SAMPLE_ID} \
+  --volumes-from volumes_container \
+  -t compbio/ngseasy-picardtools:${VERSION} \
+  java -XX:ParallelGCThreads=${NCPU} -Xmx6g -jar /usr/local/pipeline/picardtools/picard-tools-1.119/MarkDuplicates.jar \
+  TMP_DIR=${SOUTDocker}/tmp \
+  VALIDATION_STRINGENCY=SILENT \
+  MAX_RECORDS_IN_RAM=100000 \
+  CREATE_INDEX=true \
+  REMOVE_DUPLICATES=false \
+  ASSUME_SORTED=true \
+  INPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.addrg.bam \
+  OUTPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
+  METRICS_FILE=${SOUTDocker}/reports/${BAM_PREFIX}.dupemk_metrics
+
+  cp -v ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bai ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam.bai;
+  
+  docker logs MarkDuplicates_${SAMPLE_ID} >> ${LOGFILE}.log
+
+  docker rm MarkDuplicates_${SAMPLE_ID}
+
+else 
+  logger_ngseasy " ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam already exists  "  ${LOGFILE}
+fi
+
+  logger_ngseasy " END MarkDuplicates  "  ${LOGFILE}
+
+#------permissions------------#
+chmod -R 777 ${SOUT}/*
+
+done < ${config_tsv}

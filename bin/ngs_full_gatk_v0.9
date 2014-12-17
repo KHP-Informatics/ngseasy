@@ -1,0 +1,89 @@
+#!/bin/bash -x
+
+#usage printing func
+usage()
+{
+cat << EOF
+  This script calls the NGSeasy pipeline ngs_full_gatk
+
+  ARGUMENTS:
+  -h      Flag: Show this help message
+  -c      NGSeasy project and run configureation file
+  -d      NGSeasy project directory
+
+  EXAMPLE USAGE:
+    
+    ngseasy -c config.file.tsv -d project_directory
+
+EOF
+}
+
+#get options for command line args
+  while  getopts "hc:d:" opt
+  do
+
+      case ${opt} in
+	  h)
+	  usage #print help
+	  exit 0
+	  ;;
+	  
+	  c)
+	  config_tsv=${OPTARG}
+	  ;;
+
+	  d)
+	  project_directory=${OPTARG}
+	  ;; 
+      esac
+  done
+
+#check config file exists.
+if [ ! -e "${config_tsv}" ] 
+then
+	    echo "ERROR :  ${config_tsv} does not exist "
+	    usage;
+	    exit 1;
+fi
+
+#check exists.
+  if [ ! -d "${project_directory}" ] 
+  then
+	  echo " ERROR : ${project_directory} does not exist "
+	  usage;
+	  exit 1;
+  fi
+
+##################  
+# start pipeline #
+##################
+
+ngseasy_fastqc  -c ${config_tsv} -d ${project_directory}
+
+ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
+
+ngseasy_alignment -c ${config_tsv} -d ${project_directory}
+
+ngseasy_addreadgroup -c ${config_tsv} -d ${project_directory}
+
+ngseasy_markduplicates -c ${config_tsv} -d ${project_directory}
+
+ngseasy_indel_realn -c ${config_tsv} -d ${project_directory}
+
+ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
+
+ngseasy_filter_recalbam -c ${config_tsv} -d ${project_directory}
+
+ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
+ 
+ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
+
+# coming soon...
+# ngseasy_filter_bam -c ${config_tsv} -d ${project_directory}
+# ngseasy_cnv_calling -c ${config_tsv} -d ${project_directory}
+# ngseasy_variant_filtering -c ${config_tsv} -d ${project_directory}
+# ngseasy_variant_annotation -c ${config_tsv} -d ${project_directory}
+# ngseasy_report -c ${config_tsv} -d ${project_directory}
+
+
+

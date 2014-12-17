@@ -1,0 +1,132 @@
+#!/bin/bash
+# Collection of NGSeasy Functions
+# Stephen Newhouse <stephen.j.newhouse@gmail.com>
+# Version 0.9.0
+
+# NSGeasy Project Initiation
+# Makes Project and Sample Directories needed for NGSesy
+# Stephen Newhouse <stephen.j.newhouse@gmail.com>
+# Amos Folarin <afolarin@gmail.com>
+
+#usage printing func
+usage()
+{
+cat << EOF
+This script sets up the NGSeasy Project Fastq Fliles 
+See NGSEasy containerized instructions.
+
+ARGUMENTS:
+
+  -h      Flag: Show this help message
+  -c      Config pipeline file
+  -d      Base directory for (fastq_raw, reference_genomes_b37, gatk_resources, ngs_projects, ngseasy_scripts)
+
+EXAMPLE USAGE:
+
+  ngseasy_initiate_fastq -c config.file.tsv -d /media/D/docker_ngs/ngseasy/
+
+EOF
+}
+
+#get options for command line args
+  while  getopts "hc:d:" opt
+  do
+
+      case ${opt} in
+	  h)
+	  usage #print help
+	  exit 0
+	  ;;
+	  
+	  c)
+	  config_tsv=${OPTARG}
+    echo "-c = " ${config_tsv}
+	  ;;
+	 
+	  d)
+	  project_directory=${OPTARG}
+	  echo "-d = " ${project_directory}
+    ;; 
+      esac
+  done
+
+echo "checking if files exist"
+#check exists.
+if [ ! -e "${config_tsv}" ]
+  then
+	  echo "ERROR : config file ${config_tsv} does not exist "
+	  usage;
+	  exit 1;
+fi
+
+#check exists.
+if [ ! -d "${project_directory}" ]
+  then
+	  echo "ERROR : project_directory ${project_directory} does not exist "
+	  usage;
+	  exit 1;
+fi
+
+
+# read config file 
+
+# begin reading config file line by line
+  
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
+do
+
+# set varibales  
+  DATE=`date +"%d%m%y"`
+  POJECT_ID=$f1
+  SAMPLE_ID=$f2
+  FASTQ1=$f3
+  FASTQ2=$f4
+  PROJECT_DIR=${project_directory}
+  DNA_PREP_LIBRARY_ID=$f6
+  NGS_PLATFORM=$f7
+  NGS_TYPE=$f8
+  BED_ANNO=$f9
+  PIPELINE=$f10
+  ALIGNER=$f11
+  VARCALLER=$f12
+  GTMODEGATK=$f13
+  CLEANUP=$f14
+  NCPU=$f15
+	VERSION=$f16
+  NGSUSER=$f17
+  FASTQDIR=${project_directory}/fastq_raw
+
+#-------------------------------------------------------------------#
+#OUTPUT SAMPLE DIR
+ SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
+ echo "$SOUT"
+ #Logfile
+ LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
+#-------------------------------------------------------------------#
+
+#check exists.
+if [ ! -d "${SOUT}" ] 
+  then
+	  logger_ngseasy "ERROR :  ${SOUT} does not exist " ${LOGFILE}
+	  usage;
+	  exit 1;
+fi
+
+
+#copy fastq files to sample directory
+if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
+then
+  logger_ngseasy " NGSeasy: Copying fastq files from ${FASTQDIR}/ to ${SOUT}/fastq/ " ${LOGFILE}
+    cp -v ${FASTQDIR}/${FASTQ1} ${SOUT}/fastq/${FASTQ1}
+    cp -v ${FASTQDIR}/${FASTQ2} ${SOUT}/fastq/${FASTQ2}
+
+else
+  logger_ngseasy " NGSeasy: Fastq Files exist in  ${SOUT}/fastq/ " ${LOGFILE}
+  ls ${SOUT}/fastq/
+fi
+
+#------permissions------------#
+chmod -R 766 ${SOUT}/*
+
+done < ${config_tsv}
+

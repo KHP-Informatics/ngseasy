@@ -1,0 +1,127 @@
+#!/bin/bash -x
+
+# Run NGSeasy : top level master scrip
+
+
+#usage printing func
+usage()
+{
+cat << EOF
+  This script calls the NGSeasy pipeline : <full_gatk/full_no_gatk/fastqc/fastq_trimm/alignment/var_call/cnv_call/var_annotate/alignment_qc>
+  
+  See NGSEasy containerized instructions.
+
+  ARGUMENTS:
+  
+  -h      Flag: Show this help message
+  -c      NGSeasy project and run configureation file
+  -d      Base directory for (fastq_raw, reference_genomes_b37, gatk_resources, ngs_projects, ngseasy_scripts)
+
+  EXAMPLE USAGE:
+    
+    ngseasy -c config.file.tsv -d /media/ngs_projects 
+
+EOF
+}
+
+#get options for command line args
+  while  getopts "hc:d:" opt
+  do
+
+      case ${opt} in
+	  h)
+	  usage #print help
+	  exit 0
+	  ;;
+	  
+	  c)
+	  config_tsv=${OPTARG}
+	  echo "-c = ${config_tsv}"
+	  ;;
+	 
+	  d)
+	  project_directory=${OPTARG}
+	  echo "-d = ${project_directory}"
+	  ;; 
+      esac
+  done
+
+#check exists.
+if [ ! -e "${config_tsv}" ] 
+  then
+	  echo "ERROR : ${config_tsv} does not exist "
+	  usage;
+	  exit 1;
+fi
+
+#check exists.
+if [ ! -d "${project_directory}" ] 
+  then
+	  echo "ERROR :  ${project_directory} does not exist "
+	  usage;
+	  exit 1;
+fi
+
+
+# read config file #
+# begin reading config file line by line
+  
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
+do
+
+# set varibales
+  DATE=`date +"%d%m%y"`
+  POJECT_ID=$f1
+  SAMPLE_ID=$f2
+  FASTQ1=$f3
+  FASTQ2=$f4
+ # PROJECT_DIR=$f5
+  PROJECT_DIR=${project_directory}
+  DNA_PREP_LIBRARY_ID=$f6
+  NGS_PLATFORM=$f7
+  NGS_TYPE=$f8
+  BED_ANNO=$f9
+  PIPELINE=$f10
+  ALIGNER=$f11
+  VARCALLER=$f12
+  GTMODEGATK=$f13
+  CLEANUP=$f14
+  NCPU=$f15
+  VERSION=$f16
+  NGSUSER=$f17
+
+#mounted docker dir
+#script run in docker container and will look for volumes specifef in ngseasy_volumes_contaier
+DOCKERHOME="/home/pipeman/ngs_projects"
+
+#log it 
+LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
+
+logger_ngseasy "ngseasy: run pipeline: ${PIPELINE}"  ${LOGFILE}
+
+#OUTPUT SAMPLE DIR
+# /home/pipeman/ngs_projects/ is the mounted docker volume
+
+SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
+
+#time stamp
+run=`date +"%d%m%y-%H%M%S"`
+
+#make sample spec config file and save to sample run folder 
+echo "${POJECT_ID} ${SAMPLE_ID} ${FASTQ1} ${FASTQ2} ${PROJECT_DIR} ${DNA_PREP_LIBRARY_ID} ${NGS_PLATFORM} ${NGS_TYPE} ${BED_ANNO} ${PIPELINE} ${ALIGNER} ${VARCALLER} ${GTMODEGATK} ${CLEANUP} ${NCPU} ${VERSION} ${NGSUSER}" | perl -p -i -e 's/ /\t/g' > ${SOUT}/${SAMPLE_ID}_${PIPELINE}_${run}.config.tsv
+
+#sample config 
+sample_config=${SOUT}/${SAMPLE_ID}_${PIPELINE}_${run}.config.tsv
+
+logger_ngseasy "Running: bash ${PIPELINE} -c ${sample_config} -d ${PROJECT_DIR}" ${LOGFILE}
+
+/bin/bash ${PIPELINE} -c ${sample_config} -d ${PROJECT_DIR}
+
+done < ${config_tsv}
+
+
+
+
+
+
+

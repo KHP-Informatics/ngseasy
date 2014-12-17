@@ -1,2 +1,0 @@
-example	foo	foo_1.fq	foo_2.fq	./ngs_projects	fooExome	ILLUMINA	WGS	genome_bins.bed	full_nogatk	novoalign	UG	EMIT_ALL_CONFIDENT_SITES	TRUE	8
-example	bar	bar_1.fq	bar_2.fq	./ngs_projects	barExome	ILLUMINA	WGS	genome_bins.bed	full_nogatk	novoalign	UG	EMIT_ALL_CONFIDENT_SITES	TRUE	8

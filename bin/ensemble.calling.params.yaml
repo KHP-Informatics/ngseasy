@@ -1,0 +1,23 @@
+# Tweak ensemble parameters when combinining inputs from multiple calling methods.
+# These feeds into the `variant-ensemble` task which provides a simplified
+# interface for generating ensemble calls.
+---
+ensemble:
+  # Baseline filters to apply to combined calls.
+  format-filters: [DP < 4, QUAL < 5]
+  # Variants present in this percentage of input samples automatically pass
+  trusted-pct: 0.65
+  # Variables to use in classifying reads not in the trusted group.
+  # You can specify any number of classifier groups, each of which will be evaluated separately.
+  classifiers:
+    general: [AD, PL, DP, QUAL]
+  classifier-params:
+    type: svm
+# Optional names to label the input variant calls
+# If not supplied, default to numbers matched with the VCF inputs (v0, v1)
+names: ['freebayes','platypus','gatk_hc']
+# Perform prep and pre-cleaning steps. Set to false if inputs are pre-sorted
+# and filtered to save analysis time.
+prep-inputs: true
+# Optional path to BED file of regions to analyze
+# intervals: /path/to/intervals.bed
