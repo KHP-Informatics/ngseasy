@@ -64,9 +64,9 @@ ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
 
 ngseasy_alignment -c ${config_tsv} -d ${project_directory}
 
-ngseasy_addreadgroup -c ${config_tsv} -d ${project_directory}
+#ngseasy_addreadgroup -c ${config_tsv} -d ${project_directory} this is now done at the aligment stage
 
-ngseasy_markduplicates -c ${config_tsv} -d ${project_directory}
+#ngseasy_markduplicates -c ${config_tsv} -d ${project_directory} this is now done at the aligment stage
 
 ngseasy_bamutil_base_recal -c ${config_tsv} -d ${project_directory}
 

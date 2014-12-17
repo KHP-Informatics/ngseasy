@@ -25,8 +25,8 @@ RUN cd /usr/local/pipeline && \
   cd /usr/local/pipeline && \
   git clone --recursive https://github.com/cc2qe/speedseq && \
   cd /usr/local/pipeline/speedseq/src/ && \
-  sed -i s/ROOTFLAGS = -m64 -O3/#ROOTFLAGS = -m64 -O3/g Makefile && \
-  sed -i s/#ROOTFLAGS = -pthread -m64/ROOTFLAGS = -pthread -m64/g Makefile && \ 
+  sed -i s/ROOTFLAGS = -m64 -O3/#ROOTFLAGS = -m64 -O3/g /usr/local/pipeline/speedseq/src/Makefile && \
+  sed -i s/#ROOTFLAGS = -pthread -m64/ROOTFLAGS = -pthread -m64/g /usr/local/pipeline/speedseq/src/Makefile && \ 
   make cnvnator-multi && \
   sudo cp bin/* /usr/local/bin
 
