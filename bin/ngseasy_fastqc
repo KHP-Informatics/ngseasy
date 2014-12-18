@@ -8,6 +8,13 @@
 
 NGSEASYVERSION="1.0"
 
+## check and make /ngeasy_tmp if needed
+if [[ ! -e  ~/ngeasy_tmp ]]
+then
+  mkdir ~/ngeasy_tmp
+  global_run_logs=" ~/ngeasy_tmp"
+fi
+
 ## global usage
 function ngseasy_fastqc() {
     echo "
@@ -27,18 +34,17 @@ ngseasy_fastqc sets up the NGSeasy docker fastqc container compbio/ngseasy-fastq
 function logger_ngseasy() {
  message=${1}
  mylogfile=${2}
- echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -srpio`]" >> ${mylogfile}.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -srpio`]" >> ${mylogfile}.log >> ${global_run_logs}/ngseasy-run.log;
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -srpio`]"
 }
 
 ## Check options passed in.
-    if test -z "$2"
-    then
-	logger_ngseasy "[ngseasy_fastqc]:ERROR:No options found"
-	ngseasy_fastqc
-	exit 1
-    fi
-
+if test -z "$2"
+then
+  logger_ngseasy "[ngseasy_fastqc]:ERROR:No options found"
+  ngseasy_fastqc
+  exit 1
+fi
 
 ## get options for command line args
   while  getopts "hc:d:" opt
@@ -60,10 +66,10 @@ function logger_ngseasy() {
       esac
   done
 
-#check config file exists.
+## check config file exists.
 if [ ! -e "${config_tsv}" ] 
 then
-	    logger_ngseasy "[ngseasy_fastqc]:ERROR :  ${config_tsv} does not exist....exiting "
+	    logger_ngseasy "[ngseasy_fastqc]:ERROR : [${config_tsv}] does not exist....exiting "
 	    ngseasy_fastqc;
 	    exit 1;
 else
@@ -73,7 +79,7 @@ fi
 #check exists.
 if [ ! -d "${project_directory}" ]
   then
-    logger_ngseasy "[ngseasy_fastqc]:ERROR : project_directory ${project_directory} does not exist "
+    logger_ngseasy "[ngseasy_fastqc]:ERROR : project_directory [${project_directory}] does not exist "
     ngseasy_fastqc;
     exit 1;
 else
@@ -81,6 +87,8 @@ else
 fi
 
 ## Read config file 
+logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] "
+ 
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
 do
 
@@ -104,8 +112,7 @@ do
   VERSION=$f16
   NGSUSER=$f17
 
-## 
-
+## read config_file
 logger_ngseasy "[ngseasy_fastqc]:
   $DATE\t
   $POJECT_ID\t
