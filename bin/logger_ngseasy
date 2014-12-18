@@ -1,6 +1,14 @@
-#!/bin/bash
+#!/bin/bash -e
+
+################################################################
+# Program: logger_ngseasy
+# Version 1.0 
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+#################################################################
 
 # logging function for ngseasy
-
-	echo [`date`]":[Run_Log]:" ${1} >> ${2}.log
+ 
+ message=${1}
+ 
+ echo -e [`date`]":[NGSEAY Run_Log]:"${message}":[${USER}]:[`uname -a`]" >> ${2}.log
 

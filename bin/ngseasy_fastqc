@@ -6,6 +6,8 @@
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 #################################################################
 
+NGSEASYVERSION="1.0"
+
 ## global usage
 function ngseasy_fastqc() {
     echo "
@@ -20,6 +22,22 @@ options: -h  show this message
 ngseasy_fastqc sets up the NGSeasy docker fastqc container compbio/ngseasy-fastq and runs fastq on raw fastq files
 "
 }
+
+## global logging fuction
+function logger_ngseasy() {
+ message=${1}
+ mylogfile=${2}
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -srpio`]" >> ${mylogfile}.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -srpio`]"
+}
+
+## Check options passed in.
+    if test -z "$2"
+    then
+	logger_ngseasy "[ngseasy_fastqc]:ERROR:No options found"
+	ngseasy_fastqc
+	exit 1
+    fi
 
 
 ## get options for command line args
@@ -45,20 +63,24 @@ ngseasy_fastqc sets up the NGSeasy docker fastqc container compbio/ngseasy-fastq
 #check config file exists.
 if [ ! -e "${config_tsv}" ] 
 then
-	    echo "ERROR :  ${config_tsv} does not exist....exiting "
+	    logger_ngseasy "[ngseasy_fastqc]:ERROR :  ${config_tsv} does not exist....exiting "
 	    ngseasy_fastqc;
 	    exit 1;
+else
+	    logger_ngseasy "[ngseasy_fastqc]:Configuration file found [${config_tsv}] "
 fi
 
 #check exists.
 if [ ! -d "${project_directory}" ]
   then
-    echo "ERROR : project_directory ${project_directory} does not exist "
+    logger_ngseasy "[ngseasy_fastqc]:ERROR : project_directory ${project_directory} does not exist "
     ngseasy_fastqc;
     exit 1;
+else
+	    logger_ngseasy "[ngseasy_fastqc]:Top Level Project Directory [${project_directory}] "
 fi
 
-#Read config file 
+## Read config file 
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
 do
 
@@ -82,27 +104,52 @@ do
   VERSION=$f16
   NGSUSER=$f17
 
+## 
 
-#Logfile 
+logger_ngseasy "[ngseasy_fastqc]:
+  $DATE\t
+  $POJECT_ID\t
+  $SAMPLE_ID\t
+  $FASTQ1\t
+  $FASTQ2\t
+  $PROJECT_DIR\t 
+  $DNA_PREP_LIBRARY_ID\t
+  $NGS_PLATFORM\t
+  $NGS_TYPE\t
+  $BED_ANNO\t
+  $PIPELINE\t
+  $ALIGNER\t
+  $VARCALLER\t
+  $GTMODEGATK\t
+  $CLEANUP\t
+  $NCPU\t
+  $VERSION\t
+  $NGSUSER\t"
+  
+## Logfile 
 LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
+touch ${LOGFILE}.log
+logger_ngseasy "[ngseasy_fastqc]:Logging to [${LOGFILE}.log] "
 
-#OUTPUT SAMPLE DIR 
+## OUTPUT SAMPLE DIR 
 SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
+logger_ngseasy "[ngseasy_fastqc]:Sample Directory [${SOUT}] "
+
 
 #check local dir exists
 if [ ! -d "${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}" ]
 then
-  logger_ngseasy " Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
+  logger_ngseasy "[ngseasy_fastqc]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
   exit 1
 
 else 
-  logger_ngseasy " Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
+  logger_ngseasy "[ngseasy_fastqc]: Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
 fi
 
 #check for fastq files exist
 if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
-  logger_ngseasy " Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
+  logger_ngseasy "[ngseasy_fastqc]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
   exit 1
 fi
 
@@ -154,36 +201,40 @@ then
 elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9].fastq.gz ]] 
 then
 
+  logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme\n"
+
   rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} .fastq.gz`
   rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} .fastq.gz`
 
-  fq1_suffix="1.fastq.gz"
-  fq2_suffix="2.fastq.gz" 
+  fq1_suffix="R1.fastq.gz"
+  fq2_suffix="R2.fastq.gz" 
 
-  mv -v ${FASTQ1} ${rawFASTQ1}_${fq1_suffix}
-  mv -v ${FASTQ2} ${rawFASTQ2}_${fq2_suffix}
+  logger_ngseasy "[ngseasy_fastqc]:Stripping <set number (0-padded to 3 digits> from fastq names\n"
+  
+  rename -v s/_[0-9][0-9][0-9]//g  ${FASTQ1}
+  rename -v s/_[0-9][0-9][0-9]//g  ${FASTQ2}
   
 else
 
-  logger_ngseasy " Fastq naming format not recognised : [$FASTQ1] : This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
-  echo " Fastq naming format not recognised : [$FASTQ1] : should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz] "
+  logger_ngseasy "[ngseasy_fastqc]: Fastq naming format not recognised [$FASTQ1] : This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
+  echo -e "[ngseasy_fastqc]: Fastq naming format not recognised [$FASTQ1] \n should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz] "
   exit 1
 fi        
 
     
-logger_ngseasy " NGSeasy: Fastq Basename : [$rawFASTQ1] " ${LOGFILE}
+logger_ngseasy "[ngseasy_fastqc]:Fastq Basename : [$rawFASTQ1] " ${LOGFILE}
 
 #-------------------------------------------------------------------#
 
 #check if qc'd data alread exists 
 if [ -s "${SOUT}/fastq/${rawFASTQ1}_${fq1_suffix}_fastqc.zip" ] && [ -s "${SOUT}/fastq/${rawFASTQ2}_${fq2_suffix}_fastqc.zip" ] 
 then
-  logger_ngseasy " FastQC Data already exists...skipping" ${LOGFILE}
+  logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping" ${LOGFILE}
   exit 1
 fi
 
 #---------------------------------------FASTQC-----------------------------------------------------------#
-  logger_ngseasy " START: FastQC on raw Fastq files " ${LOGFILE}
+  logger_ngseasy "[ngseasy_fastqc]:START: FastQC on raw Fastq files " ${LOGFILE}
 
 #run compbio/ngseasy-fastq
 #Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
@@ -193,8 +244,8 @@ DOCKERHOME="/home/pipeman/ngs_projects"
 #Docker OUTPUT SAMPLE DIR 
 SOUTDocker=${DOCKERHOME}/${POJECT_ID}/${SAMPLE_ID}
 
-# Docker run
-logger_ngseasy "Running : /usr/local/pipeline/FastQC/fastqc --threads ${NCPU} --extract --quiet --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz ${SOUTDocker}/fastq/${rawFASTQ2}_${fq1_suffix}.gz" ${LOGFILE}
+# Docker run compbio/ngseasy-fastqc
+logger_ngseasy "[ngseasy_fastqc]:[cmd]: /usr/local/pipeline/FastQC/fastqc --threads ${NCPU} --extract --quiet --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz ${SOUTDocker}/fastq/${rawFASTQ2}_${fq1_suffix}.gz" ${LOGFILE}
 
 docker run \
   -P \
@@ -210,12 +261,11 @@ docker run \
     ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz \
     ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}.gz
     
-#log 
+## log it
     docker logs fastqc.${SAMPLE_ID} >> ${LOGFILE}.log
-
     docker rm fastqc.${SAMPLE_ID}  
    
-  logger_ngseasy " END: FastQC on raw Fastq files "  ${LOGFILE}
+  logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
 
 #------permissions------------#
 chmod -R 777 ${SOUT}/*
