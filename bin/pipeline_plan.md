@@ -46,45 +46,164 @@ add checks for containers/images
 ## NGS pipeline
 
 ```
-ngseasy_fastqc
+#!/bin/bash -e -x
 
-if [ trimm==1 ]
+################################################################
+# Program: ngseasy_full
+# Version 1.0 
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+#################################################################
+
+## global usage
+function usage_ngseasy_full() {
+    echo "
+Program: ngseasy_full
+Version 1.0
+Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+
+usage:   ngseasy_full -c <config_file> -d <project_directory> [options]
+
+options:  -t  1=quality trim [default], 0=no quality trimming 
+          -g  1=GATK, 0=No GATK [default] 
+          -r  1=Indel Realignment, 0=No Indel Realignment [default]
+          -h  show this message 
+"
+}
+
+
+## set defaults
+trimm=1
+gatk=0
+realign=1
+project_directory=""
+config_tsv=""
+
+## Check options passed in.
+    if test -z "$2"
+    then
+	usage_ngseasy_full
+	exit 1
+    f
+
+
+## get options for command line args
+while  getopts "hc:d:tgr" opt
+do
+
+  case ${opt} in
+
+   h)
+   usage_ngseasy_full #print help
+   exit 0
+   ;;
+
+   c)
+   config_tsv=${OPTARG}
+   echo "-c = ${config_tsv}"
+   ;;
+
+   d)
+   project_directory=${OPTARG}
+   echo "-d = ${project_directory}"
+   ;; 
+
+   t)
+   trimm=${OPTARG}
+   echo "-t = ${trimm}"
+   ;; 
+ 
+   g)
+   gatk=${OPTARG}
+   echo "-d = ${gatk}"
+   ;; 
+ 
+   r)
+   realign=${OPTARG}
+   echo "-d = ${realign}"
+   ;; 
+   
+  esac
+
+done
+
+## check file and directory exist.
+if [[ ! -e "${config_tsv}" ]] 
   then
-    ngseasy_trimmomatic
+	  usage_ngseasy_full;
+	  echo -e "ERROR : ${config_tsv} does not exist\n"
+	  exit 1;
 fi
 
-ngseasy_alignment
-
-# GATK Processing
-if [ gatk==1 ] && [ realign==1 ] 
-  then 
-    ngseasy_indel_realn
-    ngseasy_base_recal
+## check exists.
+if [[ ! -d "${project_directory}" ]] 
+  then
+	  usage_ngseasy_full;
+	  echo -e "ERROR :  ${project_directory} does not exist\n"
+	  exit 1;
 fi
 
-## NON-GATK Processing
-if [ gatk==0 ] && [ realign==1 ] 
-  then 
-    ngseasy_ogap_realn
-    ngseasy_bamutil_base_recal
+
+# --- Start NGS Pipeline --- #
+
+## fastqc
+ngseasy_fastqc -c ${config_tsv} -d ${project_directory}
+
+## adapter and read/base quality trimming
+if [[ "${trimm}" -eq 1 ]]
+then
+  ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
+fi
+
+## alignment : includes addition of read groups at alignment stage 
+## and then duplicate marking (samblaster), indexing and sorting with sambamba
+ngseasy_alignment -c ${config_tsv} -d ${project_directory}
+
+
+## GATK Processing : Indel realignment and base quality score reclibration
+if [[ "${gatk}" -eq 1 ]] && [[ "${realign}" -eq 1 ]] 
+then 
+  ngseasy_indel_realn -c ${config_tsv} -d ${project_directory}
+  ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
     
-  else
-    ngseasy_bamutil_base_recal
+else
+  ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
 fi
 
+## NON-GATK Processing  : Indel realignment and base quality score reclibration
+if [[ "${gatk}" -eq 0 ]] && [[ "${realign}" -eq 1 ]] 
+then 
+  ngseasy_ogap_realn -c ${config_tsv} -d ${project_directory}
+  ngseasy_bamutil_base_recal -c ${config_tsv} -d ${project_directory}
+    
+else
+  ngseasy_bamutil_base_recal -c ${config_tsv} -d ${project_directory}
+fi
 
+## Alignment statistics
+ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
 
-ngseasy_alignment_qc
+## SNP/INDEL calling
+ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
+ 
+ngseasy_variant_calling_fast_ensemble -c ${config_tsv} -d ${project_directory}
 
-ngseasy_variant_calling
-
-ngseasy_variant_calling_fast_ensemble
-
+## CNV Calling
+## Annotation
+## NGS Report
 
 ```
 
 
 ****
+ngseasy_full
+ngseasy_fastqc
+ngseasy_trimmomatic
+ngseasy_alignment
+ngseasy_indel_realn
+ngseasy_base_recal
+ngseasy_ogap_realn
+ngseasy_bamutil_base_recal
+ngseasy_variant_calling
 
 ## Dumped
 
@@ -94,7 +213,69 @@ ngseasy_markduplicates
 ```
 
 
+*****
 
+
+```
+#usage printing func
+usage()
+{
+cat << EOF
+  This script calls the NGSeasy pipeline : <full_gatk/full_no_gatk/fastqc/fastq_trimm/alignment/var_call/cnv_call/var_annotate/alignment_qc>
+  
+  See NGSEasy containerized instructions.
+
+  ARGUMENTS:
+  
+  -h      Flag: Show this help message
+  -c      NGSeasy project and run configureation file
+  -d      Base directory for (fastq_raw, reference_genomes_b37, gatk_resources, ngs_projects, ngseasy_scripts)
+
+  EXAMPLE USAGE:
+    
+    ngseasy -c config.file.tsv -d /media/ngs_projects 
+
+EOF
+}
+
+#get options for command line args
+  while  getopts "hc:d:" opt
+  do
+
+      case ${opt} in
+	  h)
+	  usage #print help
+	  exit 0
+	  ;;
+	  
+	  c)
+	  config_tsv=${OPTARG}
+	  echo "-c = ${config_tsv}"
+	  ;;
+	 
+	  d)
+	  project_directory=${OPTARG}
+	  echo "-d = ${project_directory}"
+	  ;; 
+      esac
+  done
+
+#check exists.
+if [ ! -e "${config_tsv}" ] 
+  then
+	  echo "ERROR : ${config_tsv} does not exist "
+	  usage;
+	  exit 1;
+fi
+
+#check exists.
+if [ ! -d "${project_directory}" ] 
+  then
+	  echo "ERROR :  ${project_directory} does not exist "
+	  usage;
+	  exit 1;
+fi
+```
 
 
 

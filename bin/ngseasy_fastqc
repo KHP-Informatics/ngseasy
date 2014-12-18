@@ -1,38 +1,34 @@
-#!/bin/bash -x
-# Collection of NGSeasy Functions
-# Stephen Newhouse <stephen.j.newhouse@gmail.com>
-# Version 0.9.0
+#!/bin/bash -e -x
 
-##--------------------------------------------------##
-## Pre Alignemnt Fastqc
-##--------------------------------------------------##
+################################################################
+# Program: ngseasy_fastqc
+# Version 1.0 
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+#################################################################
 
-#usage printing func
-usage()
-{
-cat << EOF
-  This script sets up the NGSeasy docker fastqc container and runs FastQC on raw fastq files
-  See NGSEasy containerized instructions.
+## global usage
+function ngseasy_fastqc() {
+    echo "
+Program: ngseasy_fastqc
+Version 1.0
+Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
-  ARGUMENTS:
-  -h      Flag: Show this help message
-  -c      NGSeasy project and run configureation file
-  -d      NGSeasy project directory
+usage:   ngseasy_fastqc -c <config_file> -d <project_directory>
 
-  EXAMPLE USAGE:
-    
-    ngseasy_fastqc -c config.file.tsv -d project_directory
+options: -h  show this message
 
-EOF
+ngseasy_fastqc sets up the NGSeasy docker fastqc container compbio/ngseasy-fastq and runs fastq on raw fastq files
+"
 }
 
-#get options for command line args
+
+## get options for command line args
   while  getopts "hc:d:" opt
   do
 
       case ${opt} in
 	  h)
-	  usage #print help
+	  ngseasy_fastqc #print help
 	  exit 0
 	  ;;
 	  
@@ -50,7 +46,7 @@ EOF
 if [ ! -e "${config_tsv}" ] 
 then
 	    echo "ERROR :  ${config_tsv} does not exist....exiting "
-	    usage;
+	    ngseasy_fastqc;
 	    exit 1;
 fi
 
@@ -58,7 +54,7 @@ fi
 if [ ! -d "${project_directory}" ]
   then
     echo "ERROR : project_directory ${project_directory} does not exist "
-    usage;
+    ngseasy_fastqc;
     exit 1;
 fi
 
@@ -66,7 +62,7 @@ fi
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
 do
 
-# set varibales  
+## set varibales  
   DATE=`date +"%d%m%y"`
   POJECT_ID=$f1
   SAMPLE_ID=$f2
@@ -114,6 +110,10 @@ fi
 
 # test for fomrat of suffix ie is it fastq or fq
 # or _R1.fastq _R1.fq
+# ILLUMINA : NA10831_ATCACG_L002_R1_001.fastq.gz
+# Illumina FASTQ files use the following naming scheme:
+# <sample name>_<barcode sequence>_L<lane (0-padded to 3 digits)>_R<read number>_<set number (0-padded to 3 digits>.fastq.gz
+
 
 if [[ "${FASTQ1}" == *_1.fastq.gz ]] 
 then
@@ -121,8 +121,8 @@ then
   rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _1.fastq.gz`
   rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _2.fastq.gz`
   
-  fq1_suffix="1.fastq"
-  fq2_suffix="2.fastq"
+  fq1_suffix="1.fastq.gz"
+  fq2_suffix="2.fastq.gz"
  
 elif [[ "${FASTQ1}" == *_R1.fastq.gz ]] 
 then
@@ -130,8 +130,8 @@ then
   rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _R1.fastq.gz`
   rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _R2.fastq.gz`
 
-  fq1_suffix="R1.fastq"
-  fq2_suffix="R2.fastq"  
+  fq1_suffix="R1.fastq.gz"
+  fq2_suffix="R2.fastq.gz"  
   
 elif [[ "${FASTQ1}" == *_1.fq.gz ]] 
 then
@@ -139,8 +139,8 @@ then
   rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _1.fq.gz`
   rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _2.fq.gz`
 
-  fq1_suffix="1.fq"
-  fq2_suffix="2.fq"  
+  fq1_suffix="1.fq.gz"
+  fq2_suffix="2.fq.gz"  
   
 elif [[ "${FASTQ1}" == *_R1.fq.gz ]] 
 then
@@ -148,16 +148,28 @@ then
   rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _R1.fq.gz`
   rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _R2.fq.gz`
   
-  fq1_suffix="R1.fq"
-  fq2_suffix="R2.fq"  
-    
+  fq1_suffix="R1.fq.gz"
+  fq2_suffix="R2.fq.gz"  
+
+elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9].fastq.gz ]] 
+then
+
+  rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} .fastq.gz`
+  rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} .fastq.gz`
+
+  fq1_suffix="1.fastq.gz"
+  fq2_suffix="2.fastq.gz" 
+
+  mv -v ${FASTQ1} ${rawFASTQ1}_${fq1_suffix}
+  mv -v ${FASTQ2} ${rawFASTQ2}_${fq2_suffix}
+  
 else
 
-  logger_ngseasy " Fastq naming format not recognised : [$FASTQ1] : should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
+  logger_ngseasy " Fastq naming format not recognised : [$FASTQ1] : This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
   echo " Fastq naming format not recognised : [$FASTQ1] : should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz] "
   exit 1
 fi        
-   
+
     
 logger_ngseasy " NGSeasy: Fastq Basename : [$rawFASTQ1] " ${LOGFILE}
 

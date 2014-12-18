@@ -1,70 +1,101 @@
 #!/bin/bash -x
 
-# Run NGSeasy : top level master scrip
+#!/bin/bash -e -x
+
+################################################################
+# Program: ngseasy
+# Version 1.0 
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+#################################################################
 
 
-#usage printing func
-usage()
-{
-cat << EOF
-  This script calls the NGSeasy pipeline : <full_gatk/full_no_gatk/fastqc/fastq_trimm/alignment/var_call/cnv_call/var_annotate/alignment_qc>
-  
-  See NGSEasy containerized instructions.
+## global usage
+function usage_ngseasy() {
+    echo "
+Program: ngseasy
+Version 1.0
+Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
-  ARGUMENTS:
-  
-  -h      Flag: Show this help message
-  -c      NGSeasy project and run configureation file
-  -d      Base directory for (fastq_raw, reference_genomes_b37, gatk_resources, ngs_projects, ngseasy_scripts)
+usage:   ngseasy -c <config_file> -d <project_directory> [options]
 
-  EXAMPLE USAGE:
-    
-    ngseasy -c config.file.tsv -d /media/ngs_projects 
-
-EOF
+options:  -t  1=quality trim [default], 0=no quality trimming 
+          -g  1=GATK, 0=No GATK [default] 
+          -r  1=Indel Realignment, 0=No Indel Realignment [default]
+          -h  show this message 
+"
 }
 
-#get options for command line args
-  while  getopts "hc:d:" opt
-  do
+### set defaults
+trimm=1
+gatk=0
+realign=1
+project_directory=""
+config_tsv=""
 
-      case ${opt} in
-	  h)
-	  usage #print help
-	  exit 0
-	  ;;
-	  
-	  c)
-	  config_tsv=${OPTARG}
-	  echo "-c = ${config_tsv}"
-	  ;;
-	 
-	  d)
-	  project_directory=${OPTARG}
-	  echo "-d = ${project_directory}"
-	  ;; 
-      esac
-  done
+## Check options passed in.
+    if test -z "$2"
+    then
+	usage_ngseasy
+	exit 1
+    f
+
+## get options for command line args
+while  getopts "hc:d:tgr" opt
+do
+
+  case ${opt} in
+
+   h)
+   usage_ngseasy #print help
+   exit 0
+   ;;
+
+   c)
+   config_tsv=${OPTARG}
+   echo "-c = ${config_tsv}"
+   ;;
+
+   d)
+   project_directory=${OPTARG}
+   echo "-d = ${project_directory}"
+   ;; 
+
+   t)
+   trimm=${OPTARG}
+   echo "-t = ${trimm}"
+   ;; 
+ 
+   g)
+   gatk=${OPTARG}
+   echo "-d = ${gatk}"
+   ;; 
+ 
+   r)
+   realign=${OPTARG}
+   echo "-d = ${realign}"
+   ;; 
+   
+  esac
+
+done
 
 #check exists.
 if [ ! -e "${config_tsv}" ] 
   then
-	  echo "ERROR : ${config_tsv} does not exist "
-	  usage;
+	  usage_ngseasy;
+	  echo "ERROR : ${config_tsv} does not exist\n"
 	  exit 1;
 fi
 
 #check exists.
 if [ ! -d "${project_directory}" ] 
   then
-	  echo "ERROR :  ${project_directory} does not exist "
-	  usage;
+	  usage_ngseasy;
+	  echo "ERROR :  ${project_directory} does not exist\n"
 	  exit 1;
 fi
 
-
-# read config file #
-# begin reading config file line by line
+## begin reading config file line by line
   
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
 do
@@ -115,12 +146,20 @@ sample_config=${SOUT}/${SAMPLE_ID}_${PIPELINE}_${run}.config.tsv
 
 logger_ngseasy "Running: bash ${PIPELINE} -c ${sample_config} -d ${PROJECT_DIR}" ${LOGFILE}
 
-/bin/bash ${PIPELINE} -c ${sample_config} -d ${PROJECT_DIR}
+/bin/bash ${PIPELINE} -c ${sample_config} -d ${PROJECT_DIR} -t ${trimm} -g ${gatk} -r ${realign}
 
 done < ${config_tsv}
 
 
-
+ngseasy_full
+ngseasy_fastqc
+ngseasy_trimmomatic
+ngseasy_alignment
+ngseasy_indel_realn
+ngseasy_base_recal
+ngseasy_ogap_realn
+ngseasy_bamutil_base_recal
+ngseasy_variant_calling
 
 
 
