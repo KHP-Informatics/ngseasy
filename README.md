@@ -1,6 +1,8 @@
 NGSeasy (beta)
 ===================
 ** This is the latest dev project **  
+**note**: undergoing massive re-dev , many links broken...stay tuned and email us. give us a few weeks.  
+
 [Funded by Biomedical Research Centre](http://core.brc.iop.kcl.ac.uk): http://core.brc.iop.kcl.ac.uk
 
 Publication: pending
