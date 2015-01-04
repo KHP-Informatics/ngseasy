@@ -13,7 +13,8 @@ Release Version: **1.0.0b**
 ****************
 ### [A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box] 
 ****************
-
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="s_j_newhouse">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**
 
 **Getting started: [The 12 Easy Steps to NGS Freedom!](https://github.com/KHP-Informatics/ngs#the-12-easy-steps-to-ngs-freedom)**  
