@@ -88,12 +88,17 @@ fi
 
 ## Read config file 
 logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] "
- 
+
+## params to get
+## trim gatk bsqr realign 
+##
+
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
 do
 
 ## set varibales  
   DATE=`date +"%d%m%y"`
+  
   POJECT_ID=$f1
   SAMPLE_ID=$f2
   FASTQ1=$f3
@@ -104,13 +109,17 @@ do
   NGS_TYPE=$f8
   BED_ANNO=$f9
   PIPELINE=$f10
-  ALIGNER=$f11
-  VARCALLER=$f12
-  GTMODEGATK=$f13
-  CLEANUP=$f14
-  NCPU=$f15
-  VERSION=$f16
-  NGSUSER=$f17
+  TRIM=$f11
+  GATK=$f12
+  BSQR=$f13
+  REALN=$f14
+  ALIGNER=$f15
+  VARCALLER=$f16
+  GTMODEGATK=$f17
+  CLEANUP=$f18
+  NCPU=$f19
+  VERSION=$f20
+  NGSUSER=$f21
 
 ## read config_file
 logger_ngseasy "[ngseasy_fastqc]:

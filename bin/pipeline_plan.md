@@ -72,9 +72,10 @@ options:  -t  1=quality trim [default], 0=no quality trimming
 
 
 ## set defaults
-trimm=1
-gatk=0
-realign=1
+TRIM=1
+GATK=0
+REALN=1
+BSQR=1
 project_directory=""
 config_tsv=""
 
@@ -108,18 +109,18 @@ do
    ;; 
 
    t)
-   trimm=${OPTARG}
-   echo "-t = ${trimm}"
+   TRIM=${OPTARG}
+   echo "-t = ${TRIM}"
    ;; 
  
    g)
-   gatk=${OPTARG}
-   echo "-d = ${gatk}"
+   GATK=${OPTARG}
+   echo "-d = ${GATK}"
    ;; 
  
    r)
-   realign=${OPTARG}
-   echo "-d = ${realign}"
+   REALN=${OPTARG}
+   echo "-d = ${REALN}"
    ;; 
    
   esac
@@ -148,50 +149,90 @@ fi
 ## fastqc
 ngseasy_fastqc -c ${config_tsv} -d ${project_directory}
 
+##-------------------------------------------------------------------------##
 ## adapter and read/base quality trimming
-if [[ "${trimm}" -eq 1 ]]
+if [[ "${TRIM}" -eq 1 ]]
 then
   ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
 fi
 
+##-------------------------------------------------------------------------##
 ## alignment : includes addition of read groups at alignment stage 
 ## and then duplicate marking (samblaster), indexing and sorting with sambamba
 ngseasy_alignment -c ${config_tsv} -d ${project_directory}
 
 
-## GATK Processing : Indel realignment and base quality score reclibration
-if [[ "${gatk}" -eq 1 ]] && [[ "${realign}" -eq 1 ]] 
-then 
+##-------------------------------------------------------------------------##
+## NGS Processing : Indel realignment and base quality score reclibration using GATK or BamUtil/ogap
+if [[ "${GATK}" -eq 1 ]] && [[ "${REALN}" -eq 1 ]] && [[ "${BSQR}" -eq 1 ]]
+then
+
   ngseasy_indel_realn -c ${config_tsv} -d ${project_directory}
   ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
     
-else
-  ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
-fi
+elif [[ "${GATK}" -eq 1 ]] && [[ "${REALN}" -eq 0 ]] && [[ "${BSQR}" -eq 1 ]]
+then
 
-## NON-GATK Processing  : Indel realignment and base quality score reclibration
-if [[ "${gatk}" -eq 0 ]] && [[ "${realign}" -eq 1 ]] 
-then 
+  ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
+
+elif [[ "${GATK}" -eq 0 ]] && [[ "${REALN}" -eq 1 ]] && [[ "${BSQR}" -eq 1 ]]
+then
+
   ngseasy_ogap_realn -c ${config_tsv} -d ${project_directory}
   ngseasy_bamutil_base_recal -c ${config_tsv} -d ${project_directory}
-    
-else
+
+elif [[ "${GATK}" -eq 0 ]] && [[ "${REALN}" -eq 0 ]] && [[ "${BSQR}" -eq 1 ]]
+then
+
   ngseasy_bamutil_base_recal -c ${config_tsv} -d ${project_directory}
+  
 fi
 
+##-------------------------------------------------------------------------##
 ## Alignment statistics
 ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
 
+##-------------------------------------------------------------------------##
 ## SNP/INDEL calling
 ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
  
 ngseasy_variant_calling_fast_ensemble -c ${config_tsv} -d ${project_directory}
 
+##-------------------------------------------------------------------------##
 ## CNV Calling
+
+##-------------------------------------------------------------------------##
 ## Annotation
+
+##-------------------------------------------------------------------------##
 ## NGS Report
 
 ```
+
+
+## options
+POJECT_ID
+SAMPLE_ID
+FASTQ1
+FASTQ2
+PROJECT_DIR
+DNA_PREP_LIBRARY_ID
+NGS_PLATFORM
+NGS_TYPE
+BAIT
+CAPTURE
+TRIM
+GATK
+BSQR
+REALN
+ALIGNER
+VARCALLER
+CNV
+GTMODEGATK
+CLEANUP
+NCPU
+VERSION
+NGSUSER
 
 
 ****
