@@ -189,7 +189,14 @@ RUN mkdir /usr/local/pipeline && \
     cd freebayes && \
     make all && \
     chmod -R 777 ./* && \
-    cp bin/bamleftalign /usr/local/bin/
+    cp bin/bamleftalign /usr/local/bin/ && \
+    cd /usr/local/pipeline/ && \
+    git clone --recursive git://github.com/ekg/vcflib.git \
+    cd vcflib && \
+    make && \
+    cp ./bin/* /usr/local/bin/
+
+
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline 
