@@ -141,77 +141,115 @@ fi
 
 # --- Start NGS Pipeline -------------------------------------------------------- #
 
-
-
-## params to get
-## trim gatk bsqr realign 
-##
-
-while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
+# Read config file
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22
 do
 
 ## set varibales  
-  DATE=`date +"%d%m%y"`
+DATE=`date +"%d%m%y"`
   
-POJECT_ID=f1
-SAMPLE_ID f2
-FASTQ1  f3
-FASTQ2  f4
-PROJECT_DIR f5
-DNA_PREP_LIBRARY_ID f6
-NGS_PLATFORM  f7
-NGS_TYPE  f8
-BAIT  f9
-CAPTURE f10
-TRIM  f11
-BSQR  f12
-REALN f13
-ALIGNER f14
-VARCALLER f15
-CNV f16
-ANNOTATOR f17
-CLEANUP f18
-NCPU  f19
-VERSION f20
-NGSUSER f21
+PROJECT_ID=$f1
+SAMPLE_ID=$f2
+FASTQ1=$f3
+FASTQ2=$f4
+PROJECT_DIR=$f5
+DNA_PREP_LIBRARY_ID=$f6
+NGS_PLATFORM=$f7
+NGS_TYPE=$f8
+BAIT=$f9
+CAPTURE=$f10
+FASTQC=$f11
+TRIM=$f12
+BSQR=$f13
+REALN=$f14
+ALIGNER=$f15
+VARCALLER=$f16
+CNV=$f17
+ANNOTATOR=$f18
+CLEANUP=$f19
+NCPU=$f20
+VERSION=$f21
+NGSUSER=$f22
 
-  POJECT_ID=$f1
-  SAMPLE_ID=$f2
-  FASTQ1=$f3
-  FASTQ2=$f4
-  PROJECT_DIR=$f5 
-  DNA_PREP_LIBRARY_ID=$f6
-  NGS_PLATFORM=$f7
-  NGS_TYPE=$f8
-  BAIT=
-  CAPTURE=
-
-  TRIM=$f11
-  BSQR=$f13
-  REALN=$f14
-  ALIGNER=$f15
-  VARCALLER=$f16
-  CNV=
-  CLEANUP=$f18
-  NCPU=$f19
-  VERSION=$f20
-  NGSUSER=$f21
-
-
-# Read config file 
+# Read config file log
 logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y"
 
+echo -e "
+[ngseasy]:Reading [${config_tsv}] \n
+[ngseasy]:Reading [${config_tsv}]:PROJECT_ID=[$PROJECT_ID] \n
+[ngseasy]:Reading [${config_tsv}]:SAMPLE_ID=[$SAMPLE_ID] \n
+[ngseasy]:Reading [${config_tsv}]:FASTQ1=[$FASTQ1] \n
+[ngseasy]:Reading [${config_tsv}]:FASTQ2=[$FASTQ2] \n
+[ngseasy]:Reading [${config_tsv}]:PROJECT_DIR=[$PROJECT_DIR] \n
+[ngseasy]:Reading [${config_tsv}]:DNA_PREP_LIBRARY_ID=[$DNA_PREP_LIBRARY_ID] \n
+[ngseasy]:Reading [${config_tsv}]:NGS_PLATFORM=[$NGS_PLATFORM] \n
+[ngseasy]:Reading [${config_tsv}]:NGS_TYPE=[$NGS_TYPE] \n
+[ngseasy]:Reading [${config_tsv}]:BAIT=[$BAIT] \n
+[ngseasy]:Reading [${config_tsv}]:CAPTURE=[$CAPTURE] \n
+[ngseasy]:Reading [${config_tsv}]:FASTQC=[$FASTQC] \n
+[ngseasy]:Reading [${config_tsv}]:TRIM=[$TRIM] \n
+[ngseasy]:Reading [${config_tsv}]:BSQR=[$BSQR] \n
+[ngseasy]:Reading [${config_tsv}]:REALN=$[$REALN] \n
+[ngseasy]:Reading [${config_tsv}]:ALIGNER=[$ALIGNER] \n
+[ngseasy]:Reading [${config_tsv}]:VARCALLER=[$VARCALLER] \n
+[ngseasy]:Reading [${config_tsv}]:CNV=[$CNV] \n
+[ngseasy]:Reading [${config_tsv}]:ANNOTATOR=[$ANNOTATOR] \n
+[ngseasy]:Reading [${config_tsv}]:CLEANUP=[$CLEANUP] \n
+[ngseasy]:Reading [${config_tsv}]:NCPU=[$NCPU] \n
+[ngseasy]:Reading [${config_tsv}]:VERSION=[$VERSION] \n
+[ngseasy]:Reading [${config_tsv}]:NGSUSER=[$NGSUSER]"
 
+logger_ngseasy "[ngseasy]:Reading [${config_tsv}] \n
+[ngseasy]:Reading [${config_tsv}]:PROJECT_ID=[$PROJECT_ID] \n
+[ngseasy]:Reading [${config_tsv}]:SAMPLE_ID=[$SAMPLE_ID] \n
+[ngseasy]:Reading [${config_tsv}]:FASTQ1=[$FASTQ1] \n
+[ngseasy]:Reading [${config_tsv}]:FASTQ2=[$FASTQ2] \n
+[ngseasy]:Reading [${config_tsv}]:PROJECT_DIR=[$PROJECT_DIR] \n
+[ngseasy]:Reading [${config_tsv}]:DNA_PREP_LIBRARY_ID=[$DNA_PREP_LIBRARY_ID] \n
+[ngseasy]:Reading [${config_tsv}]:NGS_PLATFORM=[$NGS_PLATFORM] \n
+[ngseasy]:Reading [${config_tsv}]:NGS_TYPE=[$NGS_TYPE] \n
+[ngseasy]:Reading [${config_tsv}]:BAIT=[$BAIT] \n
+[ngseasy]:Reading [${config_tsv}]:CAPTURE=[$CAPTURE] \n
+[ngseasy]:Reading [${config_tsv}]:FASTQC=[$FASTQC] \n
+[ngseasy]:Reading [${config_tsv}]:TRIM=[$TRIM] \n
+[ngseasy]:Reading [${config_tsv}]:BSQR=[$BSQR] \n
+[ngseasy]:Reading [${config_tsv}]:REALN=$[$REALN] \n
+[ngseasy]:Reading [${config_tsv}]:ALIGNER=[$ALIGNER] \n
+[ngseasy]:Reading [${config_tsv}]:VARCALLER=[$VARCALLER] \n
+[ngseasy]:Reading [${config_tsv}]:CNV=[$CNV] \n
+[ngseasy]:Reading [${config_tsv}]:ANNOTATOR=[$ANNOTATOR] \n
+[ngseasy]:Reading [${config_tsv}]:CLEANUP=[$CLEANUP] \n
+[ngseasy]:Reading [${config_tsv}]:NCPU=[$NCPU] \n
+[ngseasy]:Reading [${config_tsv}]:VERSION=[$VERSION] \n
+[ngseasy]:Reading [${config_tsv}]:NGSUSER=[$NGSUSER]
+" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y"
 
-
+##-------------------------------------------------------------------------##
 ## fastqc
-ngseasy_fastqc -c ${config_tsv} -d ${project_directory}
+if [[ "${FASTQC}" -eq "qc-fastc" ]]
+then
+    echo -e  "[ngseasy]:Calling ngseasy_fastqc" 
+    logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y" 
+
+    ngseasy_fastqc -c ${config_tsv} -d ${project_directory}
+
+else
+    echo -e  "[ngseasy]:Skipping qc-trimming" 
+    logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y" 
+fi
 
 ##-------------------------------------------------------------------------##
 ## adapter and read/base quality trimming
-if [[ "${TRIM}" -eq 1 ]]
+if [[ "${TRIM}" -eq "qc-trim" ]]
 then
-  ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
+    echo -e  "[ngseasy]:Calling ngseasy_trimmomatic" 
+    logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y" 
+
+    ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
+
+else
+    echo -e  "[ngseasy]:Skipping qc-trimming" 
+    logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y" 
 fi
 
 ##-------------------------------------------------------------------------##
@@ -264,6 +302,9 @@ ngseasy_variant_calling_fast_ensemble -c ${config_tsv} -d ${project_directory}
 
 ##-------------------------------------------------------------------------##
 ## NGS Report
+
+
+done < ${config_tsv}
 
 ```
 
