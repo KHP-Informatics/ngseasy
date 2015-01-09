@@ -49,52 +49,62 @@ add checks for containers/images
 #!/bin/bash -e -x
 
 ################################################################
-# Program: ngseasy_full
+# Program: ngseasy
 # Version 1.0 
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 #################################################################
 
+## NGSeasy version
+NGSEASYVERSION="1.0"
+
+## check and make ~/ngseasy_logs if needed
+if [[ ! -e  ${HOME}/ngseasy_logs ]]
+then
+  mkdir ${HOME}/ngseasy_logs
+  global_run_logs="${HOME}/ngseasy_logs"
+fi
+
+## global logging fuction
+function logger_ngseasy() {
+ message=${1}
+ mylogfile=${2}
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -a`]" >> ${mylogfile}.log >> ${global_run_logs}/ngseasy-run.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -a`]"
+}
+
 ## global usage
-function usage_ngseasy_full() {
+function usage_ngseasy() {
     echo "
-Program: ngseasy_full
+Program: ngseasy
 Version 1.0
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
-usage:   ngseasy_full -c <config_file> -d <project_directory> [options]
+usage:   ngseasy_full -c <config_file> -d <project_directory>
 
-options:  -t  1=quality trim [default], 0=no quality trimming 
-          -g  1=GATK, 0=No GATK [default] 
-          -r  1=Indel Realignment, 0=No Indel Realignment [default]
+options:  -c  configuration file
+          -d  project directory
           -h  show this message 
 "
 }
 
-
-## set defaults
-TRIM=1
-GATK=0
-REALN=1
-BSQR=1
-project_directory=""
-config_tsv=""
+## example config: https://docs.google.com/spreadsheets/d/1VWqmMffkVDnvOtRJGlPqOYzXWnIN_IONXQHDAawaN5Q/edit#gid=0
 
 ## Check options passed in.
-    if test -z "$2"
-    then
-	usage_ngseasy_full
-	exit 1
-    f
+if test -z "$2"
+  then
+  usage_ngseasy
+  exit 1
+fi
 
 
 ## get options for command line args
-while  getopts "hc:d:tgr" opt
+while  getopts "hc:d:" opt
 do
 
   case ${opt} in
 
    h)
-   usage_ngseasy_full #print help
+   usage_ngseasy #print help
    exit 0
    ;;
 
@@ -106,31 +116,16 @@ do
    d)
    project_directory=${OPTARG}
    echo "-d = ${project_directory}"
-   ;; 
+   ;;
 
-   t)
-   TRIM=${OPTARG}
-   echo "-t = ${TRIM}"
-   ;; 
- 
-   g)
-   GATK=${OPTARG}
-   echo "-d = ${GATK}"
-   ;; 
- 
-   r)
-   REALN=${OPTARG}
-   echo "-d = ${REALN}"
-   ;; 
-   
-  esac
 
+   esac
 done
 
 ## check file and directory exist.
 if [[ ! -e "${config_tsv}" ]] 
   then
-	  usage_ngseasy_full;
+	  usage_ngseasy;
 	  echo -e "ERROR : ${config_tsv} does not exist\n"
 	  exit 1;
 fi
@@ -138,13 +133,76 @@ fi
 ## check exists.
 if [[ ! -d "${project_directory}" ]] 
   then
-	  usage_ngseasy_full;
+	  usage_ngseasy;
 	  echo -e "ERROR :  ${project_directory} does not exist\n"
 	  exit 1;
 fi
 
 
-# --- Start NGS Pipeline --- #
+# --- Start NGS Pipeline -------------------------------------------------------- #
+
+
+
+## params to get
+## trim gatk bsqr realign 
+##
+
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
+do
+
+## set varibales  
+  DATE=`date +"%d%m%y"`
+  
+POJECT_ID=f1
+SAMPLE_ID f2
+FASTQ1  f3
+FASTQ2  f4
+PROJECT_DIR f5
+DNA_PREP_LIBRARY_ID f6
+NGS_PLATFORM  f7
+NGS_TYPE  f8
+BAIT  f9
+CAPTURE f10
+TRIM  f11
+BSQR  f12
+REALN f13
+ALIGNER f14
+VARCALLER f15
+CNV f16
+ANNOTATOR f17
+CLEANUP f18
+NCPU  f19
+VERSION f20
+NGSUSER f21
+
+  POJECT_ID=$f1
+  SAMPLE_ID=$f2
+  FASTQ1=$f3
+  FASTQ2=$f4
+  PROJECT_DIR=$f5 
+  DNA_PREP_LIBRARY_ID=$f6
+  NGS_PLATFORM=$f7
+  NGS_TYPE=$f8
+  BAIT=
+  CAPTURE=
+
+  TRIM=$f11
+  BSQR=$f13
+  REALN=$f14
+  ALIGNER=$f15
+  VARCALLER=$f16
+  CNV=
+  CLEANUP=$f18
+  NCPU=$f19
+  VERSION=$f20
+  NGSUSER=$f21
+
+
+# Read config file 
+logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y"
+
+
+
 
 ## fastqc
 ngseasy_fastqc -c ${config_tsv} -d ${project_directory}
@@ -208,6 +266,12 @@ ngseasy_variant_calling_fast_ensemble -c ${config_tsv} -d ${project_directory}
 ## NGS Report
 
 ```
+
+## pipelines
+gatk_realn_recab
+gatk_recab
+
+
 
 
 ## options

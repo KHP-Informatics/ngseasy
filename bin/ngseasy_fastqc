@@ -9,11 +9,19 @@
 NGSEASYVERSION="1.0"
 
 ## check and make /ngeasy_tmp if needed
-if [[ ! -e  ~/ngeasy_tmp ]]
+if [[ ! -e  ${HOME}/ngeasy_tmp ]]
 then
-  mkdir ~/ngeasy_tmp
+  mkdir ${HOME}/ngeasy_tmp
   global_run_logs=" ~/ngeasy_tmp"
 fi
+
+## global logging fuction
+function logger_ngseasy() {
+ message=${1}
+ mylogfile=${2}
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -a`]" >> ${mylogfile}.log >> ${global_run_logs}/ngseasy-run.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -a`]"
+}
 
 ## global usage
 function ngseasy_fastqc() {
@@ -30,13 +38,6 @@ ngseasy_fastqc sets up the NGSeasy docker fastqc container compbio/ngseasy-fastq
 "
 }
 
-## global logging fuction
-function logger_ngseasy() {
- message=${1}
- mylogfile=${2}
- echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -srpio`]" >> ${mylogfile}.log >> ${global_run_logs}/ngseasy-run.log;
- echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -srpio`]"
-}
 
 ## Check options passed in.
 if test -z "$2"
@@ -76,7 +77,7 @@ else
 	    logger_ngseasy "[ngseasy_fastqc]:Configuration file found [${config_tsv}] "
 fi
 
-#check exists.
+#check project_directory exists.
 if [ ! -d "${project_directory}" ]
   then
     logger_ngseasy "[ngseasy_fastqc]:ERROR : project_directory [${project_directory}] does not exist "
