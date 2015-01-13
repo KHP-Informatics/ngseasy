@@ -8,12 +8,16 @@
 
 NGSEASYVERSION="1.0"
 
-## check and make /ngeasy_tmp if needed
-if [[ ! -e  ${HOME}/ngeasy_tmp ]]
+## test if docker is intsalled and exit if not
+command -v docker >/dev/null 2>&1 || { echo "I require Dokcer...but it's not installed.  Aborting." >&2; exit 1; }
+
+## check and make ~/ngseasy_logs if needed
+if [[ ! -e  ${HOME}/ngseasy_logs ]]
 then
-  mkdir ${HOME}/ngeasy_tmp
-  global_run_logs=" ~/ngeasy_tmp"
+  mkdir ${HOME}/ngseasy_logs
+  global_run_logs="${HOME}/ngseasy_logs"
 fi
+
 
 ## global logging fuction
 function logger_ngseasy() {

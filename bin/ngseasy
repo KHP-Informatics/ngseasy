@@ -6,6 +6,34 @@
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 #################################################################
 
+## NGSeasy version
+NGSEASYVERSION="1.0"
+
+## test if docker is intsalled and exit if not
+command -v docker >/dev/null 2>&1 || { echo -e "Docker (https://docs.docker.com/installation/mac/) not installed.\nAborting." >&2; exit 1; }
+DOCKERVERSION=`docker version`
+echo -e "Docker Version:\n${DOCKERVERSION}"
+
+## check if ngseasy scripts exist
+
+## check and make ~/ngseasy_logs if needed
+if [[ ! -e  ${HOME}/ngseasy_logs ]]
+then
+  mkdir ${HOME}/ngseasy_logs
+  global_run_logs="${HOME}/ngseasy_logs"
+  echo -e "making ${HOME}/ngseasy_logs"
+
+else
+    echo -e "${HOME}/ngseasy_logs exists"
+fi
+
+## global logging fuction
+function logger_ngseasy() {
+ message=${1}
+ mylogfile=${2}
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -a`]" >> ${mylogfile}.log >> ${global_run_logs}/ngseasy-run.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -a`]"
+}
 
 ## global usage
 function usage_ngseasy() {
@@ -14,31 +42,26 @@ Program: ngseasy
 Version 1.0
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
-usage:   ngseasy -c <config_file> -d <project_directory> [options]
+usage:   ngseasy_full -c <config_file> -d <project_directory>
 
-options:  -t  1=quality trim [default], 0=no quality trimming 
-          -g  1=GATK, 0=No GATK [default] 
-          -r  1=Indel Realignment, 0=No Indel Realignment [default]
+options:  -c  configuration file
+          -d  project directory
           -h  show this message 
 "
 }
 
-### set defaults
-trimm=1
-gatk=0
-realign=1
-project_directory=""
-config_tsv=""
+## example config: https://docs.google.com/spreadsheets/d/1VWqmMffkVDnvOtRJGlPqOYzXWnIN_IONXQHDAawaN5Q/edit#gid=0
 
 ## Check options passed in.
-    if test -z "$2"
-    then
-	usage_ngseasy
-	exit 1
-    f
+if test -z "$2"
+  then
+  usage_ngseasy
+  exit 1
+fi
+
 
 ## get options for command line args
-while  getopts "hc:d:tgr" opt
+while  getopts "hc:d:" opt
 do
 
   case ${opt} in
@@ -56,109 +79,199 @@ do
    d)
    project_directory=${OPTARG}
    echo "-d = ${project_directory}"
-   ;; 
+   ;;
 
-   t)
-   trimm=${OPTARG}
-   echo "-t = ${trimm}"
-   ;; 
- 
-   g)
-   gatk=${OPTARG}
-   echo "-d = ${gatk}"
-   ;; 
- 
-   r)
-   realign=${OPTARG}
-   echo "-d = ${realign}"
-   ;; 
-   
-  esac
 
+   esac
 done
 
-#check exists.
-if [ ! -e "${config_tsv}" ] 
+## check file and directory exist.
+if [[ ! -e "${config_tsv}" ]] 
   then
 	  usage_ngseasy;
-	  echo "ERROR : ${config_tsv} does not exist\n"
+	  echo -e "ERROR : ${config_tsv} does not exist\n"
 	  exit 1;
 fi
 
-#check exists.
-if [ ! -d "${project_directory}" ] 
+## check exists.
+if [[ ! -d "${project_directory}" ]] 
   then
 	  usage_ngseasy;
-	  echo "ERROR :  ${project_directory} does not exist\n"
+	  echo -e "ERROR :  ${project_directory} does not exist\n"
 	  exit 1;
 fi
 
-## begin reading config file line by line
-  
-while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
+
+# --- Start NGS Pipeline -------------------------------------------------------- #
+
+# Read config file
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22
 do
 
-# set varibales
-  DATE=`date +"%d%m%y"`
-  POJECT_ID=$f1
-  SAMPLE_ID=$f2
-  FASTQ1=$f3
-  FASTQ2=$f4
- # PROJECT_DIR=$f5
-  PROJECT_DIR=${project_directory}
-  DNA_PREP_LIBRARY_ID=$f6
-  NGS_PLATFORM=$f7
-  NGS_TYPE=$f8
-  BED_ANNO=$f9
-  PIPELINE=$f10
-  ALIGNER=$f11
-  VARCALLER=$f12
-  GTMODEGATK=$f13
-  CLEANUP=$f14
-  NCPU=$f15
-  VERSION=$f16
-  NGSUSER=$f17
+## set varibales  
+DATE=`date +"%d%m%y"`
+  
+PROJECT_ID=$f1
+SAMPLE_ID=$f2
+FASTQ1=$f3
+FASTQ2=$f4
+PROJECT_DIR=$f5
+DNA_PREP_LIBRARY_ID=$f6
+NGS_PLATFORM=$f7
+NGS_TYPE=$f8
+BAIT=$f9
+CAPTURE=$f10
+FASTQC=$f11
+TRIM=$f12
+BSQR=$f13
+REALN=$f14
+ALIGNER=$f15
+VARCALLER=$f16
+CNV=$f17
+ANNOTATOR=$f18
+CLEANUP=$f19
+NCPU=$f20
+VERSION=$f21
+NGSUSER=$f22
 
-#mounted docker dir
-#script run in docker container and will look for volumes specifef in ngseasy_volumes_contaier
-DOCKERHOME="/home/pipeman/ngs_projects"
 
-#log it 
-LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
+# Read config file log
+logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y)"
 
-logger_ngseasy "ngseasy: run pipeline: ${PIPELINE}"  ${LOGFILE}
+echo -e "
+[ngseasy]:Reading [${config_tsv}] \n
+[ngseasy]:Reading [${config_tsv}]:PROJECT_ID=[$PROJECT_ID] \n
+[ngseasy]:Reading [${config_tsv}]:SAMPLE_ID=[$SAMPLE_ID] \n
+[ngseasy]:Reading [${config_tsv}]:FASTQ1=[$FASTQ1] \n
+[ngseasy]:Reading [${config_tsv}]:FASTQ2=[$FASTQ2] \n
+[ngseasy]:Reading [${config_tsv}]:PROJECT_DIR=[$PROJECT_DIR] \n
+[ngseasy]:Reading [${config_tsv}]:DNA_PREP_LIBRARY_ID=[$DNA_PREP_LIBRARY_ID] \n
+[ngseasy]:Reading [${config_tsv}]:NGS_PLATFORM=[$NGS_PLATFORM] \n
+[ngseasy]:Reading [${config_tsv}]:NGS_TYPE=[$NGS_TYPE] \n
+[ngseasy]:Reading [${config_tsv}]:BAIT=[$BAIT] \n
+[ngseasy]:Reading [${config_tsv}]:CAPTURE=[$CAPTURE] \n
+[ngseasy]:Reading [${config_tsv}]:FASTQC=[$FASTQC] \n
+[ngseasy]:Reading [${config_tsv}]:TRIM=[$TRIM] \n
+[ngseasy]:Reading [${config_tsv}]:BSQR=[$BSQR] \n
+[ngseasy]:Reading [${config_tsv}]:REALN=$[$REALN] \n
+[ngseasy]:Reading [${config_tsv}]:ALIGNER=[$ALIGNER] \n
+[ngseasy]:Reading [${config_tsv}]:VARCALLER=[$VARCALLER] \n
+[ngseasy]:Reading [${config_tsv}]:CNV=[$CNV] \n
+[ngseasy]:Reading [${config_tsv}]:ANNOTATOR=[$ANNOTATOR] \n
+[ngseasy]:Reading [${config_tsv}]:CLEANUP=[$CLEANUP] \n
+[ngseasy]:Reading [${config_tsv}]:NCPU=[$NCPU] \n
+[ngseasy]:Reading [${config_tsv}]:VERSION=[$VERSION] \n
+[ngseasy]:Reading [${config_tsv}]:NGSUSER=[$NGSUSER]"
 
-#OUTPUT SAMPLE DIR
-# /home/pipeman/ngs_projects/ is the mounted docker volume
+logger_ngseasy "[ngseasy]:Reading [${config_tsv}] \n
+[ngseasy]:Reading [${config_tsv}]:PROJECT_ID=[$PROJECT_ID] \n
+[ngseasy]:Reading [${config_tsv}]:SAMPLE_ID=[$SAMPLE_ID] \n
+[ngseasy]:Reading [${config_tsv}]:FASTQ1=[$FASTQ1] \n
+[ngseasy]:Reading [${config_tsv}]:FASTQ2=[$FASTQ2] \n
+[ngseasy]:Reading [${config_tsv}]:PROJECT_DIR=[$PROJECT_DIR] \n
+[ngseasy]:Reading [${config_tsv}]:DNA_PREP_LIBRARY_ID=[$DNA_PREP_LIBRARY_ID] \n
+[ngseasy]:Reading [${config_tsv}]:NGS_PLATFORM=[$NGS_PLATFORM] \n
+[ngseasy]:Reading [${config_tsv}]:NGS_TYPE=[$NGS_TYPE] \n
+[ngseasy]:Reading [${config_tsv}]:BAIT=[$BAIT] \n
+[ngseasy]:Reading [${config_tsv}]:CAPTURE=[$CAPTURE] \n
+[ngseasy]:Reading [${config_tsv}]:FASTQC=[$FASTQC] \n
+[ngseasy]:Reading [${config_tsv}]:TRIM=[$TRIM] \n
+[ngseasy]:Reading [${config_tsv}]:BSQR=[$BSQR] \n
+[ngseasy]:Reading [${config_tsv}]:REALN=$[$REALN] \n
+[ngseasy]:Reading [${config_tsv}]:ALIGNER=[$ALIGNER] \n
+[ngseasy]:Reading [${config_tsv}]:VARCALLER=[$VARCALLER] \n
+[ngseasy]:Reading [${config_tsv}]:CNV=[$CNV] \n
+[ngseasy]:Reading [${config_tsv}]:ANNOTATOR=[$ANNOTATOR] \n
+[ngseasy]:Reading [${config_tsv}]:CLEANUP=[$CLEANUP] \n
+[ngseasy]:Reading [${config_tsv}]:NCPU=[$NCPU] \n
+[ngseasy]:Reading [${config_tsv}]:VERSION=[$VERSION] \n
+[ngseasy]:Reading [${config_tsv}]:NGSUSER=[$NGSUSER]
+" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y")
 
-SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
+##-------------------------------------------------------------------------##
+## fastqc
+if [[ "${FASTQC}" -eq "qc-fastc" ]]
+then
+    echo -e  "[ngseasy]:Calling ngseasy_fastqc" 
+    logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y") 
 
-#time stamp
-run=`date +"%d%m%y-%H%M%S"`
+    ngseasy_fastqc -c ${config_tsv} -d ${project_directory}
 
-#make sample spec config file and save to sample run folder 
-echo "${POJECT_ID} ${SAMPLE_ID} ${FASTQ1} ${FASTQ2} ${PROJECT_DIR} ${DNA_PREP_LIBRARY_ID} ${NGS_PLATFORM} ${NGS_TYPE} ${BED_ANNO} ${PIPELINE} ${ALIGNER} ${VARCALLER} ${GTMODEGATK} ${CLEANUP} ${NCPU} ${VERSION} ${NGSUSER}" | perl -p -i -e 's/ /\t/g' > ${SOUT}/${SAMPLE_ID}_${PIPELINE}_${run}.config.tsv
+else
+    echo -e  "[ngseasy]:Skipping qc-trimming" 
+    logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y") 
+fi
 
-#sample config 
-sample_config=${SOUT}/${SAMPLE_ID}_${PIPELINE}_${run}.config.tsv
+##-------------------------------------------------------------------------##
+## adapter and read/base quality trimming
+if [[ "${TRIM}" -eq "qc-trim" ]]
+then
+    echo -e  "[ngseasy]:Calling ngseasy_trimmomatic" 
+    logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y")
 
-logger_ngseasy "Running: bash ${PIPELINE} -c ${sample_config} -d ${PROJECT_DIR}" ${LOGFILE}
+    ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
 
-/bin/bash ${PIPELINE} -c ${sample_config} -d ${PROJECT_DIR} -t ${trimm} -g ${gatk} -r ${realign}
+else
+    echo -e  "[ngseasy]:Skipping qc-trimming" 
+    logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y")
+fi
+
+##-------------------------------------------------------------------------##
+## alignment : includes addition of read groups at alignment stage 
+## and then duplicate marking (samblaster), indexing and sorting with sambamba
+ngseasy_alignment -c ${config_tsv} -d ${project_directory}
+
+
+##-------------------------------------------------------------------------##
+## NGS Processing : Indel realignment and base quality score reclibration using GATK or BamUtil/ogap
+if [[ "${GATK}" -eq 1 ]] && [[ "${REALN}" -eq 1 ]] && [[ "${BSQR}" -eq 1 ]]
+then
+    echo -e  "[ngseasy]:running gatk indel realignment and base quality score recalibration"
+
+    echo -e  "[ngseasy]:Calling ngseasy_indel_realn" 
+    
+    ngseasy_indel_realn -c ${config_tsv} -d ${project_directory}
+  
+    echo -e  "[ngseasy]:Calling ngseasy_base_recal"
+    
+    ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
+    
+elif [[ "${GATK}" -eq 1 ]] && [[ "${REALN}" -eq 0 ]] && [[ "${BSQR}" -eq 1 ]]
+then
+
+  ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
+
+elif [[ "${GATK}" -eq 0 ]] && [[ "${REALN}" -eq 1 ]] && [[ "${BSQR}" -eq 1 ]]
+then
+
+  ngseasy_ogap_realn -c ${config_tsv} -d ${project_directory}
+  ngseasy_bamutil_base_recal -c ${config_tsv} -d ${project_directory}
+
+elif [[ "${GATK}" -eq 0 ]] && [[ "${REALN}" -eq 0 ]] && [[ "${BSQR}" -eq 1 ]]
+then
+
+  ngseasy_bamutil_base_recal -c ${config_tsv} -d ${project_directory}
+  
+fi
+
+##-------------------------------------------------------------------------##
+## Alignment statistics
+ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
+
+##-------------------------------------------------------------------------##
+## SNP/INDEL calling
+ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
+ 
+ngseasy_variant_calling_fast_ensemble -c ${config_tsv} -d ${project_directory}
+
+##-------------------------------------------------------------------------##
+## CNV Calling
+
+##-------------------------------------------------------------------------##
+## Annotation
+
+##-------------------------------------------------------------------------##
+## NGS Report
+
 
 done < ${config_tsv}
-
-
-ngseasy_full
-ngseasy_fastqc
-ngseasy_trimmomatic
-ngseasy_alignment
-ngseasy_indel_realn
-ngseasy_base_recal
-ngseasy_ogap_realn
-ngseasy_bamutil_base_recal
-ngseasy_variant_calling
-
-
-
-

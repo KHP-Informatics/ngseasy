@@ -1,4 +1,4 @@
-
+#!/bin/bash
 
 
 logger_ngseasy
