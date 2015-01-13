@@ -8,6 +8,6 @@ install:
         cp -v ${SRC}/* ${TARGET_BIN}
 
 clean:
-	  rm /bin/ngseas* && rm /bin/
+	  rm /bin/ngseas* && rm /bin/ensembl****yaml
 
 
