@@ -14,7 +14,7 @@ command -v docker >/dev/null 2>&1 || { echo -e "Docker (https://docs.docker.com/
 DOCKERVERSION=`docker version`
 echo -e "Docker Version:\n${DOCKERVERSION}"
 
-## check if ngseasy scripts exist
+## TO DO : check if ngseasy scripts exist
 
 ## check and make ~/ngseasy_logs if needed
 if [[ ! -e  ${HOME}/ngseasy_logs ]]
