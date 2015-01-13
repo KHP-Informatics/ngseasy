@@ -5,6 +5,6 @@ TARGET_BIN=/bin
 SRC=./bin
 
 install:
-        cp -v ${SRC}/ngseas* ${TARGET_BIN}
+        cp -v ${SRC}/* ${TARGET_BIN}
 
 
