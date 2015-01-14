@@ -35,11 +35,11 @@ dockerimages:
 
 vep:
 	cd ${DIR}/containerized/ngs_docker_debian/ngs_variant_annotators/ngseasy_vep && \
-	docker build --rm=true compbio/ngseasy-vep:${VERSION} 
+	docker build --rm=true compbio/ngseasy-vep:${VERSION} .
 
 snpeff:
 	cd ${DIR}/containerized/ngs_docker_debian/ngs_variant_annotators/ngseasy_snpeff && \
-	docker build --rm=true compbio/ngseasy-snpeff:${VERSION} 
+	docker build --rm=true compbio/ngseasy-snpeff:${VERSION} .
 
 genomes:
 	wget http://s3.amazonaws.com/ && \
