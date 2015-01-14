@@ -10,8 +10,6 @@ TARGET_BIN=/bin
 ## relative path to ngseasy scripts
 SRC=./bin
 
-
-
 all:
 	install dockerimages genomes resources testdata vep snpeff
 
@@ -40,9 +38,9 @@ vep:
 	docker build --rm=true compbio/ngseasy-vep:${VERSION} 
 
 snpeff:
-	cd c/containerized/ngs_docker_debian/ngs_variant_annotators/ngseasy_snpeff && \
+	cd ${DIR}/containerized/ngs_docker_debian/ngs_variant_annotators/ngseasy_snpeff && \
 	docker build --rm=true compbio/ngseasy-snpeff:${VERSION} 
-	
+
 genomes:
 	wget http://s3.amazonaws.com/ && \
 	tar -xvf 
