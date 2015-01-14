@@ -55,8 +55,8 @@ testdata:
 
 
 clean:
-	rm -fv ${TARGET_BIN}/ngseas* && \
-	rm -fv ${TARGET_BIN}/ensembl****yaml
+	rm -f -v ${TARGET_BIN}/ngseas* && \
+	rm -f -v ${TARGET_BIN}/ensembl****yaml
 
 purge:
 	rm -f -v ${TARGET_BIN}/ngseas* && \
