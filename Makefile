@@ -19,12 +19,12 @@ install:
 	sudo docker pull compbio/ngseasy-freebayes:${VERSION} && \
 	sudo docker pull compbio/ngseasy-platypus:${VERSION} && \
 	sudo docker pull compbio/ngseasy-delly:${VERSION} && \
-    sudo docker pull compbio/ngseasy-lumpy:${VERSION} && \
-    sudo docker pull compbio/ngseasy-cnmops:${VERSION} && \
-    sudo docker pull compbio/ngseasy-mhmmm:${VERSION} && \
-    sudo docker pull compbio/ngseasy-exomedepth:${VERSION} && \
-    sudo docker pull compbio/ngseasy-bcbiovar:${VERSION} && \
-    sudo docker pull compbio/ngseasy-snpeff:${VERSION}
+	sudo docker pull compbio/ngseasy-lumpy:${VERSION} && \
+	sudo docker pull compbio/ngseasy-cnmops:${VERSION} && \
+	sudo docker pull compbio/ngseasy-mhmmm:${VERSION} && \
+	sudo docker pull compbio/ngseasy-exomedepth:${VERSION} && \
+	sudo docker pull compbio/ngseasy-bcbiovar:${VERSION} && \
+	sudo docker pull compbio/ngseasy-snpeff:${VERSION}
 
 @echo removing ngseasy scripts
 
