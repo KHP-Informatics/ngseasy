@@ -14,17 +14,21 @@ RUN apt-get update && \
 
 # VEP GRCh37
 RUN cd /usr/local/pipeline && \ 
-  wget https://github.com/Ensembl/ensembl-tools/archive/release/77.zip && \
-  unzip 77.zip && \
-  chmod -R 766 /usr/local/pipeline/* && \
-  cd /usr/local/pipeline/ensembl-tools-release-77/scripts/variant_effect_predictor/ && \
-  perl INSTALL.pl --AUTO acf --ASSEMBLY GRCh37 --SPECIES homo_sapiens_merged
-  
+  wget https://github.com/Ensembl/ensembl-tools/archive/release/78.zip && \
+  unzip 78.zip && \
+  chmod -R 777 /usr/local/pipeline/* && \
+  cd /usr/local/pipeline/ensembl-tools-release-78/scripts/variant_effect_predictor/ && \
+  perl INSTALL.pl -a ac -s homo_sapiens -y GRCh37 --CACHEDIR ~/.vep
+
+# Ports
+EXPOSE 80
+
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 
 ############################################################################################
 # Notes: 
@@ -33,7 +37,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 #
 # -h | --help        Display this message and quit
 #-d | --DESTDIR     Set destination directory for API install (default = './')
-#-v | --VERSION     Set API version to install (default = 77)
+#-v | --VERSION     Set API version to install (default = 78)
 #-c | --CACHEDIR    Set destination directory for cache files (default = '/.vep/')
 #-n | --UPDATE      EXPERIMENTAL! Check for and download new VEP versions
 #-a | --AUTO        Run installer without user prompts. Use a (API), c (cache),
