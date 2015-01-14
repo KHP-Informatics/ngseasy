@@ -14,22 +14,22 @@ install:
 	cp -v ${SRC}/* ${TARGET_BIN}
 
 dockerimages:	
-	sudo docker pull compbio/ngseasy-base:${VERSION} && \
-	sudo docker pull compbio/ngseasy-fastqc:${VERSION} && \
-	sudo docker pull compbio/ngseasy-trimmomatic:${VERSION} && \
-	sudo docker pull compbio/ngseasy-bwa:${VERSION} && \
-	sudo docker pull compbio/ngseasy-bowtie2:${VERSION} && \
-	sudo docker pull compbio/ngseasy-stampy:${VERSION} && \
-	sudo docker pull compbio/ngseasy-picardtools:${VERSION} && \
-	sudo docker pull compbio/ngseasy-freebayes:${VERSION} && \
-	sudo docker pull compbio/ngseasy-platypus:${VERSION} && \
-	sudo docker pull compbio/ngseasy-delly:${VERSION} && \
-	sudo docker pull compbio/ngseasy-lumpy:${VERSION} && \
-	sudo docker pull compbio/ngseasy-cnmops:${VERSION} && \
-	sudo docker pull compbio/ngseasy-mhmmm:${VERSION} && \
-	sudo docker pull compbio/ngseasy-exomedepth:${VERSION} && \
-	sudo docker pull compbio/ngseasy-bcbiovar:${VERSION} && \
-	sudo docker pull compbio/ngseasy-snpeff:${VERSION}
+	docker pull compbio/ngseasy-base:${VERSION} && \
+	docker pull compbio/ngseasy-fastqc:${VERSION} && \
+	docker pull compbio/ngseasy-trimmomatic:${VERSION} && \
+	docker pull compbio/ngseasy-bwa:${VERSION} && \
+	docker pull compbio/ngseasy-bowtie2:${VERSION} && \
+	docker pull compbio/ngseasy-stampy:${VERSION} && \
+	docker pull compbio/ngseasy-picardtools:${VERSION} && \
+	docker pull compbio/ngseasy-freebayes:${VERSION} && \
+	docker pull compbio/ngseasy-platypus:${VERSION} && \
+	docker pull compbio/ngseasy-delly:${VERSION} && \
+	docker pull compbio/ngseasy-lumpy:${VERSION} && \
+	docker pull compbio/ngseasy-cnmops:${VERSION} && \
+	docker pull compbio/ngseasy-mhmmm:${VERSION} && \
+	docker pull compbio/ngseasy-exomedepth:${VERSION} && \
+	docker pull compbio/ngseasy-bcbiovar:${VERSION} && \
+	docker pull compbio/ngseasy-snpeff:${VERSION}
 
 genomes:
 	wget http://s3.amazonaws.com/ && \
