@@ -1,7 +1,7 @@
 ## Edit this to reflect version if ya need
 VERSION=1.0
 
-## Dowload dir
+## Current working dir
 DIR=`pwd`
 
 ## Install bin path - edit at will
@@ -10,11 +10,10 @@ TARGET_BIN=/bin
 ## relative path to ngseasy scripts
 SRC=./bin
 
-all:
-	install dockerimages genomes resources testdata vep snpeff
+all: install dockerimages genomes resources vep snpeff testdata
 
 install:
-	cp -v ${SRC}/* ${TARGET_BIN}
+	cp -v ${SRC}/* ${TARGET_BIN}/
 
 dockerimages:	
 	docker pull compbio/ngseasy-base:${VERSION} && \
@@ -50,9 +49,11 @@ resources:
 	tar -xvf
 
 testdata:
-	wget http://s3.amazonaws.com/ && \
-	tar -xvf
-
+	cd ${DIR} && \
+	mkdir fastq_test_data && \
+	cd fastq_test_data && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878s.WEX_1.fq.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878s.WEX_2.fq.gz
 
 clean:
 	rm -f -v ${TARGET_BIN}/ngseas* && \
