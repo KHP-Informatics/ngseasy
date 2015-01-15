@@ -1,5 +1,6 @@
 ## Edit this to reflect version if ya need
 VERSION=1.0
+GENOMEBUILD=37
 
 ## Current working dir
 DIR=$(shell pwd)
@@ -10,7 +11,7 @@ TARGET_BIN=/bin
 ## relative path to ngseasy scripts
 SRC=./bin
 
-all: install dockerimages genomes resources vep snpeff testdata
+all: install dockerimages genomes bwaindex bowtie2index stampyindex resources vep snpeff testdata
 
 install:
 	cp -v ${SRC}/* ${TARGET_BIN}/
@@ -41,14 +42,26 @@ snpeff:
 	docker build --rm=true compbio/ngseasy-snpeff:${VERSION} .
 
 genomes:
-	wget http://s3.amazonaws.com/ && \
-	tar -xvf 
+	cd ${DIR} && \
+	mkdir reference_genomes_b${GENOMEBUILD} && \
+	cd reference_genomes_b${GENOMEBUILD} && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b${GENOMEBUILD}/human_g1k_v${GENOMEBUILD}.fasta.fai.tar.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b${GENOMEBUILD}/human_g1k_v${GENOMEBUILD}.fasta.tar.gz && \
+	tar -xvf ./*.tar.gz && \
+	chmod -R 777 ./
+
+bwaindex:
+
+stampyindex:
+
+bowtie2index:
 
 resources:
 	cd ${DIR} && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/gatk_resources.tar.gz && \
 	tar -xvf gatk_resources.tar.gz && \
-	chmod 766 -R gatk_resources
+	chmod -R 766 gatk_resources && \
+	rm gatk_resources.tar.gz
 
 testdata:
 	cd ${DIR} && \
@@ -67,6 +80,7 @@ novoalign:
 	docker build --rm=true compbio/ngseasy-gatk:${VERSION} .
 
 
+
 clean:
 	rm -f -v ${TARGET_BIN}/ngseas* && \
 	rm -f -v ${TARGET_BIN}/ensembl****yaml
@@ -79,5 +93,8 @@ purge:
 	docker rmi -f $(shell docker images -a |  grep ngseasy | awk '{print $3}')
 
 ## to do: add options to download and build reference genome builds 
+## indexing of genome 
+
+
 
 
