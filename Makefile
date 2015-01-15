@@ -2,7 +2,7 @@
 VERSION=1.0
 
 ## Current working dir
-DIR=`pwd`
+DIR=$(shell pwd)
 
 ## Install bin path - edit at will
 TARGET_BIN=/bin
@@ -74,9 +74,9 @@ clean:
 purge:
 	rm -f -v ${TARGET_BIN}/ngseas* && \
 	rm -f -v ${TARGET_BIN}/ensembl****yaml && \
-	docker kill $(docker ps -a | awk '{print $1}') && \
-	docker rm -f $(docker ps -a | awk '{print $1}') && \
-	docker rmi -f $(docker images -a |  grep ngseasy | awk '{print $3}')
+	docker kill $(shell docker ps -a | awk '{print $1}') && \
+	docker rm -f $(shell docker ps -a | awk '{print $1}') && \
+	docker rmi -f $(shell docker images -a |  grep ngseasy | awk '{print $3}')
 
 ## to do: add options to download and build reference genome builds 
 
