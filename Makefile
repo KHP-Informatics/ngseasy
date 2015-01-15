@@ -45,8 +45,10 @@ genomes:
 	tar -xvf 
 
 resources:
-	wget http://s3.amazonaws.com/ && \
-	tar -xvf
+	cd ${DIR} && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/gatk_resources.tar.gz && \
+	tar -xvf gatk_resources.tar.gz && \
+	chmod 766 -R gatk_resources
 
 testdata:
 	cd ${DIR} && \
@@ -54,6 +56,16 @@ testdata:
 	cd fastq_test_data && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878s.WEX_1.fq.gz && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878s.WEX_2.fq.gz
+
+
+gatk:
+	cd ${DIR}/containerized/ngs_docker_debian/ngs_variant_annotators/ngseasy_gatk && \
+	docker build --rm=true compbio/ngseasy-gatk:${VERSION} .
+
+novoalign:
+	cd ${DIR}/containerized/ngs_docker_debian/ngs_variant_annotators/ngseasy_novoalin && \
+	docker build --rm=true compbio/ngseasy-gatk:${VERSION} .
+
 
 clean:
 	rm -f -v ${TARGET_BIN}/ngseas* && \
@@ -64,8 +76,8 @@ purge:
 	rm -f -v ${TARGET_BIN}/ensembl****yaml && \
 	docker kill $(docker ps -a | awk '{print $1}') && \
 	docker rm -f $(docker ps -a | awk '{print $1}') && \
-	docker rmi -f $(docker images -a | awk '{print $3}')
+	docker rmi -f $(docker images -a |  grep ngseasy | awk '{print $3}')
 
-
+## to do: add options to download and build reference genome builds 
 
 
