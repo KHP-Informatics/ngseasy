@@ -3,7 +3,7 @@
 #------------------------------------------------#
 
 # Base image
-FROM compbio/ngseasy-base:latest
+FROM compbio/ngseasy-base:1.0
 
 # Maintainer 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
@@ -34,7 +34,7 @@ RUN chown -R pipeman:ngsgroup /usr/local/pipeline
 RUN rm -rf /tmp/*
 
 # open ports private only
-EXPOSE 80
+EXPOSE 8080
 
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]

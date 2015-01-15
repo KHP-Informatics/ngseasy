@@ -19,11 +19,11 @@ RUN apt-get update -y && apt-get upgrade -y
 # + FastQC
     RUN wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.2.zip \
         && unzip /tmp/fastqc_v0.11.2.zip -d /usr/local/pipeline/ \
-        && chown -R pipeman:ngsgroup /usr/local/pipeline/FastQC \
+        && chmod -R 777 /usr/local/pipeline \
         && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/FastQC/jbzip2-0.9.jar:/usr/local/pipeline/FastQC/sam-1.103.jar' /home/pipeman/.bashrc \
         && sed -i '$aPATH=${PATH}:/usr/local/pipeline/FastQC' /home/pipeman/.bashrc \
         && echo "alias ngsFastqc='/usr/local/pipeline/FastQC'" >>  /home/pipeman/.bashrc \
-        && cp -v /usr/local/pipeline/FastQC/* /usr/local/bin
+        && cp -r -v /usr/local/pipeline/FastQC/fastqc /usr/local/bin/
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
@@ -37,7 +37,7 @@ RUN rm -rf /tmp/*
 EXPOSE 80
 
 # Use baseimage-docker's bash.
-CMD ["/usr/local/bin/fastqc"]
+CMD ["/bin/bash"]
 
 #Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

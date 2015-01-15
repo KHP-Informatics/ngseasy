@@ -1,5 +1,5 @@
 # Base image
-FROM compbio/ngseasy-base:latest
+FROM compbio/ngseasy-base:1.0
 
 # Maintainer 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
@@ -12,13 +12,13 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -y && apt-get upgrade -y
 
 # + bwa 
-RUN wget -O /tmp/bwa-0.7.10.tar.bz2 http://sourceforge.net/projects/bio-bwa/files/bwa-0.7.10.tar.bz2 \
-    && tar xjvf /tmp/bwa-0.7.10.tar.bz2 -C /usr/local/pipeline/ \
-    && cd /usr/local/pipeline/bwa-0.7.10 && make \
-    && chown -R pipeman:ngsgroup /usr/local/pipeline/bwa-0.7.10 \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/bwa-0.7.10' /home/pipeman/.bashrc \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/bwa-0.7.10' ~/.bashrc \
-    && echo "alias ngsBWA='/usr/local/pipeline/bwa-0.7.10'" >>  /home/pipeman/.bashrc
+RUN wget -O /tmp/bwa-0.7.12.tar.bz2 http://sourceforge.net/projects/bio-bwa/files/bwa-0.7.12.tar.bz2 \
+    && tar xjvf /tmp/bwa-0.7.12.tar.bz2 -C /usr/local/pipeline/ \
+    && cd /usr/local/pipeline/bwa-0.7.12 && make \
+    && chown -R pipeman:ngsgroup /usr/local/pipeline/bwa-0.7.12 \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/bwa-0.7.12' /home/pipeman/.bashrc \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/bwa-0.7.12' ~/.bashrc \
+    && echo "alias ngsBWA='/usr/local/pipeline/bwa-0.7.12'" >>  /home/pipeman/.bashrc
     
 
 #-------------------------------PERMISSIONS--------------------------
@@ -30,7 +30,7 @@ RUN chown -R pipeman:ngsgroup /usr/local/pipeline
 RUN rm -rf /tmp/*
 
 #open ports private only
-EXPOSE 80
+EXPOSE 8080
 
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]
