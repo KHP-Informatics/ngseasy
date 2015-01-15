@@ -3,7 +3,7 @@
 #------------------------------------------------#
 
 # Base image
-FROM compbio/ngseasy-base:latest
+FROM compbio/ngseasy-base:1.0
 
 # Maintainer 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
@@ -37,7 +37,7 @@ RUN rm -rf /tmp/*
 EXPOSE 80
 
 # Use baseimage-docker's bash.
-CMD ["/bin/bash"]
+CMD ["/usr/local/bin/fastqc"]
 
 #Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
