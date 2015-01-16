@@ -2,6 +2,7 @@
 ## Version 1.0 
 ## Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
+## MEM Min 32GB
 
 ## Edit this to reflect version if ya need
 VERSION=1.0
