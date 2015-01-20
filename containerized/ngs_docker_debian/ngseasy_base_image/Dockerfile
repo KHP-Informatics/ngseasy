@@ -62,19 +62,11 @@ RUN apt-get update \
   ncurses-dev \
   zlib1g-dev \
   yum \
-  libX11-dev libXpm-dev libXft-dev libXext-dev
+  libX11-dev libXpm-dev libXft-dev libXext-dev \
+  asciidoc \
+  bedtools
 
-# http://www.methods.co.nz/asciidoc/INSTALL.html
-# sometimes Docker build winges about bot seeing a2x
-#RUN cd /usr/bin && \
-#  hg clone https://asciidoc.googlecode.com/hg/ && \
-#  cd hg && \
-#  autoconf && \
-#  ./configure && \
-#  make && \
-#  sudo make install
-
- #---------------------------------JAVA-------------------------------------------------------------------------------------#  
+#---------------------------------JAVA-------------------------------------------------------------------------------------#  
 # Remain current and upgrade java
 RUN apt-get update -y && \
   apt-get upgrade -y && \
@@ -143,12 +135,6 @@ RUN mkdir /usr/local/pipeline && \
     cd samblaster && \ 
     make && \ 
     cp samblaster /usr/local/bin/ && \
-    cd /usr/local/pipeline && \
-    git clone https://github.com/arq5x/bedtools2.git && \
-    cd bedtools2 && \
-    make clean && \
-    make all && \
-    make install && \
     cd /usr/local/pipeline && \ 
     curl -OL https://github.com/lomereiter/sambamba/releases/download/v0.5.0-alpha/sambamba_v5.0.0-alpha_linux.tar.bz2 && \ 
     tar -xvf sambamba_v5.0.0-alpha_linux.tar.bz2 && \ 
@@ -194,10 +180,14 @@ RUN mkdir /usr/local/pipeline && \
     git clone --recursive git://github.com/ekg/vcflib.git \
     cd vcflib && \
     make && \
-    cp ./bin/* /usr/local/bin/
-
-
-
+    cp ./bin/* /usr/local/bin/ && \
+    cd /usr/local/pipeline && \
+    git clone https://github.com/arq5x/bedtools2.git && \
+    cd bedtools2 && \
+    make clean && \
+    make all && \
+    make install && \
+  
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline 
 RUN chown -R pipeman:ngsgroup /usr/local/pipeline
