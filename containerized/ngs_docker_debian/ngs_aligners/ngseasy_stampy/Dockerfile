@@ -1,5 +1,5 @@
 # Base image
-FROM compbio/ngseasy-base:latest
+FROM compbio/ngseasy-bwa:1.0
 
 # Maintainer 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
@@ -9,8 +9,7 @@ ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 # Remain current
-RUN apt-get update && \
-  apt-get upgrade -y
+RUN apt-get update && apt-get upgrade -y
     
 # + stampy (registration required, get compressed file and put in context dir for the build)
 RUN wget -O /tmp/stampy-latest.tgz  http://www.well.ox.ac.uk/~gerton/software/Stampy/stampy-latest.tgz \
@@ -18,9 +17,9 @@ RUN wget -O /tmp/stampy-latest.tgz  http://www.well.ox.ac.uk/~gerton/software/St
     && sed -i 's/-Wl//' /usr/local/pipeline/stampy-1.0.23/makefile \
     && chmod -R 755 /usr/local/pipeline/stampy-1.0.23 \
     && cd /usr/local/pipeline/stampy-1.0.23 && make \
-    && chown -R pipeman:ngsgroup /usr/local/pipeline/stampy-1.0.23 \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.23' /home/pipeman/.bashrc \
-    && echo "alias ngsStampy='/usr/local/pipeline/stampy-1.0.23'" >>  /home/pipeman/.bashrc
+    && echo "alias ngsStampy='/usr/local/pipeline/stampy-1.0.23'" >>  /home/pipeman/.bashrc \
+    && cp -v /usr/local/pipeline/stampy-1.0.23/stampy.py /usr/local/bin
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 766 /usr/local/pipeline/***
