@@ -69,9 +69,11 @@ purgegenomes:
 bwaindex:
 	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
 	docker run \
-	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/:/home/reference_genomes_b$(GENOMEBUILD) \
+	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) \
 	--name bwa_indexing \
 	--rm=true \
+	-e USER=pipeman \
+	--user=pipeman \
 	-i -t compbio/ngseasy-bwa:$(VERSION) \
 	sudo /bin/bash -c "/usr/local/pipeline/bwa-0.7.12/bwa index -a bwtsw /home/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta" && \
 	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
@@ -107,9 +109,11 @@ novoalign:
 novoalignindex:	
 	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
 	docker run \
-	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/:/home/reference_genomes_b$(GENOMEBUILD) \
+	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) \
 	--name novoalign_indexing \
 	--rm=true \
+	-e USER=pipeman \
+	--user=pipeman \
 	-i -t compbio/ngseasy-novoalign:$(VERSION) \
 	sudo /bin/bash -c \
     "/usr/local/pipeline/novocraft/novoindex \
