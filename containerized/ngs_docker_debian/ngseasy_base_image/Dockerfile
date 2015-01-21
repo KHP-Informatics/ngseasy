@@ -90,7 +90,7 @@ RUN mkdir /usr/local/pipeline && \
 
 #--------------STANDARD NGS TOOLS----------------------------------------------------------------------------------------------#
 # Tools used for processing SAM/BAM/BED/VCF files
-# SAMTOOLS,htslib,bcftools,parallel,bamUtil,sambamba,samblaster
+# samtools,htslib,bcftools,parallel,bamUtil,sambamba,samblaster,vcftools,vcflib,seqtk,ogap,bamleftalign,bedtools2
 
 # ngs tools     
 RUN cd /usr/local/pipeline && \
@@ -148,13 +148,7 @@ RUN cd /usr/local/pipeline/ && \
     make && \
     sed  -i '$aPATH=${PATH}:/usr/local/pipeline/vcftools_0.1.12b/bin' /root/.bashrc
     
-RUN cd /usr/local/pipeline/ && \
-    git clone --recursive git://github.com/ekg/vcflib.git && \
-    cd /usr/local/pipeline/vcflib && \
-    chmod -R 777 ./* && \
-    make && \
-    cp /usr/local/pipeline/vcflib/bin/* /usr/local/bin/
-    
+   
 RUN cd /usr/local/pipeline/ && \
     git clone https://github.com/lh3/seqtk.git && \
     chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk && \
