@@ -219,7 +219,7 @@ CMD ["/bin/bash"]
 #Clean up APT when done.
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    apt-get remove asciidoc bwa && \
+    apt-get remove -y asciidoc && \
     apt-get autoclean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/
