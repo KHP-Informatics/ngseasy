@@ -9,14 +9,11 @@ ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 # general purpose tools
-RUN yum update
-RUN yum -y install cmake gcc-c++ gcc git make python27 python-devel python-yaml ncurses-devel zlib-devel numpy python-pip
-
-# PERL modules for VEP
-RUN yum -y install "perl(Archive::Extract)" "perl(CGI)" "perl(DBI)" "perl(Time::HiRes)" "perl(Archive::Tar)" "perl(Archive::Zip)"
+RUN apt-get update -y && apt-get upgrade -y
+RUN apt-get install -y python python-dev python-yaml ncurses-dev python-numpy python-pip
 
 # install dependencies
-RUN yum -y install libX11-devel libXpm-devel libXft-devel libXext-devel
+RUN apt-get install -y libX11-dev libXpm-dev libXft-dev libXext-dev
 
 # get ROOT
 RUN curl -OL ftp://root.cern.ch/root/root_v5.34.20.source.tar.gz && \
