@@ -184,7 +184,7 @@ RUN cd /usr/local/pipeline/ && \
     make all && \
     chmod -R 777 ./* && \
     cp bin/bamleftalign /usr/local/bin/ && \
-    rm -fv /usr/local/pipeline/freebayes
+    rm -frv /usr/local/pipeline/freebayes
 
 # vcflib    
 RUN cd /usr/local/pipeline/ && \
