@@ -14,8 +14,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get dist-upgrade -y
 
 # Basic dependencies
-RUN apt-get update \
-  && apt-get install -y \
+RUN apt-get install -y --no-install-recommends \
   automake \
   ant \
   bash \
@@ -62,16 +61,11 @@ RUN apt-get update \
   zlib1g-dev \
   yum \
   libX11-dev libXpm-dev libXft-dev libXext-dev \
-  asciidoc \
-  bedtools
+  asciidoc
 
 #---------------------------------JAVA-------------------------------------------------------------------------------------#  
-# Remain current and upgrade java
-RUN apt-get update -y && \
-  apt-get upgrade -y && \
-  apt-get install -y openjdk-7-jdk openjdk-7-doc openjdk-7-jre-lib && \
-  apt-get update -y && \
-  apt-get upgrade -y
+# upgrade java
+RUN apt-get install -y openjdk-7-jdk openjdk-7-doc openjdk-7-jre-lib
 
 #set java
 ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
@@ -215,7 +209,7 @@ EXPOSE 8080
 CMD ["/bin/bash"]
 
 #Clean up APT when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && apt-get remove asciidoc
 RUN apt-get autoclean && apt-get autoremove -y && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 
