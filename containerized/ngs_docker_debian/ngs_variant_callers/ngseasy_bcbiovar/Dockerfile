@@ -3,7 +3,7 @@
 #------------------------------------------------#
 
 # Base image
-FROM compbio/ngseasy-base:latest
+FROM compbio/ngseasy-base:1.0
 
 # Maintainer 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
@@ -19,11 +19,11 @@ RUN apt-get update -y && apt-get upgrade -y
 #-------------------------NGS-TOOL---------------------------------------
 RUN mkdir /usr/local/pipeline/bcbio  && \
   cd /usr/local/pipeline/bcbio && \
-  wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.1.9/bcbio.variation-0.1.9-standalone.jar && \
-  sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/bcbio/bcbio.variation-0.1.9-standalone.jar' /home/pipeman/.bashrc && \
+  wget https://github.com/chapmanb/bcbio.variation/releases/download/0.2.3-SNAPSHOT-20150115/bcbio.variation-0.2.3-SNAPSHOT-standalone.jar && \
+  mv bcbio.variation-0.2.3-SNAPSHOT-standalone.jar bcbio.variation-0.2.3.jar && \
+  sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/bcbio/bcbio.variation-0.2.3.jar' /home/pipeman/.bashrc && \
   sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' /home/pipeman/.bashrc && \
-  sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' ~/.bashrc && \
-  echo "alias ngsBCBIOVAR'/usr/local/pipeline/bcbio/'" >>  /home/pipeman/.bashrc
+  sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' ~/.bashrc
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
@@ -34,7 +34,7 @@ RUN chown -R pipeman:ngsgroup /usr/local/pipeline
 RUN rm -rf /tmp/*
 
 #open ports private only
-EXPOSE 80
+EXPOSE 8080
 
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]
