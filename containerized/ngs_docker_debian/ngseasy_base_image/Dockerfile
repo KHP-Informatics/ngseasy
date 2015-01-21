@@ -156,7 +156,7 @@ RUN cd /usr/local/pipeline/ && \
     export PERL5LIB=/usr/local/pipeline/vcftools_0.1.12b/perl/  && \
     cd /usr/local/pipeline/vcftools_0.1.12b/ && \
     make && \
-    sed  -i '$aPATH=${PATH}:/usr/local/pipeline/vcftools_0.1.12b/bin' /root/.bashrc
+    cp -v /usr/local/pipeline/vcftools_0.1.12b/bin/*  /usr/local/bin/
 
 # seqtk and trimadap
 RUN cd /usr/local/pipeline/ && \
