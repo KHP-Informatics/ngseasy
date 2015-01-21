@@ -18,7 +18,7 @@ RUN wget -O /tmp/picard-tools-1.128.zip https://github.com/broadinstitute/picard
     && chown -R pipeman:ngsgroup /usr/local/pipeline/picardtools \
     && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/picardtools/picard-tools-1.128/snappy-java-1.0.3-rc3.jar' /home/pipeman/.bashrc \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/picardtools/picard-tools-1.128' /home/pipeman/.bashrc \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/picardtools/picard-tools-1.128' ~/.bashrc \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/picardtools/picard-tools-1.128' ~/.bashrc
 
 
 #-------------------------------PERMISSIONS--------------------------
