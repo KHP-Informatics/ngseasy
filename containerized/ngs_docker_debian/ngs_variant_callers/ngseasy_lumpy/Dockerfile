@@ -20,11 +20,9 @@ RUN apt-get install -y python-numpy
 RUN cd /usr/local/pipeline \
     && git clone git://github.com/arq5x/lumpy-sv.git \
     && cd /usr/local/pipeline/lumpy-sv \
-    && make 
-    
-    #\
-    #&& sed -i '$aPATH=${PATH}:/usr/local/pipeline/lumpy-sv/bin' /home/pipeman/.bashrc \
-    #&& sed -i '$aPATH=${PATH}:/usr/local/pipeline/lumpy-sv/bin' ~/.bashrc \
+    && make \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/lumpy-sv/bin' /home/pipeman/.bashrc \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/lumpy-sv/bin' ~/.bashrc
 
 
 #-------------------------------PERMISSIONS--------------------------
