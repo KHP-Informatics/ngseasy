@@ -187,6 +187,7 @@ RUN cd /usr/local/pipeline/ && \
     cp bin/bamleftalign /usr/local/bin/
 
 RUN cd /usr/local/pipeline/ && \
+    rm -rfv /usr/local/pipeline/vcflib && \
     git clone --recursive git://github.com/ekg/vcflib.git && \
     cd vcflib && \
     make && \
