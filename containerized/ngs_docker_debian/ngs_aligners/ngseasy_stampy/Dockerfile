@@ -1,5 +1,5 @@
 # Base image
-FROM compbio/ngseasy-bwa:1.0
+FROM compbio/ngseasy-base:1.0
 
 # Maintainer 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
@@ -18,8 +18,7 @@ RUN wget -O /tmp/stampy-latest.tgz  http://www.well.ox.ac.uk/~gerton/software/St
     && chmod -R 755 /usr/local/pipeline/stampy-1.0.23 \
     && cd /usr/local/pipeline/stampy-1.0.23 && make \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.23' /home/pipeman/.bashrc \
-    && echo "alias ngsStampy='/usr/local/pipeline/stampy-1.0.23'" >>  /home/pipeman/.bashrc \
-    && cp -v /usr/local/pipeline/stampy-1.0.23/stampy.py /usr/local/bin
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.23' ~/.bashrc
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 766 /usr/local/pipeline/***
@@ -29,7 +28,7 @@ RUN chown -R pipeman:ngsgroup /usr/local/pipeline
 RUN rm -rf /tmp/*
 
 # open ports private only
-EXPOSE 80
+EXPOSE 8080
 
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]
