@@ -22,6 +22,7 @@ RUN cd /usr/local/pipeline && \
     wget https://github.com/tobiasrausch/delly/releases/download/v0.6.1/delly_v0.6.1_parallel_linux_x86_64bit && \
     mv -v delly_v0.6.1_CentOS5.4_x86_64bit delly && \
     mv -v delly_v0.6.1_parallel_linux_x86_64bit delly-parallel && \
+    chmod -R 777 /usr/local/pipeline && \
     cp -v delly /usr/local/bin && \
     cp -v delly-parallel /usr/local/bin
 

@@ -35,7 +35,7 @@ ngsprojects:
 	mkdir -v $(HOME)/ngseasy_logs
 
 purgengsprojects: 
-	rm -rf $(INSTALLDIR)/ngs_projects
+	rm -rfv $(INSTALLDIR)/ngs_projects
 
 dockerimages:	
 	docker pull compbio/ngseasy-base:$(VERSION) && \
