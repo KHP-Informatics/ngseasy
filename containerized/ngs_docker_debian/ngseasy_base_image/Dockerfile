@@ -1,7 +1,6 @@
 # NGSeasy Base Image
 
-# FROM 
-# FROM debian:wheezy
+# base image
 FROM debian:jessie
 
 # Maintainer 
@@ -100,7 +99,7 @@ RUN mkdir /usr/local/pipeline && \
 # SAMTOOLS,htslib,bcftools,parallel,bamUtil,sambamba,samblaster
 
 # ngs tools     
-  RUN cd /usr/local/pipeline && \
+RUN cd /usr/local/pipeline && \
     git clone --branch=develop git://github.com/samtools/htslib.git && \
     git clone --branch=develop git://github.com/samtools/bcftools.git && \
     git clone --branch=develop git://github.com/samtools/samtools.git && \
@@ -112,49 +111,57 @@ RUN mkdir /usr/local/pipeline && \
     make install && \
     cd /usr/local/pipeline/samtools && \
     make && \
-    make install && \    
-    cd /usr/local/pipeline && \
+    make install    
+    
+RUN cd /usr/local/pipeline && \
     wget http://ftpmirror.gnu.org/parallel/parallel-20140222.tar.bz2 && \
     bzip2 -dc parallel-20140222.tar.bz2 | tar xvf - && \
     cd parallel-20140222 && \
     ./configure && \
     make && \
-    make install && \
-    cd /usr/local/pipeline && \
+    make install
+    
+RUN cd /usr/local/pipeline && \
     git clone https://github.com/statgen/libStatGen.git && \
     cd libStatGen && \
     make all && \
-    cd /usr/local/pipeline && \
+    
+RUN cd /usr/local/pipeline && \
     git clone https://github.com/statgen/bamUtil.git && \
     cd bamUtil && \
     make cloneLib && \
     make all && \
-    make install && \
-    cd /usr/local/pipeline && \ 
+    make install
+    
+RUN cd /usr/local/pipeline && \ 
     git clone git://github.com/GregoryFaust/samblaster.git && \ 
     cd samblaster && \ 
     make && \ 
-    cp samblaster /usr/local/bin/ && \
-    cd /usr/local/pipeline && \ 
+    cp samblaster /usr/local/bin/
+    
+RUN cd /usr/local/pipeline && \ 
     curl -OL https://github.com/lomereiter/sambamba/releases/download/v0.5.0-alpha/sambamba_v5.0.0-alpha_linux.tar.bz2 && \ 
     tar -xvf sambamba_v5.0.0-alpha_linux.tar.bz2 && \ 
     cp sambamba_v5.0.0-alpha sambamba && \
     chmod +rwx sambamba && \
-    cp sambamba /usr/local/bin/ && \
-    cd /usr/local/pipeline/ && \
+    cp sambamba /usr/local/bin/
+    
+RUN cd /usr/local/pipeline/ && \
     wget -O /tmp/vcftools_0.1.12b.tar.gz http://sourceforge.net/projects/vcftools/files/vcftools_0.1.12b.tar.gz && \
     tar xzvf /tmp/vcftools_0.1.12b.tar.gz -C /usr/local/pipeline/  && \
     export PERL5LIB=/usr/local/pipeline/vcftools_0.1.12b/perl/  && \
     cd /usr/local/pipeline/vcftools_0.1.12b/ && \
     make && \
-    sed  -i '$aPATH=${PATH}:/usr/local/pipeline/vcftools_0.1.12b/bin' /root/.bashrc && \
-    cd /usr/local/pipeline/ && \
+    sed  -i '$aPATH=${PATH}:/usr/local/pipeline/vcftools_0.1.12b/bin' /root/.bashrc
+    
+RUN cd /usr/local/pipeline/ && \
     git clone --recursive git://github.com/ekg/vcflib.git && \
     cd /usr/local/pipeline/vcflib && \
     chmod -R 777 ./* && \
     make && \
-    cp /usr/local/pipeline/vcflib/bin/* /usr/local/bin/ && \
-    cd /usr/local/pipeline/ && \
+    cp /usr/local/pipeline/vcflib/bin/* /usr/local/bin/
+    
+RUN cd /usr/local/pipeline/ && \
     git clone https://github.com/lh3/seqtk.git && \
     chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk && \
     cd seqtk/ && \
@@ -163,25 +170,29 @@ RUN mkdir /usr/local/pipeline && \
     cp -v seqtk /usr/local/bin/ && \
     cp -v trimadap /usr/local/bin/ && \
     sed  -i '$aPATH=${PATH}:/usr/local/pipeline/seqtk' /home/pipeman/.bashrc && \
-    echo "alias ngsSeqtk='/usr/local/pipeline/seqtk'" >>  /home/pipeman/.bashrc \
-    cd /usr/local/pipeline/ && \
+    echo "alias ngsSeqtk='/usr/local/pipeline/seqtk'" >>  /home/pipeman/.bashrc
+    
+RUN cd /usr/local/pipeline/ && \
     git clone --recursive https://github.com/ekg/ogap.git && \
     cd ogap && \
     make all && \
     chmod -R 777 ./* && \
-    cp -v ogap /usr/local/bin/ && \
-    cd /usr/local/pipeline/
+    cp -v ogap /usr/local/bin/
+
+RUN cd /usr/local/pipeline/
     git clone --recursive git://github.com/ekg/freebayes.git && \
     cd freebayes && \
     make all && \
     chmod -R 777 ./* && \
-    cp bin/bamleftalign /usr/local/bin/ && \
-    cd /usr/local/pipeline/ && \
+    cp bin/bamleftalign /usr/local/bin/
+
+RUN cd /usr/local/pipeline/ && \
     git clone --recursive git://github.com/ekg/vcflib.git \
     cd vcflib && \
     make && \
-    cp ./bin/* /usr/local/bin/ && \
-    cd /usr/local/pipeline && \
+    cp ./bin/* /usr/local/bin/
+ 
+RUN cd /usr/local/pipeline && \
     git clone https://github.com/arq5x/bedtools2.git && \
     cd bedtools2 && \
     make clean && \
@@ -197,7 +208,7 @@ RUN chown -R pipeman:ngsgroup /usr/local/pipeline
 RUN rm -rf /tmp/*
 
 #open ports private only
-EXPOSE 80
+EXPOSE 8080
 
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]
