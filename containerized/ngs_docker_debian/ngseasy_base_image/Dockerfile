@@ -179,7 +179,7 @@ RUN cd /usr/local/pipeline/ && \
     chmod -R 777 ./* && \
     cp -v ogap /usr/local/bin/
 
-RUN cd /usr/local/pipeline/
+RUN cd /usr/local/pipeline/ && \
     git clone --recursive git://github.com/ekg/freebayes.git && \
     cd freebayes && \
     make all && \
@@ -187,7 +187,7 @@ RUN cd /usr/local/pipeline/
     cp bin/bamleftalign /usr/local/bin/
 
 RUN cd /usr/local/pipeline/ && \
-    git clone --recursive git://github.com/ekg/vcflib.git \
+    git clone --recursive git://github.com/ekg/vcflib.git && \
     cd vcflib && \
     make && \
     cp ./bin/* /usr/local/bin/
@@ -197,7 +197,7 @@ RUN cd /usr/local/pipeline && \
     cd bedtools2 && \
     make clean && \
     make all && \
-    make install && \
+    make install
   
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline 
