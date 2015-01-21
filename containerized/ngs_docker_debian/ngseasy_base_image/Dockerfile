@@ -124,7 +124,7 @@ RUN cd /usr/local/pipeline && \
 RUN cd /usr/local/pipeline && \
     git clone https://github.com/statgen/libStatGen.git && \
     cd libStatGen && \
-    make all && \
+    make all
     
 RUN cd /usr/local/pipeline && \
     git clone https://github.com/statgen/bamUtil.git && \
