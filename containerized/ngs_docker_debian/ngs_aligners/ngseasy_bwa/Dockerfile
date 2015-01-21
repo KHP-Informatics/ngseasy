@@ -15,9 +15,8 @@ RUN apt-get update -y && apt-get upgrade -y
 RUN wget -O /tmp/bwa-0.7.12.tar.bz2 http://sourceforge.net/projects/bio-bwa/files/bwa-0.7.12.tar.bz2 \
     && tar xjvf /tmp/bwa-0.7.12.tar.bz2 -C /usr/local/pipeline/ \
     && chmod -R 777 /usr/local/pipeline \
-    && cd /usr/local/pipeline/bwa-0.7.12 && make && make install \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/bwa-0.7.12' /home/pipeman/.bashrc \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/bwa-0.7.12' ~/.bashrc
+    && cd /usr/local/pipeline/bwa-0.7.12 && make \
+    && cp -v /usr/local/pipeline/bwa-0.7.12/bwa /usr/local/bin
     
 
 #-------------------------------PERMISSIONS--------------------------

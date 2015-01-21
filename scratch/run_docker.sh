@@ -5,7 +5,5 @@
 docker run --rm -it \
 -v ${HOME}/ngs_projects:/home/pipeman/ngs_projects: \
 -w /home/pipeman \
--e HOME=/home/pipeman \
--e USER=pipeman \
---name ngseasy_base \
---user=pipeman compbio/ngseasy-base:1.0
+-e HOME=/root \
+--name ngseasy_test compbio/ngseasy-bwa:1.0
