@@ -34,6 +34,9 @@ ngsprojects:
 	mkdir -v $(INSTALLDIR)/ngs_projects/annovardb && \
 	mkdir -v $(HOME)/ngseasy_logs
 
+purgengsprojects: 
+	rm -rf $(INSTALLDIR)/ngs_projects
+
 dockerimages:	
 	docker pull compbio/ngseasy-base:$(VERSION) && \
 	docker pull compbio/ngseasy-fastqc:$(VERSION) && \
