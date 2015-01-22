@@ -52,8 +52,9 @@ dockerimages:
 	docker pull compbio/ngseasy-bcbiovar:$(VERSION) && \
 	docker pull compbio/ngseasy-cnmops:$(VERSION) && \
 	docker pull compbio/ngseasy-mhmmm:$(VERSION) && \
-	docker pull compbio/ngseasy-exomedepth:$(VERSION)
-	
+	docker pull compbio/ngseasy-exomedepth:$(VERSION) && \
+	docker pull compbio/ngseasy-slope:$(VERSION)
+
 
 genomes:
 	cd $(INSTALLDIR)/ngs_projects && \
@@ -67,7 +68,7 @@ genomes:
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.tar.gz && \
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz
 	
-chromosomes: 
+chromosomes:
 	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
 	mkdir chroms && \
 	cd chroms && \

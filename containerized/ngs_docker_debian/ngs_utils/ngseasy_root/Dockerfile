@@ -5,7 +5,7 @@ FROM compbio/ngseasy-base:1.0
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
-ENV HOME /root
+#ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 # general purpose tools
@@ -25,10 +25,11 @@ RUN cd /tmp && \
     cd .. && \
     mv root /usr/local
 
-RUN touch ~/.bashrc  && \
-    echo "source /usr/local/root/bin/thisroot.sh" >>  ~/.bashrc  && \
-    . ~/.bashrc
+RUN  echo "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
+    . /root/.bashrc
 
+#ENV ROOTSYS /usr/local/root
+    
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
 RUN chown -R pipeman:ngsgroup /usr/local/pipeline
