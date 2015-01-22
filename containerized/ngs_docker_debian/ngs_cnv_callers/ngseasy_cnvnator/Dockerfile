@@ -24,8 +24,8 @@ RUN curl -OL ftp://root.cern.ch/root/root_v5.34.20.source.tar.gz && \
     cd .. && \
     sudo mv root /usr/local
 
-RUN source /usr/local/root/bin/thisroot.sh && \
-    . ~/.bashrc
+RUN touch /root/.bashrc  && cat "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
+    . /root/.bashrc
 
 # speedseq    
 RUN git clone --recursive https://github.com/cc2qe/speedseq && \
