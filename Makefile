@@ -34,7 +34,7 @@ ngsprojectdir:
 	mkdir -v $(INSTALLDIR)/ngs_projects/annovardb && \
 	mkdir -v $(HOME)/ngseasy_logs
 
-purgengsprojects: 
+purgengsprojectsdir: 
 	rm -rfv $(INSTALLDIR)/ngs_projects
 
 dockerimages:	

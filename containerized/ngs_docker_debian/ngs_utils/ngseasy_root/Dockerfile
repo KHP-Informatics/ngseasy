@@ -23,7 +23,7 @@ RUN cd /tmp && \
     ./configure && \
     make && \
     cd .. && \
-    sudo mv root /usr/local
+    mv root /usr/local
 
 RUN touch ~/.bashrc  && \
     echo "source /usr/local/root/bin/thisroot.sh" >>  ~/.bashrc  && \
