@@ -12,12 +12,12 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -y && apt-get upgrade -y
 
 RUN cd /usr/local/pipeline && \
-wget http://www-genepi.med.utah.edu/suppl/SLOPE/slope_align && \
-wget http://www-genepi.med.utah.edu/suppl/SLOPE/slope_align.cpp && \
-wget http://www-genepi.med.utah.edu/suppl/SLOPE/slope_cluster && \
-wget http://www-genepi.med.utah.edu/suppl/SLOPE/slope_cluster.cpp && \
-cp -v /usr/local/pipeline /usr/local/bin
-
+    wget http://www-genepi.med.utah.edu/suppl/SLOPE/slope_align && \
+    wget http://www-genepi.med.utah.edu/suppl/SLOPE/slope_align.cpp && \
+    wget http://www-genepi.med.utah.edu/suppl/SLOPE/slope_cluster && \
+    wget http://www-genepi.med.utah.edu/suppl/SLOPE/slope_cluster.cpp && \
+    chmod 777 ./* && \
+    cp -v /usr/local/pipeline/slope* /usr/local/bin
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
