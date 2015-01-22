@@ -31,9 +31,9 @@ RUN touch /root/.bashrc  && cat "source /usr/local/root/bin/thisroot.sh" >>  /ro
 RUN git clone --recursive https://github.com/cc2qe/speedseq && \
     cd speedseq && \
     python speedseq_setup.py && \
-    sudo cp -r bin/* /usr/local/bin/ && \ 
+    cp -r bin/* /usr/local/bin/ && \ 
     make cnvnator-multi && \
-    sudo cp bin/* /usr/local/bin
+    cp bin/* /usr/local/bin
     
 RUN mkdir -p /root/genomes/GRCh37/chroms && \
     cd /root/genomes/GRCh37/chroms && \

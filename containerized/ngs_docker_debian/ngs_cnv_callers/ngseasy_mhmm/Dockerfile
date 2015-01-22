@@ -1,5 +1,5 @@
 # Base image
-FROM compbio/ngseasy-base:latest
+FROM compbio/ngseasy-base:1.0
 
 # Maintainer 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
@@ -22,8 +22,6 @@ RUN apt-get install -y \
 	libquadmath0  \
 	libreadline6 \
 	libsm6 \
-	libtiff4 \
-	libunwind7 \
 	libx11-6 \
 	libxext6 \
 	libxss1 \
@@ -65,7 +63,7 @@ RUN chown -R pipeman:ngsgroup /usr/local/pipeline
 RUN rm -rf /tmp/*
 
 #open ports private only
-EXPOSE 80
+EXPOSE 8080
 
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]

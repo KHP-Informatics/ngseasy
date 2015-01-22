@@ -22,7 +22,7 @@ TARGET_BIN=/bin
 SRC=./bin
 
 all:
-	ngseasybin ngsprojects dockerimages genomes bwaindex bowtie2index stampyindex resources vep snpeff testdata
+	ngseasybin ngsprojects dockerimages genomes chromosomes bwaindex bowtie2index stampyindex resources vep snpeff testdata
 
 ngseasybin:
 	cp -v $(SRC)/* $(TARGET_BIN)/
@@ -66,6 +66,12 @@ genomes:
 	tar -xvf $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz && \
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.tar.gz && \
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz
+	
+chromosomes: 
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	mkdir chroms && \
+	cd chroms && \
+	cat human_g1k_v37.fasta | awk 'BEGIN { CHROM="" } { if ($1~"^>") CHROM=substr($1,2); print $0 > CHROM".fa" }'
 
 purgegenomes: 
 	rm -rfv $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)
