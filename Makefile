@@ -22,12 +22,12 @@ TARGET_BIN=/bin
 SRC=./bin
 
 all:
-	ngseasybin ngsprojects dockerimages genomes chromosomes bwaindex bowtie2index stampyindex resources vep snpeff testdata
+	scripts ngsprojectdir dockerimages genomes chromosomes bwaindex bowtie2index stampyindex resources vep snpeff testdata
 
-ngseasybin:
+scripts:
 	cp -v $(SRC)/* $(TARGET_BIN)/
 
-ngsprojects: 
+ngsprojectdir: 
 	mkdir -v $(INSTALLDIR)/ngs_projects && \
 	mkdir -v $(INSTALLDIR)/ngs_projects/raw_fastq && \
 	mkdir -v $(INSTALLDIR)/ngs_projects/config_files && \

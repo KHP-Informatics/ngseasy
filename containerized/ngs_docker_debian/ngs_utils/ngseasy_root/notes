@@ -16,7 +16,8 @@ RUN apt-get install -y python python-dev python-yaml ncurses-dev python-numpy py
 RUN apt-get install -y libX11-dev libXpm-dev libXft-dev libXext-dev
 
 # get ROOT
-RUN curl -OL ftp://root.cern.ch/root/root_v5.34.20.source.tar.gz && \
+RUN cd /tmp && \
+    curl -OL ftp://root.cern.ch/root/root_v5.34.20.source.tar.gz && \
     tar -xvf root_v5.34.20.source.tar.gz && \
     cd root && \
     ./configure && \
@@ -24,8 +25,9 @@ RUN curl -OL ftp://root.cern.ch/root/root_v5.34.20.source.tar.gz && \
     cd .. && \
     sudo mv root /usr/local
 
-RUN touch /root/.bashrc  && cat "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
-    . /root/.bashrc
+RUN touch ~/.bashrc  && \
+    echo "source /usr/local/root/bin/thisroot.sh" >>  ~/.bashrc  && \
+    . ~/.bashrc
 
 # speedseq    
 RUN git clone --recursive https://github.com/cc2qe/speedseq && \
