@@ -5,8 +5,8 @@ FROM compbio/ngseasy-base:1.0
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
-ENV HOME /root
-ENV DEBIAN_FRONTEND noninteractive
+# ENV HOME /root
+# ENV DEBIAN_FRONTEND noninteractive
 
 # Update
 RUN apt-get update -y && apt-get upgrade -y
@@ -20,8 +20,8 @@ RUN wget -O /tmp/bwa-0.7.12.tar.bz2 http://sourceforge.net/projects/bio-bwa/file
     
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+RUN chmod -R 777 /usr/local/pipeline/bwa-0.7.12
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline/bwa-0.7.12
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir
