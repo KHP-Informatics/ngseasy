@@ -5,7 +5,7 @@ FROM compbio/ngseasy-base:1.0
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
-ENV HOME /root
+# ENV HOME /root
 
 # Update
 RUN apt-get update -y && apt-get install -y python-dev
