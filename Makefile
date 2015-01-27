@@ -53,8 +53,8 @@ dockerimages:
 	docker pull compbio/ngseasy-cnmops:$(VERSION) && \
 	docker pull compbio/ngseasy-mhmmm:$(VERSION) && \
 	docker pull compbio/ngseasy-exomedepth:$(VERSION) && \
-	docker pull compbio/ngseasy-slope:$(VERSION)
-
+	docker pull compbio/ngseasy-slope:$(VERSION) && \
+        docker pull compbio/ngseasy-snap:$(VERSION)
 
 genomes:
 	cd $(INSTALLDIR)/ngs_projects && \
