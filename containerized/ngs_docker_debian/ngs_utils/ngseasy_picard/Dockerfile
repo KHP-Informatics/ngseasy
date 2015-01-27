@@ -5,8 +5,8 @@ FROM compbio/ngseasy-base:1.0
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
-ENV HOME /root
-ENV DEBIAN_FRONTEND noninteractive
+# ENV HOME /root
+# ENV DEBIAN_FRONTEND noninteractive
 
 # Update
 RUN apt-get update -y && apt-get upgrade -y
@@ -19,7 +19,6 @@ RUN wget -O /tmp/picard-tools-1.128.zip https://github.com/broadinstitute/picard
     && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/picardtools/picard-tools-1.128/snappy-java-1.0.3-rc3.jar' /home/pipeman/.bashrc \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/picardtools/picard-tools-1.128' /home/pipeman/.bashrc \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/picardtools/picard-tools-1.128' ~/.bashrc
-
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
