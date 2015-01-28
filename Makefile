@@ -109,7 +109,7 @@ exomedepth:
 slope:
 	docker pull compbio/ngseasy-slope:$(VERSION)
 	
-genomes: ngsprojectdir
+genomes: 
 	cd $(INSTALLDIR)/ngs_projects && \
 	mkdir reference_genomes_b$(GENOMEBUILD) && \
 	cd reference_genomes_b$(GENOMEBUILD) && \
@@ -121,11 +121,11 @@ genomes: ngsprojectdir
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.tar.gz && \
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz
 	
-#chromosomes: ngsprojectdir genomes
-#	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
-#	mkdir chroms && \
-#	cd chroms && \
-#	cat $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta | awk 'BEGIN { CHROM="" } { if ($1~"^>") CHROM=substr($1,2); print $0 > CHROM".fa" }'
+chromosomes: 
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	mkdir chroms && \
+	cd chroms && \
+	cat $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta | awk 'BEGIN { CHROM="" } { if ($1~"^>") CHROM=substr($1,2); print $0 > CHROM".fasta" }'
 
 purgegenomes: 
 	rm -rfv $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)
