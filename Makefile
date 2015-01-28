@@ -110,8 +110,6 @@ stampyindex:
 
 ## bowtie2index:
 
-python  /usr/local/pipeline/stampy-1.0.23/stampy.py
-
 resources: ngsprojectdir
 	cd $(INSTALLDIR)/ngs_projects && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/gatk_resources.tar.gz && \
