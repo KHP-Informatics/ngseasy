@@ -177,8 +177,7 @@ bowtie2index:
 	--user=pipeman \
 	-i -t compbio/ngseasy-bowtie2:$(VERSION) \
 	 /bin/bash -c \
-	"chmod 777 /usr/local/bin/bowtie2-build && \
-	/usr/local/bin/bowtie2-build \
+         "/usr/local/pipeline/bowtie2-2.2.4/bowtie2-build \
         /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta \
         /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD)" && \
 	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
