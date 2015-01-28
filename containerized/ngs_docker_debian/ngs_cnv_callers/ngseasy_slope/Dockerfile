@@ -5,8 +5,8 @@ FROM compbio/ngseasy-base:1.0
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
-ENV HOME /root
-ENV DEBIAN_FRONTEND noninteractive
+# ENV HOME /root
+# ENV DEBIAN_FRONTEND noninteractive
 
 # general purpose tools
 RUN apt-get update -y && apt-get upgrade -y
