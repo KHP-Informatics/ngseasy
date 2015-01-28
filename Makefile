@@ -188,9 +188,9 @@ snapindex:
 	--user=pipeman \
 	-i -t compbio/ngseasy-snap:$(VERSION) \
 	 /bin/bash -c \
-        "/usr/local/bin/snap \
+        "/usr/local/bin/snap index \
         /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta \
-        /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/" && \
+        /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/ -hg19" && \
 	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
 	
 resources: ngsprojectdir
