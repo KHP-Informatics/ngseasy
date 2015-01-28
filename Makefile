@@ -22,7 +22,7 @@ TARGET_BIN=/bin
 SRC=./bin
 
 all:
-	scripts ngsprojectdir dockerimages genomes chromosomes bwaindex bowtie2index stampyindex resources vep snpeff testdata
+	scripts ngsprojectdir dockerimages genomes chromosomes bwaindex bowtie2index stampyindex snapindex resources vep snpeff testdata
 
 scripts:
 	cp -v $(SRC)/* $(TARGET_BIN)/
@@ -56,7 +56,7 @@ dockerimages:
 	docker pull compbio/ngseasy-slope:$(VERSION) && \
         docker pull compbio/ngseasy-snap:$(VERSION)
 
-genomes:
+genomes: ngsprojectdir
 	cd $(INSTALLDIR)/ngs_projects && \
 	mkdir reference_genomes_b$(GENOMEBUILD) && \
 	cd reference_genomes_b$(GENOMEBUILD) && \
@@ -68,7 +68,7 @@ genomes:
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.tar.gz && \
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz
 	
-chromosomes:
+chromosomes: ngsprojectdir genomes
 	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
 	mkdir chroms && \
 	cd chroms && \
@@ -92,7 +92,23 @@ bwaindex:
         /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta" && \
 	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
 
-## stampyindex:
+stampyindex:
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	docker run \
+	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) \
+	--name bwa_indexing \
+	--rm=true \
+	-e USER=pipeman \
+	--user=pipeman \
+	-i -t compbio/ngseasy-stampy:$(VERSION) \
+	 /bin/bash -c \
+        "python  /usr/local/pipeline/stampy-1.0.23/stampy.py -G /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta && \
+        python  /usr/local/pipeline/stampy-1.0.23/stampy.py -g /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) -H /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD)" && \
+	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
+
+
+	
+## snapindex:
 
 ## bowtie2index:
 
