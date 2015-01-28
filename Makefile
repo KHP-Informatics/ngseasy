@@ -41,6 +41,7 @@ dockerimages:
 	docker pull compbio/ngseasy-base:$(VERSION) && \
 	docker pull compbio/ngseasy-fastqc:$(VERSION) && \
 	docker pull compbio/ngseasy-trimmomatic:$(VERSION) && \
+	docker pull compbio/ngseasy-snap:$(VERSION) && \
 	docker pull compbio/ngseasy-bwa:$(VERSION) && \
 	docker pull compbio/ngseasy-bowtie2:$(VERSION) && \
 	docker pull compbio/ngseasy-stampy:$(VERSION) && \
@@ -51,11 +52,60 @@ dockerimages:
 	docker pull compbio/ngseasy-lumpy:$(VERSION) && \
 	docker pull compbio/ngseasy-bcbiovar:$(VERSION) && \
 	docker pull compbio/ngseasy-cnmops:$(VERSION) && \
-	docker pull compbio/ngseasy-mhmmm:$(VERSION) && \
+	docker pull compbio/ngseasy-mhmm:$(VERSION) && \
 	docker pull compbio/ngseasy-exomedepth:$(VERSION) && \
-	docker pull compbio/ngseasy-slope:$(VERSION) && \
-	docker pull compbio/ngseasy-snap:$(VERSION)
+	docker pull compbio/ngseasy-slope:$(VERSION)
 
+baseimage:
+	docker pull compbio/ngseasy-base:$(VERSION)
+fastqc:
+	docker pull compbio/ngseasy-fastqc:$(VERSION)
+
+trimmomatic:
+	docker pull compbio/ngseasy-trimmomatic:$(VERSION)
+
+bwa:
+	docker pull compbio/ngseasy-bwa:$(VERSION)
+
+bowtie2:
+	docker pull compbio/ngseasy-bowtie2:$(VERSION)
+
+snap:
+	docker pull compbio/ngseasy-snap:$(VERSION)
+	
+stampy:
+	docker pull compbio/ngseasy-stampy:$(VERSION)
+	
+picardtools:
+	docker pull compbio/ngseasy-picardtools:$(VERSION)
+
+freebayes:
+	docker pull compbio/ngseasy-freebayes:$(VERSION)
+
+platypus:
+	docker pull compbio/ngseasy-platypus:$(VERSION)
+
+delly:
+	docker pull compbio/ngseasy-delly:$(VERSION)
+
+lumpy:
+	docker pull compbio/ngseasy-lumpy:$(VERSION)
+
+bcbiovar:
+	docker pull compbio/ngseasy-bcbiovar:$(VERSION)
+
+cnmops:
+	docker pull compbio/ngseasy-cnmops:$(VERSION)
+
+mhmm:
+	docker pull compbio/ngseasy-mhmm:$(VERSION)
+
+exomedepth:
+	docker pull compbio/ngseasy-exomedepth:$(VERSION)
+
+slope:
+	docker pull compbio/ngseasy-slope:$(VERSION)
+	
 genomes: ngsprojectdir
 	cd $(INSTALLDIR)/ngs_projects && \
 	mkdir reference_genomes_b$(GENOMEBUILD) && \
@@ -114,8 +164,35 @@ stampyindex:
         chmod -R 777 /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*" && \
 	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
 
-## bowtie2index:
+bowtie2index:
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	docker run \
+	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) \
+	--name bowtie2_indexing \
+	--rm=true \
+	-e USER=pipeman \
+	--user=pipeman \
+	-i -t compbio/ngseasy-bowtie2:$(VERSION) \
+	 /bin/bash -c \
+        "/usr/local/bin/bowtie2-build \
+        /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta \
+        /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD)" && \
+	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
 
+snapindex:
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	docker run \
+	--volume snap_indexing \
+	--rm=true \
+	-e USER=pipeman \
+	--user=pipeman \
+	-i -t compbio/ngseasy-snap:$(VERSION) \
+	 /bin/bash -c \
+        "/usr/local/bin/snap \
+        /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta \
+        /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/" && \
+	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
+	
 resources: ngsprojectdir
 	cd $(INSTALLDIR)/ngs_projects && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/gatk_resources.tar.gz && \
