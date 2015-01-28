@@ -96,7 +96,7 @@ stampyindex:
 	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
 	docker run \
 	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) \
-	--name bwa_indexing \
+	--name stampy_indexing \
 	--rm=true \
 	-e USER=pipeman \
 	--user=pipeman \
@@ -104,7 +104,8 @@ stampyindex:
 	 /bin/bash -c \
         "python  /usr/local/pipeline/stampy-1.0.23/stampy.py -G /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta && \
         chmod -R 777 /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/* && \
-        python  /usr/local/pipeline/stampy-1.0.23/stampy.py -g /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) -H /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD)" && \
+        python  /usr/local/pipeline/stampy-1.0.23/stampy.py -g /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) -H /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD) && \
+        chmod -R 777 /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*" && \
 	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
 
 ## bowtie2index:
