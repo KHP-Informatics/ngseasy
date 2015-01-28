@@ -54,7 +54,7 @@ dockerimages:
 	docker pull compbio/ngseasy-mhmmm:$(VERSION) && \
 	docker pull compbio/ngseasy-exomedepth:$(VERSION) && \
 	docker pull compbio/ngseasy-slope:$(VERSION) && \
-        docker pull compbio/ngseasy-snap:$(VERSION)
+	docker pull compbio/ngseasy-snap:$(VERSION)
 
 genomes: ngsprojectdir
 	cd $(INSTALLDIR)/ngs_projects && \
@@ -103,23 +103,22 @@ stampyindex:
 	-i -t compbio/ngseasy-stampy:$(VERSION) \
 	 /bin/bash -c \
         "python  /usr/local/pipeline/stampy-1.0.23/stampy.py -G /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta && \
+        chmod -R 777 /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/* && \
         python  /usr/local/pipeline/stampy-1.0.23/stampy.py -g /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) -H /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD)" && \
 	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
 
-
-	
-## snapindex:
-
 ## bowtie2index:
 
-resources:
+python  /usr/local/pipeline/stampy-1.0.23/stampy.py
+
+resources: ngsprojectdir
 	cd $(INSTALLDIR)/ngs_projects && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/gatk_resources.tar.gz && \
 	tar -xvf gatk_resources.tar.gz && \
 	chmod -R 766 gatk_resources && \
 	rm gatk_resources.tar.gz
 
-testdata:
+testdata: ngsprojectdir
 	cd $(INSTALLDIR)/ngs_projects && \
 	mkdir $(INSTALLDIR)/ngs_projects/fastq_test_data && \
 	cd $(INSTALLDIR)/ngs_projects/fastq_test_data && \
@@ -151,7 +150,7 @@ novoalignindex:
     -s 4 \
     /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).novoindex \
     /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta" && \
-    chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
+	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
 
 vep:
 	cd $(DIR)/containerized/ngs_docker_debian/ngs_variant_annotators/ngseasy_vep && \
