@@ -185,7 +185,8 @@ bowtie2index:
 snapindex:
 	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
 	docker run \
-	--volume snap_indexing \
+	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) \
+	--name snap_indexing \
 	--rm=true \
 	-e USER=pipeman \
 	--user=pipeman \
