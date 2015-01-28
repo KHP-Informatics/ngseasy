@@ -22,7 +22,10 @@ TARGET_BIN=/bin
 SRC=./bin
 
 all:
-	scripts ngsprojectdir dockerimages genomes chromosomes bwaindex bowtie2index stampyindex snapindex resources vep snpeff testdata
+	scripts ngsprojectdir dockerimages genomes bwaindex bowtie2index stampyindex snapindex resources vep snpeff testdata
+
+#all:
+#	scripts ngsprojectdir dockerimages genomes chromosomes bwaindex bowtie2index stampyindex snapindex resources vep snpeff testdata
 
 scripts:
 	cp -v $(SRC)/* $(TARGET_BIN)/
@@ -118,11 +121,11 @@ genomes: ngsprojectdir
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.tar.gz && \
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz
 	
-chromosomes: ngsprojectdir genomes
-	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
-	mkdir chroms && \
-	cd chroms && \
-	cat $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta | awk 'BEGIN { CHROM="" } { if ($1~"^>") CHROM=substr($1,2); print $0 > CHROM".fa" }'
+#chromosomes: ngsprojectdir genomes
+#	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+#	mkdir chroms && \
+#	cd chroms && \
+#	cat $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta | awk 'BEGIN { CHROM="" } { if ($1~"^>") CHROM=substr($1,2); print $0 > CHROM".fa" }'
 
 purgegenomes: 
 	rm -rfv $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)
