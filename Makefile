@@ -86,12 +86,15 @@ bwaindex:
 	-e USER=pipeman \
 	--user=pipeman \
 	-i -t compbio/ngseasy-bwa:$(VERSION) \
-	sudo /bin/bash -c "/usr/local/pipeline/bwa-0.7.12/bwa index -a bwtsw /home/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta" && \
+	 /bin/bash -c \
+        "/usr/local/pipeline/bwa-0.7.12/bwa index \
+        -a bwtsw \
+        /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta" && \
 	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
 
-stampyindex:
+## stampyindex:
 
-bowtie2index:
+## bowtie2index:
 
 resources:
 	cd $(INSTALLDIR)/ngs_projects && \
@@ -126,13 +129,13 @@ novoalignindex:
 	-e USER=pipeman \
 	--user=pipeman \
 	-i -t compbio/ngseasy-novoalign:$(VERSION) \
-	sudo /bin/bash -c \
+	 /bin/bash -c \
     "/usr/local/pipeline/novocraft/novoindex \
-    -k 14 \
-    -s 3 \
-    /home/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).novoindex \
-    /home/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta" && \
-	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
+    -k 13 \
+    -s 4 \
+    /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).novoindex \
+    /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta" && \
+    chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
 
 vep:
 	cd $(DIR)/containerized/ngs_docker_debian/ngs_variant_annotators/ngseasy_vep && \
@@ -152,7 +155,7 @@ annovardb:
 	--name get_annovardb \
 	--rm=true \
 	-i -t compbio/ngseasy-annovar:$(VERSION) \
-	sudo /bin/bash -c \
+	 /bin/bash -c \
 	"/bin/bash /usr/local/pipeline/annovar/get_annovar_gene_databases.sh && /bin/bash /usr/local/pipeline/annovar/get_annovar_databases.sh"
 
 clean:
