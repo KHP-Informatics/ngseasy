@@ -22,10 +22,7 @@ TARGET_BIN=/bin
 SRC=./bin
 
 all:
-	scripts ngsprojectdir dockerimages genomes bwaindex bowtie2index stampyindex snapindex resources vep snpeff testdata
-
-#all:
-#	scripts ngsprojectdir dockerimages genomes chromosomes bwaindex bowtie2index stampyindex snapindex resources vep snpeff testdata
+	scripts ngsprojectdir dockerimages genomes annotations bwaindex bowtie2index stampyindex snapindex resources vep snpeff testdata
 
 scripts:
 	cp -v $(SRC)/* $(TARGET_BIN)/
@@ -61,6 +58,7 @@ dockerimages:
 
 baseimage:
 	docker pull compbio/ngseasy-base:$(VERSION)
+
 fastqc:
 	docker pull compbio/ngseasy-fastqc:$(VERSION)
 
@@ -120,12 +118,24 @@ genomes:
 	tar -xvf $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz && \
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.tar.gz && \
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz
-	
+
+annotations:
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37_annotations/LCR_hg19_rmsk.bed.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37_annotations/SeqCap_EZ_Exome_v3_capture.bed.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37_annotations/SeqCap_EZ_Exome_v3_primary.bed.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37_annotations/dbsnp_138.b37.recab.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37_annotations/human_g1k_v37.chrom_lengths.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37_annotations/human_g1k_v37_0.5Kwindows.bed.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37_annotations/human_g1k_v37_1Kwindows.bed.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37_annotations/nexterarapidcapture_exome_targetedregions_v1.2.bed.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37_annotations/nexterarapidcapture_expandedexome_targetedregions.bed.gz
+
 chromosomes:
 	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
 	mkdir chroms && \
 	cd chroms && \
-	$(shell awk 'BEGIN { CHROM="" } { if ($$1~"^>") CHROM=substr($$1,2); print $$0 > CHROM".fasta" }' ${INSTALLDIR}/ngs_projects/reference_genomes_b${GENOMEBUILD}/human_g1k_v${GENOMEBUILD}.fasta)
+	awk 'BEGIN { CHROM="" } { if ($$1~"^>") CHROM=substr($$1,2); print $$0 > CHROM".fasta" }' ${INSTALLDIR}/ngs_projects/reference_genomes_b${GENOMEBUILD}/human_g1k_v${GENOMEBUILD}.fasta
 
 purgegenomes: 
 	rm -rfv $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)
@@ -272,6 +282,14 @@ purgeall:
 
 ## to do: add options to download and build reference genome builds 
 ## indexing of genome 
+
+
+
+
+
+
+
+
 
 
 
