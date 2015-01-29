@@ -22,7 +22,10 @@ TARGET_BIN=/bin
 SRC=./bin
 
 all:
-	scripts ngsprojectdir dockerimages genomes annotations bwaindex bowtie2index stampyindex snapindex resources vep snpeff testdata
+	scripts ngsprojectdir dockerimages genomes annotations contaminants resources testdata vep snpeff 
+
+indexgenomes: dockerimages
+	bwaindex bowtie2index stampyindex snapindex
 
 scripts:
 	cp -v $(SRC)/* $(TARGET_BIN)/
@@ -118,6 +121,10 @@ genomes:
 	tar -xvf $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz && \
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.tar.gz && \
 	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz
+
+contaminants:
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/contaminant_list.fa
 
 annotations:
 	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
