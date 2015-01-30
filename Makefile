@@ -32,6 +32,7 @@ indexgenomes: dockerimages
 	bwaindex bowtie2index stampyindex snapindex
 
 scripts:
+	chmod 755 $(SRC)/*
 	cp -v $(SRC)/* $(TARGET_BIN)/
 
 ngsprojectdir: 
@@ -288,9 +289,9 @@ clean:
 purgeall:
 	rm -f -v $(TARGET_BIN)/ngseas* && \
 	rm -f -v $(TARGET_BIN)/ensembl****yaml && \
-	docker kill $(shell docker ps -a | awk '(print $1)') && \
-	docker rm -f $(shell docker ps -a | awk '(print $1)') && \
-	docker rmi -f $(shell docker images -a |  grep ngseasy | awk '(print $3)')
+	docker kill $(shell docker ps -a | awk '(print $$1)') && \
+	docker rm -f $(shell docker ps -a | awk '(print $$1)') && \
+	docker rmi -f $(shell docker images -a |  grep ngseasy | awk '(print $$3)')
 
 ## to do: add options to download and build reference genome builds 
 ## indexing of genome 

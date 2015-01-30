@@ -40,7 +40,7 @@ options: -h  show this message
 
 ## test if docker is intsalled and exit if not
 #
-command -v docker >/dev/null 2>&1 || { echo -e "Docker (https://docs.docker.com/installation/mac/) not installed.\nAborting." >&2; exit 1; }
+command -v docker >/dev/null 2>&1 || { echo -e "Docker (https://docs.docker.com/installation) not installed.\nAborting." >&2; exit 1; }
 DOCKERVERSION=`docker version`
 echo -e "Docker Version:\n${DOCKERVERSION}"
 
@@ -100,11 +100,13 @@ done
 ## project list
 # config_tsv=config_file
 #
-# awk 'NR >1 {print $5"/"$1}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/Project_list
+logger_ngseasy "[ngseasy_initiate_project]:CMD: awk 'NR >1 {print $5"/"$1}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/Project_list" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
+awk 'NR >1 {print $5"/"$1}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/Project_list
 
 ## sample lists
 # config_tsv=config_file
 #
+logger_ngseasy "[ngseasy_initiate_project]:CMD: awk 'NR >1 {print $5"/"$1"/"$2}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/ProjectBySample_list" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
 awk 'NR >1 {print $5"/"$1"/"$2}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/ProjectBySample_list
 
   
@@ -118,25 +120,25 @@ PROJECTDIRS=$f1
     if [[ ! -d "$PROJECTDIRS" ]]
         then
         
-            logger_ngseasy "[ngseasy_initiate_project]:[${PROJECTDIRS}] Does Not Exist" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
-            logger_ngseasy "[ngseasy_initiate_project]:Making Project Directories..." ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
-            logger_ngseasy "[ngseasy_initiate_project]:[CMD: mkdir -p ${PROJECTDIRS}" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
+            logger_ngseasy "[ngseasy_initiate_project]:${PROJECTDIRS} Does Not Exist" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
+            logger_ngseasy "[ngseasy_initiate_project]:Making Project Directories..." ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
+            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}
-            logger_ngseasy "[ngseasy_initiate_project]:[CMD: mkdir -p ${PROJECTDIRS}/fastq" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
+            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/fastq" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}/fastq 
-            logger_ngseasy "[ngseasy_initiate_project]:[CMD: mkdir -p ${PROJECTDIRS}/tmp" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
+            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/tmp" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}/tmp 
-            logger_ngseasy "[ngseasy_initiate_project]:[CMD: mkdir -p ${PROJECTDIRS}/alignments" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
+            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/alignments" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}/alignments 
-            logger_ngseasy "[ngseasy_initiate_project]:[CMD: mkdir -p ${PROJECTDIRS}/vcf" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
+            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/vcf" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}/vcf 
-            logger_ngseasy "[ngseasy_initiate_project]:[CMD: mkdir -p ${PROJECTDIRS}/reports" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
+            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/reports" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}/reports 
-            logger_ngseasy "[ngseasy_initiate_project]:[CMD: mkdir -p ${PROJECTDIRS}/fastq" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
+            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/fastq" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}/config_files
             
         else
-            logger_ngseasy "[ngseasy_initiate_project]:[${PROJECTDIRS}] Exist" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
+            logger_ngseasy "[ngseasy_initiate_project]:${PROJECTDIRS}] Exist" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
     fi
 
 done < ${HOME}/ngseasy_tmp/ProjectBySample_list
