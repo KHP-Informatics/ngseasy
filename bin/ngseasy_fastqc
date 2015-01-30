@@ -6,29 +6,23 @@
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 #################################################################
 
+## Set version and run date
+#
 NGSEASYVERSION="1.0"
-
-## test if docker is intsalled and exit if not
-command -v docker >/dev/null 2>&1 || { echo "I require Dokcer...but it's not installed.  Aborting." >&2; exit 1; }
-
-## check and make ~/ngseasy_logs if needed
-if [[ ! -e  ${HOME}/ngseasy_logs ]]
-then
-  mkdir ${HOME}/ngseasy_logs
-  global_run_logs="${HOME}/ngseasy_logs"
-fi
-
+RUNDATE=`date +"%d%m%y"`
 
 ## global logging fuction
+#
 function logger_ngseasy() {
  message=${1}
  mylogfile=${2}
- echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -a`]" >> ${mylogfile}.log >> ${global_run_logs}/ngseasy-run.log;
- echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -a`]"
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:${message}]":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:${message}]":[${USER}]:[`uname -a`]"
 }
 
 ## global usage
-function ngseasy_fastqc() {
+#
+function ngseasy_fastqc_usage() {
     echo "
 Program: ngseasy_fastqc
 Version 1.0
@@ -42,12 +36,23 @@ ngseasy_fastqc sets up the NGSeasy docker fastqc container compbio/ngseasy-fastq
 "
 }
 
+## test if docker is intsalled and exit if not
+command -v docker >/dev/null 2>&1 || { echo "I require Dokcer...but it's not installed.  Aborting." >&2; exit 1; }
+
+## check and make ~/ngseasy_logs if needed
+#
+if [[ ! -e  ${HOME}/ngseasy_logs ]]
+then
+  mkdir ${HOME}/ngseasy_logs
+  global_run_logs="${HOME}/ngseasy_logs"
+fi
 
 ## Check options passed in.
+#
 if test -z "$2"
 then
   logger_ngseasy "[ngseasy_fastqc]:ERROR:No options found"
-  ngseasy_fastqc
+  ngseasy_fastqc_usage
   exit 1
 fi
 
@@ -57,7 +62,7 @@ fi
 
       case ${opt} in
 	  h)
-	  ngseasy_fastqc #print help
+	  ngseasy_fastqc_usage #print help
 	  exit 0
 	  ;;
 	  
@@ -75,20 +80,20 @@ fi
 if [ ! -e "${config_tsv}" ] 
 then
 	    logger_ngseasy "[ngseasy_fastqc]:ERROR : [${config_tsv}] does not exist....exiting "
-	    ngseasy_fastqc;
+	    ngseasy_fastqc_usage;
 	    exit 1;
 else
-	    logger_ngseasy "[ngseasy_fastqc]:Configuration file found [${config_tsv}] "
+	    ngseasy_fastqc_usage "[ngseasy_fastqc]:Configuration file found [${config_tsv}] "
 fi
 
 #check project_directory exists.
 if [ ! -d "${project_directory}" ]
   then
     logger_ngseasy "[ngseasy_fastqc]:ERROR : project_directory [${project_directory}] does not exist "
-    ngseasy_fastqc;
+    ngseasy_fastqc_usage;
     exit 1;
 else
-	    logger_ngseasy "[ngseasy_fastqc]:Top Level Project Directory [${project_directory}] "
+	    ngseasy_fastqc_usage "[ngseasy_fastqc]:Top Level Project Directory [${project_directory}] "
 fi
 
 ## Read config file 
@@ -98,7 +103,7 @@ logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] "
 ## trim gatk bsqr realign 
 ##
 
-while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21
 do
 
 ## set varibales  
@@ -139,6 +144,10 @@ logger_ngseasy "[ngseasy_fastqc]:
   $NGS_TYPE\t
   $BED_ANNO\t
   $PIPELINE\t
+  $TRIM\t
+  $GATK\t
+  $BSQR\t
+  $REALN\t
   $ALIGNER\t
   $VARCALLER\t
   $GTMODEGATK\t

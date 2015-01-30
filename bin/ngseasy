@@ -6,36 +6,32 @@
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 #################################################################
 
-## NGSeasy version
+## Set version and run date
+#
 NGSEASYVERSION="1.0"
+RUNDATE=`date +"%d%m%y"`
 
 ## test if docker is intsalled and exit if not
-command -v docker >/dev/null 2>&1 || { echo -e "Docker (https://docs.docker.com/installation/mac/) not installed.\nAborting." >&2; exit 1; }
+#
+command -v docker >/dev/null 2>&1 || { echo -e "Docker not installed.\nAborting." >&2; exit 1; }
 DOCKERVERSION=`docker version`
-echo -e "Docker Version:\n${DOCKERVERSION}"
-
-## TO DO : check if ngseasy scripts exist
-
-## check and make ~/ngseasy_logs if needed
-if [[ ! -e  ${HOME}/ngseasy_logs ]]
-then
-  mkdir ${HOME}/ngseasy_logs
-  global_run_logs="${HOME}/ngseasy_logs"
-  echo -e "making ${HOME}/ngseasy_logs"
-
-else
-    echo -e "${HOME}/ngseasy_logs exists"
-fi
+DOCKERINFO=`docker info`
+echo -e "\n"[`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:START]":[${USER}]:[`uname -a`]" 
+echo -e "\n---\nDocker Version\n---\n${DOCKERVERSION}\n---\n"Docker Info"\n---\n${DOCKERINFO}\n---\n"
+echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:START]":[${USER}]:[`uname -a`]"  >> ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY.log
+echo -e "\n---\nDocker Version\n---\n${DOCKERVERSION}\n---\n"Docker Info"\n---\n${DOCKERINFO}\n---\n" >> ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY.log
 
 ## global logging fuction
+#
 function logger_ngseasy() {
  message=${1}
  mylogfile=${2}
- echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -a`]" >> ${mylogfile}.log >> ${global_run_logs}/ngseasy-run.log;
- echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[`pwd`]:[${USER}]:[`uname -a`]"
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
 
 ## global usage
+#
 function usage_ngseasy() {
     echo "
 Program: ngseasy
@@ -50,15 +46,18 @@ options:  -c  configuration file
 "
 }
 
-## example config: https://docs.google.com/spreadsheets/d/1VWqmMffkVDnvOtRJGlPqOYzXWnIN_IONXQHDAawaN5Q/edit#gid=0
-
-## Check options passed in.
-if test -z "$2"
-  then
-  usage_ngseasy
-  exit 1
+## check and make ~/ngseasy_logs if needed
+#
+if [[ ! -e  ${HOME}/ngseasy_logs ]]
+then
+  mkdir ${HOME}/ngseasy_logs
+  global_run_logs="${HOME}/ngseasy_logs"
+  logger_ngseasy "making ${HOME}/ngseasy_logs" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
+else
+  logger_ngseasy "${HOME}/ngseasy_logs exists" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
 fi
 
+## example config: https://docs.google.com/spreadsheets/d/1VWqmMffkVDnvOtRJGlPqOYzXWnIN_IONXQHDAawaN5Q/edit#gid=0
 
 ## get options for command line args
 while  getopts "hc:d:" opt
@@ -85,6 +84,14 @@ do
    esac
 done
 
+## Check options passed in.
+#
+if test -z "$2"
+  then
+  usage_ngseasy
+  exit 1
+fi
+
 ## check file and directory exist.
 if [[ ! -e "${config_tsv}" ]] 
   then
@@ -100,6 +107,21 @@ if [[ ! -d "${project_directory}" ]]
 	  echo -e "ERROR :  ${project_directory} does not exist\n"
 	  exit 1;
 fi
+
+
+# --- Start NGS Pipeline -------------------------------------------------------- #
+
+##-------------------------------------------------------------------------##
+## initiate projects
+#
+echo -e  "[ngseasy]:Calling ngseasy_initiate_project" 
+ngseasy_initiate_project -c ${config_tsv} -d ${project_directory}
+
+##-------------------------------------------------------------------------##
+## initiate fastq files
+#
+echo -e  "[ngseasy]:Calling ngseasy_initiate_fastq" 
+ngseasy_initiate_fastq -c ${config_tsv} -d ${project_directory}
 
 
 # --- Start NGS Pipeline -------------------------------------------------------- #
@@ -139,54 +161,53 @@ NGSUSER=$f22
 logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y)"
 
 echo -e "
-[ngseasy]:Reading [${config_tsv}] \n
-[ngseasy]:Reading [${config_tsv}]:PROJECT_ID=[$PROJECT_ID] \n
-[ngseasy]:Reading [${config_tsv}]:SAMPLE_ID=[$SAMPLE_ID] \n
-[ngseasy]:Reading [${config_tsv}]:FASTQ1=[$FASTQ1] \n
-[ngseasy]:Reading [${config_tsv}]:FASTQ2=[$FASTQ2] \n
-[ngseasy]:Reading [${config_tsv}]:PROJECT_DIR=[$PROJECT_DIR] \n
-[ngseasy]:Reading [${config_tsv}]:DNA_PREP_LIBRARY_ID=[$DNA_PREP_LIBRARY_ID] \n
-[ngseasy]:Reading [${config_tsv}]:NGS_PLATFORM=[$NGS_PLATFORM] \n
-[ngseasy]:Reading [${config_tsv}]:NGS_TYPE=[$NGS_TYPE] \n
-[ngseasy]:Reading [${config_tsv}]:BAIT=[$BAIT] \n
-[ngseasy]:Reading [${config_tsv}]:CAPTURE=[$CAPTURE] \n
-[ngseasy]:Reading [${config_tsv}]:FASTQC=[$FASTQC] \n
-[ngseasy]:Reading [${config_tsv}]:TRIM=[$TRIM] \n
-[ngseasy]:Reading [${config_tsv}]:BSQR=[$BSQR] \n
-[ngseasy]:Reading [${config_tsv}]:REALN=$[$REALN] \n
-[ngseasy]:Reading [${config_tsv}]:ALIGNER=[$ALIGNER] \n
-[ngseasy]:Reading [${config_tsv}]:VARCALLER=[$VARCALLER] \n
-[ngseasy]:Reading [${config_tsv}]:CNV=[$CNV] \n
-[ngseasy]:Reading [${config_tsv}]:ANNOTATOR=[$ANNOTATOR] \n
-[ngseasy]:Reading [${config_tsv}]:CLEANUP=[$CLEANUP] \n
-[ngseasy]:Reading [${config_tsv}]:NCPU=[$NCPU] \n
-[ngseasy]:Reading [${config_tsv}]:VERSION=[$VERSION] \n
+[ngseasy]:Reading [${config_tsv}]\n
+[ngseasy]:Reading [${config_tsv}]:PROJECT_ID=[$PROJECT_ID]\n
+[ngseasy]:Reading [${config_tsv}]:SAMPLE_ID=[$SAMPLE_ID]\n
+[ngseasy]:Reading [${config_tsv}]:FASTQ1=[$FASTQ1]\n
+[ngseasy]:Reading [${config_tsv}]:FASTQ2=[$FASTQ2]\n
+[ngseasy]:Reading [${config_tsv}]:PROJECT_DIR=[$PROJECT_DIR]\n
+[ngseasy]:Reading [${config_tsv}]:DNA_PREP_LIBRARY_ID=[$DNA_PREP_LIBRARY_ID]\n
+[ngseasy]:Reading [${config_tsv}]:NGS_PLATFORM=[$NGS_PLATFORM]\n
+[ngseasy]:Reading [${config_tsv}]:NGS_TYPE=[$NGS_TYPE]\n
+[ngseasy]:Reading [${config_tsv}]:BAIT=[$BAIT]\n
+[ngseasy]:Reading [${config_tsv}]:CAPTURE=[$CAPTURE]\n
+[ngseasy]:Reading [${config_tsv}]:FASTQC=[$FASTQC]\n
+[ngseasy]:Reading [${config_tsv}]:TRIM=[$TRIM]\n
+[ngseasy]:Reading [${config_tsv}]:BSQR=[$BSQR]\n
+[ngseasy]:Reading [${config_tsv}]:REALN=$[$REALN]\n
+[ngseasy]:Reading [${config_tsv}]:ALIGNER=[$ALIGNER]\n
+[ngseasy]:Reading [${config_tsv}]:VARCALLER=[$VARCALLER]\n
+[ngseasy]:Reading [${config_tsv}]:CNV=[$CNV]\n
+[ngseasy]:Reading [${config_tsv}]:ANNOTATOR=[$ANNOTATOR]\n
+[ngseasy]:Reading [${config_tsv}]:CLEANUP=[$CLEANUP]\n
+[ngseasy]:Reading [${config_tsv}]:NCPU=[$NCPU]\n
+[ngseasy]:Reading [${config_tsv}]:VERSION=[$VERSION]\n
 [ngseasy]:Reading [${config_tsv}]:NGSUSER=[$NGSUSER]"
 
-logger_ngseasy "[ngseasy]:Reading [${config_tsv}] \n
-[ngseasy]:Reading [${config_tsv}]:PROJECT_ID=[$PROJECT_ID] \n
-[ngseasy]:Reading [${config_tsv}]:SAMPLE_ID=[$SAMPLE_ID] \n
-[ngseasy]:Reading [${config_tsv}]:FASTQ1=[$FASTQ1] \n
-[ngseasy]:Reading [${config_tsv}]:FASTQ2=[$FASTQ2] \n
-[ngseasy]:Reading [${config_tsv}]:PROJECT_DIR=[$PROJECT_DIR] \n
-[ngseasy]:Reading [${config_tsv}]:DNA_PREP_LIBRARY_ID=[$DNA_PREP_LIBRARY_ID] \n
-[ngseasy]:Reading [${config_tsv}]:NGS_PLATFORM=[$NGS_PLATFORM] \n
-[ngseasy]:Reading [${config_tsv}]:NGS_TYPE=[$NGS_TYPE] \n
-[ngseasy]:Reading [${config_tsv}]:BAIT=[$BAIT] \n
-[ngseasy]:Reading [${config_tsv}]:CAPTURE=[$CAPTURE] \n
-[ngseasy]:Reading [${config_tsv}]:FASTQC=[$FASTQC] \n
-[ngseasy]:Reading [${config_tsv}]:TRIM=[$TRIM] \n
-[ngseasy]:Reading [${config_tsv}]:BSQR=[$BSQR] \n
-[ngseasy]:Reading [${config_tsv}]:REALN=$[$REALN] \n
-[ngseasy]:Reading [${config_tsv}]:ALIGNER=[$ALIGNER] \n
-[ngseasy]:Reading [${config_tsv}]:VARCALLER=[$VARCALLER] \n
-[ngseasy]:Reading [${config_tsv}]:CNV=[$CNV] \n
-[ngseasy]:Reading [${config_tsv}]:ANNOTATOR=[$ANNOTATOR] \n
-[ngseasy]:Reading [${config_tsv}]:CLEANUP=[$CLEANUP] \n
-[ngseasy]:Reading [${config_tsv}]:NCPU=[$NCPU] \n
-[ngseasy]:Reading [${config_tsv}]:VERSION=[$VERSION] \n
-[ngseasy]:Reading [${config_tsv}]:NGSUSER=[$NGSUSER]
-" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y")
+logger_ngseasy "[ngseasy]:Reading [${config_tsv}]\n
+[ngseasy]:Reading [${config_tsv}]:PROJECT_ID=[$PROJECT_ID]\n
+[ngseasy]:Reading [${config_tsv}]:SAMPLE_ID=[$SAMPLE_ID]\n
+[ngseasy]:Reading [${config_tsv}]:FASTQ1=[$FASTQ1]\n
+[ngseasy]:Reading [${config_tsv}]:FASTQ2=[$FASTQ2]\n
+[ngseasy]:Reading [${config_tsv}]:PROJECT_DIR=[$PROJECT_DIR]\n
+[ngseasy]:Reading [${config_tsv}]:DNA_PREP_LIBRARY_ID=[$DNA_PREP_LIBRARY_ID]\n
+[ngseasy]:Reading [${config_tsv}]:NGS_PLATFORM=[$NGS_PLATFORM]\n
+[ngseasy]:Reading [${config_tsv}]:NGS_TYPE=[$NGS_TYPE]\n
+[ngseasy]:Reading [${config_tsv}]:BAIT=[$BAIT]\n
+[ngseasy]:Reading [${config_tsv}]:CAPTURE=[$CAPTURE]\n
+[ngseasy]:Reading [${config_tsv}]:FASTQC=[$FASTQC]\n
+[ngseasy]:Reading [${config_tsv}]:TRIM=[$TRIM]\n
+[ngseasy]:Reading [${config_tsv}]:BSQR=[$BSQR]\n
+[ngseasy]:Reading [${config_tsv}]:REALN=$[$REALN]\n
+[ngseasy]:Reading [${config_tsv}]:ALIGNER=[$ALIGNER]\n
+[ngseasy]:Reading [${config_tsv}]:VARCALLER=[$VARCALLER]\n
+[ngseasy]:Reading [${config_tsv}]:CNV=[$CNV]\n
+[ngseasy]:Reading [${config_tsv}]:ANNOTATOR=[$ANNOTATOR]\n
+[ngseasy]:Reading [${config_tsv}]:CLEANUP=[$CLEANUP]\n
+[ngseasy]:Reading [${config_tsv}]:NCPU=[$NCPU]\n
+[ngseasy]:Reading [${config_tsv}]:VERSION=[$VERSION]\n
+[ngseasy]:Reading [${config_tsv}]:NGSUSER=[$NGSUSER]" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y")
 
 ##-------------------------------------------------------------------------##
 ## fastqc

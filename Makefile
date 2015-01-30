@@ -7,9 +7,13 @@
 ## Edit this to reflect version if ya need
 VERSION=1.0
 GENOMEBUILD=37
+WHOAMI=$(shell whoami)
 
 ## This is where we will make ngs_projects and download metadata to etc etc
 ## Edit this if you want to install all somewhere else
+# eg:
+# make INSTALLDIR="/medida/scratch" all
+#
 INSTALLDIR=$(HOME)
 
 ## Current working dir
@@ -36,6 +40,7 @@ ngsprojectdir:
 	mkdir -v $(INSTALLDIR)/ngs_projects/config_files && \
 	mkdir -v $(INSTALLDIR)/ngs_projects/annovardb && \
 	mkdir -v $(HOME)/ngseasy_logs
+	mkdir -v $(HOME)/ngseasy_tmp
 
 purgengsprojectsdir: 
 	rm -rfv $(INSTALLDIR)/ngs_projects
