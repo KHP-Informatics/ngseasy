@@ -15,14 +15,15 @@ MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 # Update
 RUN apt-get update -y && apt-get upgrade -y
 
-
 #-------------------------NGS-TOOL---------------------------------------
 RUN mkdir /usr/local/pipeline/bcbio  && \
   cd /usr/local/pipeline/bcbio && \
   wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.2.3/bcbio.variation-0.2.3-standalone.jar && \
+  chmod 777 bcbio.variation-0.2.3-standalone.jar && \
   sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/bcbio/bcbio.variation-0.2.3-standalone.jar' /home/pipeman/.bashrc && \
   sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' /home/pipeman/.bashrc && \
-  sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' ~/.bashrc
+  sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' ~/.bashrc && \
+  cp -v bcbio.variation-0.2.3-standalone.jar /usr/local/bin/
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
