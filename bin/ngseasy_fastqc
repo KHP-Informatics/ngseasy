@@ -247,7 +247,6 @@ then
 else
 
   logger_ngseasy "[ngseasy_fastqc]: Fastq naming format not recognised [$FASTQ1] : This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
-  echo -e "[ngseasy_fastqc]: Fastq naming format not recognised [$FASTQ1] \n should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz] "
   exit 1
 fi        
 
@@ -275,7 +274,7 @@ DOCKERHOME="/home/pipeman/ngs_projects"
 SOUTDocker=${DOCKERHOME}/${POJECT_ID}/${SAMPLE_ID}
 
 # Docker run compbio/ngseasy-fastqc
-logger_ngseasy "[ngseasy_fastqc]:[cmd]: /usr/local/pipeline/FastQC/fastqc --threads ${NCPU} --extract --quiet --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz ${SOUTDocker}/fastq/${rawFASTQ2}_${fq1_suffix}.gz" ${LOGFILE}
+logger_ngseasy "[ngseasy_fastqc]:[cmd]: /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --quiet --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz ${SOUTDocker}/fastq/${rawFASTQ2}_${fq1_suffix}.gz" ${LOGFILE}
 
 docker run \
   -P \
@@ -283,20 +282,31 @@ docker run \
   --name fastqc.${SAMPLE_ID} \
   --volumes-from volumes_container \
   -t compbio/ngseasy-fastqc:${VERSION} /usr/local/pipeline/FastQC/fastqc \
-    --threads ${NCPU} \
+    --threads 2 \
     --extract \
     --quiet \
     --dir ${SOUTDocker}/tmp \
     --outdir ${SOUTDocker}/fastq \
     ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz \
     ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}.gz
-    
-## log it
+        
+    ## log it
     docker logs fastqc.${SAMPLE_ID} >> ${LOGFILE}.log
     docker rm fastqc.${SAMPLE_ID}  
-   
-  logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
+  
+#################
+## get some info
+ONUMREADS1=$(grep "Total Sequences" ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz_fastqc/fastqc_data.txt | awk '{print $3}')
+ONUMREADS2=$(grep "Total Sequences" ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}.gz_fastqc/fastqc_data.txt | awk '{print $3}')
+QUALSTRING=$(grep "Encoding" fastqc_data.txt | awk '{print $2,$4,$5}')
+OREADLENGTH=$(grep "Sequence length" fastqc_data.txt | awk '{print $3}')
+QUALCODE=$(awk '{print $3}' $QUALSTRING)
 
+  
+logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
+
+  
+  
 #------permissions------------#
 chmod -R 777 ${SOUT}/*
 
