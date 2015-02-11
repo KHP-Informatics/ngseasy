@@ -214,6 +214,8 @@ A full set of instructions for multiple operating systems are available on the [
 
 ## 2. Get NGSeasy
 
+We provide a simple Makefile to pull all of the public nsgeasy components, scripts and set up to correct project directory structre on your local machines.
+
 ```
 
 git clone https://github.com/KHP-Informatics/ngseasy.git
@@ -224,8 +226,8 @@ make all
 
 ```
 
-All NGSeasy Docker images can be pulled down from **[compbio Docker Hub](https://hub.docker.com/u/compbio/)** or using the script [get_containers.sh](https://github.com/KHP-Informatics/ngs/blob/master/bin/get_containers.sh)
-
+All NGSeasy Docker images can be pulled down from **[compbio Docker Hub](https://hub.docker.com/u/compbio/)** or using the Makefile.  
+We provide an Amazon EBS data volume with indexed genomes: XXXXXX  
 
 ### Dockerised and Automated Builds ##
 
