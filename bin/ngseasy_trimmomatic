@@ -214,7 +214,7 @@ adapter_fa="/home/pipeman/reference_genomes_b37/contaminant_list.fa"
     LEADING:3 \
     TRAILING:3 \
     SLIDINGWINDOW:4:15 \
-    MINLEN:35" ${LOGFILE}
+    MINLEN:75" ${LOGFILE}
     
 docker run \
   -P \
@@ -232,7 +232,7 @@ docker run \
     LEADING:3 \
     TRAILING:3 \
     SLIDINGWINDOW:4:15 \
-    MINLEN:35
+    MINLEN:75
 
 #logs    
     docker logs trimmomatic.${SAMPLE_ID} >> ${LOGFILE}.log
