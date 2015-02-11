@@ -246,6 +246,22 @@ then
   
   rename -v s/_[0-9][0-9][0-9]//g  ${FASTQ1}
   rename -v s/_[0-9][0-9][0-9]//g  ${FASTQ2}
+
+elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9][0-9].fastq.gz ]] 
+then
+
+  logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme\n"
+
+  rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} .fastq.gz`
+  rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} .fastq.gz`
+
+  fq1_suffix="R1.fastq.gz"
+  fq2_suffix="R2.fastq.gz" 
+
+  logger_ngseasy "[ngseasy_fastqc]:Stripping <set number (0-padded to 3 digits> from fastq names\n"
+  
+  rename -v s/_[0-9][0-9][0-9][0-9]//g  ${FASTQ1}
+  rename -v s/_[0-9][0-9][0-9][0-9]//g  ${FASTQ2}
   
 else
 
