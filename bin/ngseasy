@@ -112,14 +112,14 @@ fi
 # --- Start NGS Pipeline -------------------------------------------------------- #
 
 ##-------------------------------------------------------------------------##
-## initiate projects
+## initiate projects 0-0-1
 #
 echo -e  "[ngseasy]:Calling ngseasy_initiate_project" 
 ngseasy_initiate_project -c ${config_tsv} -d ${project_directory}
 
 ##-------------------------------------------------------------------------##
-## initiate fastq files
-#
+## initiate fastq files 0-0-2
+# copy or move fastq files to project directories 
 echo -e  "[ngseasy]:Calling ngseasy_initiate_fastq" 
 ngseasy_initiate_fastq -c ${config_tsv} -d ${project_directory}
 

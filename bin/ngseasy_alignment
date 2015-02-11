@@ -459,6 +459,56 @@ then
     logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}  
 fi
 
+#---------------------------------------------#
+# SNAP
+#---------------------------------------------#
+# align wih snap sorts and dupe marks the file anyway
+if [ "${ALIGNER}" == "snap" ]
+then
+logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}  
+
+    docker run \
+    -P \
+    --name ${ALIGNER}_${SAMPLE_ID} \
+    --volumes-from volumes_container \
+    -w /home/pipeman \
+    -t compbio/ngseasy-snap:${VERSION} \
+    "/usr/local/pipeline/snap-1.0beta.16-linux/snap \
+    paried \
+    /home/pipeman/reference_genomes_b37/ \
+    ${qcdPeFASTQ1} \
+    ${qcdPeFASTQ2} \
+    -so ${SOUTDocker}/alignments/${BAM_PREFIX}.raw.bam \
+    -t ${NCPU} \
+    -b \
+    -M \
+    -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${DATE}' \
+      bamleftalign -c -d -f ${reference} > ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
+      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \  
+      bam recab \
+      --in ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
+      --out ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
+      --refFile /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
+      --dbsnp ${DBSNP} \
+      --params \
+      --noPhoneHome \
+      --storeQualTag OQ \
+      --maxBaseQual 40 && \
+      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam && \
+      sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam > ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam.flagstat && \
+      bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam | bedtools mergeBed > ${SOUTDocker}/reports/${BAM_PREFIX}.recal.bed && \
+      rm -rf ${SOUTDocker}/tmp/* && \
+      rm ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam"
+
+#log 
+    docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
+    docker rm ${ALIGNER}_${SAMPLE_ID}
+    logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}  
+
+
+fi
+
+
 #------permissions------------#
 chmod -R 777 ${SOUT}/*
 
