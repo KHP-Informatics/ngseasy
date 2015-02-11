@@ -1,4 +1,4 @@
-#!/bin/bash -e -x
+#!/bin/bash
 
 ################################################################
 # Program: ngseasy_initiate_project
@@ -33,8 +33,8 @@ ngseasy_initiate_project sets up the project file directories. You only need to 
 usage:   ngseasy_initiate_project -c <config_file> -d <project_directory>
 
 options: -h  show this message
-	-c   Config pipeline file
-	-d   Base directory for [ngs_projects](fastq_raw, reference_genomes_b37, gatk_resources, ngs_projects, ngseasy_scripts)
+	 -c   Config pipeline file
+	 -d   Base directory for [ngs_projects](fastq_raw, reference_genomes_b37, gatk_resources, ngs_projects, ngseasy_scripts)
 "
 }
 
@@ -42,7 +42,7 @@ options: -h  show this message
 #
 command -v docker >/dev/null 2>&1 || { echo -e "Docker (https://docs.docker.com/installation) not installed.\nAborting." >&2; exit 1; }
 DOCKERVERSION=`docker version`
-echo -e "Docker Version:\n${DOCKERVERSION}"
+echo -e "Docker Installed:\n\n${DOCKERVERSION}\n\n"
 
 ## check and make ~/ngseasy_logs if needed
 if [[ ! -e  ${HOME}/ngseasy_logs ]]
