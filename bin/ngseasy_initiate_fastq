@@ -174,7 +174,7 @@ logger_ngseasy "[ngseasy_initiate_fastq]:
   $NGSUSER\t"
 
 ## Logfile 
-LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
+LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.initiate_fastq
 
 if [ ! -e "${LOGFILE}.log" ]
 then
