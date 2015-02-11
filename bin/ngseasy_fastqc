@@ -160,14 +160,18 @@ logger_ngseasy "[ngseasy_fastqc]:
   $NGSUSER\t"
   
 ## Logfile 
-LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
-touch ${LOGFILE}.log
+LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.fastqc
+
+if [ ! -e "${LOGFILE}.log" ]
+then
+    touch ${LOGFILE}.log
+fi
+  
 logger_ngseasy "[ngseasy_fastqc]:Logging to [${LOGFILE}.log] "
 
 ## OUTPUT SAMPLE DIR 
 SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
 logger_ngseasy "[ngseasy_fastqc]:Sample Directory [${SOUT}] "
-
 
 #check local dir exists
 if [ ! -d "${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}" ]
