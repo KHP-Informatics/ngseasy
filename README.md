@@ -108,14 +108,11 @@ The NGSeasy pipelines implement the following :-
     - **[BOWTIE2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)**  
     - **[SNAP](http://snap.cs.berkeley.edu/)**  
     
-~~- **SAM/BAM sorting and indexing** with **[SAMTOOLS](https://github.com/samtools/samtools)**.~~  
-- **SAM/BAM sorting and indexing** with **[SAMBAMBA](https://github.com/samtools/samtools)**.  
+- **SAM/BAM sorting and indexing** with **[SAMBAMBA](https://github.com/lomereiter/sambamba)**.  
 
 - **Read Group information added** using **[PICARDTOOLS](http://broadinstitute.github.io/picard/):[AddOrReplaceReadGroups](http://broadinstitute.github.io/picard/command-line-overview.html#AddOrReplaceReadGroups)** 
 
-~~- **Duplicate marking** with **[PICARDTOOLS](http://broadinstitute.github.io/picard/):[MarkDuplicates](http://broadinstitute.github.io/picard/command-line-overview.html#MarkDuplicates)**. ~~
-- **Duplicate marking** with **[SAMBLASTER](http://broadinstitute.github.io/picard/):[MarkDuplicates](http://broadinstitute.github.io/picard/command-line-overview.html#MarkDuplicates)**.  
-
+- **Duplicate marking** with **[SAMBLASTER](https://github.com/GregoryFaust/samblaster)**.  
 
 >For academic users and/or commercial/clinical groups whom have paid for GATK licensing, the next steps are to perform   
 
@@ -150,7 +147,7 @@ The NGSeasy pipelines implement the following :-
     - **[cn.MOPS](http://www.bioinf.jku.at/software/cnmops/): in Dev**
     - **[m-HMM](https://www.stt.msu.edu/users/hengwang/mHMM.html): in Dev**
     - **[ExomeDepth](http://cran.r-project.org/web/packages/ExomeDepth/index.html): in Dev**
-    - **[SLOPE](http://www-genepi.med.utah.edu/suppl/SLOPE/index.html): in Dev**  
+    - **[SLOPE](http://www-genepi.med.utah.edu/suppl/SLOPE/index.html): in Dev and not tested**  
     - **[cnvnator](http://sv.gersteinlab.org/): in Dev**  
 
 - **Variant annotation** using using one of the following or a combibation of if the `ensemble` methods are called. 
@@ -199,9 +196,10 @@ Dockerised NGSeasy
 ==========================
 ![docker](https://github.com/KHP-Informatics/ngs/blob/master/figs/Docker_container_engine_logo.png "Docker")  
 
-The following section describes getting the Dockerised NGSeasy Pipeline(s) and Resources, project set up and running NGSeasy.~~ in **12 easy steps**. ~~  
+The following section describes getting the Dockerised NGSeasy Pipeline(s) and Resources, project set up and running NGSeasy.
 
-Getting all resources and building required tools will take a few hours depending on network connections and any random "ghosts in the machine".
+Getting all resources and building required tools will take a few hours depending on network connections and any random "ghosts in the machine" - half a day in reality.
+But once you're set up, thats it - you are good to go.
 
 *****
 
