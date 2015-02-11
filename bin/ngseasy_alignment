@@ -482,9 +482,10 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     -t ${NCPU} \
     -b \
     -M \
-    -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${DATE}' \
-      bamleftalign -c -d -f ${reference} > ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
-      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \  
+    -R @RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${DATE} && \
+     sambamba view -h -f bam -t ${NCPU} /dev/stdout | \
+     bamleftalign -c -d -f ${reference} > ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
+     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \  
       bam recab \
       --in ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
       --out ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
@@ -498,7 +499,8 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
       sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam > ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam.flagstat && \
       bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam | bedtools mergeBed > ${SOUTDocker}/reports/${BAM_PREFIX}.recal.bed && \
       rm -rf ${SOUTDocker}/tmp/* && \
-      rm ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam"
+      rm ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
+      rm ${SOUTDocker}/alignments/${BAM_PREFIX}.raw.bam"
 
 #log 
     docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
