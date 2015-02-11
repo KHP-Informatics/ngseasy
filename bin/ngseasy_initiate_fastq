@@ -214,4 +214,4 @@ fi
 #------permissions------------#
 chmod -R 776 ${SOUT}/*
 
-done < awk 'NR>1' ${config_tsv}
+done < $(awk 'NR>1' ${config_tsv} )
