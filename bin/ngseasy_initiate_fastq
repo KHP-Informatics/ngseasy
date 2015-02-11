@@ -203,10 +203,10 @@ then
     mv -v ${PROJECT_DIR}/raw_fastq/${FASTQ2} ${SOUT}/fastq/${FASTQ2}
 
     logger_ngseasy "[ngseasy_initiate_fastq]:CMD:mv -v ${PROJECT_DIR}/raw_fastq/${FASTQ1} ${SOUT}/fastq/${FASTQ1}" ${LOGFILE}
-    logger_ngseasy "[ngseasy_initiate_fastq]:CMD:mv -v ${PROJECT_DIR}/raw_fastq/${FASTQ1} ${SOUT}/fastq/${FASTQ1}" ${LOGFILE}  
+    logger_ngseasy "[ngseasy_initiate_fastq]:CMD:mv -v ${PROJECT_DIR}/raw_fastq/${FASTQ2} ${SOUT}/fastq/${FASTQ1}" ${LOGFILE}  
 
-    #ln -s ${SOUT}/fastq/${FASTQ1} ${PROJECT_DIR}/raw_fastq/${FASTQ1}
-    #ln -s ${SOUT}/fastq/${FASTQ2} ${PROJECT_DIR}/raw_fastq/${FASTQ2}
+    ln -s ${SOUT}/fastq/${FASTQ1} ${PROJECT_DIR}/raw_fastq/${FASTQ1}
+    ln -s ${SOUT}/fastq/${FASTQ2} ${PROJECT_DIR}/raw_fastq/${FASTQ2}
     
 else
   logger_ngseasy "[ngseasy_initiate_fastq]:Fastq Files already exist in  ${SOUT}/fastq/ " ${LOGFILE}
