@@ -201,24 +201,7 @@ The following section describes getting the Dockerised NGSeasy Pipeline(s) and R
 Getting all resources and building required tools will take a few hours depending on network connections and any random "ghosts in the machine" - half a day in reality.
 But once you're set up, thats it - you are good to go.
 
-*****
-
-## The 12 Easy Steps to NGS Freedom!
-
-**1. [Install Docker](https://github.com/KHP-Informatics/ngs#1-install-docker)**  
-**2. [Get NGSeasy Automated build Container Images](https://github.com/KHP-Informatics/ngs#2-get-ngseasy-automated-build-container-images)**  
-**3. [Make NGSeasy project directory](https://github.com/KHP-Informatics/ngs#3-make-ngseasy-project-directory)**  
-**4. [Download NGSeasy Resources](https://github.com/KHP-Informatics/ngs#4-download-ngseasy-resources)**  
-**5. [Get NGSeasy Sripts](https://github.com/KHP-Informatics/ngs#5-get-ngseasy-sripts)**  
-**6. [Manually Build required NGSeasy Container Images](https://github.com/KHP-Informatics/ngs#6-manually-build-required-ngseasy-container-images)**  
-**7. [Manually Build NGSeasy Variant Annotaion Container Images](https://github.com/KHP-Informatics/ngs#7-manually-build-ngseasy-variant-annotaion-container-images)**  
-**8. [Set up NGSeasy Project Working Directories](https://github.com/KHP-Informatics/ngs#8-set-up-ngseasy-project-working-directories)**  
-**9. [NGSeasy Project configuration file](https://github.com/KHP-Informatics/ngs#9-ngseasy-project-configuration-file)**  
-**10. [Copy Project Fastq files to relevent Project/Sample Directories](https://github.com/KHP-Informatics/ngs#10-copy-project-fastq-files-to-relevent-projectsample-directories)**  
-**11. [Start the NGSeasy Volume Contaier](https://github.com/KHP-Informatics/ngs#11-start-the-ngseasy-volume-contaier)**  
-**12. [Running an NGSeasy full pipeline : from raw fastq to vcf calls](https://github.com/KHP-Informatics/ngs#12-running-an-ngseasy-full-pipeline--from-raw-fastq-to-vcf-calls)**  
-
-*****
+******
 ## 1. Install Docker
 
 Follow the simple instructions in the links provided below  
@@ -229,14 +212,20 @@ Follow the simple instructions in the links provided below
 
 A full set of instructions for multiple operating systems are available on the [Docker website](https://docs.docker.com/installation/).
 
-## 2. Get NGSeasy Automated build Container Images
+## 2. Get NGSeasy
+
+```
+
+git clone https://github.com/KHP-Informatics/ngseasy.git
+
+cd ngseasy
+
+make all
+
+```
 
 All NGSeasy Docker images can be pulled down from **[compbio Docker Hub](https://hub.docker.com/u/compbio/)** or using the script [get_containers.sh](https://github.com/KHP-Informatics/ngs/blob/master/bin/get_containers.sh)
 
-```bash
-# get images
-bash get_containers.sh v1.0
-```
 
 ### Dockerised and Automated Builds ##
 
