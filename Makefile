@@ -20,7 +20,7 @@ INSTALLDIR=$(HOME)
 DIR=$(shell pwd)
 
 ## Install bin path - edit at will
-TARGET_BIN=/bin
+TARGET_BIN=/usr/local/bin
 
 ## relative path to ngseasy scripts
 SRC=./bin
@@ -32,7 +32,7 @@ indexgenomes: dockerimages
 	bwaindex bowtie2index stampyindex snapindex
 
 scripts:
-	chmod 776 $(SRC)/*
+	chmod 777 $(SRC)/*
 	cp -v $(SRC)/* $(TARGET_BIN)/
 
 ngsprojectdir: 
