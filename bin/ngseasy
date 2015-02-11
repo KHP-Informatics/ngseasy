@@ -211,7 +211,7 @@ logger_ngseasy "[ngseasy]:Reading [${config_tsv}]\n
 
 ##-------------------------------------------------------------------------##
 ## fastqc
-if [[ "${FASTQC}" -eq "qc-fastc" ]]
+if [[ "${FASTQC}" -eq "qc-fastq" ]]
 then
     echo -e  "[ngseasy]:Calling ngseasy_fastqc" 
     logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y") 
@@ -239,7 +239,8 @@ fi
 
 ##-------------------------------------------------------------------------##
 ## alignment : includes addition of read groups at alignment stage 
-## and then duplicate marking (samblaster), indexing and sorting with sambamba
+## and then duplicate marking with samblaster and indexing and sorting with sambamba
+## added SNAP aligner
 ngseasy_alignment -c ${config_tsv} -d ${project_directory}
 
 

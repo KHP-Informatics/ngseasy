@@ -82,12 +82,13 @@ EOF
   docker run \
   -d \
   -P \
+  -w /home/pipeman/ \
   -v ${host_vol_dir}/fastq_raw:/home/pipeman/fastq_raw \
   -v ${host_vol_dir}/reference_genomes_b37:/home/pipeman/reference_genomes_b37 \
   -v ${host_vol_dir}/gatk_resources:/home/pipeman/gatk_resources \
   -v ${host_vol_dir}:/home/pipeman/ngs_projects \
   -v ${host_vol_dir}/ngseasy/ngs/bin:/home/pipeman/ngseasy_scripts \
   --name volumes_container \
-  -t compbio/ngseasy-base:wheezy
+  -t compbio/ngseasy-base:1.0
 
 

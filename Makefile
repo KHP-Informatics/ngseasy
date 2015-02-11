@@ -32,7 +32,7 @@ indexgenomes: dockerimages
 	bwaindex bowtie2index stampyindex snapindex
 
 scripts:
-	chmod 755 $(SRC)/*
+	chmod 776 $(SRC)/*
 	cp -v $(SRC)/* $(TARGET_BIN)/
 
 ngsprojectdir: 

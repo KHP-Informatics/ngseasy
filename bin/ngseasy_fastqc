@@ -16,9 +16,10 @@ RUNDATE=`date +"%d%m%y"`
 function logger_ngseasy() {
  message=${1}
  mylogfile=${2}
- echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:${message}]":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
- echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:${message}]":[${USER}]:[`uname -a`]"
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
+
 
 ## global usage
 #
@@ -281,6 +282,7 @@ docker run \
   --rm=true \
   --name fastqc.${SAMPLE_ID} \
   --volumes-from volumes_container \
+  -w /home/pipeman \
   -t compbio/ngseasy-fastqc:${VERSION} /usr/local/pipeline/FastQC/fastqc \
     --threads 2 \
     --extract \
