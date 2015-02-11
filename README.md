@@ -1,3 +1,5 @@
+![NGSeasy_logo](https://github.com/KHP-Informatics/ngseasy/blob/sjn_dev/figs/NGSeasy_logo_0.0.1.png "NGSeasy_logo")
+
 NGSeasy (beta)
 ===================
 ** This is the latest dev project **  
