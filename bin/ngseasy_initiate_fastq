@@ -175,7 +175,12 @@ logger_ngseasy "[ngseasy_initiate_fastq]:
 
 ## Logfile 
 LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
-touch ${LOGFILE}.log
+
+if [ ! -e "${LOGFILE}.log" ]
+then
+    touch ${LOGFILE}.log
+fi
+
 logger_ngseasy "[ngseasy_initiate_fastq]:Logging to [${LOGFILE}.log] "
 
 ## OUTPUT SAMPLE DIR 
