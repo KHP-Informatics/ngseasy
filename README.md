@@ -14,8 +14,6 @@ Release Version: **1.0.0b**
 
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**
 
-**Getting started: [The 12 Easy Steps to NGS Freedom!](https://github.com/KHP-Informatics/ngs#the-12-easy-steps-to-ngs-freedom)**  
-
 
 **Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
 
@@ -108,13 +106,16 @@ The NGSeasy pipelines implement the following :-
     - **[STAMPY](http://www.well.ox.ac.uk/project-stampy)**   
     - **[NOVOALIGN](http://www.novocraft.com)**  
     - **[BOWTIE2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)**  
-    - *[SNAP](http://snap.cs.berkeley.edu/): COMING SOON!*
+    - **[SNAP](http://snap.cs.berkeley.edu/)**  
     
-- **SAM/BAM sorting and indexing** with **[SAMTOOLS](https://github.com/samtools/samtools)**.  
+~~- **SAM/BAM sorting and indexing** with **[SAMTOOLS](https://github.com/samtools/samtools)**.~~  
+- **SAM/BAM sorting and indexing** with **[SAMBAMBA](https://github.com/samtools/samtools)**.  
 
 - **Read Group information added** using **[PICARDTOOLS](http://broadinstitute.github.io/picard/):[AddOrReplaceReadGroups](http://broadinstitute.github.io/picard/command-line-overview.html#AddOrReplaceReadGroups)** 
 
-- **Duplicate marking** with **[PICARDTOOLS](http://broadinstitute.github.io/picard/):[MarkDuplicates](http://broadinstitute.github.io/picard/command-line-overview.html#MarkDuplicates)**.  
+~~- **Duplicate marking** with **[PICARDTOOLS](http://broadinstitute.github.io/picard/):[MarkDuplicates](http://broadinstitute.github.io/picard/command-line-overview.html#MarkDuplicates)**. ~~
+- **Duplicate marking** with **[SAMBLASTER](http://broadinstitute.github.io/picard/):[MarkDuplicates](http://broadinstitute.github.io/picard/command-line-overview.html#MarkDuplicates)**.  
+
 
 >For academic users and/or commercial/clinical groups whom have paid for GATK licensing, the next steps are to perform   
 
@@ -149,7 +150,8 @@ The NGSeasy pipelines implement the following :-
     - **[cn.MOPS](http://www.bioinf.jku.at/software/cnmops/): in Dev**
     - **[m-HMM](https://www.stt.msu.edu/users/hengwang/mHMM.html): in Dev**
     - **[ExomeDepth](http://cran.r-project.org/web/packages/ExomeDepth/index.html): in Dev**
-    - *[SLOPE](http://www-genepi.med.utah.edu/suppl/SLOPE/index.html) : COMING SOON!*
+    - **[SLOPE](http://www-genepi.med.utah.edu/suppl/SLOPE/index.html): in Dev**  
+    - **[cnvnator](http://sv.gersteinlab.org/): in Dev**  
 
 - **Variant annotation** using using one of the following or a combibation of if the `ensemble` methods are called. 
     - **[SnpEff](http://snpeff.sourceforge.net/): in Dev** 
@@ -197,7 +199,7 @@ Dockerised NGSeasy
 ==========================
 ![docker](https://github.com/KHP-Informatics/ngs/blob/master/figs/Docker_container_engine_logo.png "Docker")  
 
-The following section describes getting the Dockerised NGSeasy Pipeline(s) and Resources, project set up and running NGSeasy in **12 easy steps**.  
+The following section describes getting the Dockerised NGSeasy Pipeline(s) and Resources, project set up and running NGSeasy.~~ in **12 easy steps**. ~~  
 
 Getting all resources and building required tools will take a few hours depending on network connections and any random "ghosts in the machine".
 

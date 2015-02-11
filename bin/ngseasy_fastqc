@@ -33,7 +33,9 @@ usage:   ngseasy_fastqc -c <config_file> -d <project_directory>
 
 options: -h  show this message
 
-ngseasy_fastqc sets up the NGSeasy docker fastqc container compbio/ngseasy-fastq and runs fastq on raw fastq files
+ngseasy_fastqc sets up the NGSeasy docker fastqc container compbio/ngseasy-fastq and runs fastq on raw fastq files.
+
+This is is optomised for PE data, and calls 2 threads as default to process the 2 PE .fastq file simultaneuously.
 "
 }
 
