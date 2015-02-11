@@ -210,8 +210,7 @@ then
     ln -s ${SOUT}/fastq/${FASTQ2} ${PROJECT_DIR}/raw_fastq/${FASTQ1}
     
 else
-  logger_ngseasy "[ngseasy_initiate_fastq]:Fastq Files exist in  ${SOUT}/fastq/ " ${LOGFILE}
-  ls ${SOUT}/fastq/
+  logger_ngseasy "[ngseasy_initiate_fastq]:Fastq Files already exist in  ${SOUT}/fastq/ " ${LOGFILE}
 fi
 
 #------permissions------------#
