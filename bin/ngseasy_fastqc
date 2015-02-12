@@ -112,7 +112,6 @@ do
 
 ## set varibales  
 DATE=`date +"%d%m%y"`
-  
 PROJECT_ID=$f1
 SAMPLE_ID=$f2
 FASTQ1=$f3
@@ -160,7 +159,7 @@ logger_ngseasy "[ngseasy_fastqc]:
   $CLEANUP\t
   $NCPU\t
   $VERSION\t
-  $NGSUSER\t"
+  $NGSUSER\t\n"
   
 ## Logfile 
 LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.ngseasy_fastqc
