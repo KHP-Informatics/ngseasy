@@ -313,7 +313,6 @@ SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
 logger_ngseasy "[ngseasy_fastqc]: docker \
     run \
     -d \
-    --rm=true \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -w /home/pipeman \
     -e HOME=/home/pipeman \
