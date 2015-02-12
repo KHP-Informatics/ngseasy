@@ -107,33 +107,34 @@ sed 1d ${config_tsv} > ${config_tsv}.tmp
 ## trim gatk bsqr realign 
 ##
 
-while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22
 do
 
 ## set varibales  
-  DATE=`date +"%d%m%y"`
+DATE=`date +"%d%m%y"`
   
-  POJECT_ID=$f1
-  SAMPLE_ID=$f2
-  FASTQ1=$f3
-  FASTQ2=$f4
-  PROJECT_DIR=$f5 
-  DNA_PREP_LIBRARY_ID=$f6
-  NGS_PLATFORM=$f7
-  NGS_TYPE=$f8
-  BED_ANNO=$f9
-  PIPELINE=$f10
-  TRIM=$f11
-  GATK=$f12
-  BSQR=$f13
-  REALN=$f14
-  ALIGNER=$f15
-  VARCALLER=$f16
-  GTMODEGATK=$f17
-  CLEANUP=$f18
-  NCPU=$f19
-  VERSION=$f20
-  NGSUSER=$f21
+PROJECT_ID=$f1
+SAMPLE_ID=$f2
+FASTQ1=$f3
+FASTQ2=$f4
+PROJECT_DIR=$f5
+DNA_PREP_LIBRARY_ID=$f6
+NGS_PLATFORM=$f7
+NGS_TYPE=$f8
+BAIT=$f9
+CAPTURE=$f10
+FASTQC=$f11
+TRIM=$f12
+BSQR=$f13
+REALN=$f14
+ALIGNER=$f15
+VARCALLER=$f16
+CNV=$f17
+ANNOTATOR=$f18
+CLEANUP=$f19
+NCPU=$f20
+VERSION=$f21
+NGSUSER=$f22
 
 ## read config_file
 logger_ngseasy "[ngseasy_fastqc]:
@@ -146,15 +147,16 @@ logger_ngseasy "[ngseasy_fastqc]:
   $DNA_PREP_LIBRARY_ID\t
   $NGS_PLATFORM\t
   $NGS_TYPE\t
-  $BED_ANNO\t
-  $PIPELINE\t
+  $BAIT\t
+  $CAPTURE\t
+  $FASTQC\t
   $TRIM\t
-  $GATK\t
   $BSQR\t
   $REALN\t
   $ALIGNER\t
   $VARCALLER\t
-  $GTMODEGATK\t
+  $CNV\t
+  $ANNOTATOR\t
   $CLEANUP\t
   $NCPU\t
   $VERSION\t
