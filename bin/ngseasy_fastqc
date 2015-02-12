@@ -311,7 +311,7 @@ SOUTDocker=${DOCKERHOME}/${POJECT_ID}/${SAMPLE_ID}
 #
 logger_ngseasy "[ngseasy_fastqc]:[cmd]: /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --quiet --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz ${SOUTDocker}/fastq/${rawFASTQ2}_${fq1_suffix}.gz" ${LOGFILE}
 
-docker run -P --rm=true -v ${PROJECT_DIR}:/home/pipeman -w /home/pipeman --name fastqc.${SAMPLE_ID} -t compbio/ngseasy-fastqc:${VERSION} \
+docker run -P --rm=true -v ${PROJECT_DIR}:/home/pipeman -w /home/pipeman --name fastqc.${SAMPLE_ID} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
     "/usr/local/pipeline/FastQC/fastqc --threads 2 --extract --quiet \
     --dir ${SOUTDocker}/tmp \
     --outdir ${SOUTDocker}/fastq \
