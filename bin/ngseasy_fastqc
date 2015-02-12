@@ -314,7 +314,7 @@ logger_ngseasy "[ngseasy_fastqc]: docker \
     run \
     -d \
     --rm=true \
-    -v ${PROJECT_DIR}:/home/pipeman \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -w /home/pipeman \
     -e HOME=/home/pipeman \
     -e USER=pipeman \
@@ -326,7 +326,7 @@ logger_ngseasy "[ngseasy_fastqc]: docker \
     docker \
     run \
     -d \
-    -v ${PROJECT_DIR}:/home/pipeman \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -w /home/pipeman \
     -e HOME=/home/pipeman \
     -e USER=pipeman \
@@ -338,7 +338,7 @@ logger_ngseasy "[ngseasy_fastqc]: docker \
     ## log it
     docker logs fastqc.${SAMPLE_ID} >> ${LOGFILE}.log
     docker rm -f fastqc.${SAMPLE_ID}
-    
+
 #################
 ## get some info
 ONUMREADS1=$(grep "Total Sequences" ${SOUT}/fastq/${rawFASTQ1}_${fq1_suffix}_fastqc/fastqc_data.txt | awk '{print $3}')
