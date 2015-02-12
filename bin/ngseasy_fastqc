@@ -101,7 +101,8 @@ fi
 
 ## Read config file 
 logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] "
-
+sed 1d ${config_tsv} > ${config_tsv}.tmp
+  
 ## params to get
 ## trim gatk bsqr realign 
 ##
@@ -331,4 +332,5 @@ QUALCODE=$(awk '{print $3}' $QUALSTRING)
 logger_ngseasy "NR1=$ONUMREADS1 NR2=$ONUMREADS2 RDL=$OREADLENGTH QUAL=$QUALSTRING" ${LOGFILE}
 logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
 
-done < ${config_tsv}
+done < ${config_tsv}.tmp
+rm  ${config_tsv}.tmp
