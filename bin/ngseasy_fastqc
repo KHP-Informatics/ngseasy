@@ -161,19 +161,25 @@ logger_ngseasy "[ngseasy_fastqc]:
   
 ## Logfile 
 LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.ngseasy_fastqc
-
+## check and make log directory
+if [ ! -d "${PROJECT_DIR}/${POJECT_ID}/run_logs/" ]
+then
+    mkdir ${PROJECT_DIR}/${POJECT_ID}/run_logs/
+fi
+## check and make logfile
 if [ ! -e "${LOGFILE}.log" ]
 then
     touch ${LOGFILE}.log
 fi
-  
 logger_ngseasy "[ngseasy_fastqc]:Logging to [${LOGFILE}.log] "
 
 ## OUTPUT SAMPLE DIR 
+#
 SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
 logger_ngseasy "[ngseasy_fastqc]:Sample Directory [${SOUT}] "
 
-#check local dir exists
+## check local dir exists
+#
 if [ ! -d "${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}" ]
 then
   logger_ngseasy "[ngseasy_fastqc]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
@@ -183,15 +189,16 @@ else
   logger_ngseasy "[ngseasy_fastqc]: Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
 fi
 
-#check for fastq files exist
+## check for fastq files exist
+#
 if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
   logger_ngseasy "[ngseasy_fastqc]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
   exit 1
 fi
 
-#set new names for copied fastq files
-
+## set new names for copied fastq files
+#
 # test for fomrat of suffix ie is it fastq or fq
 # or _R1.fastq _R1.fq
 # ILLUMINA : NA10831_ATCACG_L002_R1_001.fastq.gz
@@ -272,13 +279,14 @@ else
   logger_ngseasy "[ngseasy_fastqc]: Fastq naming format not recognised [$FASTQ1] : This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
   exit 1
 fi        
-
     
 logger_ngseasy "[ngseasy_fastqc]:Fastq Basename : [$rawFASTQ1] " ${LOGFILE}
+logger_ngseasy "[ngseasy_fastqc]:Fastq suffix : [$fq1_suffix] and [$fq1_suffix] " ${LOGFILE}
 
 #-------------------------------------------------------------------#
 
-#check if qc'd data alread exists 
+## check if qc'd data alread exists 
+#
 if [ -s "${SOUT}/fastq/${rawFASTQ1}_${fq1_suffix}_fastqc.zip" ] && [ -s "${SOUT}/fastq/${rawFASTQ2}_${fq2_suffix}_fastqc.zip" ] 
 then
   logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping" ${LOGFILE}
@@ -288,32 +296,25 @@ fi
 #---------------------------------------FASTQC-----------------------------------------------------------#
   logger_ngseasy "[ngseasy_fastqc]:START: FastQC on raw Fastq files " ${LOGFILE}
 
-#run compbio/ngseasy-fastq
-#Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
-
+## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
+#
 DOCKERHOME="/home/pipeman/ngs_projects"
 
-#Docker OUTPUT SAMPLE DIR 
+## Docker OUTPUT SAMPLE DIR 
+#
 SOUTDocker=${DOCKERHOME}/${POJECT_ID}/${SAMPLE_ID}
 
-# Docker run compbio/ngseasy-fastqc
+## Docker run compbio/ngseasy-fastqc
+#
 logger_ngseasy "[ngseasy_fastqc]:[cmd]: /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --quiet --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz ${SOUTDocker}/fastq/${rawFASTQ2}_${fq1_suffix}.gz" ${LOGFILE}
 
-docker run \
-  -P \
-  --rm=true \
-  --name fastqc.${SAMPLE_ID} \
-  --volumes-from volumes_container \
-  -w /home/pipeman \
-  -t compbio/ngseasy-fastqc:${VERSION} \
-  /usr/local/pipeline/FastQC/fastqc \
-    --threads 2 \
-    --extract \
-    --quiet \
+docker run -P --rm=true -v ${PROJECT_DIR}:/home/pipeman -w /home/pipeman --name fastqc.${SAMPLE_ID} -t compbio/ngseasy-fastqc:${VERSION} \
+    "/usr/local/pipeline/FastQC/fastqc --threads 2 --extract --quiet \
     --dir ${SOUTDocker}/tmp \
     --outdir ${SOUTDocker}/fastq \
     ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz \
-    ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}.gz
+    ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}.gz && \
+    chmod -R 777 ${SOUTDocker}/*"
         
     ## log it
     docker logs fastqc.${SAMPLE_ID} >> ${LOGFILE}.log
@@ -326,10 +327,8 @@ ONUMREADS2=$(grep "Total Sequences" ${SOUT}/fastq/${rawFASTQ2}_${fq2_suffix}.gz_
 QUALSTRING=$(grep "Encoding" fastqc_data.txt | awk '{print $2,$4,$5}')
 OREADLENGTH=$(grep "Sequence length" fastqc_data.txt | awk '{print $3}')
 QUALCODE=$(awk '{print $3}' $QUALSTRING)
-  
+
+logger_ngseasy "NR1=$ONUMREADS1 NR2=$ONUMREADS2 RDL=$OREADLENGTH QUAL=$QUALSTRING" ${LOGFILE}
 logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
-  
-#------permissions------------#
-sudo chmod -R 777 ${SOUT}/*
 
 done < ${config_tsv}
