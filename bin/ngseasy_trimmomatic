@@ -203,10 +203,18 @@ adapter_fa="/home/pipeman/reference_genomes_b37/contaminant_list.fa"
 
 #--------------------------------------------------------------------------------#
 #run compbio/ngseasy-fastq
-  logger_ngseasy "Running :java -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar PE \
+  logger_ngseasy "[ngseasy_trimmomatic]:docker \
+    run \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    -w /home/pipeman \
+    -e HOME=/home/pipeman \
+    -e USER=pipeman \
+    --user pipeman \
+  --name trimmomatic.${SAMPLE_ID} \
+  -t compbio/ngseasy-trimmomatic:${VERSION} java -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar PE \
     -threads ${NCPU} \
     -phred33 \
-    -trimlog ${SOUTDocker}/fastq/${SAMPLE_ID}.trimm_qc.log \
+    -trimlog ${SOUTDocker}/fastq/trimm_qc.log \
     ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}.gz \
     ${qcdPeFASTQ1} ${qcdSeFASTQ1} \
     ${qcdPeFASTQ2} ${qcdSeFASTQ2} \
@@ -216,12 +224,15 @@ adapter_fa="/home/pipeman/reference_genomes_b37/contaminant_list.fa"
     SLIDINGWINDOW:4:15 \
     MINLEN:75" ${LOGFILE}
     
-docker run \
-  -P \
-  --rm=true \
+    docker \
+    run \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    -w /home/pipeman \
+    -e HOME=/home/pipeman \
+    -e USER=pipeman \
+    --user pipeman \
   --name trimmomatic.${SAMPLE_ID} \
-  --volumes-from volumes_container \
-  -t compbio/ngseasy-trimmomatic:${VERSION} java -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar PE \
+  -t compbio/ngseasy-trimmomatic:${NGSVERSION} java -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar PE \
     -threads ${NCPU} \
     -phred33 \
     -trimlog ${SOUTDocker}/fastq/trimm_qc.log \
