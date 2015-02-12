@@ -319,7 +319,6 @@ logger_ngseasy "[ngseasy_fastqc]: docker run -P --rm=true -v ${PROJECT_DIR}:/hom
 
     docker \
     run \
-    -P \
     --rm=true \
     -v ${PROJECT_DIR}:/home/pipeman \
     -w /home/pipeman \
