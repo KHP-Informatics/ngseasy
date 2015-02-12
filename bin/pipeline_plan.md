@@ -172,7 +172,7 @@ VERSION=$f21
 NGSUSER=$f22
 
 # Read config file log
-logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y"
+logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${PROJECT_ID}.${USER}.$(date +"%d%m%y"
 
 echo -e "
 [ngseasy]:Reading [${config_tsv}] \n
@@ -222,20 +222,20 @@ logger_ngseasy "[ngseasy]:Reading [${config_tsv}] \n
 [ngseasy]:Reading [${config_tsv}]:NCPU=[$NCPU] \n
 [ngseasy]:Reading [${config_tsv}]:VERSION=[$VERSION] \n
 [ngseasy]:Reading [${config_tsv}]:NGSUSER=[$NGSUSER]
-" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y"
+" ${HOME}/ngseasy_logs/ngseasy.${PROJECT_ID}.${USER}.$(date +"%d%m%y"
 
 ##-------------------------------------------------------------------------##
 ## fastqc
 if [[ "${FASTQC}" -eq "qc-fastc" ]]
 then
     echo -e  "[ngseasy]:Calling ngseasy_fastqc" 
-    logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y" 
+    logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${PROJECT_ID}.${USER}.$(date +"%d%m%y" 
 
     ngseasy_fastqc -c ${config_tsv} -d ${project_directory}
 
 else
     echo -e  "[ngseasy]:Skipping qc-trimming" 
-    logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y" 
+    logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${PROJECT_ID}.${USER}.$(date +"%d%m%y" 
 fi
 
 ##-------------------------------------------------------------------------##
@@ -243,13 +243,13 @@ fi
 if [[ "${TRIM}" -eq "qc-trim" ]]
 then
     echo -e  "[ngseasy]:Calling ngseasy_trimmomatic" 
-    logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y" 
+    logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${PROJECT_ID}.${USER}.$(date +"%d%m%y" 
 
     ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
 
 else
     echo -e  "[ngseasy]:Skipping qc-trimming" 
-    logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y" 
+    logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${PROJECT_ID}.${USER}.$(date +"%d%m%y" 
 fi
 
 ##-------------------------------------------------------------------------##
@@ -316,7 +316,7 @@ gatk_recab
 
 
 ## options
-POJECT_ID
+PROJECT_ID
 SAMPLE_ID
 FASTQ1
 FASTQ2

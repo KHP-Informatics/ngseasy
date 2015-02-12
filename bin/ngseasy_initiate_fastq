@@ -126,7 +126,7 @@ do
 ## set varibales  
   DATE=`date +"%d%m%y"`
   
-  POJECT_ID=$f1
+  PROJECT_ID=$f1
   SAMPLE_ID=$f2
   FASTQ1=$f3
   FASTQ2=$f4
@@ -151,7 +151,7 @@ do
 ## read config_file
 logger_ngseasy "[ngseasy_initiate_fastq]:
   $DATE\t
-  $POJECT_ID\t
+  $PROJECT_ID\t
   $SAMPLE_ID\t
   $FASTQ1\t
   $FASTQ2\t
@@ -174,7 +174,7 @@ logger_ngseasy "[ngseasy_initiate_fastq]:
   $NGSUSER\t"
 
 ## Logfile 
-LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.initiate_fastq
+LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.initiate_fastq
 
 if [ ! -e "${LOGFILE}.log" ]
 then
@@ -184,12 +184,12 @@ fi
 logger_ngseasy "[ngseasy_initiate_fastq]:Logging to [${LOGFILE}.log] "
 
 ## OUTPUT SAMPLE DIR 
-SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
+SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
 logger_ngseasy "[ngseasy_initiate_fastq]:Sample Directory [${SOUT}] "
 
 
 ## check local dir exists
-if [ ! -d "${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}" ]
+if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
   logger_ngseasy "[ngseasy_initiate_fastq]:ERROR:Cant Find Project directory ${SOUT}. This is then end. Please Stop and check everything is ok " ${LOGFILE}
   exit 1

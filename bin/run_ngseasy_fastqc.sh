@@ -38,7 +38,7 @@ while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15
 do
 
 # set varibales  
-  POJECT_ID=$f1
+  PROJECT_ID=$f1
   SAMPLE_ID=$f2
   FASTQ1=$f3
   FASTQ2=$f4
@@ -60,11 +60,11 @@ do
   echo " NGSeasy: Setting BAM_PREFIX directory [$BAM_PREFIX]"
  
 #OUTPUT SAMPLE DIR /home/pipeman/
- SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
+ SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
 #-------------------------------------------------------------------#
 
 #check dir exists
-if [ ! -d ${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID} ]
+if [ ! -d ${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID} ]
 then
   echo " NGSeasy: Cant Find Project directory. This is then end. Please Stop and check everything is ok " `date`
   exit 1

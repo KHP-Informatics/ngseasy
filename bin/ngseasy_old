@@ -100,7 +100,7 @@ do
 
 # set varibales
   DATE=`date +"%d%m%y"`
-  POJECT_ID=$f1
+  PROJECT_ID=$f1
   SAMPLE_ID=$f2
   FASTQ1=$f3
   FASTQ2=$f4
@@ -124,20 +124,20 @@ do
 DOCKERHOME="/home/pipeman/ngs_projects"
 
 #log it 
-LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
+LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
 
 logger_ngseasy "ngseasy: run pipeline: ${PIPELINE}"  ${LOGFILE}
 
 #OUTPUT SAMPLE DIR
 # /home/pipeman/ngs_projects/ is the mounted docker volume
 
-SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
+SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
 
 #time stamp
 run=`date +"%d%m%y-%H%M%S"`
 
 #make sample spec config file and save to sample run folder 
-echo "${POJECT_ID} ${SAMPLE_ID} ${FASTQ1} ${FASTQ2} ${PROJECT_DIR} ${DNA_PREP_LIBRARY_ID} ${NGS_PLATFORM} ${NGS_TYPE} ${BED_ANNO} ${PIPELINE} ${ALIGNER} ${VARCALLER} ${GTMODEGATK} ${CLEANUP} ${NCPU} ${VERSION} ${NGSUSER}" | perl -p -i -e 's/ /\t/g' > ${SOUT}/${SAMPLE_ID}_${PIPELINE}_${run}.config.tsv
+echo "${PROJECT_ID} ${SAMPLE_ID} ${FASTQ1} ${FASTQ2} ${PROJECT_DIR} ${DNA_PREP_LIBRARY_ID} ${NGS_PLATFORM} ${NGS_TYPE} ${BED_ANNO} ${PIPELINE} ${ALIGNER} ${VARCALLER} ${GTMODEGATK} ${CLEANUP} ${NCPU} ${VERSION} ${NGSUSER}" | perl -p -i -e 's/ /\t/g' > ${SOUT}/${SAMPLE_ID}_${PIPELINE}_${run}.config.tsv
 
 #sample config 
 sample_config=${SOUT}/${SAMPLE_ID}_${PIPELINE}_${run}.config.tsv

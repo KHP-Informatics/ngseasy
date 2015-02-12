@@ -138,7 +138,7 @@ DATE=`date +"%d%m%y"`
 
 ## read config_file
 logger_ngseasy "[ngseasy_fastqc]:
-  $POJECT_ID\t
+  $PROJECT_ID\t
   $SAMPLE_ID\t
   $FASTQ1\t
   $FASTQ2\t
@@ -163,11 +163,11 @@ logger_ngseasy "[ngseasy_fastqc]:
   $DATE\t"
   
 ## Logfile 
-LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.ngseasy_fastqc
+LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.ngseasy_fastqc
 ## check and make log directory
-if [ ! -d "${PROJECT_DIR}/${POJECT_ID}/run_logs/" ]
+if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
 then
-    mkdir ${PROJECT_DIR}/${POJECT_ID}/run_logs/
+    mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
 fi
 ## check and make logfile
 if [ ! -e "${LOGFILE}.log" ]
@@ -178,12 +178,12 @@ logger_ngseasy "[ngseasy_fastqc]:Logging to [${LOGFILE}.log] "
 
 ## OUTPUT SAMPLE DIR 
 #
-SOUT=${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}
+SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
 logger_ngseasy "[ngseasy_fastqc]:Sample Directory [${SOUT}] "
 
 ## check local dir exists
 #
-if [ ! -d "${PROJECT_DIR}/${POJECT_ID}/${SAMPLE_ID}" ]
+if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
   logger_ngseasy "[ngseasy_fastqc]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
   exit 1
@@ -305,7 +305,7 @@ DOCKERHOME="/home/pipeman/ngs_projects"
 
 ## Docker OUTPUT SAMPLE DIR 
 #
-SOUTDocker=${DOCKERHOME}/${POJECT_ID}/${SAMPLE_ID}
+SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
 
 ## Docker run compbio/ngseasy-fastqc
 #

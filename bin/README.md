@@ -739,7 +739,7 @@ The [config.file.tsv] should contain the following 15 columns for each sample to
 
 |Variable|type|Description|Options/Examples|
 |--------|--------|--------|--------|
-POJECT_ID|string|Project ID|Cancer|
+PROJECT_ID|string|Project ID|Cancer|
 SAMPLE_ID|string|Sample ID| T100|
 FASTQ1|string|Raw fastq file name read 1| foo_1_fq.gz|
 FASTQ2|string|Raw fastq file name read 1| foo_2_fq.gz|
