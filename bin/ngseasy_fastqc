@@ -310,12 +310,17 @@ SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
 ## Docker run compbio/ngseasy-fastqc
 #
 #logger_ngseasy "[ngseasy_fastqc]:[cmd]: /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --quiet --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq1_suffix}" ${LOGFILE}
-logger_ngseasy "[ngseasy_fastqc]: docker run -P --rm=true -v ${PROJECT_DIR}:/home/pipeman -w /home/pipeman --name fastqc.${SAMPLE_ID} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
-    /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --quiet \
-    --dir ${SOUTDocker}/tmp \
-    --outdir ${SOUTDocker}/fastq \
-    ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} \
-    ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}" ${LOGFILE}
+logger_ngseasy "[ngseasy_fastqc]: docker \
+    run \
+    --rm=true \
+    -v ${PROJECT_DIR}:/home/pipeman \
+    -w /home/pipeman \
+    -e HOME=/home/pipeman \
+    -e USER=pipeman \
+    --user pipeman \
+    --name fastqc.${SAMPLE_ID} \
+    -t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
+     /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --quiet --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}" ${LOGFILE}
 
     docker \
     run \
@@ -331,7 +336,6 @@ logger_ngseasy "[ngseasy_fastqc]: docker run -P --rm=true -v ${PROJECT_DIR}:/hom
         
     ## log it
     docker logs fastqc.${SAMPLE_ID} >> ${LOGFILE}.log
-    docker rm fastqc.${SAMPLE_ID}  
 
 #################
 ## get some info
