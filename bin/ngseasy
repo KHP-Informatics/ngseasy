@@ -38,10 +38,12 @@ Program: ngseasy
 Version 1.0
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
-usage:   ngseasy_full -c <config_file> -d <project_directory>
+usage:   ngseasy_full -c <config_file> -d <project_directory> -p 1 -f 1
 
 options:  -c  configuration file
           -d  project directory
+          -p  initiate project. Options: 1 or 0
+          -f  initiate fastq files. Option 1 or 0
           -h  show this message 
 "
 }
@@ -85,7 +87,7 @@ do
    ;;
 
    p)
-   make_dirs=${OPTARG}
+   initiate_project=${OPTARG}
    echo "-p = ${make_dirs}"
    ;;
    
@@ -129,7 +131,7 @@ fi
 ## initiate projects 0-0-1
 #
 
-if [[ "${make_dirs}" -eq "1" ]]
+if [[ "${initiate_project}" -eq "1" ]]
 then
     echo -e  "[ngseasy]:Calling ngseasy_initiate_project" 
     /bin/bash ngseasy_initiate_project -c ${config_tsv} -d ${project_directory}
