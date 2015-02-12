@@ -324,7 +324,6 @@ logger_ngseasy "[ngseasy_fastqc]: docker \
 
     docker \
     run \
-    --rm=true \
     -v ${PROJECT_DIR}:/home/pipeman \
     -w /home/pipeman \
     -e HOME=/home/pipeman \
@@ -336,6 +335,7 @@ logger_ngseasy "[ngseasy_fastqc]: docker \
         
     ## log it
     docker logs fastqc.${SAMPLE_ID} >> ${LOGFILE}.log
+    docker rm -f fastqc.${SAMPLE_ID}
     
 #################
 ## get some info
