@@ -86,7 +86,7 @@ then
 	    ngseasy_fastqc_usage;
 	    exit 1;
 else
-	    ngseasy_fastqc_usage "[ngseasy_fastqc]:Configuration file found [${config_tsv}] "
+	    logger_ngseasy "[ngseasy_fastqc]:Configuration file found [${config_tsv}] "
 fi
 
 #check project_directory exists.
@@ -96,7 +96,7 @@ if [ ! -d "${project_directory}" ]
     ngseasy_fastqc_usage;
     exit 1;
 else
-	    ngseasy_fastqc_usage "[ngseasy_fastqc]:Top Level Project Directory [${project_directory}] "
+	    logger_ngseasy "[ngseasy_fastqc]:Top Level Project Directory [${project_directory}] "
 fi
 
 ## Read config file 
@@ -111,7 +111,7 @@ while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19
 do
 
 ## set varibales  
-DATE=`date +"%d%m%y"`
+
 PROJECT_ID=$f1
 SAMPLE_ID=$f2
 FASTQ1=$f3
@@ -134,7 +134,7 @@ CLEANUP=$f19
 NCPU=$f20
 VERSION=$f21
 NGSUSER=$f22
-
+DATE=`date +"%d%m%y"`
 ## read config_file
 logger_ngseasy "[ngseasy_fastqc]:
   $DATE\t
