@@ -81,7 +81,6 @@ EOF
 
   docker run \
   -d \
-  -P \
   -w /home/pipeman/ \
   -v ${host_vol_dir}/fastq_raw:/home/pipeman/fastq_raw \
   -v ${host_vol_dir}/reference_genomes_b37:/home/pipeman/reference_genomes_b37 \
