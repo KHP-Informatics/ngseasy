@@ -40,7 +40,7 @@ This is is optomised for PE data, and calls 2 threads as default to process the 
 }
 
 ## test if docker is intsalled and exit if not
-command -v docker >/dev/null 2>&1 || { echo "I require Dokcer...but it's not installed.  Aborting." >&2; exit 1; }
+command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
 
 ## check and make ~/ngseasy_logs if needed
 #
@@ -160,7 +160,7 @@ logger_ngseasy "[ngseasy_fastqc]:
   $NGSUSER\t"
   
 ## Logfile 
-LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.fastqc
+LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.ngseasy_fastqc
 
 if [ ! -e "${LOGFILE}.log" ]
 then
@@ -305,7 +305,8 @@ docker run \
   --name fastqc.${SAMPLE_ID} \
   --volumes-from volumes_container \
   -w /home/pipeman \
-  -t compbio/ngseasy-fastqc:${VERSION} /usr/local/pipeline/FastQC/fastqc \
+  -t compbio/ngseasy-fastqc:${VERSION} \
+  /usr/local/pipeline/FastQC/fastqc \
     --threads 2 \
     --extract \
     --quiet \
@@ -320,18 +321,15 @@ docker run \
   
 #################
 ## get some info
-ONUMREADS1=$(grep "Total Sequences" ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz_fastqc/fastqc_data.txt | awk '{print $3}')
-ONUMREADS2=$(grep "Total Sequences" ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}.gz_fastqc/fastqc_data.txt | awk '{print $3}')
+ONUMREADS1=$(grep "Total Sequences" ${SOUT}/fastq/${rawFASTQ1}_${fq1_suffix}.gz_fastqc/fastqc_data.txt | awk '{print $3}')
+ONUMREADS2=$(grep "Total Sequences" ${SOUT}/fastq/${rawFASTQ2}_${fq2_suffix}.gz_fastqc/fastqc_data.txt | awk '{print $3}')
 QUALSTRING=$(grep "Encoding" fastqc_data.txt | awk '{print $2,$4,$5}')
 OREADLENGTH=$(grep "Sequence length" fastqc_data.txt | awk '{print $3}')
 QUALCODE=$(awk '{print $3}' $QUALSTRING)
-
   
 logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
-
-  
   
 #------permissions------------#
-chmod -R 777 ${SOUT}/*
+sudo chmod -R 777 ${SOUT}/*
 
 done < ${config_tsv}

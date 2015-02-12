@@ -59,8 +59,12 @@ fi
 
 ## example config: https://docs.google.com/spreadsheets/d/1VWqmMffkVDnvOtRJGlPqOYzXWnIN_IONXQHDAawaN5Q/edit#gid=0
 
+## default options
+make_dirs=0
+set_fastq=0
+
 ## get options for command line args
-while  getopts "hc:d:" opt
+while  getopts "hc:d:pf" opt
 do
 
   case ${opt} in
@@ -80,7 +84,17 @@ do
    echo "-d = ${project_directory}"
    ;;
 
-
+   p)
+   make_dirs=${OPTARG}
+   echo "-p = ${make_dirs}"
+   ;;
+   
+   f)
+   set_fastq=${OPTARG}
+   echo "-f = ${set_fastq}"
+   ;;
+   
+   
    esac
 done
 
@@ -114,15 +128,29 @@ fi
 ##-------------------------------------------------------------------------##
 ## initiate projects 0-0-1
 #
-echo -e  "[ngseasy]:Calling ngseasy_initiate_project" 
-ngseasy_initiate_project -c ${config_tsv} -d ${project_directory}
+
+if [[ "${make_dirs}" -eq "1" ]]
+then
+    echo -e  "[ngseasy]:Calling ngseasy_initiate_project" 
+    /bin/bash ngseasy_initiate_project -c ${config_tsv} -d ${project_directory}
+
+else
+    echo -e  "[ngseasy]:Assuming ngseasy_initiate_project already run. Project and Sample dirctories exist" 
+fi
+
 
 ##-------------------------------------------------------------------------##
 ## initiate fastq files 0-0-2
 # copy or move fastq files to project directories 
-echo -e  "[ngseasy]:Calling ngseasy_initiate_fastq" 
-ngseasy_initiate_fastq -c ${config_tsv} -d ${project_directory}
 
+if [[ "${set_fastq}" -eq "1" ]]
+then
+    echo -e  "[ngseasy]:Calling ngseasy_initiate_fastq" 
+    /bin/bash ngseasy_initiate_fastq -c ${config_tsv} -d ${project_directory}
+
+else
+    echo -e  "[ngseasy]:Assuming ngseasy_initiate_fastq already run. Sample fastq files exist and are in the right directories....ngseasy will check later" 
+fi
 
 # --- Start NGS Pipeline -------------------------------------------------------- #
 
@@ -216,7 +244,7 @@ then
     echo -e  "[ngseasy]:Calling ngseasy_fastqc" 
     logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y") 
 
-    ngseasy_fastqc -c ${config_tsv} -d ${project_directory}
+    /bin/bash ngseasy_fastqc -c ${config_tsv} -d ${project_directory}
 
 else
     echo -e  "[ngseasy]:Skipping qc-trimming" 
@@ -230,7 +258,7 @@ then
     echo -e  "[ngseasy]:Calling ngseasy_trimmomatic" 
     logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${POJECT_ID}.${USER}.$(date +"%d%m%y")
 
-    ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
+    /bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
 
 else
     echo -e  "[ngseasy]:Skipping qc-trimming" 
@@ -241,7 +269,8 @@ fi
 ## alignment : includes addition of read groups at alignment stage 
 ## and then duplicate marking with samblaster and indexing and sorting with sambamba
 ## added SNAP aligner
-ngseasy_alignment -c ${config_tsv} -d ${project_directory}
+## realignment includes bamleftalign
+/bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
 
 
 ##-------------------------------------------------------------------------##
@@ -252,39 +281,39 @@ then
 
     echo -e  "[ngseasy]:Calling ngseasy_indel_realn" 
     
-    ngseasy_indel_realn -c ${config_tsv} -d ${project_directory}
+    /bin/bash ngseasy_indel_realn -c ${config_tsv} -d ${project_directory}
   
     echo -e  "[ngseasy]:Calling ngseasy_base_recal"
     
-    ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
+   /bin/bash  ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
     
 elif [[ "${GATK}" -eq 1 ]] && [[ "${REALN}" -eq 0 ]] && [[ "${BSQR}" -eq 1 ]]
 then
 
-  ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
+  /bin/bash ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
 
 elif [[ "${GATK}" -eq 0 ]] && [[ "${REALN}" -eq 1 ]] && [[ "${BSQR}" -eq 1 ]]
 then
 
-  ngseasy_ogap_realn -c ${config_tsv} -d ${project_directory}
-  ngseasy_bamutil_base_recal -c ${config_tsv} -d ${project_directory}
+  #ngseasy_ogap_realn -c ${config_tsv} -d ${project_directory}
+  /bin/bash ngseasy_bamutil_base_recal -c ${config_tsv} -d ${project_directory}
 
 elif [[ "${GATK}" -eq 0 ]] && [[ "${REALN}" -eq 0 ]] && [[ "${BSQR}" -eq 1 ]]
 then
 
-  ngseasy_bamutil_base_recal -c ${config_tsv} -d ${project_directory}
+  /bin/bash ngseasy_bamutil_base_recal -c ${config_tsv} -d ${project_directory}
   
 fi
 
 ##-------------------------------------------------------------------------##
 ## Alignment statistics
-ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
+/bin/bash ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
 
 ##-------------------------------------------------------------------------##
 ## SNP/INDEL calling
-ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
+/bin/bash ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
  
-ngseasy_variant_calling_fast_ensemble -c ${config_tsv} -d ${project_directory}
+/bin/bash ngseasy_variant_calling_fast_ensemble -c ${config_tsv} -d ${project_directory}
 
 ##-------------------------------------------------------------------------##
 ## CNV Calling
