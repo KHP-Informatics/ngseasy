@@ -135,9 +135,9 @@ NCPU=$f20
 VERSION=$f21
 NGSUSER=$f22
 DATE=`date +"%d%m%y"`
+
 ## read config_file
 logger_ngseasy "[ngseasy_fastqc]:
-  $DATE\t
   $POJECT_ID\t
   $SAMPLE_ID\t
   $FASTQ1\t
@@ -159,7 +159,8 @@ logger_ngseasy "[ngseasy_fastqc]:
   $CLEANUP\t
   $NCPU\t
   $VERSION\t
-  $NGSUSER\t\n"
+  $NGSUSER\t
+  $DATE\t"
   
 ## Logfile 
 LOGFILE=${PROJECT_DIR}/${POJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.ngseasy_fastqc
