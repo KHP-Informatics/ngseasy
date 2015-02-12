@@ -102,6 +102,9 @@ fi
 ## Read config file 
 logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] "
 sed 1d ${config_tsv} > ${config_tsv}.tmp
+numsamples=`wc -l ${config_tsv}.tmp`  
+numcores=`nproc`
+numjobs=$(expr $numcores / 2)
   
 ## params to get
 ## trim gatk bsqr realign 
@@ -323,6 +326,7 @@ logger_ngseasy "[ngseasy_fastqc]: docker \
 
     docker \
     run \
+    --rm=true \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -w /home/pipeman \
     -e HOME=/home/pipeman \
@@ -330,7 +334,7 @@ logger_ngseasy "[ngseasy_fastqc]: docker \
     --user pipeman \
     --name fastqc.${SAMPLE_ID} \
     -t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
-     /usr/local/pipeline/FastQC/fastqc --threads 2 --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}
+     /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}
     
     ## log it
     #docker logs fastqc.${SAMPLE_ID} >> ${LOGFILE}.log
@@ -339,4 +343,6 @@ logger_ngseasy "[ngseasy_fastqc]: docker \
 logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
 
 done < ${config_tsv}.tmp
-rm  ${config_tsv}.tmp
+
+
+#rm  ${config_tsv}.tmp
