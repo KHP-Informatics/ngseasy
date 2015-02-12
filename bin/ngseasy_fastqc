@@ -320,7 +320,7 @@ logger_ngseasy "[ngseasy_fastqc]: docker \
     --user pipeman \
     --name fastqc.${SAMPLE_ID} \
     -t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
-     /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --quiet --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}" ${LOGFILE}
+     /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}" ${LOGFILE}
 
     docker \
     run \
@@ -332,11 +332,11 @@ logger_ngseasy "[ngseasy_fastqc]: docker \
     --user pipeman \
     --name fastqc.${SAMPLE_ID} \
     -t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
-     /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --quiet --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}
+     /usr/local/pipeline/FastQC/fastqc --threads 2 --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}
         
     ## log it
     docker logs fastqc.${SAMPLE_ID} >> ${LOGFILE}.log
-
+    
 #################
 ## get some info
 ONUMREADS1=$(grep "Total Sequences" ${SOUT}/fastq/${rawFASTQ1}_${fq1_suffix}_fastqc/fastqc_data.txt | awk '{print $3}')
