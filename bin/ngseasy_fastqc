@@ -305,7 +305,7 @@ DOCKERHOME="/home/pipeman/ngs_projects"
 
 ## Docker OUTPUT SAMPLE DIR 
 #
-SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
+SOUTDocker=${DOCKERHOME}/${POJECT_ID}/${SAMPLE_ID}
 
 ## Docker run compbio/ngseasy-fastqc
 #
