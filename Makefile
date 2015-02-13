@@ -40,7 +40,7 @@ ngsprojectdir:
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/raw_fastq && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/config_files && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/annovardb && \
-	mkdir -v -p $(INSTALLDIR)/ngs_project/run_logs && \
+	mkdir -v -p $(INSTALLDIR)/ngs_projects/run_logs && \
 	mkdir -v -p $(HOME)/ngseasy_logs && \
 	mkdir -v -p $(HOME)/ngseasy_tmp
 
