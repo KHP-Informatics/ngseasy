@@ -36,13 +36,13 @@ scripts:
 	cp -v $(SRC)/* $(TARGET_BIN)/
 
 ngsprojectdir: 
-	mkdir -v $(INSTALLDIR)/ngs_projects && \
-	mkdir -v $(INSTALLDIR)/ngs_projects/raw_fastq && \
-	mkdir -v $(INSTALLDIR)/ngs_projects/config_files && \
-	mkdir -v $(INSTALLDIR)/ngs_projects/annovardb && \
-	mkdir -v $(INSTALLDIR)/ngs_project/run_logs && \
-	mkdir -v $(HOME)/ngseasy_logs && \
-	mkdir -v $(HOME)/ngseasy_tmp
+	mkdir -v -p $(INSTALLDIR)/ngs_projects && \
+	mkdir -v -p $(INSTALLDIR)/ngs_projects/raw_fastq && \
+	mkdir -v -p $(INSTALLDIR)/ngs_projects/config_files && \
+	mkdir -v -p $(INSTALLDIR)/ngs_projects/annovardb && \
+	mkdir -v -p $(INSTALLDIR)/ngs_project/run_logs && \
+	mkdir -v -p $(HOME)/ngseasy_logs && \
+	mkdir -v -p $(HOME)/ngseasy_tmp
 
 purgengsprojectsdir: 
 	rm -rfv $(INSTALLDIR)/ngs_projects
