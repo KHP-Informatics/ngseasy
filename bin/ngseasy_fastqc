@@ -383,7 +383,7 @@ logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
 
 ## remove docker containers
 #
-docker rm -f $(docker ps -a | grep fastqc | awk '{print $1}')
+#docker rm -f $(docker ps -a | grep fastqc | awk '{print $1}')
 
 # my random blah
 
