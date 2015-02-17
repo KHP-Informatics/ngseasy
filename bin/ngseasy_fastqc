@@ -262,6 +262,9 @@ for FILES2PROCESS in $batchfiles;do
 	fq1_suffix="1.fastq.gz"
 	fq2_suffix="2.fastq.gz"
 	
+	FQ1=${rawFASTQ1}_${fq1_suffix}
+	FQ2=${rawFASTQ2}_${fq2_suffix}
+	
 	elif [[ "${FASTQ1}" == *_R1.fastq.gz ]] 
 	then
 
@@ -269,7 +272,10 @@ for FILES2PROCESS in $batchfiles;do
 	rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _R2.fastq.gz`
 
 	fq1_suffix="R1.fastq.gz"
-	fq2_suffix="R2.fastq.gz"  
+	fq2_suffix="R2.fastq.gz"
+	
+	FQ1=${rawFASTQ1}_${fq1_suffix}
+	FQ2=${rawFASTQ2}_${fq2_suffix}
 	
 	elif [[ "${FASTQ1}" == *_1.fq.gz ]] 
 	then
@@ -279,6 +285,9 @@ for FILES2PROCESS in $batchfiles;do
 
 	fq1_suffix="1.fq.gz"
 	fq2_suffix="2.fq.gz"  
+
+	FQ1=${rawFASTQ1}_${fq1_suffix}
+	FQ2=${rawFASTQ2}_${fq2_suffix}
 	
 	elif [[ "${FASTQ1}" == *_R1.fq.gz ]] 
 	then
@@ -289,52 +298,39 @@ for FILES2PROCESS in $batchfiles;do
 	fq1_suffix="R1.fq.gz"
 	fq2_suffix="R2.fq.gz"  
 
+	FQ1=${rawFASTQ1}_${fq1_suffix}
+	FQ2=${rawFASTQ2}_${fq2_suffix}
+	
 	elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9].fastq.gz ]] 
 	then
 
 	logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme"
 
-	rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} .fastq.gz`
-	rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} .fastq.gz`
+	FQ1=${FASTQ1}
+	FQ2=${FASTQ2}
 
-	fq1_suffix="R1.fastq.gz"
-	fq2_suffix="R2.fastq.gz" 
-
-	logger_ngseasy "[ngseasy_fastqc]:Stripping <set number (0-padded to 3 digits> from fastq names"
 	
-	rename -v s/_[0-9][0-9][0-9]//g  ${SOUT}/fastq/${FASTQ1}
-	rename -v s/_[0-9][0-9][0-9]//g  ${SOUT}/fastq/${FASTQ2}
-
 	elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9][0-9].fastq.gz ]] 
 	then
 
-	logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme\n"
+	logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme"
 
-	rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} .fastq.gz`
-	rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} .fastq.gz`
-
-	fq1_suffix="R1.fastq.gz"
-	fq2_suffix="R2.fastq.gz" 
-
-	logger_ngseasy "[ngseasy_fastqc]:Stripping <set number (0-padded to 3 digits> from fastq names"
-	
-	rename -v s/_[0-9][0-9][0-9][0-9]//g  ${SOUT}/fastq/${FASTQ1}
-	rename -v s/_[0-9][0-9][0-9][0-9]//g  ${SOUT}/fastq/${FASTQ2}
-	
+	FQ1=${FASTQ1}
+	FQ2=${FASTQ2}
+		
 	else
 
-	logger_ngseasy "[ngseasy_fastqc]: Fastq naming format not recognised [$FASTQ1] : This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
+	logger_ngseasy "[ngseasy_fastqc]: Fastq naming format not recognised for files [$FASTQ1] [$FASTQ2]" ${LOGFILE} 
+	logger_ngseasy "[ngseasy_fastqc]: This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
 	exit 1
 	fi        
-	
-	logger_ngseasy "[ngseasy_fastqc]:Fastq Basename : [$rawFASTQ1] " ${LOGFILE}
-	logger_ngseasy "[ngseasy_fastqc]:Fastq suffix : [$fq1_suffix] and [$fq2_suffix] " ${LOGFILE}
+
 
 	#-------------------------------------------------------------------#
 
 	## check if qc'd data alread exists 
 	#
-	if [ -s "${SOUT}/fastq/${rawFASTQ1}_${fq1_suffix}_fastqc.zip" ] && [ -s "${SOUT}/fastq/${rawFASTQ2}_${fq2_suffix}_fastqc.zip" ] 
+	if [ -s "${SOUT}/fastq/${F1}_fastqc.zip" ] && [ -s "${SOUT}/fastq/${F2}_fastqc.zip" ] 
 	then
 	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping" ${LOGFILE}
 	exit 1
@@ -353,7 +349,7 @@ for FILES2PROCESS in $batchfiles;do
 
 	## Docker run compbio/ngseasy-fastqc
 	#
-	logger_ngseasy "[ngseasy_fastqc]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/pipeman/ngs_projects -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman --name fastqc.${SAMPLE_ID} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}" ${LOGFILE}
+	logger_ngseasy "[ngseasy_fastqc]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/pipeman/ngs_projects -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman --name fastqc.${SAMPLE_ID} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${F1} ${SOUTDocker}/fastq/${F2}" ${LOGFILE}
 
 	## call docker: run as -d in background (-d does not work with --rm=true). 
 	# This runs all containers in background..simultaneuously!
@@ -366,7 +362,7 @@ for FILES2PROCESS in $batchfiles;do
 	--user pipeman \
 	--name fastqc.${SAMPLE_ID} \
 	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
-	/usr/local/pipeline/FastQC/fastqc --threads 2 --extract --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}
+	/usr/local/pipeline/FastQC/fastqc --threads 2 --extract --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${FQ1} ${SOUTDocker}/fastq/${FQ2}
 
 	done < ${FILES2PROCESS}
 
