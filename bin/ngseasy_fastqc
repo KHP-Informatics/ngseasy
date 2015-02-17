@@ -80,6 +80,7 @@ fi
   done
 
 ## check config file exists.
+#
 if [ ! -e "${config_tsv}" ] 
 then
 	    logger_ngseasy "[ngseasy_fastqc]:ERROR : [${config_tsv}] does not exist....exiting "
@@ -89,7 +90,8 @@ else
 	    logger_ngseasy "[ngseasy_fastqc]:Configuration file found [${config_tsv}] "
 fi
 
-#check project_directory exists.
+## check project_directory exists.
+#
 if [ ! -d "${project_directory}" ]
   then
     logger_ngseasy "[ngseasy_fastqc]:ERROR : project_directory [${project_directory}] does not exist "
@@ -100,21 +102,30 @@ else
 fi
 
 ## Read config file 
+#
 logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] "
 sed 1d ${config_tsv} > ${config_tsv}.tmp
-numsamples=`wc -l ${config_tsv}.tmp`  
-numcores=`nproc`
-numjobs=$(expr $numcores / 2)
-  
-## params to get
-## trim gatk bsqr realign 
-##
 
+## number of samples to run
+#
+numsamples=`wc -l ${config_tsv}.tmp`  
+
+## number of cores available
+#
+numcores=`nproc`
+
+## muber of jobs fastqc calls allowed to run at the same time
+#
+numjobs=$(expr $numcores / 2)
+ 
+  
+## Read config and loop through all lines calling fastqc docker
+##
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22
 do
 
 ## set varibales  
-
+#
 PROJECT_ID=$f1
 SAMPLE_ID=$f2
 FASTQ1=$f3
