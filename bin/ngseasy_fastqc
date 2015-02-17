@@ -328,7 +328,7 @@ for FILES2PROCESS in $batchfiles;do
 	fi        
 	
 	logger_ngseasy "[ngseasy_fastqc]:Fastq Basename : [$rawFASTQ1] " ${LOGFILE}
-	logger_ngseasy "[ngseasy_fastqc]:Fastq suffix : [$fq1_suffix] and [$fq1_suffix] " ${LOGFILE}
+	logger_ngseasy "[ngseasy_fastqc]:Fastq suffix : [$fq1_suffix] and [$fq2_suffix] " ${LOGFILE}
 
 	#-------------------------------------------------------------------#
 
@@ -383,7 +383,7 @@ logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
 
 ## remove docker containers
 #
-#docker rm -f $(docker ps -a | grep fastqc | awk '{print $1}')
+docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
 
 # my random blah
 
