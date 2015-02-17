@@ -16,7 +16,7 @@ RUNDATE=`date +"%d%m%y"`
 function logger_ngseasy() {
  message=${1}
  mylogfile=${2}
- echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]\n" >> ${mylogfile}.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
 
@@ -104,23 +104,55 @@ fi
 ## Read config file 
 #
 logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] "
+
+## remove header
+#
 sed 1d ${config_tsv} > ${config_tsv}.tmp
 
 ## number of samples to run
 #
-numsamples=`wc -l ${config_tsv}.tmp`  
+numsamples=`wc -l ${config_tsv}.tmp | awk '{print $1}'`  
+logger_ngseasy "[ngseasy_fastqc]:Number of samples [$numsamples]"
 
 ## number of cores available
 #
+mincpuallowed=8
 numcores=`nproc`
+logger_ngseasy "[ngseasy_fastqc]:Number of available cores [$numcores]"
+
+if [[ "$numcores" -lt 2 ]]
+then
+	logger_ngseasy "[ngseasy_fastqc]:Number of available cores less than 2. Exiting "
+	exit 1;
+fi
 
 ## muber of jobs fastqc calls allowed to run at the same time
 #
-numjobs=$(expr $numcores / 2)
- 
-  
+numjobsallowed=$(expr $numcores / 2)
+logger_ngseasy "[ngseasy_fastqc]:Number of Jobs allowed [$numjobsallowed]"
+
+## split config file into batches : N samples per batch. N samples == njobs
+#
+if [[ "$numjobsallowed" -lt "$numsamples" ]]
+then
+	logger_ngseasy "[ngseasy_fastqc]:Number samples is more than number of jobs allowed"
+	logger_ngseasy "[ngseasy_fastqc]:splitting config file in to [${numjobsallowed}] batches"
+	logger_ngseasy "[ngseasy_fastqc]:CMD:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp"
+	
+	split -d -l ${numjobsallowed} --additional-suffix=".batch.config.tmp" ${config_tsv}.tmp 
+else
+	logger_ngseasy "[ngseasy_fastqc]:Number samples is more than number of jobs allowed"
+fi
+
+## get file names to process
+#
+batchfiles=`ls | grep batch`
+
 ## Read config and loop through all lines calling fastqc docker
 ##
+
+for FILES2PROCESS in $batchfiles;do
+
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22
 do
 
@@ -335,6 +367,8 @@ logger_ngseasy "[ngseasy_fastqc]: docker \
     -t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
      /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}" ${LOGFILE}
 
+## call docker: run as -d in background does not work with --rm=true
+#
     docker \
     run \
     --rm=true \
@@ -353,7 +387,15 @@ logger_ngseasy "[ngseasy_fastqc]: docker \
 
 logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
 
-done < ${config_tsv}.tmp
+## done < ${config_tsv}.tmp
+done < ${FILES2PROCESS}
 
-
+# my random blah
 #rm  ${config_tsv}.tmp
+#Each thread will be allocated 250MB of
+#                    memory so you shouldn't run more threads than your
+#                    available memory will cope with, and not more than
+#                    6 threads on a 32 bit machine
+# so 16 GB RAM Machine = 8 jobs at the same time
+## 32GB = 16 jobsan so on
+# 
