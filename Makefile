@@ -35,6 +35,9 @@ scripts:
 	chmod 777 $(SRC)/*
 	cp -v $(SRC)/* $(TARGET_BIN)/
 
+rmscripts:
+	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy 
+
 ngsprojectdir: 
 	mkdir -v -p $(INSTALLDIR)/ngs_projects && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/raw_fastq && \
