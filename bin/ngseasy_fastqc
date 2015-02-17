@@ -133,15 +133,12 @@ logger_ngseasy "[ngseasy_fastqc]:Number of Jobs allowed [$numjobsallowed]"
 
 ## split config file into batches : N samples per batch. N samples == njobs
 #
-if [[ "$numjobsallowed" -lt "$numsamples" ]]
+if [[ "$numsamples"  -gt "$numjobsallowed" ]]
 then
 	logger_ngseasy "[ngseasy_fastqc]:Number samples [$numsamples] greater than number of cpu jobs allowed [$numjobsallowed]"
-	logger_ngseasy "[ngseasy_fastqc]:splitting config file in to [${numjobsallowed}] batches"
+	logger_ngseasy "[ngseasy_fastqc]:splitting config file in to batches of at most [${numjobsallowed}] samples"
 	logger_ngseasy "[ngseasy_fastqc]:[cmd]:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp"
-	
 	split -d -l ${numjobsallowed} --additional-suffix=".batch.${config_tsv}.tmp" ${config_tsv}.tmp 
-else
-	logger_ngseasy "[ngseasy_fastqc]:Number samples is more than number of jobs allowed"
 fi
 
 ## get file names to process
