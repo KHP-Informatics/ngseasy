@@ -137,7 +137,7 @@ then
     /bin/bash ngseasy_initiate_project -c ${config_tsv} -d ${project_directory}
 
 else
-    echo -e  "[ngseasy]:Assuming ngseasy_initiate_project already run. Project and Sample dirctories exist" 
+    echo -e  "[ngseasy]:Assuming ngseasy_initiate_project already run. Project and Sample directories exist" 
 fi
 
 
@@ -249,7 +249,7 @@ then
     /bin/bash ngseasy_fastqc -c ${config_tsv} -d ${project_directory}
 
 else
-    echo -e  "[ngseasy]:Skipping qc-trimming" 
+    echo -e  "[ngseasy]:Skipping fastqc" 
     logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${PROJECT_ID}.${USER}.$(date +"%d%m%y") 
 fi
 

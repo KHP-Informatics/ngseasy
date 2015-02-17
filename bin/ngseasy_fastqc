@@ -135,11 +135,11 @@ logger_ngseasy "[ngseasy_fastqc]:Number of Jobs allowed [$numjobsallowed]"
 #
 if [[ "$numjobsallowed" -lt "$numsamples" ]]
 then
-	logger_ngseasy "[ngseasy_fastqc]:Number samples is more than number of jobs allowed"
+	logger_ngseasy "[ngseasy_fastqc]:Number samples [$numsamples] greater than number of cpu jobs allowed [$numjobsallowed]"
 	logger_ngseasy "[ngseasy_fastqc]:splitting config file in to [${numjobsallowed}] batches"
-	logger_ngseasy "[ngseasy_fastqc]:CMD:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp"
+	logger_ngseasy "[ngseasy_fastqc]:[cmd]:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp"
 	
-	split -d -l ${numjobsallowed} --additional-suffix=".batch.config.tmp" ${config_tsv}.tmp 
+	split -d -l ${numjobsallowed} --additional-suffix=".batch.${config_tsv}.tmp" ${config_tsv}.tmp 
 else
 	logger_ngseasy "[ngseasy_fastqc]:Number samples is more than number of jobs allowed"
 fi
@@ -185,7 +185,7 @@ for FILES2PROCESS in $batchfiles;do
 
 	## read config_file
 	logger_ngseasy "[ngseasy_fastqc]:
-	$PROJECT_ID\t
+	[$PROJECT_ID\t
 	$SAMPLE_ID\t
 	$FASTQ1\t
 	$FASTQ2\t
@@ -207,7 +207,7 @@ for FILES2PROCESS in $batchfiles;do
 	$NCPU\t
 	$VERSION\t
 	$NGSUSER\t
-	$DATE\t"
+	$DATE]"
 	
 	## Logfile 
 	LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.ngseasy_fastqc
@@ -295,7 +295,7 @@ for FILES2PROCESS in $batchfiles;do
 	elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9].fastq.gz ]] 
 	then
 
-	logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme\n"
+	logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme"
 
 	rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} .fastq.gz`
 	rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} .fastq.gz`
@@ -303,7 +303,7 @@ for FILES2PROCESS in $batchfiles;do
 	fq1_suffix="R1.fastq.gz"
 	fq2_suffix="R2.fastq.gz" 
 
-	logger_ngseasy "[ngseasy_fastqc]:Stripping <set number (0-padded to 3 digits> from fastq names\n"
+	logger_ngseasy "[ngseasy_fastqc]:Stripping <set number (0-padded to 3 digits> from fastq names"
 	
 	rename -v s/_[0-9][0-9][0-9]//g  ${FASTQ1}
 	rename -v s/_[0-9][0-9][0-9]//g  ${FASTQ2}
@@ -319,7 +319,7 @@ for FILES2PROCESS in $batchfiles;do
 	fq1_suffix="R1.fastq.gz"
 	fq2_suffix="R2.fastq.gz" 
 
-	logger_ngseasy "[ngseasy_fastqc]:Stripping <set number (0-padded to 3 digits> from fastq names\n"
+	logger_ngseasy "[ngseasy_fastqc]:Stripping <set number (0-padded to 3 digits> from fastq names"
 	
 	rename -v s/_[0-9][0-9][0-9][0-9]//g  ${FASTQ1}
 	rename -v s/_[0-9][0-9][0-9][0-9]//g  ${FASTQ2}
@@ -356,26 +356,12 @@ for FILES2PROCESS in $batchfiles;do
 
 	## Docker run compbio/ngseasy-fastqc
 	#
-	#logger_ngseasy "[ngseasy_fastqc]:[cmd]: /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --quiet --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq1_suffix}" ${LOGFILE}
-	logger_ngseasy "[ngseasy_fastqc]: docker \
-	run \
-	-d \
-	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-	-w /home/pipeman \
-	-e HOME=/home/pipeman \
-	-e USER=pipeman \
-	--user pipeman \
-	--name fastqc.${SAMPLE_ID} \
-	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
-	/usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}" ${LOGFILE}
+	logger_ngseasy "[ngseasy_fastqc]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/pipeman/ngs_projects -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman --name fastqc.${SAMPLE_ID} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}" ${LOGFILE}
 
 	## call docker: run as -d in background (-d does not work with --rm=true). 
 	# This runs all containers in background..simultaneuously!
 	#
-	docker \
-	run \
-	-d \
-	--rm=true \
+	docker run -d \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	-w /home/pipeman \
 	-e HOME=/home/pipeman \
@@ -383,28 +369,31 @@ for FILES2PROCESS in $batchfiles;do
 	--user pipeman \
 	--name fastqc.${SAMPLE_ID} \
 	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
-	/usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}
-	
+	/usr/local/pipeline/FastQC/fastqc --threads 2 --extract --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix} ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}
 
-	## done < ${config_tsv}.tmp
 	done < ${FILES2PROCESS}
+
+
 ## end for looop
+#
 logger_ngseasy "[ngseasy_fastqc]:Processed [${FILES2PROCESS}]"
+
 done
 
-logger_ngseasy "[ngseasy_fastqc]:cleaning up with [docker rm -f \$(docker ps -a | grep fastqc | awk '{print \$1}')]"
-
-docker rm -f $(docker ps -a | grep fastqc | awk '{print $1}')
-
+## END ALL
+#
 logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
 
+## remove docker containers
+#
+docker rm -f $(docker ps -a | grep fastqc | awk '{print $1}')
 
 # my random blah
-#rm  ${config_tsv}.tmp
+
 #Each thread will be allocated 250MB of
 #                    memory so you shouldn't run more threads than your
 #                    available memory will cope with, and not more than
 #                    6 threads on a 32 bit machine
 # so 16 GB RAM Machine = 8 jobs at the same time
-## 32GB = 16 jobsan so on
+## 32GB = 16 jobs an so on
 # 
