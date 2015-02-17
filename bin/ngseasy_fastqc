@@ -302,8 +302,8 @@ for FILES2PROCESS in $batchfiles;do
 
 	logger_ngseasy "[ngseasy_fastqc]:Stripping <set number (0-padded to 3 digits> from fastq names"
 	
-	rename -v s/_[0-9][0-9][0-9]//g  ${FASTQ1}
-	rename -v s/_[0-9][0-9][0-9]//g  ${FASTQ2}
+	rename -v s/_[0-9][0-9][0-9]//g  ${SOUT}/fastq/${FASTQ1}
+	rename -v s/_[0-9][0-9][0-9]//g  ${SOUT}/fastq/${FASTQ2}
 
 	elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9][0-9].fastq.gz ]] 
 	then
@@ -318,8 +318,8 @@ for FILES2PROCESS in $batchfiles;do
 
 	logger_ngseasy "[ngseasy_fastqc]:Stripping <set number (0-padded to 3 digits> from fastq names"
 	
-	rename -v s/_[0-9][0-9][0-9][0-9]//g  ${FASTQ1}
-	rename -v s/_[0-9][0-9][0-9][0-9]//g  ${FASTQ2}
+	rename -v s/_[0-9][0-9][0-9][0-9]//g  ${SOUT}/fastq/${FASTQ1}
+	rename -v s/_[0-9][0-9][0-9][0-9]//g  ${SOUT}/fastq/${FASTQ2}
 	
 	else
 
