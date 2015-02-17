@@ -105,54 +105,18 @@ fi
 #
 logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] "
 
-## remove header
+## check if ${config_tsv}.tmp exists and make it if it dont
 #
-sed 1d ${config_tsv} > ${config_tsv}.tmp
-
-## number of samples to run
-#
-numsamples=`wc -l ${config_tsv}.tmp | awk '{print $1}'`  
-logger_ngseasy "[ngseasy_fastqc]:Number of samples [$numsamples]"
-
-## number of cores available
-#
-mincpuallowed=8
-numcores=`nproc`
-logger_ngseasy "[ngseasy_fastqc]:Number of available cores [$numcores]"
-
-if [[ "$numcores" -lt 2 ]]
+if [[ ! -s "${config_tsv}.tmp" ]]
 then
-	logger_ngseasy "[ngseasy_fastqc]:Number of available cores less than 2. Exiting "
-	exit 1;
+	sed 1d ${config_tsv} > ${config_tsv}.tmp
 fi
-
-## muber of jobs fastqc calls allowed to run at the same time
-#
-numjobsallowed=$(expr $numcores / 2)
-logger_ngseasy "[ngseasy_fastqc]:Number of Jobs allowed [$numjobsallowed]"
-
-## split config file into batches : N samples per batch. N samples == njobs
-#
-if [[ "$numsamples"  -gt "$numjobsallowed" ]]
-then
-	logger_ngseasy "[ngseasy_fastqc]:Number samples [$numsamples] greater than number of cpu jobs allowed [$numjobsallowed]"
-	logger_ngseasy "[ngseasy_fastqc]:splitting config file in to batches of at most [${numjobsallowed}] samples"
-	logger_ngseasy "[ngseasy_fastqc]:[cmd]:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp"
-	split -d -l ${numjobsallowed} --additional-suffix=".batch.${config_tsv}.tmp" ${config_tsv}.tmp 
-fi
-
-## get file names to process
-#
-batchfiles=`ls | grep batch`
 
 ## Read config and loop through all lines calling fastqc docker
 ##
-
-for FILES2PROCESS in $batchfiles;do
-	logger_ngseasy "[ngseasy_fastqc]:Running [${FILES2PROCESS}]"
 	
-	while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22
-	do
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22
+do
 
 	## set varibales  
 	#
@@ -364,29 +328,7 @@ for FILES2PROCESS in $batchfiles;do
 	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
 	/usr/local/pipeline/FastQC/fastqc --threads 2 --extract --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${FQ1} ${SOUTDocker}/fastq/${FQ2}
 
-	done < ${FILES2PROCESS}
+done < ${config_tsv}.tmp
 
-
-## end for looop
-#
-logger_ngseasy "[ngseasy_fastqc]:Processed [${FILES2PROCESS}]"
-
-done
-
-## END ALL
-#
 logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
-
-## remove docker containers
-#
-docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
-
-# my random blah
-
-#Each thread will be allocated 250MB of
-#                    memory so you shouldn't run more threads than your
-#                    available memory will cope with, and not more than
-#                    6 threads on a 32 bit machine
-# so 16 GB RAM Machine = 8 jobs at the same time
-## 32GB = 16 jobs an so on
-# 
+ 

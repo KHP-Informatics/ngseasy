@@ -154,103 +154,73 @@ else
     echo -e  "[ngseasy]:Assuming ngseasy_initiate_fastq already run. Sample fastq files exist and are in the right directories....ngseasy will check later" 
 fi
 
-# --- Start NGS Pipeline -------------------------------------------------------- #
 
-# Read config file
-while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22
-do
-
-## set varibales  
-DATE=`date +"%d%m%y"`
-  
-PROJECT_ID=$f1
-SAMPLE_ID=$f2
-FASTQ1=$f3
-FASTQ2=$f4
-PROJECT_DIR=$f5
-DNA_PREP_LIBRARY_ID=$f6
-NGS_PLATFORM=$f7
-NGS_TYPE=$f8
-BAIT=$f9
-CAPTURE=$f10
-FASTQC=$f11
-TRIM=$f12
-BSQR=$f13
-REALN=$f14
-ALIGNER=$f15
-VARCALLER=$f16
-CNV=$f17
-ANNOTATOR=$f18
-CLEANUP=$f19
-NCPU=$f20
-VERSION=$f21
-NGSUSER=$f22
-
-
-# Read config file log
-logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${PROJECT_ID}.${USER}.$(date +"%d%m%y)"
-
-echo -e "
-[ngseasy]:Reading [${config_tsv}]\n
-[ngseasy]:Reading [${config_tsv}]:PROJECT_ID=[$PROJECT_ID]\n
-[ngseasy]:Reading [${config_tsv}]:SAMPLE_ID=[$SAMPLE_ID]\n
-[ngseasy]:Reading [${config_tsv}]:FASTQ1=[$FASTQ1]\n
-[ngseasy]:Reading [${config_tsv}]:FASTQ2=[$FASTQ2]\n
-[ngseasy]:Reading [${config_tsv}]:PROJECT_DIR=[$PROJECT_DIR]\n
-[ngseasy]:Reading [${config_tsv}]:DNA_PREP_LIBRARY_ID=[$DNA_PREP_LIBRARY_ID]\n
-[ngseasy]:Reading [${config_tsv}]:NGS_PLATFORM=[$NGS_PLATFORM]\n
-[ngseasy]:Reading [${config_tsv}]:NGS_TYPE=[$NGS_TYPE]\n
-[ngseasy]:Reading [${config_tsv}]:BAIT=[$BAIT]\n
-[ngseasy]:Reading [${config_tsv}]:CAPTURE=[$CAPTURE]\n
-[ngseasy]:Reading [${config_tsv}]:FASTQC=[$FASTQC]\n
-[ngseasy]:Reading [${config_tsv}]:TRIM=[$TRIM]\n
-[ngseasy]:Reading [${config_tsv}]:BSQR=[$BSQR]\n
-[ngseasy]:Reading [${config_tsv}]:REALN=$[$REALN]\n
-[ngseasy]:Reading [${config_tsv}]:ALIGNER=[$ALIGNER]\n
-[ngseasy]:Reading [${config_tsv}]:VARCALLER=[$VARCALLER]\n
-[ngseasy]:Reading [${config_tsv}]:CNV=[$CNV]\n
-[ngseasy]:Reading [${config_tsv}]:ANNOTATOR=[$ANNOTATOR]\n
-[ngseasy]:Reading [${config_tsv}]:CLEANUP=[$CLEANUP]\n
-[ngseasy]:Reading [${config_tsv}]:NCPU=[$NCPU]\n
-[ngseasy]:Reading [${config_tsv}]:VERSION=[$VERSION]\n
-[ngseasy]:Reading [${config_tsv}]:NGSUSER=[$NGSUSER]"
-
-logger_ngseasy "[ngseasy]:Reading [${config_tsv}]\n
-[ngseasy]:Reading [${config_tsv}]:PROJECT_ID=[$PROJECT_ID]\n
-[ngseasy]:Reading [${config_tsv}]:SAMPLE_ID=[$SAMPLE_ID]\n
-[ngseasy]:Reading [${config_tsv}]:FASTQ1=[$FASTQ1]\n
-[ngseasy]:Reading [${config_tsv}]:FASTQ2=[$FASTQ2]\n
-[ngseasy]:Reading [${config_tsv}]:PROJECT_DIR=[$PROJECT_DIR]\n
-[ngseasy]:Reading [${config_tsv}]:DNA_PREP_LIBRARY_ID=[$DNA_PREP_LIBRARY_ID]\n
-[ngseasy]:Reading [${config_tsv}]:NGS_PLATFORM=[$NGS_PLATFORM]\n
-[ngseasy]:Reading [${config_tsv}]:NGS_TYPE=[$NGS_TYPE]\n
-[ngseasy]:Reading [${config_tsv}]:BAIT=[$BAIT]\n
-[ngseasy]:Reading [${config_tsv}]:CAPTURE=[$CAPTURE]\n
-[ngseasy]:Reading [${config_tsv}]:FASTQC=[$FASTQC]\n
-[ngseasy]:Reading [${config_tsv}]:TRIM=[$TRIM]\n
-[ngseasy]:Reading [${config_tsv}]:BSQR=[$BSQR]\n
-[ngseasy]:Reading [${config_tsv}]:REALN=$[$REALN]\n
-[ngseasy]:Reading [${config_tsv}]:ALIGNER=[$ALIGNER]\n
-[ngseasy]:Reading [${config_tsv}]:VARCALLER=[$VARCALLER]\n
-[ngseasy]:Reading [${config_tsv}]:CNV=[$CNV]\n
-[ngseasy]:Reading [${config_tsv}]:ANNOTATOR=[$ANNOTATOR]\n
-[ngseasy]:Reading [${config_tsv}]:CLEANUP=[$CLEANUP]\n
-[ngseasy]:Reading [${config_tsv}]:NCPU=[$NCPU]\n
-[ngseasy]:Reading [${config_tsv}]:VERSION=[$VERSION]\n
-[ngseasy]:Reading [${config_tsv}]:NGSUSER=[$NGSUSER]" ${HOME}/ngseasy_logs/ngseasy.${PROJECT_ID}.${USER}.$(date +"%d%m%y")
 
 ##-------------------------------------------------------------------------##
 ## fastqc
+#
 if [[ "${FASTQC}" -eq "qc-fastq" ]]
 then
-    echo -e  "[ngseasy]:Calling ngseasy_fastqc" 
-    logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${PROJECT_ID}.${USER}.$(date +"%d%m%y") 
+	logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
 
-    /bin/bash ngseasy_fastqc -c ${config_tsv} -d ${project_directory}
+	## check if ${config_tsv}.tmp exists and make it if it dont
+	#
+	if [[ ! -s "${config_tsv}.tmp" ]]
+	then
+		sed 1d ${config_tsv} > ${config_tsv}.tmp
+	fi
+
+	## number of samples to run
+	#
+	numsamples=`wc -l ${config_tsv}.tmp | awk '{print $1}'`  
+	logger_ngseasy "[ngseasy_fastqc]:Number of samples [$numsamples]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+
+	## number of cores available
+	#
+	mincpuallowed=8
+	numcores=`nproc`
+	logger_ngseasy "[ngseasy_fastqc]:Number of available cores [$numcores]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+
+	if [[ "$numcores" -lt 2 ]]
+	then
+		logger_ngseasy "[ngseasy_fastqc]:Number of available cores less than 2. Exiting " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+		exit 1;
+	fi
+
+	## muber of jobs fastqc calls allowed to run at the same time
+	#
+	numjobsallowed=$(expr $numcores / 2)
+	logger_ngseasy "[ngseasy_fastqc]:Number of Jobs allowed [$numjobsallowed]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+
+	## split config file into batches : N samples per batch. N samples == njobs
+	#
+	if [[ "$numsamples"  -gt "$numjobsallowed" ]]
+	then
+		logger_ngseasy "[ngseasy_fastqc]:Number samples [$numsamples] greater than number of cpu jobs allowed [$numjobsallowed]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+		logger_ngseasy "[ngseasy_fastqc]:splitting config file in to batches of at most [${numjobsallowed}] samples" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+		logger_ngseasy "[ngseasy_fastqc]:[cmd]:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+		
+		split -d -l ${numjobsallowed} --additional-suffix=".batch.${config_tsv}.tmp" ${config_tsv}.tmp 
+	fi
+
+	## get file names to process
+	#
+	batchfiles=`ls | grep batch` 
+	
+	## call ngseasy_fastqc
+	#
+	for batch_config in $batchfiles
+	do
+		/bin/bash ngseasy_fastqc -c ${batch_config} -d ${project_directory}
+	done
+		
+	## remove docker containers
+	#
+	docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
 
 else
     echo -e  "[ngseasy]:Skipping fastqc" 
-    logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${PROJECT_ID}.${USER}.$(date +"%d%m%y") 
+    logger_ngseasy "[ngseasy]:Skipping fastqc " ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .$(date +"%d%m%y") 
 fi
 
 ##-------------------------------------------------------------------------##
@@ -258,13 +228,13 @@ fi
 if [[ "${TRIM}" -eq "qc-trim" ]]
 then
     echo -e  "[ngseasy]:Calling ngseasy_trimmomatic" 
-    logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${PROJECT_ID}.${USER}.$(date +"%d%m%y")
+    logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .$(date +"%d%m%y")
 
     /bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
 
 else
     echo -e  "[ngseasy]:Skipping qc-trimming" 
-    logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${PROJECT_ID}.${USER}.$(date +"%d%m%y")
+    logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .$(date +"%d%m%y")
 fi
 
 ##-------------------------------------------------------------------------##
@@ -326,5 +296,3 @@ fi
 ##-------------------------------------------------------------------------##
 ## NGS Report
 
-
-done < ${config_tsv}
