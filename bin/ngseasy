@@ -168,6 +168,8 @@ then
 #
 if [[ ! -e "${config_tsv}.tmp" ]]
 then
+	logger_ngseasy "[ngseasy]:[cmd]:sed 1d ${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+	
 	sed 1d ${config_tsv} > ${config_tsv}.tmp
 fi
 
@@ -209,11 +211,13 @@ fi
 batchfiles=`ls | grep batch` 
 	
 ## call ngseasy_fastqc
- config_tsv=test.config
- project_directory=/home/sjnewhouse/ngs_projects
+config_tsv=test.config
+project_directory=/home/sjnewhouse/ngs_projects
 #
 for batch_config in $batchfiles
 do
+	logger_ngseasy "[ngseasy]:[cmd]:ngseasy_fastqc -c ${batch_config} -d ${project_directory}" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+		
 	/bin/bash ngseasy_fastqc -c ${batch_config} -d ${project_directory}
 	wait
 done
