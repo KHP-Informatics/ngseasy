@@ -38,6 +38,9 @@ scripts:
 rmscripts:
 	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy 
 
+updatescripts:
+	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy && chmod 777 $(SRC)/ && cp -v $(SRC)/* $(TARGET_BIN)/
+
 ngsprojectdir: 
 	mkdir -v -p $(INSTALLDIR)/ngs_projects && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/raw_fastq && \

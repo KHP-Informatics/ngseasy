@@ -212,6 +212,7 @@ then
 	for batch_config in $batchfiles
 	do
 		/bin/bash ngseasy_fastqc -c ${batch_config} -d ${project_directory}
+		wait
 	done
 		
 	## remove docker containers
