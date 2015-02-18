@@ -43,11 +43,11 @@ Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
 usage:   ngseasy_full -c <config_file> -d <project_directory> -p 1 -f 1
 
-options:  -c  configuration file
-          -d  project directory
-          -p  initiate project. Options: 1 or 0
-          -f  initiate fastq files. Option 1 or 0
-          -h  show this message 
+options:  -c  STRING	configuration file
+          -d  STRING	project directory
+          -p  BOOLEAN	initiate project. Options: 1 or 0
+          -f  BOOLEAN	initiate fastq files. Option 1 or 0
+          -h  NULL	show this message 
 "
 }
 
@@ -112,16 +112,16 @@ done
 ## Check options passed in.
 #
 if test -z "$2"
-  then
-  usage_ngseasy
-  exit 1
+	then
+	usage_ngseasy
+	exit 1
 fi
 
 ###########################################################################################
 ## check file and directory exist.
 #
 if [[ ! -e "${config_tsv}" ]] 
-  then
+then
 	  usage_ngseasy;
 	  logger_ngseasy "[ngseasy]:ERROR : ${config_tsv} does not exist\n"
 	  exit 1;
@@ -144,7 +144,7 @@ then
     logger_ngseasy "[ngseasy]:ERROR : [${config_tsv}] format issue. Check your file! " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
     exit 1;
 else 
-    logger_ngseasy "[ngseasy]:Numcols of [${config_tsv}] ok [$numcols]...proceeding... " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")	     
+    logger_ngseasy "[ngseasy]:Numcols of [${config_tsv}] ok:[$numcols]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")	     
 fi
 
 

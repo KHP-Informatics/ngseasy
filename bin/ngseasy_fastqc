@@ -11,6 +11,7 @@
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 
+########################################################################################################
 ## global logging fuction
 #
 function logger_ngseasy() {
@@ -20,7 +21,7 @@ function logger_ngseasy() {
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
 
-
+########################################################################################################
 ## global usage
 #
 function ngseasy_fastqc_usage() {
@@ -39,9 +40,11 @@ This is is optomised for PE data, and calls 2 threads as default to process the 
 "
 }
 
+########################################################################################################
 ## test if docker is intsalled and exit if not
 command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
 
+########################################################################################################
 ## check and make ~/ngseasy_logs if needed
 #
 if [[ ! -e  ${HOME}/ngseasy_logs ]]
@@ -50,6 +53,7 @@ then
   global_run_logs="${HOME}/ngseasy_logs"
 fi
 
+########################################################################################################
 ## Check options passed in.
 #
 if test -z "$2"
@@ -59,6 +63,7 @@ then
   exit 1
 fi
 
+########################################################################################################
 ## get options for command line args
   while  getopts "hc:d:" opt
   do
@@ -79,6 +84,7 @@ fi
       esac
   done
 
+########################################################################################################  
 ## check config file exists.
 #
 if [ ! -e "${config_tsv}" ] 
@@ -90,6 +96,7 @@ else
 	    logger_ngseasy "[ngseasy_fastqc]:Configuration file found [${config_tsv}] "
 fi
 
+########################################################################################################
 ## check project_directory exists.
 #
 if [ ! -d "${project_directory}" ]
