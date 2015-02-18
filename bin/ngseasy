@@ -68,6 +68,8 @@ fi
 ###########################################################################################
 ## default options
 #
+config_tsv=""
+project_directory=""
 initiate_project=0
 set_fastq=0
 
