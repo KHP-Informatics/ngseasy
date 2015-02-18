@@ -167,9 +167,10 @@ else
 fi
 
 
+###########################################################################################
 ## Make log file ##
 #
-touch ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+touch ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y").log
 
 ###########################################################################################
 ## fastqc
@@ -199,6 +200,8 @@ mincpuallowed=8
 numcores=`nproc`
 logger_ngseasy "[ngseasy_fastqc]:Number of available cores [$numcores]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
 
+## check if number of cpu less than 2 and exit if so ####
+#
 if [[ "$numcores" -lt 2 ]]
 then
 	logger_ngseasy "[ngseasy_fastqc]:Number of available cores less than 2. Exiting " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
@@ -217,24 +220,26 @@ then
 	logger_ngseasy "[ngseasy_fastqc]:Number samples [$numsamples] greater than number of cpu jobs allowed [$numjobsallowed]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
 	logger_ngseasy "[ngseasy_fastqc]:splitting config file in to batches of at most [${numjobsallowed}] samples" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
 	logger_ngseasy "[ngseasy_fastqc]:[cmd]:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
-	
-	split -d -l ${numjobsallowed} --additional-suffix=".batch.${config_tsv}.tmp" ${config_tsv}.tmp 
+
+	split -d -l ${numjobsallowed} --additional-suffix=".batch.${config_tsv}.tmp" ${config_tsv}.tmp
+else
+	cp ${config_tsv}.tmp original.batch.${config_tsv}.tmp
 fi
 
-## get file names to process
+## get file names to process ####
 #
 batchfiles=`ls | grep batch` 
-	
-	
+
+
 ## call ngseasy_fastqc ####
 #
 # config_tsv=test.config
 # project_directory=/home/sjnewhouse/ngs_projects
 #
-for batch_config in `cat $batchfiles`
+for MYBATCH in $batchfiles
 do
-	logger_ngseasy "[ngseasy]:[cmd]:ngseasy_fastqc -c ${batch_config} -d ${project_directory}" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
-	/bin/bash ngseasy_fastqc -c ${batch_config} -d ${project_directory}
+	logger_ngseasy "[ngseasy]:[cmd]:ngseasy_fastqc -c ${MYBATCH} -d ${project_directory}" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+	/bin/bash ngseasy_fastqc -c ${MYBATCH} -d ${project_directory}
 	wait
 done
 
@@ -245,7 +250,17 @@ done
 	
 	docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
 
+## rm tmp config files ####
+#
+	logger_ngseasy "[ngseasy]:cleaning up tmp config files" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
+	logger_ngseasy "[ngseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
+	
+	rm -v *.batch.${config_tsv}.tmp
+	
 	logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+
+## skip fastqc if required #### 
+#
 else
 
     logger_ngseasy "[ngseasy]:Skipping fastqc " ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .$(date +"%d%m%y") 
@@ -261,6 +276,8 @@ then
     logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .$(date +"%d%m%y")
 
     /bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
+    
+    rm 
 
 else
     echo -e  "[ngseasy]:Skipping qc-trimming" 
