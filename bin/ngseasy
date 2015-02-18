@@ -159,66 +159,67 @@ fi
 ###########################################################################################
 ## fastqc
 #
+#
 if [[ "${FASTQC}" -eq "qc-fastq" ]]
 then
 	logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
 
-	## check if ${config_tsv}.tmp exists and make it if it dont
-	#
-	if [[ ! -e "${config_tsv}.tmp" ]]
-	then
-		sed 1d ${config_tsv} > ${config_tsv}.tmp
-	fi
+## check if ${config_tsv}.tmp exists and make it if it dont
+#
+if [[ ! -e "${config_tsv}.tmp" ]]
+then
+	sed 1d ${config_tsv} > ${config_tsv}.tmp
+fi
 
-	## number of samples to run
-	#
-	numsamples=`wc -l ${config_tsv}.tmp | awk '{print $1}'`  
-	logger_ngseasy "[ngseasy_fastqc]:Number of samples [$numsamples]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+## number of samples to run
+#
+numsamples=`wc -l ${config_tsv}.tmp | awk '{print $1}'`  
+logger_ngseasy "[ngseasy_fastqc]:Number of samples [$numsamples]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
 
-	## number of cores available
-	#
-	mincpuallowed=8
-	numcores=`nproc`
-	logger_ngseasy "[ngseasy_fastqc]:Number of available cores [$numcores]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+## number of cores available
+#
+mincpuallowed=8
+numcores=`nproc`
+logger_ngseasy "[ngseasy_fastqc]:Number of available cores [$numcores]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
 
-	if [[ "$numcores" -lt 2 ]]
-	then
-		logger_ngseasy "[ngseasy_fastqc]:Number of available cores less than 2. Exiting " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
-		exit 1;
-	fi
+if [[ "$numcores" -lt 2 ]]
+then
+	logger_ngseasy "[ngseasy_fastqc]:Number of available cores less than 2. Exiting " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+	exit 1;
+fi
 
-	## muber of jobs fastqc calls allowed to run at the same time
-	#
-	numjobsallowed=$(expr $numcores / 2)
-	logger_ngseasy "[ngseasy_fastqc]:Number of Jobs allowed [$numjobsallowed]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+## muber of jobs fastqc calls allowed to run at the same time
+#
+numjobsallowed=$(expr $numcores / 2)
+logger_ngseasy "[ngseasy_fastqc]:Number of Jobs allowed [$numjobsallowed]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
 
-	## split config file into batches : N samples per batch. N samples == njobs
-	#
-	if [[ "$numsamples"  -gt "$numjobsallowed" ]]
-	then
-		logger_ngseasy "[ngseasy_fastqc]:Number samples [$numsamples] greater than number of cpu jobs allowed [$numjobsallowed]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
-		logger_ngseasy "[ngseasy_fastqc]:splitting config file in to batches of at most [${numjobsallowed}] samples" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
-		logger_ngseasy "[ngseasy_fastqc]:[cmd]:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
-		
-		split -d -l ${numjobsallowed} --additional-suffix=".batch.${config_tsv}.tmp" ${config_tsv}.tmp 
-	fi
-
-	## get file names to process
-	#
-	batchfiles=`ls | grep batch` 
+## split config file into batches : N samples per batch. N samples == njobs
+#
+if [[ "$numsamples"  -gt "$numjobsallowed" ]]
+then
+	logger_ngseasy "[ngseasy_fastqc]:Number samples [$numsamples] greater than number of cpu jobs allowed [$numjobsallowed]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+	logger_ngseasy "[ngseasy_fastqc]:splitting config file in to batches of at most [${numjobsallowed}] samples" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+	logger_ngseasy "[ngseasy_fastqc]:[cmd]:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
 	
-	## call ngseasy_fastqc
-	 config_tsv=test.config
-	 project_directory=/home/sjnewhouse/ngs_projects
-	#
-	for batch_config in $batchfiles
-	do
-		/bin/bash ngseasy_fastqc -c ${batch_config} -d ${project_directory}
-		wait
-	done
+	split -d -l ${numjobsallowed} --additional-suffix=".batch.${config_tsv}.tmp" ${config_tsv}.tmp 
+fi
+
+## get file names to process
+#
+batchfiles=`ls | grep batch` 
+	
+## call ngseasy_fastqc
+ config_tsv=test.config
+ project_directory=/home/sjnewhouse/ngs_projects
+#
+for batch_config in $batchfiles
+do
+	/bin/bash ngseasy_fastqc -c ${batch_config} -d ${project_directory}
+	wait
+done
 		
-	## remove docker containers
-	#
+## remove docker containers
+#
 	docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
 
 else
