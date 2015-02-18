@@ -156,7 +156,7 @@ fi
 
 
 
-##-------------------------------------------------------------------------##
+###########################################################################################
 ## fastqc
 #
 if [[ "${FASTQC}" -eq "qc-fastq" ]]
@@ -165,7 +165,7 @@ then
 
 	## check if ${config_tsv}.tmp exists and make it if it dont
 	#
-	if [[ ! -s "${config_tsv}.tmp" ]]
+	if [[ ! -e "${config_tsv}.tmp" ]]
 	then
 		sed 1d ${config_tsv} > ${config_tsv}.tmp
 	fi
@@ -208,6 +208,8 @@ then
 	batchfiles=`ls | grep batch` 
 	
 	## call ngseasy_fastqc
+	 config_tsv=test.config
+	 project_directory=/home/sjnewhouse/ngs_projects
 	#
 	for batch_config in $batchfiles
 	do
