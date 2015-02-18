@@ -127,19 +127,24 @@ if [[ ! -e "${config_tsv}" ]]
 	  exit 1;
 fi
 
-########################################################################################################
+###########################################################################################
+## Make log file ##
+#
+touch ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y").log
+
+############################################################################################
 ## check Num feilds in  ${config_tsv}
 #
-logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] "
+logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
 if [[  "$numcols" -lt 22 ]] 
 then
-    logger_ngseasy "[ngseasy]:ERROR : [${config_tsv}] format issue. Check your file! "
+    logger_ngseasy "[ngseasy]:ERROR : [${config_tsv}] format issue. Check your file! " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
     exit 1;
 else 
-    logger_ngseasy "[ngseasy]:Numcols of [${config_tsv}] ok [$numcols]...proceeding... "	    
+    logger_ngseasy "[ngseasy]:Numcols of [${config_tsv}] ok [$numcols]...proceeding... " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")	     
 fi
 
 
@@ -149,7 +154,7 @@ fi
 if [[ ! -d "${project_directory}" ]] 
   then
 	  usage_ngseasy;
-	  echo -e "[ngseasy]:ERROR :  ${project_directory} does not exist\n"
+	  logger_ngseasy "[ngseasy]:ERROR :  ${project_directory} does not exist" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
 	  exit 1;
 fi
 
@@ -161,11 +166,11 @@ fi
 
 if [[ "${initiate_project}" -eq "1" ]]
 then
-    echo -e  "[ngseasy]:Calling ngseasy_initiate_project" 
+    logger_ngseasy "[ngseasy]:Calling ngseasy_initiate_project"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
     /bin/bash ngseasy_initiate_project -c ${config_tsv} -d ${project_directory}
 
 else
-    echo -e  "[ngseasy]:Assuming ngseasy_initiate_project already run. Project and Sample directories exist" 
+   logger_ngseasy  "[ngseasy]:Assuming ngseasy_initiate_project already run. Project and Sample directories exist" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
 fi
 
 
@@ -175,18 +180,43 @@ fi
 
 if [[ "${set_fastq}" -eq "1" ]]
 then
-    echo -e  "[ngseasy]:Calling ngseasy_initiate_fastq" 
+    logger_ngseasy  "[ngseasy]:Calling ngseasy_initiate_fastq" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
     /bin/bash ngseasy_initiate_fastq -c ${config_tsv} -d ${project_directory}
 
 else
-    echo -e  "[ngseasy]:Assuming ngseasy_initiate_fastq already run. Sample fastq files exist and are in the right directories....ngseasy will check later" 
+    logger_ngseasy  "[ngseasy]:Assuming ngseasy_initiate_fastq already run. Sample fastq files exist and are in the right directories....ngseasy will check later" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
 fi
 
+########################################################################################################
+## Read config file 
 
-###########################################################################################
-## Make log file ##
+## check ${config_tsv}. is this a batch file or the orginal config file 
 #
-touch ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y").log
+logger_ngseasy "[ngseasy_fastqc]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
+
+hasheader=`grep POJECT_ID ${config_tsv} | wc -l | awk '{print $1}'`
+
+if [[ "${config_tsv}" == *.batch.* ]]
+then
+	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
+
+	FILE=${config_tsv}
+
+## if header present then remove it
+elif [[	"$hasheader" -eq 1 ]]
+	then
+	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
+	logger_ngseasy "[ngseasy_fastqc]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+
+	sed 1d ${config_tsv} > ${config_tsv}.tmp
+
+	FILE=${config_tsv}.tmp
+
+else
+	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
+
+	FILE=${config_tsv}
+fi
 
 ###########################################################################################
 ## fastqc
