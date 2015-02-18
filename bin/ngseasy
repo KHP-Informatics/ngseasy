@@ -123,9 +123,25 @@ fi
 if [[ ! -e "${config_tsv}" ]] 
   then
 	  usage_ngseasy;
-	  echo -e "ERROR : ${config_tsv} does not exist\n"
+	  logger_ngseasy "[ngseasy]:ERROR : ${config_tsv} does not exist\n"
 	  exit 1;
 fi
+
+########################################################################################################
+## check Num feilds in  ${config_tsv}
+#
+logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] "
+
+numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
+
+if [[  "$numcols" -lt 22 ]] 
+then
+    logger_ngseasy "[ngseasy]:ERROR : [${config_tsv}] format issue. Check your file! "
+    exit 1;
+else 
+    logger_ngseasy "[ngseasy]:Numcols of [${config_tsv}] ok [$numcols]...proceeding... "	    
+fi
+
 
 ###########################################################################################
 ## check exists.
@@ -133,7 +149,7 @@ fi
 if [[ ! -d "${project_directory}" ]] 
   then
 	  usage_ngseasy;
-	  echo -e "ERROR :  ${project_directory} does not exist\n"
+	  echo -e "[ngseasy]:ERROR :  ${project_directory} does not exist\n"
 	  exit 1;
 fi
 
@@ -236,12 +252,32 @@ batchfiles=`ls | grep batch`
 # config_tsv=test.config
 # project_directory=/home/sjnewhouse/ngs_projects
 #
-for MYBATCH in $batchfiles
+ndockerjobs=0
+
+
+for MYBATCH in `ls $batchfiles`
 do
-	logger_ngseasy "[ngseasy]:[cmd]:ngseasy_fastqc -c ${MYBATCH} -d ${project_directory}" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+	logger_ngseasy "r -c ${MYBATCH} -d ${project_directory}" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y") 
+	
+	## call ngseasy_fastqc
 	/bin/bash ngseasy_fastqc -c ${MYBATCH} -d ${project_directory}
-	wait
+	
+	## get n jobs running in background
+	ndockerjobs=`docker ps -a | grep ngseasy-fastqc | grep Up | wc -l`
+	
+	logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs started [$ndockerjobs]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.$(date +"%d%m%y")
+	
+	## while jobs still running, ie not equal to 0, then sleep for 10 seconds
+	while [ $ndockerjobs -gt 0 ]
+	do
+		sleep 1m
+		ndockerjobs=`docker ps -a | grep fastqc | wc -l`
+		logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]"
+	done	
+
 done
+
+
 
 ## remove docker containers ####
 #
