@@ -343,7 +343,8 @@ logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${con
 #
 else
 
-    logger_ngseasy "[ngseasy]:Skipping fastqc " ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE} 
+    logger_ngseasy "[ngseasy]:Skipping fastqc " ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
+    logger_ngseasy "[ngseasy]:Skipping fastqc...did you run it already?...I hope so " ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE} 
 fi
 
 
