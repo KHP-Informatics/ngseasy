@@ -1,19 +1,20 @@
 #!/bin/bash -e -x
-
-################################################################
+###########################################################################################
 # Program: ngseasy
 # Version 1.0 
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
-#################################################################
+###########################################################################################
 
+###########################################################################################
 ## Set version and run date
-#
+###########################################################################################
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 
 ###########################################################################################
 ## test if docker is intsalled and exit if not
-#
+###########################################################################################
+
 command -v docker >/dev/null 2>&1 || { echo -e "Docker not installed.\nAborting." >&2; exit 1; }
 DOCKERVERSION=`docker version`
 DOCKERINFO=`docker info`
@@ -24,7 +25,8 @@ echo -e "\n---\nDocker Version\n---\n${DOCKERVERSION}\n---\n"Docker Info"\n---\n
 
 ###########################################################################################
 ## global logging fuction
-#
+###########################################################################################
+
 function logger_ngseasy() {
  message=${1}
  mylogfile=${2}
@@ -34,7 +36,8 @@ function logger_ngseasy() {
 
 ###########################################################################################
 ## global usage
-#
+###########################################################################################
+
 function usage_ngseasy() {
     echo "
 Program: ngseasy
@@ -53,7 +56,8 @@ options:  -c  STRING	configuration file
 
 ###########################################################################################
 ## check and make ~/ngseasy_logs if needed
-#
+############################################################################################
+
 if [[ ! -e  ${HOME}/ngseasy_logs ]]
 then
   mkdir ${HOME}/ngseasy_logs
@@ -67,7 +71,8 @@ fi
 
 ###########################################################################################
 ## default options
-#
+###########################################################################################
+
 config_tsv=""
 project_directory=""
 initiate_project=0
@@ -75,7 +80,8 @@ set_fastq=0
 
 ###########################################################################################
 ## get options for command line args
-#
+###########################################################################################
+
 while  getopts "hc:d:pf" opt
 do
 
@@ -112,7 +118,8 @@ done
 
 ###########################################################################################
 ## Check options passed in.
-#
+###########################################################################################
+
 if test -z "$2"
 	then
 	usage_ngseasy
@@ -121,7 +128,8 @@ fi
 
 ###########################################################################################
 ## check file and directory exist.
-#
+###########################################################################################
+
 if [[ ! -e "${config_tsv}" ]] 
 then
 	  usage_ngseasy;
@@ -131,12 +139,21 @@ fi
 
 ###########################################################################################
 ## Make log file ##
-#
-touch ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}.log
+###########################################################################################
+
+if [[ ! -e "${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}.log" ]]
+then
+	logger_ngseasy "[ngseasy]:Making log file [${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}.log]"
+	touch ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}.log
+	logger_ngseasy "[ngseasy]:Log file [${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}.log]"
+else
+	logger_ngseasy "[ngseasy]:Log file [${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}.log]"
+fi
 
 ############################################################################################
 ## check Num feilds in  ${config_tsv}
-#
+###########################################################################################
+
 logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
@@ -152,7 +169,8 @@ fi
 
 ###########################################################################################
 ## check ${project_directory} exists.
-#
+###########################################################################################
+
 if [[ ! -d "${project_directory}" ]] 
   then
 	  usage_ngseasy;
@@ -163,7 +181,7 @@ fi
 
 ###########################################################################################
 ## initiate projects 0-0-1
-#
+###########################################################################################
 
 if [[ "${initiate_project}" -eq "1" ]]
 then
@@ -177,6 +195,7 @@ fi
 
 ###########################################################################################
 ## initiate fastq files 0-0-2
+###########################################################################################
 # copy or move fastq files to project directories 
 
 if [[ "${set_fastq}" -eq "1" ]]
@@ -190,6 +209,7 @@ fi
 
 ########################################################################################################
 ## Read config file 
+###########################################################################################
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
@@ -205,8 +225,8 @@ then
 ## if header present then remove it
 elif [[ "$hasheader" -eq 1 ]]
 then
-	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	logger_ngseasy "[ngseasy_fastqc]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] header present..gonna remove this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_fastqc]:[cmd]:sed 1d ${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 	sed 1d ${config_tsv} > ${config_tsv}.tmp
 	FILE=${config_tsv}.tmp
 else
@@ -216,7 +236,8 @@ fi
 
 ###########################################################################################
 ## fastqc
-#
+###########################################################################################
+
 if [[ "${FASTQC}" -eq "qc-fastq" ]]
 then
 
@@ -263,19 +284,15 @@ fi
 batchfiles=`ls | grep batch` 
 
 
-## call ngseasy_fastqc ####
-#
-# config_tsv=test.config
-# project_directory=/home/sjnewhouse/ngs_projects
+## set num running jobs counter to 0 ####
 #
 ndockerjobs=0
 
-
 ## loop through config files and run fastqc ####
 #
+logger_ngseasy "[ngseasy]:ngseasy_fastqc START LOOP" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 for MYBATCH in `ls $batchfiles`
 do
-logger_ngseasy "[ngseasy]:ngseasy_fastqc START LOOP" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 logger_ngseasy "[ngseasy]:[cmd]:ngseasy_fastqc -c \${MYBATCH} -d ${project_directory}" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 ## call ngseasy_fastqc
@@ -300,10 +317,11 @@ done
 
 done
 
+## log the end ####
+#
 logger_ngseasy "[ngseasy]:ngseasy_fastqc END LOOP" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
-
-## remove docker containers ####
+## remove docker Exited containers ####
 #
 logger_ngseasy "[ngseasy]:cleaning up container images" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}	
 logger_ngseasy "[ngseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
