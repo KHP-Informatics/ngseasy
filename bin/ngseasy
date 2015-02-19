@@ -267,7 +267,7 @@ fi
 ## muber of jobs fastqc calls allowed to run at the same time ####
 #
 numjobsallowed=$(expr $numcores / 2)
-logger_ngseasy "[ngseasy_fastqc]:Number of Jobs allowed [$numjobsallowed]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy_fastqc]:Number of Jobs allowed [$numjobsallowed] ie 2 cores per sample" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 ## split config file into batches : N samples per batch. N samples == njobs
 #
@@ -297,7 +297,7 @@ for MYBATCH in `ls $batchfiles`
 do
 logger_ngseasy "[ngseasy]:[cmd]:ngseasy_fastqc -c \${MYBATCH} -d ${project_directory}" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
-## call ngseasy_fastqc
+## call ngseasy_fastqc ####
 #
 /bin/bash ngseasy_fastqc -c ${MYBATCH} -d ${project_directory};
 
@@ -307,10 +307,11 @@ ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
 
 logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs started [$ndockerjobs]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
-## while jobs still running ie not equal to 0 then sleep for 10 seconds
+## while jobs still running ie not equal to 0 then sleep for 10 seconds ####
 #
 logger_ngseasy "[ngseasy]:checking for the number of running Docker FastQC jobs every 1 minute" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 logger_ngseasy "[ngseasy]:when the number of running Docker FastQC jobs hits [0], then next batch will begin" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 while [ $ndockerjobs -gt 0 ]
 do
