@@ -270,44 +270,52 @@ batchfiles=`ls | grep batch`
 #
 ndockerjobs=0
 
+
+## loop through config files and run fastqc ####
+#
 for MYBATCH in `ls $batchfiles`
 do
-	logger_ngseasy "[ngseasy]:[cmd]:ngseasy_fastqc -c \${MYBATCH} -d ${project_directory}" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:ngseasy_fastqc START LOOP" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:[cmd]:ngseasy_fastqc -c \${MYBATCH} -d ${project_directory}" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
-	## call ngseasy_fastqc
-	/bin/bash ngseasy_fastqc -c ${MYBATCH} -d ${project_directory}
+## call ngseasy_fastqc
+#
+/bin/bash ngseasy_fastqc -c ${MYBATCH} -d ${project_directory};
 
-	## get n jobs running in background
-	ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`
+## get n jobs running in background
+#
+ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
 
-	logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs started [$ndockerjobs]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs started [$ndockerjobs]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
-	## while jobs still running, ie not equal to 0 then sleep for 10 seconds
-	while [[ "$ndockerjobs" -gt 0 ]]
-	do
-		sleep 1m
-		ndockerjobs=`docker ps -a | grep fastqc | wc -l`
-		logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]"
-	done	
+## while jobs still running ie not equal to 0 then sleep for 10 seconds
+#
+while [ $ndockerjobs -gt 0 ]
+
+do
+	sleep 30s;
+	ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
+	logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]"
+done	
+
 done
 
+logger_ngseasy "[ngseasy]:ngseasy_fastqc END LOOP" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 
 ## remove docker containers ####
 #
-	logger_ngseasy "[ngseasy]:cleaning up container images" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}	
-	logger_ngseasy "[ngseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	
-	docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
+logger_ngseasy "[ngseasy]:cleaning up container images" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}	
+logger_ngseasy "[ngseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
 
 ## rm tmp config files ####
 #
-	logger_ngseasy "[ngseasy]:cleaning up tmp config files" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	logger_ngseasy "[ngslseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	
-	rm -v *.batch.${config_tsv}.tmp
-	
-	logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:cleaning up tmp config files" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngslseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+rm -v *.batch.${config_tsv}.tmp
+
+logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 ## skip fastqc if required #### 
 #
