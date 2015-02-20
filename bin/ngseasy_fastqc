@@ -335,7 +335,8 @@ then
 else
 
 	logger_ngseasy "[ngseasy_fastqc]: Fastq naming format not recognised for files [$FASTQ1] [$FASTQ2]" ${LOGFILE} 
-	logger_ngseasy "[ngseasy_fastqc]: This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
+	logger_ngseasy "[ngseasy_fastqc]: This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE}
+	logger_ngseasy "[ngseasy_fastqc]: or one of Illuminas stoopid names eg [_R1_001.fastq.gz]" ${LOGFILE} 
 	exit 1
 fi        
 

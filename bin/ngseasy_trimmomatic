@@ -392,7 +392,7 @@ docker run \
 	-e USER=pipeman \
 	--user pipeman \
 	--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
-	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -Xmx6g -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 	PE \
 	-threads ${NCPU} \
 	-phred33 \
@@ -413,7 +413,7 @@ docker run \
 
 ## logs    
 #
-docker logstrimmomatic_${SAMPLE_ID}_${NGS_TYPE} >> ${LOGFILE}.log
+docker logs trimmomatic_${SAMPLE_ID}_${NGS_TYPE} >> ${LOGFILE}.log
 docker rm trimmomatic_${SAMPLE_ID}_${NGS_TYPE} 
 
 logger_ngseasy "[ngseasy_trimmomatic]:END: Trimmomatic on raw Fastq files " ${LOGFILE}
