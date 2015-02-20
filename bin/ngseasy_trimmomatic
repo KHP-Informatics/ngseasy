@@ -59,8 +59,8 @@ fi
 #
 if test -z "$2"
 then
-  logger_ngseasy "[ngseasy_fastqc]:ERROR:No options found"
-  ngseasy_fastqc_usage
+  logger_ngseasy "[ngseasy_trimmomatic]:ERROR:No options found"
+  ngseasy_trimmomatic_usage
   exit 1
 fi
 
@@ -71,7 +71,7 @@ fi
 
       case ${opt} in
 	  h)
-	  ngseasy_fastqc_usage #print help
+	  ngseasy_trimmomatic_usage #print help
 	  exit 0
 	  ;;
 	  
@@ -89,11 +89,11 @@ fi
 #
 if [ ! -e "${config_tsv}" ] 
 then
-	    logger_ngseasy "[ngseasy_fastqc]:ERROR : [${config_tsv}] does not exist....exiting "
-	    ngseasy_fastqc_usage;
+	    logger_ngseasy "[ngseasy_trimmomatic]:ERROR : [${config_tsv}] does not exist....exiting "
+	    ngseasy_trimmomatic_usage;
 	    exit 1;
 else
-	    logger_ngseasy "[ngseasy_fastqc]:Configuration file found [${config_tsv}] "
+	    logger_ngseasy "[ngseasy_trimmomatic]:Configuration file found [${config_tsv}] "
 fi
 
 ########################################################################################################
@@ -101,26 +101,26 @@ fi
 #
 if [ ! -d "${project_directory}" ]
   then
-    logger_ngseasy "[ngseasy_fastqc]:ERROR : project_directory [${project_directory}] does not exist "
-    ngseasy_fastqc_usage;
+    logger_ngseasy "[ngseasy_trimmomatic]:ERROR : project_directory [${project_directory}] does not exist "
+    ngseasy_trimmomatic_usage;
     exit 1;
 else
-	    logger_ngseasy "[ngseasy_fastqc]:Top Level Project Directory [${project_directory}] "
+	    logger_ngseasy "[ngseasy_trimmomatic]:Top Level Project Directory [${project_directory}] "
 fi
 
 ########################################################################################################
 ## check Num feilds in  ${config_tsv}
 #
-logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] "
+logger_ngseasy "[ngseasy_trimmomatic]:Reading [${config_tsv}] "
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
 if [[  "$numcols" -lt 22 ]] 
 then
-	    logger_ngseasy "[ngseasy_fastqc]:ERROR : [${config_tsv}] format issue. Check your file! "
+	    logger_ngseasy "[ngseasy_trimmomatic]:ERROR : [${config_tsv}] format issue. Check your file! "
 	    exit 1;
 	    else 
-	    logger_ngseasy "[ngseasy_fastqc]:Numcols of [${config_tsv}] ok...proceeding... "	    
+	    logger_ngseasy "[ngseasy_trimmomatic]:Numcols of [${config_tsv}] ok...proceeding... "	    
 fi
 
 ########################################################################################################
@@ -128,25 +128,25 @@ fi
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
-logger_ngseasy "[ngseasy_fastqc]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy_trimmomatic]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 hasheader=`grep POJECT_ID ${config_tsv} | wc -l | awk '{print $1}'`
 
 if [[ "${config_tsv}" == *.batch.* ]]
 then
-	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_trimmomatic]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 	FILE=${config_tsv}
 
 ## if header present then remove it
 #
 elif [[ "$hasheader" -eq 1 ]]
 then
-	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	logger_ngseasy "[ngseasy_fastqc]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_trimmomatic]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_trimmomatic]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 	sed 1d ${config_tsv} > ${config_tsv}.tmp
 	FILE=${config_tsv}.tmp
 else
-	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_trimmomatic]:[${config_tsv}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 	FILE=${config_tsv}
 fi
 
@@ -184,7 +184,7 @@ NGSUSER=$f22
 DATE=`date +"%d%m%y"`
 
 ## read config_file
-logger_ngseasy "[ngseasy_fastqc]:
+logger_ngseasy "[ngseasy_trimmomatic]:
 [$PROJECT_ID\t
 $SAMPLE_ID\t
 $FASTQ1\t
@@ -212,7 +212,7 @@ $DATE]"
 ########################################################################################################
 ## LOGFILE 
 #
-LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.ngseasy_fastqc
+LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.ngseasy_trimmomatic
 
 ########################################################################################################
 ## check and make log directory
@@ -229,23 +229,23 @@ if [ ! -e "${LOGFILE}.log" ]
 then
 	touch ${LOGFILE}.log
 fi
-	logger_ngseasy "[ngseasy_fastqc]:Logging to [${LOGFILE}.log] "
+	logger_ngseasy "[ngseasy_trimmomatic]:Logging to [${LOGFILE}.log] "
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR 
 #
 SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
-logger_ngseasy "[ngseasy_fastqc]:Sample Directory [${SOUT}] "
+logger_ngseasy "[ngseasy_trimmomatic]:Sample Directory [${SOUT}] "
 
 ########################################################################################################
 ## check local dir exists
 #
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
-	logger_ngseasy "[ngseasy_fastqc]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
+	logger_ngseasy "[ngseasy_trimmomatic]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
 	exit 1
 else 
-	logger_ngseasy "[ngseasy_fastqc]: Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
+	logger_ngseasy "[ngseasy_trimmomatic]: Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
 fi
 
 ########################################################################################################
@@ -253,7 +253,7 @@ fi
 #
 if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
-	logger_ngseasy "[ngseasy_fastqc]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
+	logger_ngseasy "[ngseasy_trimmomatic]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
 	exit 1
 fi
 
@@ -318,7 +318,7 @@ then
 elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9].fastq.gz ]] 
 then
 
-	logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme"
+	logger_ngseasy "[ngseasy_trimmomatic]:Illumina fastq naming scheme"
 
 	FQ1=${FASTQ1}
 	FQ2=${FASTQ2}
@@ -326,15 +326,15 @@ then
 elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9][0-9].fastq.gz ]] 
 then
 
-	logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme"
+	logger_ngseasy "[ngseasy_trimmomatic]:Illumina fastq naming scheme"
 
 	FQ1=${FASTQ1}
 	FQ2=${FASTQ2}
 
 else
 
-	logger_ngseasy "[ngseasy_fastqc]: Fastq naming format not recognised for files [$FASTQ1] [$FASTQ2]" ${LOGFILE} 
-	logger_ngseasy "[ngseasy_fastqc]: This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
+	logger_ngseasy "[ngseasy_trimmomatic]: Fastq naming format not recognised for files [$FASTQ1] [$FASTQ2]" ${LOGFILE} 
+	logger_ngseasy "[ngseasy_trimmomatic]: This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
 	exit 1
 fi        
 
