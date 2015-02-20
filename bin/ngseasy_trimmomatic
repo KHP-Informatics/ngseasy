@@ -358,8 +358,8 @@ logger_ngseasy "[ngseasy_trimmomatic]:trimmomatic not run yet" ${LOGFILE}
 ########################################################################################################
 # Trimmomatic paired output
 #
-logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 [${SAMPLE_ID}_${NGS_TYPE}_1.filtered.fastq.gz]" ${LOGFILE}
-logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 [${SAMPLE_ID}_${NGS_TYPE}_2.filtered.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 filtered [${SAMPLE_ID}_${NGS_TYPE}_1.filtered.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 filtered [${SAMPLE_ID}_${NGS_TYPE}_2.filtered.fastq.gz]" ${LOGFILE}
 
 qcPEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_1.filtered.fastq.gz;
 qcPEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_2.filtered.fastq.gz;
@@ -367,8 +367,8 @@ qcPEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_2.filtered.fastq.gz;
 ########################################################################################################
 # Trimmomatic unpaired ouput
 #
-logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 [${SAMPLE_ID}_${NGS_TYPE}_1.unpaired.fastq.gz]" ${LOGFILE}
-logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 [${SAMPLE_ID}_${NGS_TYPE}_2.unpaired.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 unpaired [${SAMPLE_ID}_${NGS_TYPE}_1.unpaired.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 unpaired [${SAMPLE_ID}_${NGS_TYPE}_2.unpaired.fastq.gz]" ${LOGFILE}
 
 qcSEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_1.unpaired.fastq.gz;
 qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_2.unpaired.fastq.gz;
@@ -383,7 +383,7 @@ logger_ngseasy "setting adaptor list [$adapter_fa]" ${LOGFILE}
 ########################################################################################################
 ## run compbio/ngseasy-trimmomatic
 # 
-logger_ngseasy "[ngseasy_trimmomatic]:[cmd]:-phred33 ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:75" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: -phred33 ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:75 " ${LOGFILE}
 
 docker run \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -406,6 +406,10 @@ docker run \
 	TRAILING:3 \
 	SLIDINGWINDOW:4:15 \
 	MINLEN:75
+	
+## set MINLEN:75 to use with bwa mem and the like
+## plus having shorter crap data aint good is it
+## options to change this in the future eg will add TRIMOPT=${STRING} at some point
 
 ## logs    
 #
