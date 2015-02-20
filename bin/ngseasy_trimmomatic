@@ -202,7 +202,7 @@ fi
 adapter_fa="/home/pipeman/reference_genomes_b37/contaminant_list.fa"
 
 #--------------------------------------------------------------------------------#
-#run compbio/ngseasy-fastq
+#run compbio/ngseasy-trimmomatic
   logger_ngseasy "[ngseasy_trimmomatic]:docker \
     run \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
