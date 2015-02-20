@@ -239,8 +239,11 @@ testdata: ngsprojectdir
 	mkdir $(INSTALLDIR)/ngs_projects/fastq_test_data && \
 	cd $(INSTALLDIR)/ngs_projects/fastq_test_data && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878s.WEX_1.fq.gz && \
-	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878s.WEX_2.fq.gz
-
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878s.WEX_2.fq.gz && \
+	wget https://dnanexus-rnd.s3.amazonaws.com/NA12878-xten/reads/NA12878D_HiSeqX_R1.fastq.gz && \
+	wget https://dnanexus-rnd.s3.amazonaws.com/NA12878-xten/reads/NA12878D_HiSeqX_R1.fastq.gz && \
+	wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR292/SRR292250/SRR292250_1.fastq.gz && \
+	wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR292/SRR292250/SRR292250_2.fastq.gz
 
 gatk:
 	cd $(DIR)/containerized/ngs_docker_debian/ngs_variant_annotators/ngseasy_gatk && \
@@ -302,7 +305,6 @@ purgeall:
 
 ## to do: add options to download and build reference genome builds 
 ## indexing of genome 
-
 
 
 
