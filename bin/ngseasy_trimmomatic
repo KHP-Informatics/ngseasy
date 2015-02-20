@@ -378,7 +378,14 @@ qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_2.unpaired.fastq.gz;
 #
 adapter_fa="/home/pipeman/reference_genomes_b37/contaminant_list.fa"
 
-logger_ngseasy "setting adaptor list [$adapter_fa]" ${LOGFILE}
+if [[ ! -e  "${PROJECT_DIR}/reference_genomes_b37/contaminant_list.fa" ]]
+then
+	logger_ngseasy "[ngseasy_trimmomatic]:ERROR: can not find contaminant_list.fa. Exiting" ${LOGFILE}
+	exit 1
+else
+	logger_ngseasy "[ngseasy_trimmomatic]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
+fi
+
 
 ########################################################################################################
 ## run compbio/ngseasy-trimmomatic
