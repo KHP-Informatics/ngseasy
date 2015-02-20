@@ -399,7 +399,7 @@ docker run \
 	-e USER=pipeman \
 	--user pipeman \
 	--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
-	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -Xmx6g -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 	PE \
 	-threads ${NCPU} \
 	-phred33 \
