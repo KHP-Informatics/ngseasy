@@ -153,7 +153,7 @@ fi
 
 ########################################################################################################
 ## Read config and loop through all lines calling fastqc docker
-##
+#
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22
 do
 
@@ -209,44 +209,55 @@ $VERSION\t
 $NGSUSER\t
 $DATE]"
 
-## Logfile 
+########################################################################################################
+## LOGFILE 
+#
 LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.ngseasy_fastqc
+
+########################################################################################################
 ## check and make log directory
+#
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
 then
-mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
+	mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
 fi
+
+########################################################################################################
 ## check and make logfile
+#
 if [ ! -e "${LOGFILE}.log" ]
 then
-touch ${LOGFILE}.log
+	touch ${LOGFILE}.log
 fi
-logger_ngseasy "[ngseasy_fastqc]:Logging to [${LOGFILE}.log] "
+	logger_ngseasy "[ngseasy_fastqc]:Logging to [${LOGFILE}.log] "
 
+########################################################################################################
 ## OUTPUT SAMPLE DIR 
 #
 SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
 logger_ngseasy "[ngseasy_fastqc]:Sample Directory [${SOUT}] "
 
+########################################################################################################
 ## check local dir exists
 #
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
-logger_ngseasy "[ngseasy_fastqc]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
-exit 1
-
+	logger_ngseasy "[ngseasy_fastqc]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
+	exit 1
 else 
-logger_ngseasy "[ngseasy_fastqc]: Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
+	logger_ngseasy "[ngseasy_fastqc]: Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
 fi
 
+########################################################################################################
 ## check for fastq files exist
 #
 if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
-logger_ngseasy "[ngseasy_fastqc]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
-exit 1
+	logger_ngseasy "[ngseasy_fastqc]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
+	exit 1
 fi
 
+########################################################################################################
 ## set new names for copied fastq files
 #
 # test for fomrat of suffix ie is it fastq or fq
@@ -259,104 +270,108 @@ fi
 if [[ "${FASTQ1}" == *_1.fastq.gz ]] 
 then
 
-rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _1.fastq.gz`
-rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _2.fastq.gz`
+	rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _1.fastq.gz`
+	rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _2.fastq.gz`
 
-fq1_suffix="1.fastq.gz"
-fq2_suffix="2.fastq.gz"
+	fq1_suffix="1.fastq.gz"
+	fq2_suffix="2.fastq.gz"
 
-FQ1=${rawFASTQ1}_${fq1_suffix}
-FQ2=${rawFASTQ2}_${fq2_suffix}
+	FQ1=${rawFASTQ1}_${fq1_suffix}
+	FQ2=${rawFASTQ2}_${fq2_suffix}
 
 elif [[ "${FASTQ1}" == *_R1.fastq.gz ]] 
 then
 
-rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _R1.fastq.gz`
-rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _R2.fastq.gz`
+	rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _R1.fastq.gz`
+	rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _R2.fastq.gz`
 
-fq1_suffix="R1.fastq.gz"
-fq2_suffix="R2.fastq.gz"
+	fq1_suffix="R1.fastq.gz"
+	fq2_suffix="R2.fastq.gz"
 
-FQ1=${rawFASTQ1}_${fq1_suffix}
-FQ2=${rawFASTQ2}_${fq2_suffix}
+	FQ1=${rawFASTQ1}_${fq1_suffix}
+	FQ2=${rawFASTQ2}_${fq2_suffix}
 
 elif [[ "${FASTQ1}" == *_1.fq.gz ]] 
 then
 
-rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _1.fq.gz`
-rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _2.fq.gz`
+	rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _1.fq.gz`
+	rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _2.fq.gz`
 
-fq1_suffix="1.fq.gz"
-fq2_suffix="2.fq.gz"  
+	fq1_suffix="1.fq.gz"
+	fq2_suffix="2.fq.gz"  
 
-FQ1=${rawFASTQ1}_${fq1_suffix}
-FQ2=${rawFASTQ2}_${fq2_suffix}
+	FQ1=${rawFASTQ1}_${fq1_suffix}
+	FQ2=${rawFASTQ2}_${fq2_suffix}
 
 elif [[ "${FASTQ1}" == *_R1.fq.gz ]] 
 then
 
-rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _R1.fq.gz`
-rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _R2.fq.gz`
+	rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _R1.fq.gz`
+	rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _R2.fq.gz`
 
-fq1_suffix="R1.fq.gz"
-fq2_suffix="R2.fq.gz"  
+	fq1_suffix="R1.fq.gz"
+	fq2_suffix="R2.fq.gz"  
 
-FQ1=${rawFASTQ1}_${fq1_suffix}
-FQ2=${rawFASTQ2}_${fq2_suffix}
+	FQ1=${rawFASTQ1}_${fq1_suffix}
+	FQ2=${rawFASTQ2}_${fq2_suffix}
 
 elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9].fastq.gz ]] 
 then
 
-logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme"
+	logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme"
 
-FQ1=${FASTQ1}
-FQ2=${FASTQ2}
+	FQ1=${FASTQ1}
+	FQ2=${FASTQ2}
 
 elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9][0-9].fastq.gz ]] 
 then
 
-logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme"
+	logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme"
 
-FQ1=${FASTQ1}
-FQ2=${FASTQ2}
+	FQ1=${FASTQ1}
+	FQ2=${FASTQ2}
 
 else
 
-logger_ngseasy "[ngseasy_fastqc]: Fastq naming format not recognised for files [$FASTQ1] [$FASTQ2]" ${LOGFILE} 
-logger_ngseasy "[ngseasy_fastqc]: This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
-exit 1
+	logger_ngseasy "[ngseasy_fastqc]: Fastq naming format not recognised for files [$FASTQ1] [$FASTQ2]" ${LOGFILE} 
+	logger_ngseasy "[ngseasy_fastqc]: This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
+	exit 1
 fi        
 
 
-	#-------------------------------------------------------------------#
-
-	## check if qc'd data alread exists 
-	#
-	if [ -s "${SOUT}/fastq/${F1}_fastqc.zip" ] && [ -s "${SOUT}/fastq/${F2}_fastqc.zip" ] 
-	then
+########################################################################################################
+## check if qc'd data alread exists 
+#
+if [ -s "${SOUT}/fastq/${F1}_fastqc.zip" ] && [ -s "${SOUT}/fastq/${F2}_fastqc.zip" ] 
+then
 	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping" ${LOGFILE}
 	exit 1
-	fi
+fi
 
-	#---------------------------------------FASTQC-----------------------------------------------------------#
-	logger_ngseasy "[ngseasy_fastqc]:START: FastQC on raw Fastq files" ${LOGFILE}
+########################################################################################################
+#---------------------------------------FASTQC---------------------------------------------------------#
+########################################################################################################
 
-	## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
-	#
-	DOCKERHOME="/home/pipeman/ngs_projects"
+logger_ngseasy "[ngseasy_fastqc]:START: FastQC on raw Fastq files" ${LOGFILE}
 
-	## Docker OUTPUT SAMPLE DIR 
-	#
-	SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
+########################################################################################################
+## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
+#
+DOCKERHOME="/home/pipeman/ngs_projects"
 
-	## Docker run compbio/ngseasy-fastqc
-	#
-	logger_ngseasy "[ngseasy_fastqc]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/pipeman/ngs_projects -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman --name fastqc.${SAMPLE_ID} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${F1} ${SOUTDocker}/fastq/${F2}" ${LOGFILE}
+########################################################################################################
+## Docker OUTPUT SAMPLE DIR 
+#
+SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
 
-	## call docker: run as -d in background (-d does not work with --rm=true). 
-	# This runs all containers in background..simultaneuously!
-	#
-	docker run -d \
+########################################################################################################
+## Docker run compbio/ngseasy-fastqc
+## call docker: run as -d in background (-d does not work with --rm=true). 
+## This runs all containers in background..simultaneuously!
+#
+logger_ngseasy "[ngseasy_fastqc]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/pipeman/ngs_projects -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman --name fastqc.${SAMPLE_ID} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${F1} ${SOUTDocker}/fastq/${F2}" ${LOGFILE}
+
+docker run -d \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	-w /home/pipeman \
 	-e HOME=/home/pipeman \
@@ -368,5 +383,6 @@ fi
 
 done < ${FILE}
 
+########################################################################################################
 logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
- 
+########################################################################################################

@@ -138,6 +138,7 @@ then
 	FILE=${config_tsv}
 
 ## if header present then remove it
+#
 elif [[ "$hasheader" -eq 1 ]]
 then
 	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
@@ -149,9 +150,10 @@ else
 	FILE=${config_tsv}
 fi
 
+
 ########################################################################################################
-## Read config and loop through all lines calling trimmomatic docker
-##
+## Read config and loop through all lines calling fastqc docker
+#
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22
 do
 
@@ -207,44 +209,55 @@ $VERSION\t
 $NGSUSER\t
 $DATE]"
 
-## Logfile 
+########################################################################################################
+## LOGFILE 
+#
 LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.ngseasy_fastqc
+
+########################################################################################################
 ## check and make log directory
+#
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
 then
-mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
+	mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
 fi
+
+########################################################################################################
 ## check and make logfile
+#
 if [ ! -e "${LOGFILE}.log" ]
 then
-touch ${LOGFILE}.log
+	touch ${LOGFILE}.log
 fi
-logger_ngseasy "[ngseasy_fastqc]:Logging to [${LOGFILE}.log] "
+	logger_ngseasy "[ngseasy_fastqc]:Logging to [${LOGFILE}.log] "
 
+########################################################################################################
 ## OUTPUT SAMPLE DIR 
 #
 SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
 logger_ngseasy "[ngseasy_fastqc]:Sample Directory [${SOUT}] "
 
+########################################################################################################
 ## check local dir exists
 #
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
-logger_ngseasy "[ngseasy_fastqc]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
-exit 1
-
+	logger_ngseasy "[ngseasy_fastqc]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
+	exit 1
 else 
-logger_ngseasy "[ngseasy_fastqc]: Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
+	logger_ngseasy "[ngseasy_fastqc]: Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
 fi
 
+########################################################################################################
 ## check for fastq files exist
 #
 if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
-logger_ngseasy "[ngseasy_fastqc]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
-exit 1
+	logger_ngseasy "[ngseasy_fastqc]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
+	exit 1
 fi
 
+########################################################################################################
 ## set new names for copied fastq files
 #
 # test for fomrat of suffix ie is it fastq or fq
@@ -323,132 +336,38 @@ else
 	logger_ngseasy "[ngseasy_fastqc]: Fastq naming format not recognised for files [$FASTQ1] [$FASTQ2]" ${LOGFILE} 
 	logger_ngseasy "[ngseasy_fastqc]: This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
 	exit 1
-fi    
+fi        
 
 
+########################################################################################################
+#---------------------------------------Trimmomatic----------------------------------------------------#
+########################################################################################################
 
+logger_ngseasy " START Trimmomatic+FastQC filtered Fastq files " ${LOGFILE}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#--------------------------------------------------------------------------------#
-#Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
-DOCKERHOME="/home/pipeman/ngs_projects"
-
-#--------------------------------------------------------------------------------#
-#Docker OUTPUT SAMPLE DIR 
-SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
-
-#--------------------------------------------------------------------------------#
-#check local dir exists
-if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
-then
-  logger_ngseasy " Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
-  exit 1
-
-else 
-  logger_ngseasy " Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
-fi
-
-#--------------------------------------------------------------------------------#
-#check for fastq files exist
-if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
-then
-  logger_ngseasy " Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
-  exit 1
-fi
-
-#--------------------------------------------------------------------------------#
-# test for fomrat of suffix ie is it fastq or fq
-# or _R1.fastq _R1.fq
-
-if [[ "${FASTQ1}" == *_1.fastq.gz ]] 
-then
-
-  rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _1.fastq.gz`
-  rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _2.fastq.gz`
-  
-  fq1_suffix="1.fastq"
-  fq2_suffix="2.fastq"
- 
-elif [[ "${FASTQ1}" == *_R1.fastq.gz ]] 
-then
-
-  rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _R1.fastq.gz`
-  rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _R2.fastq.gz`
-
-  fq1_suffix="R1.fastq"
-  fq2_suffix="R2.fastq"  
-  
-elif [[ "${FASTQ1}" == *_1.fq.gz ]] 
-then
-
-  rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _1.fq.gz`
-  rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _2.fq.gz`
-
-  fq1_suffix="1.fq"
-  fq2_suffix="2.fq"  
-  
-elif [[ "${FASTQ1}" == *_R1.fq.gz ]] 
-then
-
-  rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _R1.fq.gz`
-  rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _R2.fq.gz`
-  
-  fq1_suffix="R1.fq"
-  fq2_suffix="R2.fq"  
-    
-else
-
-  logger_ngseasy " Fastq naming format not recognised : [$FASTQ1] : should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
-  echo " Fastq naming format not recognised : [$FASTQ1] : should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz] "
-  exit 1
-fi     
-
-    
-logger_ngseasy " NGSeasy: Fastq Basename : [$rawFASTQ1] " ${LOGFILE}
-
-#--------------------------------------------------------------------------------#
-
-#check if qc'd data alread exists 
+## check if qc'd data alread exists 
+#
 if [ -s "${SOUT}/fastq/${rawFASTQ1}_1.filtered.fastq.gz" ] && [ -s "${SOUT}/fastq/${rawFASTQ2}_2.filtered.fastq.gz" ]
 then
-  logger_ngseasy " Trimmed Data already exists...skipping" ${LOGFILE}
-  exit 1
+	logger_ngseasy " Trimmed Data already exists...skipping" ${LOGFILE}
+	exit 1
 fi
 
 
-#---------------------------------------Trimmomatic-----------------------------------------------------------#
-  logger_ngseasy " START: Trimmomatic on raw Fastq files " ${LOGFILE}
-
-#--------------------------------------------------------------------------------#
+########################################################################################################
 # Trimmomatic paired output
-  qcdPeFASTQ1=${SOUTDocker}/fastq/${rawFASTQ1}_1.filtered.fastq.gz;
-  qcdPeFASTQ2=${SOUTDocker}/fastq/${rawFASTQ2}_2.filtered.fastq.gz;
+  qcPEFQ1=${SOUTDocker}/fastq/${rawFASTQ1}_1.filtered.fastq.gz;
+  qcPEFQ2=${SOUTDocker}/fastq/${rawFASTQ2}_2.filtered.fastq.gz;
 
 # Trimmomatic unpaired ouput
-  qcdSeFASTQ1=${SOUTDocker}/fastq/${rawFASTQ1}_1.unpaired.fastq.gz;
-  qcdSeFASTQ2=${SOUTDocker}/fastq/${rawFASTQ2}_2.unpaired.fastq.gz;
+  qcSEFQ1=${SOUTDocker}/fastq/${rawFASTQ1}_1.unpaired.fastq.gz;
+  qcSEFQ2=${SOUTDocker}/fastq/${rawFASTQ2}_2.unpaired.fastq.gz;
 
-#--------------------------------------------------------------------------------#  
+########################################################################################################  
 # adapter_fa
 adapter_fa="/home/pipeman/reference_genomes_b37/contaminant_list.fa"
 
-#--------------------------------------------------------------------------------#
+########################################################################################################
 #run compbio/ngseasy-trimmomatic
   logger_ngseasy "[ngseasy_trimmomatic]:docker \
     run \
@@ -463,43 +382,48 @@ adapter_fa="/home/pipeman/reference_genomes_b37/contaminant_list.fa"
     -phred33 \
     -trimlog ${SOUTDocker}/fastq/trimm_qc.log \
     ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}.gz \
-    ${qcdPeFASTQ1} ${qcdSeFASTQ1} \
-    ${qcdPeFASTQ2} ${qcdSeFASTQ2} \
+    ${qcPEFQ1} ${qcSEFQ1} \
+    ${qcPEFQ2} ${qcSEFQ2} \
     ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
     LEADING:3 \
     TRAILING:3 \
     SLIDINGWINDOW:4:15 \
     MINLEN:75" ${LOGFILE}
-    
-    docker \
-    run \
-    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -w /home/pipeman \
-    -e HOME=/home/pipeman \
-    -e USER=pipeman \
-    --user pipeman \
-  --name trimmomatic.${SAMPLE_ID} \
-  -t compbio/ngseasy-trimmomatic:${NGSVERSION} java -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar PE \
-    -threads ${NCPU} \
-    -phred33 \
-    -trimlog ${SOUTDocker}/fastq/trimm_qc.log \
-    ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}.gz \
-    ${qcdPeFASTQ1} ${qcdSeFASTQ1} \
-    ${qcdPeFASTQ2} ${qcdSeFASTQ2} \
-    ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
-    LEADING:3 \
-    TRAILING:3 \
-    SLIDINGWINDOW:4:15 \
-    MINLEN:75
 
-#logs    
-    docker logs trimmomatic.${SAMPLE_ID} >> ${LOGFILE}.log
+########################################################################################################
+## run compbio/ngseasy-trimmomatic
+# 
+docker run \
+	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+	-w /home/pipeman \
+	-e HOME=/home/pipeman \
+	-e USER=pipeman \
+	--user pipeman \
+	--name trimmomatic.${SAMPLE_ID} \
+	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+	PE \
+	-threads ${NCPU} \
+	-phred33 \
+	-trimlog ${SOUTDocker}/fastq/trimm_qc.log \
+	${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}.gz \
+	${qcPEFQ1} ${qcSEFQ1} \
+	${qcPEFQ2} ${qcSEFQ2} \
+	ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
+	LEADING:3 \
+	TRAILING:3 \
+	SLIDINGWINDOW:4:15 \
+	MINLEN:75
 
-    docker rm trimmomatic.${SAMPLE_ID}  
-   
-   logger_ngseasy " END: Trimmomatic on raw Fastq files " ${LOGFILE}
+## logs    
+#
+	docker logs trimmomatic.${SAMPLE_ID} >> ${LOGFILE}.log
+	docker rm trimmomatic.${SAMPLE_ID}  
+	logger_ngseasy " END: Trimmomatic on raw Fastq files " ${LOGFILE}
 
-#---------------------------------------FASTQC Post Timmomatic-----------------------------------------------------------#
+########################################################################################################
+#---------------------------------------FASTQC Post Timmomatic-----------------------------------------#
+########################################################################################################
+
 if [ -s "${SOUT}/fastq/${rawFASTQ1}_1.filtered.fastq_fastqc.html" ] && [ -s "${SOUT}/fastq/${rawFASTQ1}_1.filtered.fastq_fastqc.html" ]
 then
   logger_ngseasy " FastQC Data already exists...skipping" ${LOGFILE}
@@ -510,15 +434,15 @@ fi
 
 #--------------------------------------------------------------------------------#  
   logger_ngseasy "Running :/usr/local/pipeline/FastQC/fastqc \
-    --threads ${NCPU} \
+    --threads $4 \
     --extract \
     --quiet \
     --dir ${SOUTDocker}/tmp \
     --outdir ${SOUTDocker}/fastq \
-    ${qcdPeFASTQ1} \
-    ${qcdPeFASTQ2} \
-    ${qcdSeFASTQ1} \
-    ${qcdSeFASTQ2}" ${LOGFILE}
+    ${qcPEFQ1} \
+    ${qcPEFQ2} \
+    ${qcSEFQ1} \
+    ${qcSEFQ2}" ${LOGFILE}
     
 #  compbio/ngseasy-fastqc
   docker run \
@@ -527,15 +451,15 @@ fi
   --name fastqc_post_trimm.${SAMPLE_ID} \
   --volumes-from volumes_container \
   -t compbio/ngseasy-fastqc:${VERSION} /usr/local/pipeline/FastQC/fastqc \
-    --threads ${NCPU} \
+    --threads 4 \
     --extract \
     --quiet \
     --dir ${SOUTDocker}/tmp \
     --outdir ${SOUTDocker}/fastq \
-    ${qcdPeFASTQ1} \
-    ${qcdPeFASTQ2} \
-    ${qcdSeFASTQ1} \
-    ${qcdSeFASTQ2}
+    ${qcPEFQ1} \
+    ${qcPEFQ2} \
+    ${qcSEFQ1} \
+    ${qcSEFQ2}
 
 # logs
     docker logs fastqc_post_trimm.${SAMPLE_ID} >> ${LOGFILE}.log
@@ -549,3 +473,7 @@ fi
 chmod -R 777 ${SOUT}/*
 
 done < ${config_tsv}
+
+########################################################################################################
+logger_ngseasy " END: Trimmomatic+FastQC filtered Fastq files " ${LOGFILE}
+########################################################################################################
