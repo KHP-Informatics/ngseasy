@@ -429,55 +429,38 @@ logger_ngseasy "[ngseasy_trimmomatic]:END: Trimmomatic on raw Fastq files " ${LO
 #---------------------------------------FASTQC Post Timmomatic-----------------------------------------#
 ########################################################################################################
 
-if [ -s "${SOUT}/fastq/${rawFASTQ1}_1.filtered.fastq_fastqc.html" ] && [ -s "${SOUT}/fastq/${rawFASTQ1}_1.filtered.fastq_fastqc.html" ]
-then
-  logger_ngseasy " FastQC Data already exists...skipping" ${LOGFILE}
-  exit 1
-fi
-
-  logger_ngseasy " START: FASTQC on Trimmomatic filtered Fastq files " ${LOGFILE}
-
-#--------------------------------------------------------------------------------#  
-  logger_ngseasy "Running :/usr/local/pipeline/FastQC/fastqc \
-    --threads $4 \
-    --extract \
-    --quiet \
-    --dir ${SOUTDocker}/tmp \
-    --outdir ${SOUTDocker}/fastq \
-    ${qcPEFQ1} \
-    ${qcPEFQ2} \
-    ${qcSEFQ1} \
-    ${qcSEFQ2}" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:START FastQC post Trimmomatic" ${LOGFILE}
     
-#  compbio/ngseasy-fastqc
-  docker run \
-  -P \
-  --rm=true \
-  --name fastqc_post_trimm.${SAMPLE_ID} \
-  --volumes-from volumes_container \
-  -t compbio/ngseasy-fastqc:${VERSION} /usr/local/pipeline/FastQC/fastqc \
-    --threads 4 \
-    --extract \
-    --quiet \
-    --dir ${SOUTDocker}/tmp \
-    --outdir ${SOUTDocker}/fastq \
-    ${qcPEFQ1} \
-    ${qcPEFQ2} \
-    ${qcSEFQ1} \
-    ${qcSEFQ2}
+##  compbio/ngseasy-fastqc
+#
+docker run \
+	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+	-w /home/pipeman \
+	-e HOME=/home/pipeman \
+	-e USER=pipeman \
+	--user pipeman \
+	--name fastqc_post_trimm_${SAMPLE_ID}_${NGS_TYPE} \
+	-t compbio/ngseasy-fastqc:${VERSION} /usr/local/pipeline/FastQC/fastqc \
+	--threads 4 \
+	--extract \
+	--quiet \
+	--dir ${SOUTDocker}/tmp \
+	--outdir ${SOUTDocker}/fastq \
+	${qcPEFQ1} \
+	${qcPEFQ2} \
+	${qcSEFQ1} \
+	${qcSEFQ2}
 
-# logs
-    docker logs fastqc_post_trimm.${SAMPLE_ID} >> ${LOGFILE}.log
-
-    docker rm fastqc_post_trimm.${SAMPLE_ID}  
-  
-#log 
-  logger_ngseasy " END: FASTQC on Trimmomatic filtered Fastq files " ${LOGFILE}
+## logs
+#
+docker logs fastqc_post_trimm_${SAMPLE_ID}_${NGS_TYPE}} >> ${LOGFILE}.log
+docker rm fastqc_post_trimm_${SAMPLE_ID}_${NGS_TYPE}  
+logger_ngseasy "[ngseasy_trimmomatic]:END FastQC post Trimmomatic" ${LOGFILE}
   
 #------permissions------------#
 chmod -R 777 ${SOUT}/*
 
-done < ${config_tsv}
+done < ${FILE}
 
 ########################################################################################################
 logger_ngseasy " END: Trimmomatic+FastQC filtered Fastq files " ${LOGFILE}
