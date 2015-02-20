@@ -229,7 +229,8 @@ if [ ! -e "${LOGFILE}.log" ]
 then
 	touch ${LOGFILE}.log
 fi
-	logger_ngseasy "[ngseasy_fastqc]:Logging to [${LOGFILE}.log] "
+
+logger_ngseasy "[ngseasy_fastqc]:Logging to [${LOGFILE}.log] "
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR 
@@ -245,7 +246,7 @@ then
 	logger_ngseasy "[ngseasy_fastqc]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
 	exit 1
 else 
-	logger_ngseasy "[ngseasy_fastqc]: Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
+	logger_ngseasy "[ngseasy_fastqc]: Setting OUTPUT directory to [${SOUT}]" ${LOGFILE}
 fi
 
 ########################################################################################################

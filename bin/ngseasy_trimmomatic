@@ -266,7 +266,6 @@ fi
 # Illumina FASTQ files use the following naming scheme:
 # <sample name>_<barcode sequence>_L<lane (0-padded to 3 digits)>_R<read number>_<set number (0-padded to 3 digits>.fastq.gz
 
-
 if [[ "${FASTQ1}" == *_1.fastq.gz ]] 
 then
 
@@ -338,74 +337,68 @@ else
 	exit 1
 fi        
 
-
 ########################################################################################################
 #---------------------------------------Trimmomatic----------------------------------------------------#
 ########################################################################################################
 
-logger_ngseasy " START Trimmomatic+FastQC filtered Fastq files " ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:START Trimmomatic+FastQC filtered Fastq files" ${LOGFILE}
 
 ## check if qc'd data alread exists 
 #
+logger_ngseasy "[ngseasy_trimmomatic]:checking if trimmed data exists" ${LOGFILE}
+
 if [ -s "${SOUT}/fastq/${rawFASTQ1}_1.filtered.fastq.gz" ] && [ -s "${SOUT}/fastq/${rawFASTQ2}_2.filtered.fastq.gz" ]
 then
-	logger_ngseasy " Trimmed Data already exists...skipping" ${LOGFILE}
+	logger_ngseasy "[ngseasy_trimmomatic]:Trimmed Data already exists...skipping [ngseasy_trimmomatic]" ${LOGFILE}
 	exit 1
 fi
 
+logger_ngseasy "[ngseasy_trimmomatic]:trimmomatic not run yet" ${LOGFILE}
 
 ########################################################################################################
 # Trimmomatic paired output
-  qcPEFQ1=${SOUTDocker}/fastq/${rawFASTQ1}_1.filtered.fastq.gz;
-  qcPEFQ2=${SOUTDocker}/fastq/${rawFASTQ2}_2.filtered.fastq.gz;
+#
+logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 [${SAMPLE_ID}_${NGS_TYPE}_1.filtered.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 [${SAMPLE_ID}_${NGS_TYPE}_2.filtered.fastq.gz]" ${LOGFILE}
 
+qcPEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_1.filtered.fastq.gz;
+qcPEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_2.filtered.fastq.gz;
+
+########################################################################################################
 # Trimmomatic unpaired ouput
-  qcSEFQ1=${SOUTDocker}/fastq/${rawFASTQ1}_1.unpaired.fastq.gz;
-  qcSEFQ2=${SOUTDocker}/fastq/${rawFASTQ2}_2.unpaired.fastq.gz;
+#
+logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 [${SAMPLE_ID}_${NGS_TYPE}_1.unpaired.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 [${SAMPLE_ID}_${NGS_TYPE}_2.unpaired.fastq.gz]" ${LOGFILE}
+
+qcSEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_1.unpaired.fastq.gz;
+qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_2.unpaired.fastq.gz;
 
 ########################################################################################################  
 # adapter_fa
+#
 adapter_fa="/home/pipeman/reference_genomes_b37/contaminant_list.fa"
 
-########################################################################################################
-#run compbio/ngseasy-trimmomatic
-  logger_ngseasy "[ngseasy_trimmomatic]:docker \
-    run \
-    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -w /home/pipeman \
-    -e HOME=/home/pipeman \
-    -e USER=pipeman \
-    --user pipeman \
-  --name trimmomatic.${SAMPLE_ID} \
-  -t compbio/ngseasy-trimmomatic:${VERSION} java -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar PE \
-    -threads ${NCPU} \
-    -phred33 \
-    -trimlog ${SOUTDocker}/fastq/trimm_qc.log \
-    ${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}.gz \
-    ${qcPEFQ1} ${qcSEFQ1} \
-    ${qcPEFQ2} ${qcSEFQ2} \
-    ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
-    LEADING:3 \
-    TRAILING:3 \
-    SLIDINGWINDOW:4:15 \
-    MINLEN:75" ${LOGFILE}
+logger_ngseasy "setting adaptor list [$adapter_fa]" ${LOGFILE}
 
 ########################################################################################################
 ## run compbio/ngseasy-trimmomatic
 # 
+logger_ngseasy "[ngseasy_trimmomatic]:[cmd]:-phred33 ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:75" ${LOGFILE}
+
 docker run \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	-w /home/pipeman \
 	-e HOME=/home/pipeman \
 	-e USER=pipeman \
 	--user pipeman \
-	--name trimmomatic.${SAMPLE_ID} \
+	--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
 	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 	PE \
 	-threads ${NCPU} \
 	-phred33 \
 	-trimlog ${SOUTDocker}/fastq/trimm_qc.log \
-	${SOUTDocker}/fastq/${rawFASTQ1}_${fq1_suffix}.gz ${SOUTDocker}/fastq/${rawFASTQ2}_${fq2_suffix}.gz \
+	${SOUTDocker}/fastq/${FQ1} \
+	${SOUTDocker}/fastq/${FQ2} \
 	${qcPEFQ1} ${qcSEFQ1} \
 	${qcPEFQ2} ${qcSEFQ2} \
 	ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
@@ -416,9 +409,10 @@ docker run \
 
 ## logs    
 #
-	docker logs trimmomatic.${SAMPLE_ID} >> ${LOGFILE}.log
-	docker rm trimmomatic.${SAMPLE_ID}  
-	logger_ngseasy " END: Trimmomatic on raw Fastq files " ${LOGFILE}
+docker logstrimmomatic_${SAMPLE_ID}_${NGS_TYPE} >> ${LOGFILE}.log
+docker rm trimmomatic_${SAMPLE_ID}_${NGS_TYPE} 
+
+logger_ngseasy "[ngseasy_trimmomatic]:END: Trimmomatic on raw Fastq files " ${LOGFILE}
 
 ########################################################################################################
 #---------------------------------------FASTQC Post Timmomatic-----------------------------------------#
