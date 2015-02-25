@@ -390,10 +390,6 @@ fi
 ########################################################################################################
 ## run compbio/ngseasy-trimmomatic
 # 
-#echo -e "
-#zcat ${SOUTDocker}/raw_fastq/${FQ1} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/raw_fastq/${FQ1}.art_filt
-#zcat ${SOUTDocker}/raw_fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/raw_fastq/${FQ2}.art_filt
-#" | parallel -j 2
 
 if [[ "$TRIMM" == "qc-adaptor" ]]
 then
@@ -416,7 +412,7 @@ zcat ${SOUTDocker}/fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTD
 		--user pipeman \
 		--rm=true \
 		--name fastx_artifacts_filter_${SAMPLE_ID}_${NGS_TYPE} \
-		-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh"
+		-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
 
 ## run trimmomatic
 #
@@ -445,6 +441,28 @@ zcat ${SOUTDocker}/fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTD
 elif [[ "$TRIMM" == "qc-trimm" ]]
 then
 logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 AVGQUAL:2 MINLEN:75 " ${LOGFILE}
+
+## make parallel cmd
+#
+echo -e "
+zcat ${SOUTDocker}/fastq/${FQ1} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/fastq/${FQ1}.art_filt
+zcat ${SOUTDocker}/fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/fastq/${FQ2}.art_filt
+" > ${SOUT}/parallel_fastx.sh
+
+## run fastx_artifacts_filter
+#
+	docker run \
+		-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+		-w /home/pipeman \
+		-e HOME=/home/pipeman \
+		-e USER=pipeman \
+		--user pipeman \
+		--rm=true \
+		--name fastx_artifacts_filter_${SAMPLE_ID}_${NGS_TYPE} \
+		-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
+
+## run trimmomatic
+#
 	docker run \
 		-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 		-w /home/pipeman \
