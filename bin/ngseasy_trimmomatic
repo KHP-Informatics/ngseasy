@@ -395,11 +395,31 @@ fi
 #zcat ${SOUTDocker}/raw_fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/raw_fastq/${FQ2}.art_filt
 #" | parallel -j 2
 
-
 if [[ "$TRIMM" == "qc-adaptor" ]]
 then
 logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 AVGQUAL:2 MINLEN:75 " ${LOGFILE}
 
+## make parallel cmd
+#
+echo -e "
+zcat ${SOUTDocker}/fastq/${FQ1} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/fastq/${FQ1}.art_filt
+zcat ${SOUTDocker}/fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/fastq/${FQ2}.art_filt
+" > ${SOUT}/parallel_fastx.sh
+
+## run fastx_artifacts_filter
+#
+	docker run \
+		-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+		-w /home/pipeman \
+		-e HOME=/home/pipeman \
+		-e USER=pipeman \
+		--user pipeman \
+		--rm=true \
+		--name fastx_artifacts_filter_${SAMPLE_ID}_${NGS_TYPE} \
+		-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh"
+
+## run trimmomatic
+#
 	docker run \
 		-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 		-w /home/pipeman \
@@ -407,12 +427,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:
 		-e USER=pipeman \
 		--user pipeman \
 		--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
-		-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "
-		echo -e "
-		zcat ${SOUTDocker}/raw_fastq/${FQ1} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/raw_fastq/${FQ1}.art_filt
-		zcat ${SOUTDocker}/raw_fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/raw_fastq/${FQ2}.art_filt
-		" | parallel -j 2 && \
-		java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+		-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 		PE \
 		-threads ${NCPU} \
 		-trimlog ${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_trimm_qc.log \
@@ -425,9 +440,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:
 		TRAILING:3 \
 		SLIDINGWINDOW:4:15 \
 		AVGQUAL:2 \
-		MINLEN:75 && \
-		rm ${SOUTDocker}/raw_fastq/${FQ1}.art_filt && \
-		rm ${SOUTDocker}/raw_fastq/${FQ2}.art_filt"
+		MINLEN:75
 	
 elif [[ "$TRIMM" == "qc-trimm" ]]
 then
