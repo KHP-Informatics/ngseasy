@@ -211,7 +211,7 @@ These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files 
  11. seqtk  
  12. parallel  
 
-This base image is used as the base of all our compbio/ngseasy-* tools.   
+This image is used as the base of all our compbio/ngseasy-* tools.   
 
 **Why not a separate containers per application?** The more docker-esque approach, would be to have separate containers for each NGS tool. 
 However, this belies the fact that many of these tools interact in a deep way, allowing pipes and streamlined system calls for manipulating
