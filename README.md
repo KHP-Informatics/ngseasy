@@ -195,7 +195,7 @@ for base quality score recalibration.
 
 ## A Special note on the base image.
 
-We include the following (what we think of as) _NGS Powertools_ in the [compbio/ngseasy-base]() image. 
+We include the following - what we think of as - **_NGS Powertools_** in the **[compbio/ngseasy-base]()** image. 
 These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files in multiple ways.
 
  1.  samtools  
