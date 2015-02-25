@@ -350,19 +350,18 @@ fi
 
 
 ###################################################################################
-## adapter and read/base quality trimming
-if [[ "${TRIM}" -eq "qc-trim" ]]
+## adapter and read/base quality trimming qc-trimm, qc-adaptor
+if [[ "${TRIM}" -eq "qc-trimm" ]] || [[ "${TRIM}" -eq "qc-adaptor" ]]
 then
-    echo -e  "[ngseasy]:Calling ngseasy_trimmomatic" 
-    logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
+	logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
 
-    /bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
-    
-    rm 
+	/bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
+
+elif [[ "${TRIM}" -eq "skip" ]] 
+	logger_ngseasy  "[ngseasy]:Skipping qc-trimming"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
 
 else
-    echo -e  "[ngseasy]:Skipping qc-trimming" 
-    logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
+	logger_ngseasy  "[ngseasy]:Skipping qc-trimming"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
 fi
 
 ##-------------------------------------------------------------------------##
