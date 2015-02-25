@@ -245,13 +245,13 @@ FASTQ2|string|Raw fastq file name read 1| foo_2_fq.gz|
 PROJECT_DIR|string|Project Directory| /medida/ngs_projects |
 DNA_PREP_LIBRARY_ID|string|DNA Libray Prep ID| Custom_Cancer |
 NGS_PLATFORM|string|Platform Name| ILLUMINA |
-NGS_TYPE|string|Experiment type| WGS/WEX/TGS/ |
+NGS_TYPE|string|Experiment type| WGS, WEX, TGS |
 BAIT|string|user supplied bed file|
 CAPTURE|string|user supplied bed file|
 FASTQC|string|run FastQc|skip, qc-fastq|
-TRIM=|string|run Trimmomatic|skip, qc-trimm, qc-adaptor|
-BSQR=|string|Base Quality Score Recalibration|skip, bam-recab, gatk-recab|
-REALN=|string|Bam Realignment around indels|skip,bam-realn, gatk-realn|
+TRIM|string|run Trimmomatic|skip, qc-trimm, qc-adaptor|
+BSQR|string|Base Quality Score Recalibration|skip, bam-recab, gatk-recab|
+REALN|string|Bam Realignment around indels|skip,bam-realn, gatk-realn|
 ALIGNER|string|Aligner|skip, bwa, bowtie2, stampy, snap, novoalign|
 VARCALLER|string|Variant Caller|ensemble,ensemble-fast, freebayes, platypus, UnifiedGenotyper, HaplotypeCaller|
 CNV|string|CNV Caller|skip, lump, delly, exomedepth|
