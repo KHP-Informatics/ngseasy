@@ -301,9 +301,9 @@ We provide an Amazon EBS data volume with indexed genomes: XXXXXX
 
 *****************************
 
-### Dockerised and Automated Builds ##
+### Dockerised NGS Tools
 
-The following opensource tools are all provided as automated builds. 
+The following opensource tools are all provided. 
 
 | Tool | Build |
 |-------------|----------------------|
