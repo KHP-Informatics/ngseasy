@@ -191,6 +191,31 @@ for base quality score recalibration.
 - bamaddrg https://github.com/ekg/bamaddrg  
 - bamtools https://github.com/ekg/bamtools  
 
+********
+
+## A Special note on the base image.
+
+We include the following (what we think of as) _NGS Powertools_ in the [compbio/ngseasy-base]() image. 
+These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files in multiple ways.
+
+ 1.  samtools  
+ 2.  bcftools  
+ 3.  vcftools  
+ 4.  vcflib  
+ 5.  bamUtil  
+ 6.  bedtools2  
+ 7.  ogap  
+ 8.  samblaster  
+ 9.  sambamba  
+ 10. bamleftalign  
+ 11. seqtk  
+ 12. parallel  
+
+This base image is used as the base of all our compbio/ngseasy-* tools.   
+
+**Why not a separate containers per application?** The more docker-esque approach, would be to have separate containers for each NGS tool. 
+However, this belies the fact that many of these tools interact in a deep way, allowing pipes and streamlined system calls for manipulating
+the output of NGS pipelines (BED/SAM/BAM/VCF files). Therefore, we built  these into a single development environment for ngseasy.
 
 ************
 
@@ -228,6 +253,9 @@ cd ngseasy
 make all
 
 ```
+
+Setting up the initial project can take up a day, depending on your local network connections and speeds.
+
 
 ## 3. Set up NGSeasy Project configuration file
 
