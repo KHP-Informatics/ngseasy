@@ -212,7 +212,7 @@ $DATE]"
 ########################################################################################################
 ## LOGFILE 
 #
-LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.ngseasy_trimmomatic
+LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${RUNDATE}.ngseasy_trimmomatic
 
 ########################################################################################################
 ## check and make log directory
@@ -390,30 +390,57 @@ fi
 ########################################################################################################
 ## run compbio/ngseasy-trimmomatic
 # 
-logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: -phred33 ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:75 " ${LOGFILE}
 
-docker run \
-	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-	-w /home/pipeman \
-	-e HOME=/home/pipeman \
-	-e USER=pipeman \
-	--user pipeman \
-	--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
-	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
-	PE \
-	-threads ${NCPU} \
-	-phred33 \
-	-trimlog ${SOUTDocker}/fastq/trimm_qc.log \
-	${SOUTDocker}/fastq/${FQ1} \
-	${SOUTDocker}/fastq/${FQ2} \
-	${qcPEFQ1} ${qcSEFQ1} \
-	${qcPEFQ2} ${qcSEFQ2} \
-	ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
-	LEADING:3 \
-	TRAILING:3 \
-	SLIDINGWINDOW:4:15 \
-	MINLEN:75
+if [[ "$TRIMM" == "qc-trimm" ]]
+then
+logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 AVGQUAL:2 MINLEN:75 " ${LOGFILE}
+	docker run \
+		-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+		-w /home/pipeman \
+		-e HOME=/home/pipeman \
+		-e USER=pipeman \
+		--user pipeman \
+		--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
+		-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+		PE \
+		-threads ${NCPU} \
+		-trimlog ${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_trimm_qc.log \
+		${SOUTDocker}/fastq/${FQ1} \
+		${SOUTDocker}/fastq/${FQ2} \
+		${qcPEFQ1} ${qcSEFQ1} \
+		${qcPEFQ2} ${qcSEFQ2} \
+		ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
+		LEADING:3 \
+		TRAILING:3 \
+		SLIDINGWINDOW:4:15 \
+		AVGQUAL:2 \
+		MINLEN:75
 	
+elif [[ "$TRIMM" == "qc-fastq" ]]
+then
+logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 AVGQUAL:2 MINLEN:75 " ${LOGFILE}
+	docker run \
+		-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+		-w /home/pipeman \
+		-e HOME=/home/pipeman \
+		-e USER=pipeman \
+		--user pipeman \
+		--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
+		-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+		PE \
+		-threads ${NCPU} \
+		-trimlog ${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_trimm_qc.log \
+		${SOUTDocker}/fastq/${FQ1} \
+		${SOUTDocker}/fastq/${FQ2} \
+		${qcPEFQ1} ${qcSEFQ1} \
+		${qcPEFQ2} ${qcSEFQ2} \
+		LEADING:3 \
+		TRAILING:3 \
+		SLIDINGWINDOW:4:15 \
+		AVGQUAL:2 \
+		MINLEN:75
+fi
+
 ## set MINLEN:75 to use with bwa mem and the like
 ## plus having shorter crap data aint good is it
 ## options to change this in the future eg will add TRIMOPT=${STRING} at some point

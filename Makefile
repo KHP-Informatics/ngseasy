@@ -6,7 +6,7 @@
 
 ## Edit this to reflect version if ya need
 VERSION=1.0
-GENOMEBUILD=37
+GENOMEBUILD="b37"
 WHOAMI=$(shell whoami)
 
 ## This is where we will make ngs_projects and download metadata to etc etc
@@ -125,22 +125,22 @@ slope:
 	
 genomes: 
 	cd $(INSTALLDIR)/ngs_projects && \
-	mkdir reference_genomes_b$(GENOMEBUILD) && \
-	cd reference_genomes_b$(GENOMEBUILD) && \
-	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz && \
-	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.tar.gz && \
+	mkdir reference_genomes_$(GENOMEBUILD) && \
+	cd reference_genomes_$(GENOMEBUILD) && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.tar.gz && \
 	chmod -R 777 $(INSTALLDIR)/ngs_projects/ && \
-	tar -xvf $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.tar.gz && \
-	tar -xvf $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz && \
-	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.tar.gz && \
-	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz
+	tar -xvf $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.tar.gz && \
+	tar -xvf $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz && \
+	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.tar.gz && \
+	rm -v $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta.fai.tar.gz
 
 contaminants:
-	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD) && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/contaminant_list.fa
 
 annotations:
-	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD) && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37_annotations/LCR_hg19_rmsk.bed.gz && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37_annotations/SeqCap_EZ_Exome_v3_capture.bed.gz && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37_annotations/SeqCap_EZ_Exome_v3_primary.bed.gz && \
@@ -152,18 +152,18 @@ annotations:
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37_annotations/nexterarapidcapture_expandedexome_targetedregions.bed.gz
 
 chromosomes:
-	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD) && \
 	mkdir chroms && \
 	cd chroms && \
 	awk 'BEGIN { CHROM="" } { if ($$1~"^>") CHROM=substr($$1,2); print $$0 > CHROM".fasta" }' ${INSTALLDIR}/ngs_projects/reference_genomes_b${GENOMEBUILD}/human_g1k_v${GENOMEBUILD}.fasta
 
 purgegenomes: 
-	rm -rfv $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)
+	rm -rfv $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)
 
 bwaindex:
-	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD) && \
 	docker run \
-	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) \
+	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD) \
 	--name bwa_indexing \
 	--rm=true \
 	-e USER=pipeman \
@@ -172,13 +172,13 @@ bwaindex:
 	 /bin/bash -c \
         "/usr/local/pipeline/bwa-0.7.12/bwa index \
         -a bwtsw \
-        /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta" && \
-	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
+        /home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta" && \
+	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/*
 
 stampyindex:
-	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD) && \
 	docker run \
-	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) \
+	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD) \
 	--name stampy_indexing \
 	--rm=true \
 	-e USER=pipeman \
@@ -187,20 +187,20 @@ stampyindex:
 	 /bin/bash -c \
         "python  \
         /usr/local/pipeline/stampy-1.0.23/stampy.py \
-        -G /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD) \
-        /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta && \
-        chmod -R 777 /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/* && \
+        -G /home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD) \
+        /home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta && \
+        chmod -R 777 /home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD)/* && \
         python  \
         /usr/local/pipeline/stampy-1.0.23/stampy.py \
-        -g /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD) \
-        -H /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD) && \
-        chmod -R 777 /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*" && \
-	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
+        -g /home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD) \
+        -H /home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD) && \
+        chmod -R 777 /home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD)/*" && \
+	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/*
 
 bowtie2index:
-	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD) && \
 	docker run \
-	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) \
+	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD) \
 	--name bowtie2_indexing \
 	--rm=true \
 	-e USER=pipeman \
@@ -208,14 +208,14 @@ bowtie2index:
 	-i -t compbio/ngseasy-bowtie2:$(VERSION) \
 	 /bin/bash -c \
          "/usr/local/pipeline/bowtie2-2.2.4/bowtie2-build \
-        /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta \
-        /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD)" && \
-	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
+        /home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta \
+        /home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD)" && \
+	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/*
 
 snapindex:
-	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD) && \
 	docker run \
-	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) \
+	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD) \
 	--name snap_indexing \
 	--rm=true \
 	-e USER=pipeman \
@@ -223,9 +223,9 @@ snapindex:
 	-i -t compbio/ngseasy-snap:$(VERSION) \
 	 /bin/bash -c \
         "/usr/local/bin/snap index \
-        /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta \
-        /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/ -hg19" && \
-	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
+        /home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta \
+        /home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD)/ -hg19" && \
+	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/*
 	
 resources: ngsprojectdir
 	cd $(INSTALLDIR)/ngs_projects && \
@@ -255,9 +255,9 @@ novoalign:
 
 
 novoalignindex:	
-	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD) && \
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD) && \
 	docker run \
-	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD) \
+	--volume $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/:/home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD) \
 	--name novoalign_indexing \
 	--rm=true \
 	-e USER=pipeman \
@@ -267,9 +267,9 @@ novoalignindex:
     "/usr/local/pipeline/novocraft/novoindex \
     -k 13 \
     -s 4 \
-    /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).novoindex \
-    /home/pipeman/ngs_projects/reference_genomes_b$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta" && \
-	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b$(GENOMEBUILD)/*
+    /home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).novoindex \
+    /home/pipeman/ngs_projects/reference_genomes_$(GENOMEBUILD)/human_g1k_v$(GENOMEBUILD).fasta" && \
+	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)/*
 
 vep:
 	cd $(DIR)/containerized/ngs_docker_debian/ngs_variant_annotators/ngseasy_vep && \

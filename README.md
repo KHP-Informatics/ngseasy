@@ -8,7 +8,7 @@ NGSeasy (beta)
 Publication: pending
 
 Authors: Stephen J Newhouse, Amos Folarin , Maximilian Kerz  
-Release Version: **1.0.0b**  
+Release Version: **1.0.0**  
 
 ****************
 ### [A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box] 
@@ -194,6 +194,7 @@ for base quality score recalibration.
 
 ************
 
+
 Dockerised NGSeasy
 ==========================
 ![docker](https://github.com/KHP-Informatics/ngs/blob/master/figs/Docker_container_engine_logo.png "Docker")  
@@ -218,7 +219,7 @@ A full set of instructions for multiple operating systems are available on the [
 
 We provide a simple Makefile to pull all of the public nsgeasy components, scripts and set up to correct project directory structre on your local machines.
 
-```
+```{bash}
 
 git clone https://github.com/KHP-Informatics/ngseasy.git
 
@@ -228,8 +229,49 @@ make all
 
 ```
 
+## 3. Set up NGSeasy Project configuration file
+
+In Excel make config file and save as [TAB] Delimited file with ``.tsv`` extenstion.  
+See Example provided and [GoogleDoc](https://docs.google.com/spreadsheets/d/1kp1Nyw0x3zXqO2Wm2Z25ErJ0Z-Uoab8tjRPq9h4sonk/edit?usp=sharing). Remove the header from this file before running the pipeline. This sets up Information related to: Project Name, Sample Name, Library Type, Pipeline to call, NCPU.
+
+The [config.file.tsv] should contain the following 15 columns for each sample to be run through a pipeline:- 
+
+|Variable|type|Description|Options/Examples|
+|--------|--------|--------|--------|
+POJECT_ID|string|Project ID|Cancer|
+SAMPLE_ID|string|Sample ID| T100|
+FASTQ1|string|Raw fastq file name read 1| foo_1_fq.gz|
+FASTQ2|string|Raw fastq file name read 1| foo_2_fq.gz|
+PROJECT_DIR|string|Project Directory| /medida/ngs_projects |
+DNA_PREP_LIBRARY_ID|string|DNA Libray Prep ID| Custom_Cancer |
+NGS_PLATFORM|string|Platform Name| ILLUMINA |
+NGS_TYPE|string|Experiment type| WGS/WEX/TGS/ |
+BAIT|string|user supplied bed file|
+CAPTURE|string|user supplied bed file|
+FASTQC|string|run FastQc|skip, qc-fastq|
+TRIM=|string|run Trimmomatic|skip, qc-trimm, qc-adaptor|
+BSQR=|string|Base Quality Score Recalibration|skip, bam-recab, gatk-recab|
+REALN=|string|Bam Realignment around indels|skip,bam-realn, gatk-realn|
+ALIGNER|string|Aligner|skip, bwa, bowtie2, stampy, snap, novoalign|
+VARCALLER|string|Variant Caller|ensemble,ensemble-fast, freebayes, platypus, UnifiedGenotyper, HaplotypeCaller|
+CNV|string|CNV Caller|skip, lump, delly, exomedepth|
+ANNOTATOR|string|Choose annotator|skip|
+CLEANUP|string|Clean Up Files (TRUE/FALSE)|TRUE/FALSE|
+NCPU|number|Number of cores to call|1..n|
+VERSION|number|NGSeasy Version |1.0|
+NGSUSER|string|user email address|stephen.j.newhouse@gmail.com|
+
+
+## 4. Run NGSeasy
+
+```{bash}
+
+```
+
 All NGSeasy Docker images can be pulled down from **[compbio Docker Hub](https://hub.docker.com/u/compbio/)** or using the Makefile.  
 We provide an Amazon EBS data volume with indexed genomes: XXXXXX  
+
+*****************************
 
 ### Dockerised and Automated Builds ##
 

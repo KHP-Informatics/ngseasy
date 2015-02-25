@@ -212,7 +212,7 @@ $DATE]"
 ########################################################################################################
 ## LOGFILE 
 #
-LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.ngseasy_fastqc
+LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${RUNDATE}.ngseasy_fastqc
 
 ########################################################################################################
 ## check and make log directory
