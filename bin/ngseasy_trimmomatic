@@ -390,10 +390,16 @@ fi
 ########################################################################################################
 ## run compbio/ngseasy-trimmomatic
 # 
+#echo -e "
+#zcat ${SOUTDocker}/raw_fastq/${FQ1} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/raw_fastq/${FQ1}.art_filt
+#zcat ${SOUTDocker}/raw_fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/raw_fastq/${FQ2}.art_filt
+#" | parallel -j 2
 
-if [[ "$TRIMM" == "qc-trimm" ]]
+
+if [[ "$TRIMM" == "qc-adaptor" ]]
 then
 logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 AVGQUAL:2 MINLEN:75 " ${LOGFILE}
+
 	docker run \
 		-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 		-w /home/pipeman \
@@ -401,7 +407,12 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:
 		-e USER=pipeman \
 		--user pipeman \
 		--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
-		-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+		-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "
+		echo -e "
+		zcat ${SOUTDocker}/raw_fastq/${FQ1} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/raw_fastq/${FQ1}.art_filt
+		zcat ${SOUTDocker}/raw_fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/raw_fastq/${FQ2}.art_filt
+		" | parallel -j 2 && \
+		java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 		PE \
 		-threads ${NCPU} \
 		-trimlog ${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_trimm_qc.log \
@@ -414,9 +425,11 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:
 		TRAILING:3 \
 		SLIDINGWINDOW:4:15 \
 		AVGQUAL:2 \
-		MINLEN:75
+		MINLEN:75 && \
+		rm ${SOUTDocker}/raw_fastq/${FQ1}.art_filt && \
+		rm ${SOUTDocker}/raw_fastq/${FQ2}.art_filt"
 	
-elif [[ "$TRIMM" == "qc-fastq" ]]
+elif [[ "$TRIMM" == "qc-trimm" ]]
 then
 logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 AVGQUAL:2 MINLEN:75 " ${LOGFILE}
 	docker run \
