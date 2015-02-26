@@ -1,38 +1,78 @@
-#!/bin/bash -x
-# Collection of NGSeasy Functions
-# Stephen Newhouse <stephen.j.newhouse@gmail.com>
-# Version 0.9.0
+#!/bin/bash
 
-##--------------------------------------------------##
-## NGS Alignment
-##--------------------------------------------------##
+################################################################
+# Program: ngseasy_alignment
+# Version 1.0 
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+#################################################################
 
-#usage printing func
-usage()
-{
-cat << EOF
-  This script sets up the NGSeasy docker fastqc container and runs FastQC on raw fastq files
-  See NGSEasy containerized instructions.
+## Set version and run date
+#
+NGSEASYVERSION="1.0"
+RUNDATE=`date +"%d%m%y"`
 
-  ARGUMENTS:
-  -h      Flag: Show this help message
-  -c      NGSeasy project and run configureation file
-  -d      NGSeasy project directory
-
-  EXAMPLE USAGE:
-    
-    ngseasy_alignment -c config.file.tsv -d project_directory
-
-EOF
+########################################################################################################
+## global logging fuction
+#
+function logger_ngseasy() {
+ message=${1}
+ mylogfile=${2}
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
 
-#get options for command line args
+########################################################################################################
+## global usage
+#
+function ngseasy_alignment_usage() {
+    echo "
+Program: ngseasy_alignment
+Version 1.0
+Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+
+usage:   ngseasy_alignment -c <config_file> -d <project_directory>
+
+options:  -c  STRING	configuration file
+          -d  STRING	project directory
+          -h  NULL	show this message
+
+ngseasy_alignment sets up the NGSeasy docker containers for your aligner of choice.
+
+This is is optomised for Illumina PE data
+"
+}
+
+########################################################################################################
+## test if docker is intsalled and exit if not
+command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
+
+########################################################################################################
+## check and make ~/ngseasy_logs if needed
+#
+if [[ ! -e  ${HOME}/ngseasy_logs ]]
+then
+  mkdir ${HOME}/ngseasy_logs
+  global_run_logs="${HOME}/ngseasy_logs"
+fi
+
+########################################################################################################
+## Check options passed in.
+#
+if test -z "$2"
+then
+  logger_ngseasy "[ngseasy_alignment]:ERROR:No options found"
+  ngseasy_alignment_usage
+  exit 1
+fi
+
+########################################################################################################
+## get options for command line args
   while  getopts "hc:d:" opt
   do
 
       case ${opt} in
 	  h)
-	  usage #print help
+	  ngseasy_alignment_usage #print help
 	  exit 0
 	  ;;
 	  
@@ -46,48 +86,131 @@ EOF
       esac
   done
 
-#-------------------------------------------------------------------#
-#check config file exists.
+########################################################################################################  
+## check config file exists.
+#
 if [ ! -e "${config_tsv}" ] 
 then
-	    echo "ERROR :  ${config_tsv} does not exist....exiting "
-	    usage;
+	    logger_ngseasy "[ngseasy_alignment]:ERROR : [${config_tsv}] does not exist....exiting "
+	    ngseasy_alignment_usage;
 	    exit 1;
+else
+	    logger_ngseasy "[ngseasy_alignment]:Configuration file found [${config_tsv}] "
 fi
 
-#-------------------------------------------------------------------#
-#check exists.
+########################################################################################################
+## check project_directory exists.
+#
 if [ ! -d "${project_directory}" ]
   then
-    echo "ERROR : project_directory ${project_directory} does not exist "
-    usage;
+    logger_ngseasy "[ngseasy_alignment]:ERROR : project_directory [${project_directory}] does not exist "
+    ngseasy_alignment_usage;
     exit 1;
+else
+	    logger_ngseasy "[ngseasy_alignment]:Top Level Project Directory [${project_directory}] "
 fi
 
-#-------------------------------------------------------------------#
-#Read config file 
-while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
+########################################################################################################
+## check Num feilds in  ${config_tsv}
+#
+logger_ngseasy "[ngseasy_alignment]:Reading [${config_tsv}] "
+
+numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
+
+if [[  "$numcols" -lt 22 ]] 
+then
+	    logger_ngseasy "[ngseasy_alignment]:ERROR : [${config_tsv}] format issue. Check your file! "
+	    exit 1;
+	    else 
+	    logger_ngseasy "[ngseasy_alignment]:Numcols of [${config_tsv}] ok...proceeding... "	    
+fi
+
+########################################################################################################
+## Read config file 
+
+## check ${config_tsv}. is this a batch file or the orginal config file 
+#
+logger_ngseasy "[ngseasy_alignment]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+
+hasheader=`grep POJECT_ID ${config_tsv} | wc -l | awk '{print $1}'`
+
+if [[ "${config_tsv}" == *.batch.* ]]
+then
+	logger_ngseasy "[ngseasy_alignment]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	FILE=${config_tsv}
+
+## if header present then remove it
+elif [[ "$hasheader" -eq 1 ]]
+then
+	logger_ngseasy "[ngseasy_alignment]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_alignment]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	sed 1d ${config_tsv} > ${config_tsv}.tmp
+	FILE=${config_tsv}.tmp
+else
+	logger_ngseasy "[ngseasy_alignment]:[${config_tsv}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	FILE=${config_tsv}
+fi
+
+########################################################################################################
+## Read config and loop through all lines calling fastqc docker
+#
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22
 do
 
-# set varibales  
-  DATE=`date +"%d%m%y"`
-  PROJECT_ID=$f1
-  SAMPLE_ID=$f2
-  FASTQ1=$f3
-  FASTQ2=$f4
-  PROJECT_DIR=$f5 
-  DNA_PREP_LIBRARY_ID=$f6
-  NGS_PLATFORM=$f7
-  NGS_TYPE=$f8
-  BED_ANNO=$f9
-  PIPELINE=$f10
-  ALIGNER=$f11
-  VARCALLER=$f12
-  GTMODEGATK=$f13
-  CLEANUP=$f14
-  NCPU=$f15
-  VERSION=$f16
-  NGSUSER=$f17
+## set varibales  
+#
+PROJECT_ID=$f1
+SAMPLE_ID=$f2
+FASTQ1=$f3
+FASTQ2=$f4
+PROJECT_DIR=$f5
+DNA_PREP_LIBRARY_ID=$f6
+NGS_PLATFORM=$f7
+NGS_TYPE=$f8
+BAIT=$f9
+CAPTURE=$f10
+FASTQC=$f11
+TRIM=$f12
+BSQR=$f13
+REALN=$f14
+ALIGNER=$f15
+VARCALLER=$f16
+CNV=$f17
+ANNOTATOR=$f18
+CLEANUP=$f19
+NCPU=$f20
+VERSION=$f21
+NGSUSER=$f22
+DATE=`date +"%d%m%y"`
+
+## read config_file
+logger_ngseasy "[ngseasy_alignment]:
+[$PROJECT_ID\t
+$SAMPLE_ID\t
+$FASTQ1\t
+$FASTQ2\t
+$PROJECT_DIR\t 
+$DNA_PREP_LIBRARY_ID\t
+$NGS_PLATFORM\t
+$NGS_TYPE\t
+$BAIT\t
+$CAPTURE\t
+$FASTQC\t
+$TRIM\t
+$BSQR\t
+$REALN\t
+$ALIGNER\t
+$VARCALLER\t
+$CNV\t
+$ANNOTATOR\t
+$CLEANUP\t
+$NCPU\t
+$VERSION\t
+$NGSUSER\t
+$DATE]"
+
+
+
 
 #-------------------------------------------------------------------#
 #Logfile 
