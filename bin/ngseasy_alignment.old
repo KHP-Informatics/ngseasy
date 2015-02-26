@@ -294,12 +294,7 @@ logger_ngseasy "[ngseasy_alignment]:Setting BAM prefix:[${SAMPLE_ID}.${TRIM}.${B
 ########################################################################################################
 # PLATFORM UNIT
 #
-logger_ngseasy "[ngseasy_alignment]:Getting PLATFORM UNIT" ${LOGFILE}
-logger_ngseasy "[ngseasy_alignment]:[smd]:platform_unit=\`zcat \${FQ1} | head -1 | perl -p -i -e 's/:/\t/' | cut -f 1 | perl -p -i -e 's/@//g'\` " ${LOGFILE}
-
-	platform_unit=`zcat ${FQ1} | head -1 | perl -p -i -e 's/:/\t/' | cut -f 1 | perl -p -i -e 's/@//g'`  
-
-logger_ngseasy "[ngseasy_alignment]:PLATFORM UNIT:[$platform_unit]" ${LOGFILE}
+platform_unit=`zcat ${FQ1} | head -1 | perl -p -i -e 's/:/\t/' | cut -f 1 | perl -p -i -e 's/@//g'`  
 
 ########################################################################################################
 # SNP file for bam recab
