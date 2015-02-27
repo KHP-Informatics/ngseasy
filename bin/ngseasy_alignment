@@ -10,6 +10,8 @@
 #
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
+#GENOMEBUILD="b37"
+GENOMEBUILD="hg19"
 
 ########################################################################################################
 ## global logging fuction
@@ -261,11 +263,13 @@ fi
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
 #
 DOCKERHOME="/home/pipeman/ngs_projects"
+logger_ngseasy "[ngseasy_alignment]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
 
 ########################################################################################################
 ## Docker OUTPUT SAMPLE DIR 
 #
 SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
+logger_ngseasy "[ngseasy_alignment]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
 
 ########################################################################################################
 ## check if Trimmed data alread exists 
@@ -278,15 +282,19 @@ else
 	logger_ngseasy "[ngseasy_alignment]:Trimmed FastQC Data exsts" ${LOGFILE}
 	
 	logger_ngseasy "[ngseasy_alignment]:Setting FQ1:[${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_1.filtered.fastq.gz] " ${LOGFILE}
+
 	FQ1=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_1.filtered.fastq.gz
 	
 	logger_ngseasy "[ngseasy_alignment]:Setting FQ2:[${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_2.filtered.fastq.gz] " ${LOGFILE}
+
 	FQ2=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_2.filtered.fastq.gz
 fi
 
 
 ########################################################################################################
 ## bamprefix
+# sampleid.qc-adaptor.bam-bsqr-bam-realn-bwa.bam
+# sampleid.qc-adaptor.gatk-bsqr.gtak-realn.bwa.bam
 #
 BAM_PREFIX=${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}
 logger_ngseasy "[ngseasy_alignment]:Setting BAM prefix:[${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}] " ${LOGFILE}
@@ -306,8 +314,12 @@ logger_ngseasy "[ngseasy_alignment]:PLATFORM UNIT:[$platform_unit]" ${LOGFILE}
 # grep -v ^# dbsnp_138.b37.vcf | cut -f 1,2 > dbsnp_138.b37.recab
 # from gatk resources
 #
-DBSNP="/home/pipeman/ngs_projects/reference_genomes_b37/dbsnp_138.b37.recab"
-  
+DBSNPb37="/home/pipeman/ngs_projects/reference_genomes_b37/dbsnp_138.b37.recab"
+DBSNPhg19="/home/pipeman/ngs_projects/reference_genomes_hg19/dbsnp_138.hg19.recab"
+
+logger_ngseasy "[ngseasy_alignment]:dbSNP file for bam recab b37 [${DBSNPb37}]" ${LOGFILE}
+logger_ngseasy "[ngseasy_alignment]:dbSNP file for bam recab hg19 [${DBSNPhg19}]" ${LOGFILE}
+
 ########################################################################################################
 ## BWA 
 #
