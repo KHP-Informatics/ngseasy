@@ -560,13 +560,18 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     -e USER=pipeman \
     --user pipeman \
     -t compbio/ngseasy-snap:${VERSION} \
-    "/usr/local/pipeline/snap/snap paried ${REFDIR} ${FQ1} ${FQ2} \
+    "/usr/local/pipeline/snap/snap \
+    paried \
+    ${REFDIR} \
+    ${FQ1} \
+    ${FQ2} \
     -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
+    -R @RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE} \
     -so \
+    -sm 10 \
     -t ${NCPU} \
     -b \
     -M \
-    -R @RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE} \
     -s 50 1000 \
     -H 16000 \
     -h 100 \
