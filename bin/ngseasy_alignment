@@ -352,6 +352,10 @@ if [[ "${ALIGNER}" == "bwa" ]]; then
   -P \
   --name ${ALIGNER}_${SAMPLE_ID} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  -w /home/pipeman \
+  -e HOME=/home/pipeman \
+  -e USER=pipeman \
+  --user pipeman \
   -t compbio/ngseasy-bwa:${VERSION} sudo /bin/bash -c \
   "/usr/local/pipeline/bwa-0.7.10/bwa mem \
   -M \
@@ -384,6 +388,10 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
   -P \
   --name ${ALIGNER}_${SAMPLE_ID} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  -w /home/pipeman \
+  -e HOME=/home/pipeman \
+  -e USER=pipeman \
+  --user pipeman \
   -t compbio/ngseasy-novoalign:${VERSION} sudo /bin/bash -c \
     "/usr/local/pipeline/novocraft/novoalign \
    -d ${GENOMEINDEX}.fasta.novoindex \
@@ -427,6 +435,10 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
   -P \
   --name ${ALIGNER}_bwa_${SAMPLE_ID} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  -w /home/pipeman \
+  -e HOME=/home/pipeman \
+  -e USER=pipeman \
+  --user pipeman \
   -t compbio/ngseasy-bwa:${VERSION} sudo /bin/bash -c \
   "/usr/local/pipeline/bwa-0.7.10/bwa mem \
   -M \
@@ -453,6 +465,10 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
     -P \
     --name ${ALIGNER}_${SAMPLE_ID} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    -w /home/pipeman \
+    -e HOME=/home/pipeman \
+    -e USER=pipeman \
+    --user pipeman \
     -t compbio/ngseasy-stampy:${VERSION} sudo /bin/bash -c \
     "python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
       -g ${GENOMEINDEX} \
@@ -496,6 +512,10 @@ elif [[ "${ALIGNER}" == "bowtie2" ]]; then
     -P \
     --name ${ALIGNER}_${SAMPLE_ID} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    -w /home/pipeman \
+    -e HOME=/home/pipeman \
+    -e USER=pipeman \
+    --user pipeman \
     -t compbio/ngseasy-bowtie2:${VERSION} \
     "/usr/local/pipeline/bowtie2-2.2.3/bowtie2 \
     --end-to-end \
@@ -536,6 +556,9 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     --name ${ALIGNER}_${SAMPLE_ID} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -w /home/pipeman \
+    -e HOME=/home/pipeman \
+    -e USER=pipeman \
+    --user pipeman \
     -t compbio/ngseasy-snap:${VERSION} \
     "/usr/local/pipeline/snap-1.0beta.16-linux/snap \
     paried \
@@ -550,7 +573,7 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \ 
     sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam.flagstat && \
     bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
-      rm -rf ${SOUTDocker}/tmp/*"
+    rm -rf ${SOUTDocker}/tmp/*"
 
 ## log docker run 
 #
