@@ -564,7 +564,8 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     ${REFDIR} \
     ${FQ1} \
     ${FQ2} \
-    -so ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
+    -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
+    -so \
     -t ${NCPU} \
     -b \
     -M \
