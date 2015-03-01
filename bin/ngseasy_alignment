@@ -552,7 +552,6 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     -h 300 \
     -d 8 \
     -mcp 1000000 && \
-    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \ 
     sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
     bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
     rm -rf ${SOUTDocker}/tmp/*"
