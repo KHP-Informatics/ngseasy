@@ -10,8 +10,6 @@
 #
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
-#GENOMEBUILD="b37"
-GENOMEBUILD="hg19"
 
 ########################################################################################################
 ## global logging fuction
@@ -22,6 +20,25 @@ function logger_ngseasy() {
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
+
+########################################################################################################
+## Select Genome Build
+#
+# GENOMEBUILD="b37"
+GENOMEBUILD="hg19"
+
+if [[ "${GENOMEBUILD}" == "b37" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
+  GENOMEINDEX=${REFDIR}/human_g1k_v37
+
+elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
+  GENOMEINDEX=${REFDIR}/ucsc.hg19
+
+else
+  logger_ngseasy "No genome selected. Exiting. Choose one of [b37] or [hg19]"
+  exit 1
+fi
 
 ########################################################################################################
 ## global usage
@@ -36,7 +53,7 @@ usage:   ngseasy_alignment -c <config_file> -d <project_directory>
 
 options:  -c  STRING	configuration file
           -d  STRING	project directory
-          -h  NULL	show this message
+          -h  NULL	  show this message
 
 ngseasy_alignment sets up the NGSeasy docker containers for your aligner of choice.
 
@@ -269,6 +286,7 @@ logger_ngseasy "[ngseasy_alignment]:Docker home directory [${DOCKERHOME}]" ${LOG
 ## Docker OUTPUT SAMPLE DIR 
 #
 SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
+
 logger_ngseasy "[ngseasy_alignment]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
 
 ########################################################################################################
@@ -277,6 +295,7 @@ logger_ngseasy "[ngseasy_alignment]:Docker Output directory [${SOUTDocker}]" ${L
 if [ ! -s "${SOUT}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_1.filtered.fastq.gz" ] && [ ! -s "${SOUT}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_2.filtered.fastq.gz" ]
 then
 	logger_ngseasy "[ngseasy_alignment]:ERROR:Trimmed FastQC Data does not exsts. Exiting" ${LOGFILE}
+  logger_ngseasy "[ngseasy_alignment]:Please run ngseasy_trimmomatic" ${LOGFILE}
 	exit 1
 else
 	logger_ngseasy "[ngseasy_alignment]:Trimmed FastQC Data exsts" ${LOGFILE}
@@ -293,11 +312,12 @@ fi
 
 ########################################################################################################
 ## bamprefix
-# sampleid.qc-adaptor.bam-bsqr-bam-realn-bwa.bam
-# sampleid.qc-adaptor.gatk-bsqr.gtak-realn.bwa.bam
+# SAMPLE_ID.WEX.ILLUMINA.bwa.b37.bam
+# 
 #
-BAM_PREFIX=${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}
-logger_ngseasy "[ngseasy_alignment]:Setting BAM prefix:[${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}] " ${LOGFILE}
+BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}.${GENOMEBUILD}
+
+logger_ngseasy "[ngseasy_alignment]:Setting BAM prefix to [${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}.${GENOMEBUILD}] " ${LOGFILE}
 
 ########################################################################################################
 # PLATFORM UNIT
@@ -323,8 +343,7 @@ logger_ngseasy "[ngseasy_alignment]:dbSNP file for bam recab hg19 [${DBSNPhg19}]
 ########################################################################################################
 ## BWA 
 #
-if [ "${ALIGNER}" == "bwa" ]
-  then
+if [[ "${ALIGNER}" == "bwa" ]]; then
   
   logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}
 
@@ -332,140 +351,112 @@ if [ "${ALIGNER}" == "bwa" ]
   docker run \
   -P \
   --name ${ALIGNER}_${SAMPLE_ID} \
-  --volumes-from volumes_container \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   -t compbio/ngseasy-bwa:${VERSION} sudo /bin/bash -c \
   "/usr/local/pipeline/bwa-0.7.10/bwa mem \
   -M \
   -t ${NCPU} \
-  -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${DATE}' \
-  /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-  ${qcdPeFASTQ1} ${qcdPeFASTQ2} | \
+  -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE}' \
+  ${GENOMEINDEX}.fasta \
+  ${FQ1} ${FQ2} | \
   samblaster --addMateTags | \
   sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \  
-  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam.flagstat && \
-  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools mergeBed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
+  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
+  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
   rm -rf ${SOUTDocker}/tmp/*"
   
 # log docker run 
     docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
-    docker rm ${ALIGNER}_${SAMPLE_ID}
+    docker rm -f ${ALIGNER}_${SAMPLE_ID}
 
     logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}  
 
-fi
+########################################################################################################
+## novoalign 
+#
+elif [[ "${ALIGNER}" == "novoalign" ]]; then
 
-#---------------------------------------------#
-# novoalign 
-#---------------------------------------------#
-if [ "${ALIGNER}" == "novoalign" ]
-then
   logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}
 
   docker run \
   -P \
   --name ${ALIGNER}_${SAMPLE_ID} \
-  --volumes-from volumes_container \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   -t compbio/ngseasy-novoalign:${VERSION} sudo /bin/bash -c \
     "/usr/local/pipeline/novocraft/novoalign \
-   -d /home/pipeman/reference_genomes_b37/human_g1k_v37.novoIndex \
-   -f ${qcdPeFASTQ1} ${qcdPeFASTQ2} \
+   -d ${GENOMEINDEX}.fasta.novoindex \
+   -f ${FQ1} ${FQ2} \
    -F STDFQ \
    --Q2Off \
    --3Prime \
    -g 40 \
    -x 6 \
    -r All 100 \
-   -i PE 300,150 \
+   -i PE 500,50 \
    -c ${NCPU} \
    -k \
    -K ${SOUTDocker}/alignments/${BAM_PREFIX}.K.stats \
    -o SAM $'@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}' | \
   samblaster --addMateTags | \
   sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
-  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o /dev/stdout /dev/stdin | \
-  bamleftalign -c -d -f ${reference} > ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
-  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \  
-  bam recab \
-  --in ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
-  --out ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
-  --refFile /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-  --dbsnp ${DBSNP} \
-  --params \
-  --noPhoneHome \
-  --storeQualTag OQ \
-  --maxBaseQual 40 && \
-  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam && \
-  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam > ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam.flagstat && \
-  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam | bedtools mergeBed > ${SOUTDocker}/reports/${BAM_PREFIX}.recal.bed && \
-  rm -rf ${SOUTDocker}/tmp/* && \
-  rm ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam"
+  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin  && \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
+  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
+  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
+  rm -rf ${SOUTDocker}/tmp/*"
 
-
-#log docker run 
-    docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
-    docker rm ${ALIGNER}_${SAMPLE_ID}
-
+## log docker run 
+#
+  docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
+  docker rm -f ${ALIGNER}_${SAMPLE_ID}
   logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}  
 
-  fi
 
-#---------------------------------------------#
-# Stampy : BWA > STAMPY
-#---------------------------------------------#
-if [ "${ALIGNER}" == "stampy" ]
-then
+########################################################################################################
+## stampy : bwa the stampy 
+#
+elif [[ "${ALIGNER}" == "stampy" ]]; then
 
-  logger_ngseasy " START Basic ${ALIGNER} Alignment: BWA " ${LOGFILE}
+  logger_ngseasy " START Basic ${ALIGNER} Alignment: Running bwa mem first " ${LOGFILE}
 
-# align wih bwa
+## align wih bwa
+#
   docker run \
   -P \
   --name ${ALIGNER}_bwa_${SAMPLE_ID} \
-  --volumes-from volumes_container \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   -t compbio/ngseasy-bwa:${VERSION} sudo /bin/bash -c \
   "/usr/local/pipeline/bwa-0.7.10/bwa mem \
   -M \
   -t ${NCPU} \
-  -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${DATE}' \
-  /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-  ${qcdPeFASTQ1} ${qcdPeFASTQ2} | \
+  -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE}' \
+  ${GENOMEINDEX}.fasta \
+  ${FQ1} ${FQ2} | \
   samblaster --addMateTags | \
   sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
-  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o /dev/stdout /dev/stdin | \
-  bamleftalign -c -d -f ${reference} > ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
-  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \  
-  bam recab \
-  --in ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
-  --out ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bwa.bam \
-  --refFile /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-  --dbsnp ${DBSNP} \
-  --params \
-  --noPhoneHome \
-  --storeQualTag OQ \
-  --maxBaseQual 40 && \
-  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bwa.bam && \
-  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bwa.bam > ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bwa.bam.flagstat && \
-  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bwa.bam | bedtools mergeBed > ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bwa.bed && \
-  rm -rf ${SOUTDocker}/tmp/* && \
-  rm ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam"
+  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam /dev/stdin | \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam && \
+  rm -rf ${SOUTDocker}/tmp/*"
   
 #log docker run 
     docker logs ${ALIGNER}_bwa_${SAMPLE_ID} >> ${LOGFILE}.log
-    docker rm ${ALIGNER}_bwa_${SAMPLE_ID}
+    docker rm -f ${ALIGNER}_bwa_${SAMPLE_ID}
 
-# align wih stampy
-    logger_ngseasy " START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}  
+########################################################################################################
+## stampy 
+# 
+  logger_ngseasy " START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}  
 
     docker run \
     -P \
     --name ${ALIGNER}_${SAMPLE_ID} \
-    --volumes-from volumes_container \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -t compbio/ngseasy-stampy:${VERSION} sudo /bin/bash -c \
-    " python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
-      -g /home/pipeman/reference_genomes_b37/human_g1k_v37 \
-      -h /home/pipeman/reference_genomes_b37/human_g1k_v37 \
+    "python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
+      -g ${GENOMEINDEX} \
+      -h ${GENOMEINDEX} \
       -t ${NCPU} \
       --bamsortprefix ${SOUTDocker}/tmp \
       --bamkeepgoodreads \
@@ -475,54 +466,36 @@ then
       --gapopen=40 \
       --gapextend=6 \
       --noautosense \
-      --insertsize=300 \
-      --insertsd=150 \
-      -M ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bwa.bam | \
+      --insertsize=500 \
+      --insertsd=50 \
+      -M ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bwa.bam | \
       samblaster --addMateTags | \
       sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
-      sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o /dev/stdout /dev/stdin | \
-      bamleftalign -c -d -f ${reference} > ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
+      sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin && \
       sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \  
-      bam recab \
-      --in ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
-      --out ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
-      --refFile /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-      --dbsnp ${DBSNP} \
-      --params \
-      --noPhoneHome \
-      --storeQualTag OQ \
-      --maxBaseQual 40 && \
-      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam && \
-      sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam > ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam.flagstat && \
-      bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam | bedtools mergeBed > ${SOUTDocker}/reports/${BAM_PREFIX}.recal.bed && \
+      sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
+      bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
       rm -rf ${SOUTDocker}/tmp/* && \
-      rm ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
-      rm ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bwa.bam"
+      rm ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam"
+
+## log docker run 
+#
+  docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
+  docker rm -f ${ALIGNER}_${SAMPLE_ID}
+  logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}  
 
 
-      
-   docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
-   docker rm ${ALIGNER}_${SAMPLE_ID}
-   logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}  
-
-# remove BWA aligned files
-    logger_ngseasy " Remove Basic ${ALIGNER} Alignment BWA BAMs " ${LOGFILE}  
-    rm -v ${SOUT}/alignments/${BAM_PREFIX}.*.bwa.*
-fi
-
-#---------------------------------------------#
+########################################################################################################
 # Bowtie2
-#---------------------------------------------#
-# align wih bowtie2
-if [ "${ALIGNER}" == "bowtie2" ]
-then
+# 
+elif [[ "${ALIGNER}" == "bowtie2" ]]; then
 
     logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}  
 
     docker run \
     -P \
     --name ${ALIGNER}_${SAMPLE_ID} \
-    --volumes-from volumes_container \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -t compbio/ngseasy-bowtie2:${VERSION} \
     "/usr/local/pipeline/bowtie2-2.2.3/bowtie2 \
     --end-to-end \
@@ -532,88 +505,68 @@ then
     --rg SM:${BAM_PREFIX} \
     --rg PU:${NGS_PLATFORM} \
     --rg LB:${DNA_PREP_LIBRARY_ID} \
-    -1 ${qcdPeFASTQ1} \
-    -2 ${qcdPeFASTQ2} \
+    -1 ${FQ1} \
+    -2 ${FQ2} \
     -S ${SOUTDocker}/alignments/${BAM_PREFIX}.raw.sam | \
       samblaster --addMateTags | \
       sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
-      sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o /dev/stdout /dev/stdin | \
-      bamleftalign -c -d -f ${reference} > ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
+      sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o /${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin && \
       sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \  
-      bam recab \
-      --in ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
-      --out ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
-      --refFile /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-      --dbsnp ${DBSNP} \
-      --params \
-      --noPhoneHome \
-      --storeQualTag OQ \
-      --maxBaseQual 40 && \
-      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam && \
-      sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam > ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam.flagstat && \
-      bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam | bedtools mergeBed > ${SOUTDocker}/reports/${BAM_PREFIX}.recal.bed && \
-      rm -rf ${SOUTDocker}/tmp/* && \
-      rm ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam"
+      sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
+      bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
+      rm -rf ${SOUTDocker}/tmp/*"
 
-#log 
-    docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
-    docker rm ${ALIGNER}_${SAMPLE_ID}
-    logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}  
-fi
+## log docker run 
+#
+  docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
+  docker rm -f ${ALIGNER}_${SAMPLE_ID}
+  logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}  
 
-#---------------------------------------------#
+########################################################################################################
 # SNAP
-#---------------------------------------------#
+# 
 # align wih snap sorts and dupe marks the file anyway
-if [ "${ALIGNER}" == "snap" ]
-then
+#
+elif [[ "${ALIGNER}" == "snap" ]]; then
+
 logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}  
 
     docker run \
     -P \
     --name ${ALIGNER}_${SAMPLE_ID} \
-    --volumes-from volumes_container \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -w /home/pipeman \
     -t compbio/ngseasy-snap:${VERSION} \
     "/usr/local/pipeline/snap-1.0beta.16-linux/snap \
     paried \
-    /home/pipeman/reference_genomes_b37/ \
-    ${qcdPeFASTQ1} \
-    ${qcdPeFASTQ2} \
-    -so ${SOUTDocker}/alignments/${BAM_PREFIX}.raw.bam \
+    ${REFDIR} \
+    ${FQ1} \
+    ${FQ2} \
+    -so ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
     -t ${NCPU} \
     -b \
     -M \
-    -R @RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${DATE} && \
-     sambamba view -h -f bam -t ${NCPU} /dev/stdout | \
-     bamleftalign -c -d -f ${reference} > ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
-     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \  
-      bam recab \
-      --in ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
-      --out ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
-      --refFile /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-      --dbsnp ${DBSNP} \
-      --params \
-      --noPhoneHome \
-      --storeQualTag OQ \
-      --maxBaseQual 40 && \
-      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam && \
-      sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam > ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam.flagstat && \
-      bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam | bedtools mergeBed > ${SOUTDocker}/reports/${BAM_PREFIX}.recal.bed && \
-      rm -rf ${SOUTDocker}/tmp/* && \
-      rm ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
-      rm ${SOUTDocker}/alignments/${BAM_PREFIX}.raw.bam"
+    -R @RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE} && \
+    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \ 
+    sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam.flagstat && \
+    bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
+      rm -rf ${SOUTDocker}/tmp/*"
 
-#log 
+## log docker run 
+#
     docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
-    docker rm ${ALIGNER}_${SAMPLE_ID}
+    docker rm -f ${ALIGNER}_${SAMPLE_ID}
     logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}  
-
+else
+  logger_ngseasy " No Aligner selected. Or aligner not recognised. Should be one of bwa, stampy, novoalign, snap or bowtie2" ${LOGFILE} 
+  exit 1
 
 fi
 
-
-#------permissions------------#
+########################################################################################################
+# permissions
+#
 chmod -R 777 ${SOUT}/*
 
-done < ${config_tsv}
+done < ${FILE}
+# THE END
