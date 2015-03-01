@@ -352,7 +352,7 @@ if [[ "${ALIGNER}" == "bwa" ]]; then
 # align wih bwa
   docker run \
   -P \
-  --name ${ALIGNER}_${SAMPLE_ID} \
+  --name alignment_${BAM_PREFIX} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   -w /home/pipeman \
   -e HOME=/home/pipeman \
@@ -374,8 +374,8 @@ if [[ "${ALIGNER}" == "bwa" ]]; then
   rm -rf ${SOUTDocker}/tmp/*"
   
 # log docker run 
-    docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
-    docker rm -f ${ALIGNER}_${SAMPLE_ID}
+    docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
+    docker rm -f alignment_${BAM_PREFIX}
 
     logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}  
 
@@ -388,7 +388,7 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
 
   docker run \
   -P \
-  --name ${ALIGNER}_${SAMPLE_ID} \
+  --name alignment_${BAM_PREFIX} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   -w /home/pipeman \
   -e HOME=/home/pipeman \
@@ -418,8 +418,8 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
 
 ## log docker run 
 #
-  docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
-  docker rm -f ${ALIGNER}_${SAMPLE_ID}
+  docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm -f alignment_${BAM_PREFIX}
   logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}  
 
 
@@ -464,7 +464,7 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
 
     docker run \
     -P \
-    --name ${ALIGNER}_${SAMPLE_ID} \
+    --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -w /home/pipeman \
     -e HOME=/home/pipeman \
@@ -497,8 +497,8 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
 
 ## log docker run 
 #
-  docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
-  docker rm -f ${ALIGNER}_${SAMPLE_ID}
+  docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm -f alignment_${BAM_PREFIX}
   logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}  
 
 
@@ -511,7 +511,7 @@ elif [[ "${ALIGNER}" == "bowtie2" ]]; then
 
     docker run \
     -P \
-    --name ${ALIGNER}_${SAMPLE_ID} \
+    --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -w /home/pipeman \
     -e HOME=/home/pipeman \
@@ -539,8 +539,8 @@ elif [[ "${ALIGNER}" == "bowtie2" ]]; then
 
 ## log docker run 
 #
-  docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
-  docker rm -f ${ALIGNER}_${SAMPLE_ID}
+  docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm -f alignment_${BAM_PREFIX}
   logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}  
 
 ########################################################################################################
@@ -554,7 +554,7 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
 
     docker run \
     -P \
-    --name ${ALIGNER}_${SAMPLE_ID} \
+    --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -w /home/pipeman \
     -e HOME=/home/pipeman \
@@ -585,8 +585,8 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
 
 ## log docker run 
 #
-    docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
-    docker rm -f ${ALIGNER}_${SAMPLE_ID}
+    docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
+    docker rm -f alignment_${BAM_PREFIX}
     logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}
 
 else
