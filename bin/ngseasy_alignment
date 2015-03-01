@@ -560,8 +560,7 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     -e USER=pipeman \
     --user pipeman \
     -t compbio/ngseasy-snap:${VERSION} \
-    "/usr/local/pipeline/snap-1.0beta.16-linux/snap \
-    paried \
+    "/usr/local/pipeline/snap-1.0beta.16-linux/snap paried \
     ${REFDIR} \
     ${FQ1} \
     ${FQ2} \
@@ -571,7 +570,7 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     -M \
     -R @RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE} && \
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \ 
-    sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam.flagstat && \
+    sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
     bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
     rm -rf ${SOUTDocker}/tmp/*"
 
