@@ -581,7 +581,8 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
 #
     docker logs ${ALIGNER}_${SAMPLE_ID} >> ${LOGFILE}.log
     docker rm -f ${ALIGNER}_${SAMPLE_ID}
-    logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}  
+    logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}
+
 else
   logger_ngseasy " No Aligner selected. Or aligner not recognised. Should be one of bwa, stampy, novoalign, snap or bowtie2" ${LOGFILE} 
   exit 1
