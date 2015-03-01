@@ -12,6 +12,11 @@ NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 
 ########################################################################################################
+## docker run command
+#
+DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+
+########################################################################################################
 ## global logging fuction
 #
 function logger_ngseasy() {
@@ -350,14 +355,9 @@ if [[ "${ALIGNER}" == "bwa" ]]; then
   logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}
 
 # align wih bwa
-  docker run \
-  -P \
-  --name alignment_${BAM_PREFIX} \
+  ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-  -w /home/pipeman \
-  -e HOME=/home/pipeman \
-  -e USER=pipeman \
-  --user pipeman \
+  --name alignment_${BAM_PREFIX} \
   -t compbio/ngseasy-bwa:${NGSEASYVERSION} sudo /bin/bash -c \
   "/usr/local/pipeline/bwa-0.7.10/bwa mem \
   -M \
@@ -386,14 +386,9 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
 
   logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}
 
-  docker run \
-  -P \
+  ${DOCKER_RUN} \
   --name alignment_${BAM_PREFIX} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-  -w /home/pipeman \
-  -e HOME=/home/pipeman \
-  -e USER=pipeman \
-  --user pipeman \
   -t compbio/ngseasy-novoalign:${NGSEASYVERSION} sudo /bin/bash -c \
     "/usr/local/pipeline/novocraft/novoalign \
    -d ${GENOMEINDEX}.fasta.novoindex \
@@ -432,14 +427,9 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
 
 ## align wih bwa
 #
-  docker run \
-  -P \
+  ${DOCKER_RUN} \
   --name ${ALIGNER}_bwa_${SAMPLE_ID} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-  -w /home/pipeman \
-  -e HOME=/home/pipeman \
-  -e USER=pipeman \
-  --user pipeman \
   -t compbio/ngseasy-bwa:${NGSEASYVERSION} sudo /bin/bash -c \
   "/usr/local/pipeline/bwa-0.7.10/bwa mem \
   -M \
@@ -462,14 +452,9 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
 # 
   logger_ngseasy " START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}  
 
-    docker run \
-    -P \
+    ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -w /home/pipeman \
-    -e HOME=/home/pipeman \
-    -e USER=pipeman \
-    --user pipeman \
     -t compbio/ngseasy-stampy:${NGSEASYVERSION} sudo /bin/bash -c \
     "python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
       -g ${GENOMEINDEX} \
@@ -509,14 +494,9 @@ elif [[ "${ALIGNER}" == "bowtie2" ]]; then
 
     logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}  
 
-    docker run \
-    -P \
+    ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -w /home/pipeman \
-    -e HOME=/home/pipeman \
-    -e USER=pipeman \
-    --user pipeman \
     -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} \
     "/usr/local/pipeline/bowtie2-2.2.3/bowtie2 \
     --end-to-end \
@@ -552,14 +532,9 @@ elif [[ "${ALIGNER}" == "snap" ]]; then
 
 logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}  
 
-    docker run \
-    -P \
+    ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -w /home/pipeman \
-    -e HOME=/home/pipeman \
-    -e USER=pipeman \
-    --user pipeman \
     -t compbio/ngseasy-snap:${NGSEASYVERSION} \
     "/usr/local/pipeline/snap/snap \
     paried \
