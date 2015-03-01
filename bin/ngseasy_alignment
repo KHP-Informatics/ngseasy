@@ -569,7 +569,7 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     -R @RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE} \
     -s 50 1000 \
     -H 16000 \
-    -h 300 \
+    -h 100 \
     -d 8 \
     -mcp 1000000 && \
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \ 
