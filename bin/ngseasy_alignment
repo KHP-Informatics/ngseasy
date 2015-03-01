@@ -358,7 +358,7 @@ if [[ "${ALIGNER}" == "bwa" ]]; then
   -e HOME=/home/pipeman \
   -e USER=pipeman \
   --user pipeman \
-  -t compbio/ngseasy-bwa:${VERSION} sudo /bin/bash -c \
+  -t compbio/ngseasy-bwa:${NGSEASYVERSION} sudo /bin/bash -c \
   "/usr/local/pipeline/bwa-0.7.10/bwa mem \
   -M \
   -t ${NCPU} \
@@ -394,7 +394,7 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
   -e HOME=/home/pipeman \
   -e USER=pipeman \
   --user pipeman \
-  -t compbio/ngseasy-novoalign:${VERSION} sudo /bin/bash -c \
+  -t compbio/ngseasy-novoalign:${NGSEASYVERSION} sudo /bin/bash -c \
     "/usr/local/pipeline/novocraft/novoalign \
    -d ${GENOMEINDEX}.fasta.novoindex \
    -f ${FQ1} ${FQ2} \
@@ -440,7 +440,7 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
   -e HOME=/home/pipeman \
   -e USER=pipeman \
   --user pipeman \
-  -t compbio/ngseasy-bwa:${VERSION} sudo /bin/bash -c \
+  -t compbio/ngseasy-bwa:${NGSEASYVERSION} sudo /bin/bash -c \
   "/usr/local/pipeline/bwa-0.7.10/bwa mem \
   -M \
   -t ${NCPU} \
@@ -470,7 +470,7 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
     -e HOME=/home/pipeman \
     -e USER=pipeman \
     --user pipeman \
-    -t compbio/ngseasy-stampy:${VERSION} sudo /bin/bash -c \
+    -t compbio/ngseasy-stampy:${NGSEASYVERSION} sudo /bin/bash -c \
     "python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
       -g ${GENOMEINDEX} \
       -h ${GENOMEINDEX} \
@@ -517,7 +517,7 @@ elif [[ "${ALIGNER}" == "bowtie2" ]]; then
     -e HOME=/home/pipeman \
     -e USER=pipeman \
     --user pipeman \
-    -t compbio/ngseasy-bowtie2:${VERSION} \
+    -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} \
     "/usr/local/pipeline/bowtie2-2.2.3/bowtie2 \
     --end-to-end \
     -threads ${NCPU} \
@@ -560,7 +560,7 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     -e HOME=/home/pipeman \
     -e USER=pipeman \
     --user pipeman \
-    -t compbio/ngseasy-snap:${VERSION} \
+    -t compbio/ngseasy-snap:${NGSEASYVERSION} \
     "/usr/local/pipeline/snap/snap \
     paried \
     ${REFDIR} \
@@ -569,7 +569,6 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
     -R @RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE} \
     -so \
-    -sm 10 \
     -t ${NCPU} \
     -b \
     -M \
