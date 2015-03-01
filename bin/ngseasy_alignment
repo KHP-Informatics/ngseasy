@@ -571,8 +571,9 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     -M \
     -R @RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE} \
     -s 50 1000 \
-    -H 2000 \
+    -H 16000 \
     -h 300 \
+    -d 8 \
     -mcp 1000000 && \
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \ 
     sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
