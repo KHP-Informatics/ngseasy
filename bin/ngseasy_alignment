@@ -30,10 +30,12 @@ GENOMEBUILD="hg19"
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
   GENOMEINDEX=${REFDIR}/human_g1k_v37
+  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
 
 elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
   GENOMEINDEX=${REFDIR}/ucsc.hg19
+  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
 
 else
   logger_ngseasy "No genome selected. Exiting. Choose one of [b37] or [hg19]"
@@ -397,12 +399,11 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
    -d ${GENOMEINDEX}.fasta.novoindex \
    -f ${FQ1} ${FQ2} \
    -F STDFQ \
-   --Q2Off \
    --3Prime \
    -g 40 \
    -x 6 \
    -r All 100 \
-   -i PE 500,50 \
+   -i PE 500,100 \
    -c ${NCPU} \
    -k \
    -K ${SOUTDocker}/alignments/${BAM_PREFIX}.K.stats \
@@ -483,7 +484,7 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
       --gapextend=6 \
       --noautosense \
       --insertsize=500 \
-      --insertsd=50 \
+      --insertsd=100 \
       -M ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bwa.bam | \
       samblaster --addMateTags | \
       sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
@@ -574,7 +575,7 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     -M \
     -s 50 1000 \
     -H 16000 \
-    -h 100 \
+    -h 300 \
     -d 8 \
     -mcp 1000000 && \
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \ 
