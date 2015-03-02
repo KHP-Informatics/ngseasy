@@ -12,6 +12,11 @@ NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 
 ########################################################################################################
+## docker run command
+#
+DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+
+########################################################################################################
 ## global logging fuction
 #
 function logger_ngseasy() {
@@ -20,6 +25,27 @@ function logger_ngseasy() {
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
+
+########################################################################################################
+## Select Genome Build
+# hard codes the 
+# GENOMEBUILD="b37"
+GENOMEBUILD="hg19"
+
+if [[ "${GENOMEBUILD}" == "b37" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
+  GENOMEINDEX=${REFDIR}/human_g1k_v37
+  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
+
+elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
+  GENOMEINDEX=${REFDIR}/ucsc.hg19
+  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
+
+else
+  logger_ngseasy "No genome selected. Exiting. Choose one of [b37] or [hg19]"
+  exit 1
+fi
 
 ########################################################################################################
 ## global usage
@@ -391,7 +417,7 @@ fi
 ## run compbio/ngseasy-trimmomatic
 # 
 
-if [[ "$TRIMM" == "qc-adaptor" ]]
+if [[ "$TRIMM" == "atrim" ]]
 then
 logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files " ${LOGFILE}
 
@@ -406,52 +432,41 @@ zcat ${SOUTDocker}/fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTD
 #
 logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter " ${LOGFILE}
 
-	docker run \
-		-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-		-w /home/pipeman \
-		-e HOME=/home/pipeman \
-		-e USER=pipeman \
-		--user pipeman \
-		--rm=true \
-		--name fastx_artifacts_filter_${SAMPLE_ID}_${NGS_TYPE} \
-		-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
+	${DOCKER_RUN} \
+	--rm=true \
+	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+	--name fastx_artifacts_filter_${SAMPLE_ID}_${NGS_TYPE} \
+	-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
 
 ## run trimmomatic
 #
 logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 AVGQUAL:2 MINLEN:75 " ${LOGFILE}
 
-	docker run \
-		-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-		-w /home/pipeman \
-		-e HOME=/home/pipeman \
-		-e USER=pipeman \
-		--user pipeman \
-		--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
-		--rm=true \
-		-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
-		PE \
-		-threads ${NCPU} \
-		${SOUTDocker}/fastq/${FQ1}.art_filt.gz \
-		${SOUTDocker}/fastq/${FQ2}.art_filt.gz \
-		${qcPEFQ1} ${qcSEFQ1} \
-		${qcPEFQ2} ${qcSEFQ2} \
-		ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
-		LEADING:3 \
-		TRAILING:3 \
-		SLIDINGWINDOW:4:15 \
-		AVGQUAL:2 \
-		MINLEN:75
+	${DOCKER_RUN} \
+	--rm=true \
+	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+	--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
+	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+	PE \
+	-threads ${NCPU} \
+	${SOUTDocker}/fastq/${FQ1}.art_filt.gz \
+	${SOUTDocker}/fastq/${FQ2}.art_filt.gz \
+	${qcPEFQ1} ${qcSEFQ1} \
+	${qcPEFQ2} ${qcSEFQ2} \
+	ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
+	LEADING:3 \
+	TRAILING:3 \
+	SLIDINGWINDOW:4:15 \
+	AVGQUAL:2 \
+	MINLEN:75
 
 logger_ngseasy "[ngseasy_trimmomatic]:FastQC post Trimmomatic" ${LOGFILE}
     
 ##  compbio/ngseasy-fastqc
 #
-docker run \
+	${DOCKER_RUN} \
+	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-	-w /home/pipeman \
-	-e HOME=/home/pipeman \
-	-e USER=pipeman \
-	--user pipeman \
 	--name fastqc_post_trimm_${SAMPLE_ID}_${NGS_TYPE} \
 	-t compbio/ngseasy-fastqc:${VERSION} /usr/local/pipeline/FastQC/fastqc \
 	--threads 4 \
@@ -466,9 +481,10 @@ docker run \
 
 ## Just QC FASTQ NO ADAPTOR TRIM
 #
-elif [[ "$TRIMM" == "qc-trimm" ]]
+elif [[ "$TRIMM" == "btrim" ]]
 then
-logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files " ${LOGFILE}
+
+logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files. No adatptor trimming. Just quality trimming " ${LOGFILE}
 
 ## make parallel cmd
 #
@@ -481,38 +497,30 @@ zcat ${SOUTDocker}/fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTD
 #
 logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter " ${LOGFILE}
 
-	docker run \
-		-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-		-w /home/pipeman \
-		-e HOME=/home/pipeman \
-		-e USER=pipeman \
-		--user pipeman \
-		--rm=true \
-		--name fastx_artifacts_filter_${SAMPLE_ID}_${NGS_TYPE} \
-		-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
+	${DOCKER_RUN} \
+	--rm=true \
+	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+	--name fastx_artifacts_filter_${SAMPLE_ID}_${NGS_TYPE} \
+	-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
 
 ## run trimmomatic
 #
-	docker run \
-		-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-		-w /home/pipeman \
-		-e HOME=/home/pipeman \
-		-e USER=pipeman \
-		--user pipeman \
-		--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
-		--rm=true \
-		-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
-		PE \
-		-threads ${NCPU} \
-		${SOUTDocker}/fastq/${FQ1}.art_filt.gz \
-		${SOUTDocker}/fastq/${FQ2}.art_filt.gz \
-		${qcPEFQ1} ${qcSEFQ1} \
-		${qcPEFQ2} ${qcSEFQ2} \
-		LEADING:3 \
-		TRAILING:3 \
-		SLIDINGWINDOW:4:15 \
-		AVGQUAL:2 \
-		MINLEN:75
+	${DOCKER_RUN} \
+	--rm=true \
+	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+	--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
+	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+	PE \
+	-threads ${NCPU} \
+	${SOUTDocker}/fastq/${FQ1}.art_filt.gz \
+	${SOUTDocker}/fastq/${FQ2}.art_filt.gz \
+	${qcPEFQ1} ${qcSEFQ1} \
+	${qcPEFQ2} ${qcSEFQ2} \
+	LEADING:3 \
+	TRAILING:3 \
+	SLIDINGWINDOW:4:15 \
+	AVGQUAL:2 \
+	MINLEN:75
 
 logger_ngseasy "[ngseasy_trimmomatic]:START FastQC post Trimmomatic" ${LOGFILE}
     

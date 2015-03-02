@@ -351,7 +351,7 @@ fi
 
 ###################################################################################
 ## adapter and read/base quality trimming qc-trimm, qc-adaptor
-if [[ "${TRIM}" -eq "qc-trimm" ]] || [[ "${TRIM}" -eq "qc-adaptor" ]]
+if [[ "${TRIM}" -eq "atrim" ]] || [[ "${TRIM}" -eq "btrim" ]]
 then
 	logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
 
