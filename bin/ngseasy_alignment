@@ -466,9 +466,10 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam && \
   rm -rf ${SOUTDocker}/tmp/*"
   
-#log docker run 
-    docker logs ${ALIGNER}_bwa_${SAMPLE_ID} >> ${LOGFILE}.log
-    docker rm -f ${ALIGNER}_bwa_${SAMPLE_ID}
+## log docker run 
+#
+ docker logs ${ALIGNER}_bwa_${SAMPLE_ID} >> ${LOGFILE}.log
+ docker rm -f ${ALIGNER}_bwa_${SAMPLE_ID}
 
 ########################################################################################################
 ## stampy 

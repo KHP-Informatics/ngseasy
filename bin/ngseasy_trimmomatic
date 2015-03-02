@@ -512,7 +512,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter " ${LOGFILE}
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
-	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 	PE \
 	-threads ${NCPU} \
 	${SOUTDocker}/fastq/${FQ1}.art_filt.gz \
