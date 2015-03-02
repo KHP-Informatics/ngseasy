@@ -238,7 +238,7 @@ else
 fi
 
 ###########################################################################################
-## run fastqc ngseasy_fastqc
+## FastQC
 ###########################################################################################
 
 logger_ngseasy "[ngseasy]:START ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
@@ -246,33 +246,33 @@ logger_ngseasy "[ngseasy]:START ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${c
 ## number of samples to run ####
 #
 numsamples=`wc -l ${config_tsv}.tmp | awk '{print $1}'`  
-logger_ngseasy "[ngseasy_fastqc]:Number of samples [$numsamples]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:Number of samples [$numsamples]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 ## number of cores available
 # mincpuallowed=8
 numcores=`nproc`
-logger_ngseasy "[ngseasy_fastqc]:Number of available cores [$numcores]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:Number of available cores [$numcores]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 ## check if number of cpu less than 2 and exit if so ####
 #
 if [[ "$numcores" -lt 2 ]]
 then
-	logger_ngseasy "[ngseasy_fastqc]:Number of available cores less than 2. Exiting " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+	logger_ngseasy "[ngseasy]:Number of available cores less than 2. Exiting " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 	exit 1;
 fi
 
 ## muber of jobs fastqc calls allowed to run at the same time ####
 #
 numjobsallowed=$(expr $numcores / 2)
-logger_ngseasy "[ngseasy_fastqc]:Number of Jobs allowed [$numjobsallowed] ie 2 cores per sample" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:Number of FastQC Jobs allowed [$numjobsallowed] ie 2 cores per sample" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 ## split config file into batches : N samples per batch. N samples == njobs
 #
 if [[ "$numsamples"  -gt "$numjobsallowed" ]]
 then
-	logger_ngseasy "[ngseasy_fastqc]:Number samples [$numsamples] greater than number of cpu jobs allowed [$numjobsallowed]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
-	logger_ngseasy "[ngseasy_fastqc]:splitting config file in to batches of at most [${numjobsallowed}] samples" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
-	logger_ngseasy "[ngseasy_fastqc]:[cmd]:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+	logger_ngseasy "[ngseasyc]:Number samples [$numsamples] greater than number of cpu jobs allowed [$numjobsallowed]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+	logger_ngseasy "[ngseasy]:splitting config file in to batches of at most [${numjobsallowed}] samples" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+	logger_ngseasy "[ngseasy]:[cmd]:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 	split -d -l ${numjobsallowed} --additional-suffix=".batch.${config_tsv}.tmp" ${config_tsv}.tmp
 else
 	cp ${config_tsv}.tmp original.batch.${config_tsv}.tmp
@@ -288,7 +288,7 @@ ndockerjobs=0
 
 ## loop through config files and run fastqc ####
 #
-logger_ngseasy "[ngseasy]:ngseasy_fastqc START LOOP" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:START FASTQC LOOP" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 for MYBATCH in `ls $batchfiles`
 do
@@ -322,7 +322,7 @@ done
 
 ## log the end ####
 #
-logger_ngseasy "[ngseasy]:ngseasy_fastqc END LOOP" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:END FASTQC LOOP" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 ## remove docker Exited containers ####
 #
