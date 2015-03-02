@@ -349,29 +349,50 @@ fi
 
 ###################################################################################
 ## adapter and read/base quality trimming qc-trimm, qc-adaptor
-if [[ "${TRIM}" -eq "atrim" ]] || [[ "${TRIM}" -eq "btrim" ]]
-then
+###################################################################################
+
+if [[ "${TRIM}" -eq "atrim" ]] || [[ "${TRIM}" -eq "btrim" ]]; then
+
 	logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
 
 	/bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
 
-elif [[ "${TRIM}" -eq "skip" ]] 
+elif [[ "${TRIM}" -eq "notrim" ]]; then
+
 	logger_ngseasy  "[ngseasy]:Skipping qc-trimming"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
 
 else
 	logger_ngseasy  "[ngseasy]:Skipping qc-trimming"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
 fi
 
-##-------------------------------------------------------------------------##
+
+###################################################################################
 ## alignment : includes addition of read groups at alignment stage 
 ## and then duplicate marking with samblaster and indexing and sorting with sambamba
-## added SNAP aligner
-## realignment includes bamleftalign
-/bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
+###################################################################################
+
+logger_ngseasy  "[ngseasy]:Running ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
+
+	/bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
 
 
-##-------------------------------------------------------------------------##
-## NGS Processing : Indel realignment and base quality score reclibration using GATK or BamUtil/ogap
+###################################################################################
+## NGS Processing : Indel realignment 
+###################################################################################
+
+if [[  ]]; then
+
+elif [[  ]]; then
+
+else
+
+fi
+
+
+###################################################################################
+## NGS Processing : Base Quality Score Recalibration
+###################################################################################
+
 if [[ "${GATK}" -eq 1 ]] && [[ "${REALN}" -eq 1 ]] && [[ "${BSQR}" -eq 1 ]]
 then
     echo -e  "[ngseasy]:running gatk indel realignment and base quality score recalibration"
