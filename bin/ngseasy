@@ -337,7 +337,7 @@ rm -v *.batch.${config_tsv}.tmp
 logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 ###################################################################################
-## adapter and read/base quality trimming qc-trimm, qc-adaptor
+## Quality Trimming
 ###################################################################################
 
 logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
@@ -345,8 +345,7 @@ logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngse
 	/bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
-## alignment : includes addition of read groups at alignment stage 
-## and then duplicate marking with samblaster and indexing and sorting with sambamba
+## Alignment 
 ###################################################################################
 
 logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
@@ -354,7 +353,7 @@ logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngse
 	/bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
-## NGS Processing : Indel realignment 
+## Indel realignment 
 ###################################################################################
 
 logger_ngseasy  "[ngseasy]:Calling ngseasy_realn"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
@@ -362,7 +361,7 @@ logger_ngseasy  "[ngseasy]:Calling ngseasy_realn"  ${HOME}/ngseasy_logs/ngseasy.
 	/bin/bash ngseasy_realn  -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
-## NGS Processing : Base Quality Score Recalibration
+## Base Quality Score Recalibration
 ###################################################################################
 
 logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
@@ -378,21 +377,21 @@ logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment_qc"  ${HOME}/ngseasy_logs/n
 	/bin/bash ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
-## SNP/INDEL calling
+## Variant calling
 ###################################################################################
 logger_ngseasy  "[ngseasy]:Calling ngseasy_variant_calling"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 	/bin/bash ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
-## CNV Calling
+## CNV Calling: coming soon
 ###################################################################################
 
 ###################################################################################
-## Annotation
+## Annotation: coming soon
 ###################################################################################
 
 ###################################################################################
-## NGS Report
+## NGS Report: coming soon
 ###################################################################################
 
