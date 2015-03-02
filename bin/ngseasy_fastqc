@@ -242,6 +242,14 @@ fi
 LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_fastqc
 
 ########################################################################################################
+## QUIT IF no-fastqc option is selected
+#
+if [[ "$FASTQC" == "no-fastqc" ]]; then
+	logger_ngseasy "[ngseasy_fastqc]:no-fastqc selected. Exiting" ${LOGFILE}
+	exit 1
+fi
+
+########################################################################################################
 ## check and make log directory
 #
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
@@ -396,7 +404,7 @@ SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
 ########################################################################################################
 ## BAM FILE NAME
 #
-# SAMPLE_ID.WEX.pe.ILLUMINA.atrim.bwa.b37.dupemk.bam
+# SAMPLE_ID.WEX.PE.ILLUMINA.atrim.bwa.b37.dupemk.bam
 #
 BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}
 
