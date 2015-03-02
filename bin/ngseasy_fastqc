@@ -350,7 +350,7 @@ fi
 if [ -s "${SOUT}/fastq/${FQ1}_fastqc.zip" ] && [ -s "${SOUT}/fastq/${FQ2}_fastqc.zip" ] 
 then
 	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping this bit" ${LOGFILE}
-	exit 1
+	exit 0
 fi
 
 ########################################################################################################

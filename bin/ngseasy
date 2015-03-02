@@ -217,24 +217,24 @@ logger_ngseasy "[ngseasy]:START ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${c
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
-logger_ngseasy "[ngseasy_fastqc]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 hasheader=`sed 1q ${config_tsv} | grep POJECT_ID | wc -l | awk '{print $1}'`
 
 if [[ "${config_tsv}" == *.batch.* ]]
 then
-	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 	FILE=${config_tsv}
 
 ## if header present then remove it
 elif [[ "$hasheader" -eq 1 ]]
 then
-	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] header present...gonna remove this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	logger_ngseasy "[ngseasy_fastqc]:[cmd]:sed 1d ${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy]:[${config_tsv}] header present...gonna remove this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy]:[cmd]:sed 1d ${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 	sed 1d ${config_tsv} > ${config_tsv}.tmp
 	FILE=${config_tsv}.tmp
 else
-	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] is seemingly perfect. Well Done" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy]:[${config_tsv}] is seemingly perfect. Well Done" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 	FILE=${config_tsv}
 fi
 
@@ -343,9 +343,9 @@ done
 
 ## call ngseasy_trimmomatic
 #
-#logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
-#	/bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
+	/bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
 ## Alignment 
@@ -353,13 +353,13 @@ done
 
 ## check if ngseasy_trimmomatic still running and wait
 #
-#running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`
+running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`
 
-#while [ $running_trimmomatic_jobs -gt 0 ]; do
-#	sleep 30s;
-#	running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`;
-#	logger_ngseasy "[ngseasy]:Number of Docker Trimmomatic jobs running [$running_trimmomatic_jobs]" 
-#done
+while [ $running_trimmomatic_jobs -gt 0 ]; do
+	sleep 30s;
+	running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`;
+	logger_ngseasy "[ngseasy]:Number of Docker Trimmomatic jobs running [$running_trimmomatic_jobs]" 
+done
 
 ## call ngseasy_alignment
 #
