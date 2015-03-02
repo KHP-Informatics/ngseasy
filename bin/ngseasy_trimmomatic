@@ -27,27 +27,6 @@ function logger_ngseasy() {
 }
 
 ########################################################################################################
-## Select Genome Build
-# hard codes the 
-# GENOMEBUILD="b37"
-GENOMEBUILD="hg19"
-
-if [[ "${GENOMEBUILD}" == "b37" ]]; then
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
-  GENOMEINDEX=${REFDIR}/human_g1k_v37
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
-
-elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
-  GENOMEINDEX=${REFDIR}/ucsc.hg19
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
-
-else
-  logger_ngseasy "No genome selected. Exiting. Choose one of [b37] or [hg19]"
-  exit 1
-fi
-
-########################################################################################################
 ## global usage
 #
 function ngseasy_trimmomatic_usage() {
@@ -180,37 +159,39 @@ fi
 ########################################################################################################
 ## Read config and loop through all lines calling fastqc docker
 #
-while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
 
 ## set varibales  
 #
-PROJECT_ID=$f1
-SAMPLE_ID=$f2
-FASTQ1=$f3
-FASTQ2=$f4
-PROJECT_DIR=$f5
-DNA_PREP_LIBRARY_ID=$f6
-NGS_PLATFORM=$f7
-NGS_TYPE=$f8
-BAIT=$f9
-CAPTURE=$f10
-FASTQC=$f11
-TRIM=$f12
-BSQR=$f13
-REALN=$f14
-ALIGNER=$f15
-VARCALLER=$f16
-CNV=$f17
-ANNOTATOR=$f18
-CLEANUP=$f19
-NCPU=$f20
-VERSION=$f21
-NGSUSER=$f22
+POJECT_ID=f1
+SAMPLE_ID=f2
+FASTQ1=f3
+FASTQ2=f4
+PROJECT_DIR=f5
+DNA_PREP_LIBRARY_ID=f6
+NGS_PLATFORM=f7
+NGS_TYPE=f8
+BAIT=f9
+CAPTURE=f10
+GENOMEBUILD=f11
+FASTQC=f12
+TRIM=f13
+BSQR=f14
+REALN=f15
+ALIGNER=f16
+VARCALLER=f17
+CNV=f18
+ANNOTATOR=f19
+CLEANUP=f20
+NCPU=f21
+VERSION=f22
+NGSUSER=f23
+
 DATE=`date +"%d%m%y"`
 
 ## read config_file
-logger_ngseasy "[ngseasy_trimmomatic]:
+logger_ngseasy "[ngseasy_alignment]:
 [$PROJECT_ID\t
 $SAMPLE_ID\t
 $FASTQ1\t
@@ -221,6 +202,7 @@ $NGS_PLATFORM\t
 $NGS_TYPE\t
 $BAIT\t
 $CAPTURE\t
+$GENOMEBUILD\t
 $FASTQC\t
 $TRIM\t
 $BSQR\t
@@ -234,6 +216,25 @@ $NCPU\t
 $VERSION\t
 $NGSUSER\t
 $DATE]"
+
+########################################################################################################
+## Select Genome Build
+#
+
+if [[ "${GENOMEBUILD}" == "b37" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
+  GENOMEINDEX=${REFDIR}/human_g1k_v37
+  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
+
+elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
+  GENOMEINDEX=${REFDIR}/ucsc.hg19
+  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
+
+else
+  logger_ngseasy "No genome selected. Exiting. Choose one of [b37] or [hg19]"
+  exit 1
+fi
 
 ########################################################################################################
 ## LOGFILE 

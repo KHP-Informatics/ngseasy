@@ -347,8 +347,6 @@ else
     logger_ngseasy "[ngseasy]:Skipping fastqc...did you run it already?...I hope so " ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE} 
 fi
 
-
-
 ###################################################################################
 ## adapter and read/base quality trimming qc-trimm, qc-adaptor
 if [[ "${TRIM}" -eq "atrim" ]] || [[ "${TRIM}" -eq "btrim" ]]
