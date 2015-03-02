@@ -385,20 +385,20 @@ logger_ngseasy "[ngseasy_trimmomatic]:Trimmomatic not run yet" ${LOGFILE}
 ########################################################################################################
 # Trimmomatic paired output
 #
-logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 filtered [${SAMPLE_ID}_${NGS_TYPE}_1.filtered.fastq.gz]" ${LOGFILE}
-logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 filtered [${SAMPLE_ID}_${NGS_TYPE}_2.filtered.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 filtered [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 filtered [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz]" ${LOGFILE}
 
-qcPEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_1.filtered.fastq.gz;
-qcPEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}.2.filtered.fastq.gz;
+qcPEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz;
+qcPEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}.2.filtered.fastq.gz;
 
 ########################################################################################################
 # Trimmomatic unpaired ouput
 #
-logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 unpaired [${SAMPLE_ID}_${NGS_TYPE}_1.unpaired.fastq.gz]" ${LOGFILE}
-logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 unpaired [${SAMPLE_ID}_${NGS_TYPE}_2.unpaired.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 unpaired [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.unpaired.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 unpaired [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.unpaired.fastq.gz]" ${LOGFILE}
 
-qcSEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}.1.unpaired.fastq.gz;
-qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}.2.unpaired.fastq.gz;
+qcSEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}.1.unpaired.fastq.gz;
+qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}.2.unpaired.fastq.gz;
 
 ########################################################################################################  
 # adapter_fa

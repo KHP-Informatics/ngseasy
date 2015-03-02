@@ -342,12 +342,11 @@ fi
 
 ########################################################################################################
 ## bamprefix
-# SAMPLE_ID.WEX.ILLUMINA.atrim.bam-realn.bam-bsqr.bwa.b37.bam
-# SAMPLE_ID.WEX.ILLUMINA.atrim.gatk-realn.gatk-bsqr.bwa.b37.bam
+# SAMPLE_ID.WEX.ILLUMINA.atrim.bwa.b37.dupemk.bam
 #
-BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${TRIM}.${REALN}.${BSQR}.${ALIGNER}.${GENOMEBUILD}
+BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}
 
-logger_ngseasy "[ngseasy_alignment]:Setting BAM prefix to [${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${TRIM}.${REALN}.${BSQR}.${ALIGNER}.${GENOMEBUILD}] " ${LOGFILE}
+logger_ngseasy "[ngseasy_alignment]:Setting BAM prefix to [${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}] " ${LOGFILE}
 
 ########################################################################################################
 # PLATFORM UNIT
