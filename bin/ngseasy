@@ -268,11 +268,14 @@ if [[ "$numsamples"  -gt "$numjobsallowed" ]]; then
 	logger_ngseasy "[ngseasy]:[cmd]:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 	split -d -l ${numjobsallowed} --additional-suffix=".batch.${config_tsv}.tmp" ${config_tsv}.tmp
 else
-	cp ${config_tsv}.tmp original.batch.${config_tsv}.tmp
+	logger_ngseasy "[ngseasy]:Number of jobs to run [$numsamples]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+	logger_ngseasy "[ngseasy]:making [original.batch.${config_tsv}.tmp]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+	cp -v ${config_tsv}.tmp original.batch.${config_tsv}.tmp
 fi
 
 ## get file names to process ####
 #
+logger_ngseasy "[ngseasy]: Getting config file names to process " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 batchfiles=`ls | grep batch` 
 
 ## set num running jobs counter to 0 ####
