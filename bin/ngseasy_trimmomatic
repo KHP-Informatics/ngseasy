@@ -135,7 +135,7 @@ fi
 #
 logger_ngseasy "[ngseasy_trimmomatic]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
-hasheader=`grep POJECT_ID ${config_tsv} | wc -l | awk '{print $1}'`
+hasheader=`grep PROJECT_ID ${config_tsv} | wc -l | awk '{print $1}'`
 
 if [[ "${config_tsv}" == *.batch.* ]]
 then
@@ -161,7 +161,7 @@ fi
 #
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
-POJECT_ID=$f1;
+PROJECT_ID=$f1;
 SAMPLE_ID=$f2;
 FASTQ1=$f3;
 FASTQ2=$f4;
