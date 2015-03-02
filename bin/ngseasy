@@ -325,12 +325,6 @@ logger_ngseasy "[ngseasy]:cleaning up container images" ${HOME}/ngseasy_logs/ngs
 logger_ngseasy "[ngseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
 
-## rm tmp config files ####
-#
-logger_ngseasy "[ngseasy]:cleaning up tmp config files" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-logger_ngseasy "[ngslseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-rm -v *.batch.${config_tsv}.tmp
-
 logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 ###################################################################################
