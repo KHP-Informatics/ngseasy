@@ -344,34 +344,23 @@ logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${con
 else
 
     logger_ngseasy "[ngseasy]:Skipping fastqc " ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
-    logger_ngseasy "[ngseasy]:Skipping fastqc...did you run it already?...I hope so " ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE} 
+    logger_ngseasy "[ngseasy]:Skipping fastqc...did you run it already?...I hope so " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 fi
 
 ###################################################################################
 ## adapter and read/base quality trimming qc-trimm, qc-adaptor
 ###################################################################################
 
-if [[ "${TRIM}" -eq "atrim" ]] || [[ "${TRIM}" -eq "btrim" ]]; then
-
-	logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
+logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 	/bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
-
-elif [[ "${TRIM}" -eq "notrim" ]]; then
-
-	logger_ngseasy  "[ngseasy]:Skipping qc-trimming"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
-
-else
-	logger_ngseasy  "[ngseasy]:Skipping qc-trimming"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
-fi
-
 
 ###################################################################################
 ## alignment : includes addition of read groups at alignment stage 
 ## and then duplicate marking with samblaster and indexing and sorting with sambamba
 ###################################################################################
 
-logger_ngseasy  "[ngseasy]:Running ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
+logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 	/bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
 
@@ -380,61 +369,43 @@ logger_ngseasy  "[ngseasy]:Running ngseasy_alignment"  ${HOME}/ngseasy_logs/ngse
 ## NGS Processing : Indel realignment 
 ###################################################################################
 
-logger_ngseasy  "[ngseasy]:Running ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
+logger_ngseasy  "[ngseasy]:Calling ngseasy_realn"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
-	/bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
+	/bin/bash ngseasy_realn  -c ${config_tsv} -d ${project_directory}
 
 
 ###################################################################################
 ## NGS Processing : Base Quality Score Recalibration
 ###################################################################################
 
-if [[ "${GATK}" -eq 1 ]] && [[ "${REALN}" -eq 1 ]] && [[ "${BSQR}" -eq 1 ]]
-then
-    echo -e  "[ngseasy]:running gatk indel realignment and base quality score recalibration"
+logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
-    echo -e  "[ngseasy]:Calling ngseasy_indel_realn" 
-    
-    /bin/bash ngseasy_indel_realn -c ${config_tsv} -d ${project_directory}
-  
-    echo -e  "[ngseasy]:Calling ngseasy_base_recal"
-    
-   /bin/bash  ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
-    
-elif [[ "${GATK}" -eq 1 ]] && [[ "${REALN}" -eq 0 ]] && [[ "${BSQR}" -eq 1 ]]
-then
+	/bin/bash ngseasy_bsqr -c ${config_tsv} -d ${project_directory}
 
-  /bin/bash ngseasy_base_recal -c ${config_tsv} -d ${project_directory}
-
-elif [[ "${GATK}" -eq 0 ]] && [[ "${REALN}" -eq 1 ]] && [[ "${BSQR}" -eq 1 ]]
-then
-
-  #ngseasy_ogap_realn -c ${config_tsv} -d ${project_directory}
-  /bin/bash ngseasy_bamutil_base_recal -c ${config_tsv} -d ${project_directory}
-
-elif [[ "${GATK}" -eq 0 ]] && [[ "${REALN}" -eq 0 ]] && [[ "${BSQR}" -eq 1 ]]
-then
-
-  /bin/bash ngseasy_bamutil_base_recal -c ${config_tsv} -d ${project_directory}
-  
-fi
-
-##-------------------------------------------------------------------------##
+###################################################################################
 ## Alignment statistics
-/bin/bash ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
+###################################################################################
 
-##-------------------------------------------------------------------------##
+logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment_qc"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+
+	/bin/bash ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
+
+###################################################################################
 ## SNP/INDEL calling
-/bin/bash ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
- 
-/bin/bash ngseasy_variant_calling_fast_ensemble -c ${config_tsv} -d ${project_directory}
+###################################################################################
+logger_ngseasy  "[ngseasy]:Calling ngseasy_variant_calling"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
-##-------------------------------------------------------------------------##
+	/bin/bash ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
+
+###################################################################################
 ## CNV Calling
+###################################################################################
 
-##-------------------------------------------------------------------------##
+###################################################################################
 ## Annotation
+###################################################################################
 
-##-------------------------------------------------------------------------##
+###################################################################################
 ## NGS Report
+###################################################################################
 
