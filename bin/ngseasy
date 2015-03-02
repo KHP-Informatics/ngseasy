@@ -44,7 +44,7 @@ Program: ngseasy
 Version 1.0
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
-usage:   ngseasy_full -c <config_file> -d <project_directory> -p 1 -f 1
+usage:   ngseasy -c <config_file> -d <project_directory> -p 1 -f 1
 
 options:  -c  STRING	configuration file
           -d  STRING	project directory
@@ -133,7 +133,7 @@ fi
 if [[ ! -e "${config_tsv}" ]] 
 then
 	  usage_ngseasy;
-	  logger_ngseasy "[ngseasy]:ERROR : ${config_tsv} does not exist\n"
+	  logger_ngseasy "[ngseasy]:ERROR config file [${config_tsv}] does not exist\n"
 	  exit 1;
 fi
 
