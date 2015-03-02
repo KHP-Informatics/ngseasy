@@ -394,19 +394,23 @@ DOCKERHOME="/home/pipeman/ngs_projects"
 SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
 
 ########################################################################################################
+## BAM FILE NAME
+#
+# SAMPLE_ID.WEX.pe.ILLUMINA.atrim.bwa.b37.dupemk.bam
+#
+BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}
+
+########################################################################################################
 ## Docker run compbio/ngseasy-fastqc
 ## call docker: run as -d in background (-d does not work with --rm=true). 
 ## This runs all containers in background..simultaneuously!
 #
 logger_ngseasy "[ngseasy_fastqc]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/pipeman/ngs_projects -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman --name fastqc.${SAMPLE_ID} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${F1} ${SOUTDocker}/fastq/${F2}" ${LOGFILE}
 
-docker run -d \
+	${DOCKER_RUN} \
+	-d \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-	-w /home/pipeman \
-	-e HOME=/home/pipeman \
-	-e USER=pipeman \
-	--user pipeman \
-	--name fastqc.${SAMPLE_ID} \
+	--name fastqc.${BAM_PREFIX} \
 	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
 	/usr/local/pipeline/FastQC/fastqc --threads 2 --extract --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${FQ1} ${SOUTDocker}/fastq/${FQ2}
 

@@ -341,7 +341,8 @@ fi
 
 
 ########################################################################################################
-## bamprefix
+## BAM FILE NAME
+#
 # SAMPLE_ID.WEX.pe.ILLUMINA.atrim.bwa.b37.dupemk.bam
 #
 BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}

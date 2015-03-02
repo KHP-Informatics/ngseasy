@@ -335,6 +335,17 @@ logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${con
 ## Quality Trimming
 ###################################################################################
 
+## check if ngseasy_fastqc still running and wait
+#
+running_fastq_jobs=`docker ps -a | grep fastqc | grep Up | wc -l`
+
+while [ $running_fastq_jobs -gt 0 ]; do
+	sleep 30s;
+	running_fastq_jobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
+done
+
+## call ngseasy_trimmomatic
+#
 logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 	/bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
@@ -343,6 +354,18 @@ logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngse
 ## Alignment 
 ###################################################################################
 
+## check if ngseasy_trimmomatic still running and wait
+#
+running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`
+
+while [ $running_trimmomatic_jobs -gt 0 ]; do
+	sleep 30s;
+	running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`;
+done
+
+## call ngseasy_alignment
+#
+logg
 logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 	/bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
