@@ -188,31 +188,9 @@ NGSUSER=$f23
 DATE=`date +"%d%m%y"`
 
 ## read config_file
-logger_ngseasy "[ngseasy_fastqc]:
-[$PROJECT_ID\t
-$SAMPLE_ID\t
-$FASTQ1\t
-$FASTQ2\t
-$PROJECT_DIR\t 
-$DNA_PREP_LIBRARY_ID\t
-$NGS_PLATFORM\t
-$NGS_TYPE\t
-$BAIT\t
-$CAPTURE\t
-$GENOMEBUILD\t
-$FASTQC\t
-$TRIM\t
-$BSQR\t
-$REALN\t
-$ALIGNER\t
-$VARCALLER\t
-$CNV\t
-$ANNOTATOR\t
-$CLEANUP\t
-$NCPU\t
-$VERSION\t
-$NGSUSER\t
-$DATE]"
+logger_ngseasy "[ngseasy_fastqc]:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
+$VERSION\t$NGSUSER\t$DATE]"
 
 ########################################################################################################
 ## LOGFILE 
