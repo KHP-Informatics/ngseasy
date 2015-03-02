@@ -407,6 +407,7 @@ adapter_fa="/home/pipeman/reference_genomes_b37/contaminant_list.fa"
 if [[ ! -e  "${PROJECT_DIR}/reference_genomes_b37/contaminant_list.fa" ]]
 then
 	logger_ngseasy "[ngseasy_trimmomatic]:ERROR: can not find contaminant_list.fa. Exiting" ${LOGFILE}
+	logger_ngseasy "[ngseasy_trimmomatic]:ERROR: please run [make contaminants]" ${LOGFILE}
 	exit 1
 else
 	logger_ngseasy "[ngseasy_trimmomatic]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
@@ -417,9 +418,9 @@ fi
 ## run compbio/ngseasy-trimmomatic
 # 
 
-if [[ "$TRIMM" == "atrim" ]]
-then
-logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files " ${LOGFILE}
+if [[ "$TRIMM" == "atrim" ]]; then
+
+logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files. Adaptor and read quality trimming" ${LOGFILE}
 
 ## make parallel cmd
 #
@@ -430,7 +431,7 @@ zcat ${SOUTDocker}/fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTD
 
 ## run fastx_artifacts_filter
 #
-logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter " ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter. Removing Homopolymer reads" ${LOGFILE}
 
 	${DOCKER_RUN} \
 	--rm=true \
@@ -446,7 +447,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
-	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=${NCPU} -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 	PE \
 	-threads ${NCPU} \
 	${SOUTDocker}/fastq/${FQ1}.art_filt.gz \
@@ -479,12 +480,13 @@ logger_ngseasy "[ngseasy_trimmomatic]:FastQC post Trimmomatic" ${LOGFILE}
 	${qcSEFQ1} \
 	${qcSEFQ2}
 
+########################################################################################################	
 ## Just QC FASTQ NO ADAPTOR TRIM
+# btrim is basic qc-trim
 #
-elif [[ "$TRIMM" == "btrim" ]]
-then
+elif [[ "$TRIMM" == "btrim" ]]; then
 
-logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files. No adatptor trimming. Just quality trimming " ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files. No adaptor trimming. Just read quality trimming " ${LOGFILE}
 
 ## make parallel cmd
 #
@@ -526,14 +528,10 @@ logger_ngseasy "[ngseasy_trimmomatic]:START FastQC post Trimmomatic" ${LOGFILE}
     
 ##  compbio/ngseasy-fastqc
 #
-docker run \
-	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-	-w /home/pipeman \
-	-e HOME=/home/pipeman \
-	-e USER=pipeman \
-	--user pipeman \
-	--name fastqc_post_trimm_${SAMPLE_ID}_${NGS_TYPE} \
+	${DOCKER_RUN} \
 	--rm=true \
+	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+	--name fastqc_post_trimm_${SAMPLE_ID}_${NGS_TYPE} \
 	-t compbio/ngseasy-fastqc:${VERSION} /usr/local/pipeline/FastQC/fastqc \
 	--threads 4 \
 	--extract \
@@ -545,17 +543,20 @@ docker run \
 	${qcSEFQ1} \
 	${qcSEFQ2}
 
+else 
+	logger_ngseasy "[ngseasy_trimmomatic]:Skipping quality control of raw reads" ${LOGFILE}
 fi
 
 ## set MINLEN:75 to use with bwa mem and the like
 ## plus having shorter crap data aint good is it
 ## options to change this in the future eg will add TRIMOPT=${STRING} at some point
-
-logger_ngseasy "[ngseasy_trimmomatic]:END: Trimmomatic on raw Fastq files " ${LOGFILE}
   
-#------permissions------------#
+######################################################################################################## 
+## permissions
+#
 chmod -R 777 ${SOUT}/*
 
+## END ##
 done < ${FILE}
 
 ########################################################################################################
