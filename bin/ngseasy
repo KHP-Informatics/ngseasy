@@ -285,7 +285,7 @@ logger_ngseasy "[ngseasy]:START FASTQC LOOP" ${HOME}/ngseasy_logs/ngseasy.${conf
 
 for MYBATCH in `ls $batchfiles`
 do
-	logger_ngseasy "[ngseasy]:[cmd]:ngseasy_fastqc -c \${MYBATCH} -d ${project_directory}" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+	logger_ngseasy "[ngseasy]:[cmd]:ngseasy_fastqc -c ${MYBATCH} -d ${project_directory}" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 ## call ngseasy_fastqc ####
 #
@@ -305,12 +305,11 @@ logger_ngseasy "[ngseasy]:checking for the number of running Docker FastQC jobs 
 logger_ngseasy "[ngseasy]:when the number of running Docker FastQC jobs hits [0], then next batch will begin" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
-	while [ $ndockerjobs -gt 0 ]; do
-		sleep 60s;
-		ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
-		logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]" 
-	done
-
+while [ $ndockerjobs -gt 0 ]; do
+	sleep 60s;
+	ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
+	logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]" 
+done
 done
 
 ## log the end ####
