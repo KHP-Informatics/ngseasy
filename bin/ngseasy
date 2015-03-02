@@ -241,9 +241,6 @@ fi
 ## run fastqc ngseasy_fastqc
 ###########################################################################################
 
-if [[ "${FASTQC}" -eq "qc-fastq" ]]
-then
-
 logger_ngseasy "[ngseasy]:START ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 ## number of samples to run ####
@@ -299,7 +296,9 @@ logger_ngseasy "[ngseasy]:[cmd]:ngseasy_fastqc -c \${MYBATCH} -d ${project_direc
 
 ## call ngseasy_fastqc ####
 #
-/bin/bash ngseasy_fastqc -c ${MYBATCH} -d ${project_directory};
+logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+
+	/bin/bash ngseasy_fastqc -c ${MYBATCH} -d ${project_directory};
 
 ## get n jobs running in background
 #
@@ -339,14 +338,6 @@ rm -v *.batch.${config_tsv}.tmp
 
 logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
-## skip fastqc if required #### 
-#
-else
-
-    logger_ngseasy "[ngseasy]:Skipping fastqc " ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
-    logger_ngseasy "[ngseasy]:Skipping fastqc...did you run it already?...I hope so " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
-fi
-
 ###################################################################################
 ## adapter and read/base quality trimming qc-trimm, qc-adaptor
 ###################################################################################
@@ -364,7 +355,6 @@ logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngse
 
 	/bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
 
-
 ###################################################################################
 ## NGS Processing : Indel realignment 
 ###################################################################################
@@ -372,7 +362,6 @@ logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngse
 logger_ngseasy  "[ngseasy]:Calling ngseasy_realn"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 	/bin/bash ngseasy_realn  -c ${config_tsv} -d ${project_directory}
-
 
 ###################################################################################
 ## NGS Processing : Base Quality Score Recalibration
