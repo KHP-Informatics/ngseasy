@@ -343,9 +343,9 @@ done
 
 ## call ngseasy_trimmomatic
 #
-logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+#logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
-	/bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
+#	/bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
 ## Alignment 
@@ -353,13 +353,13 @@ logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngse
 
 ## check if ngseasy_trimmomatic still running and wait
 #
-running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`
+#running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`
 
-while [ $running_trimmomatic_jobs -gt 0 ]; do
-	sleep 30s;
-	running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`;
-	logger_ngseasy "[ngseasy]:Number of Docker Trimmomatic jobs running [$running_trimmomatic_jobs]" 
-done
+#while [ $running_trimmomatic_jobs -gt 0 ]; do
+#	sleep 30s;
+#	running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`;
+#	logger_ngseasy "[ngseasy]:Number of Docker Trimmomatic jobs running [$running_trimmomatic_jobs]" 
+#done
 
 ## call ngseasy_alignment
 #
