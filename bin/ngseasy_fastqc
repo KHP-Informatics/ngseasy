@@ -143,17 +143,17 @@ if [[ "${config_tsv}" == *.batch.* ]]
 then
 	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 	FILE=${config_tsv}
-
-## if header present then remove it
+	logger_ngseasy "[ngseasy_fastqc]:Setting FILE to [${FILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 elif [[ "$hasheader" -eq 1 ]]
 then
 	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 	logger_ngseasy "[ngseasy_fastqc]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 	sed 1d ${config_tsv} > ${config_tsv}.tmp
 	FILE=${config_tsv}.tmp
+	logger_ngseasy "[ngseasy_fastqc]:Setting FILE to [${FILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 else
-	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 	FILE=${config_tsv}
+	logger_ngseasy "[ngseasy_fastqc]:[${FILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
 
 ########################################################################################################
@@ -216,29 +216,31 @@ $VERSION\t
 $NGSUSER\t
 $DATE]"
 
-########################################################################################################
-## Select Genome Build
-#
-
-if [[ "${GENOMEBUILD}" == "b37" ]]; then
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
-  GENOMEINDEX=${REFDIR}/human_g1k_v37
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
-
-elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
-  GENOMEINDEX=${REFDIR}/ucsc.hg19
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
-
-else
-  logger_ngseasy "No genome selected. Exiting. Choose one of [b37] or [hg19]"
-  exit 1
-fi
 
 ########################################################################################################
 ## LOGFILE 
 #
 LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_fastqc
+
+########################################################################################################
+## Select Genome Build
+#
+logger_ngseasy "Checking genome selected]"  ${LOGFILE}
+
+if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
+  GENOMEINDEX=${REFDIR}/human_g1k_v37
+  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+
+elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
+  GENOMEINDEX=${REFDIR}/ucsc.hg19
+  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+
+else
+  logger_ngseasy "No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
+  exit 1
+fi
 
 ########################################################################################################
 ## check and make log directory
