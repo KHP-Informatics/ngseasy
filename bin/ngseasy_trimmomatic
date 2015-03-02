@@ -414,6 +414,12 @@ else
 	logger_ngseasy "[ngseasy_trimmomatic]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
 fi
 
+########################################################################################################
+## BAM FILE NAME
+#
+# SAMPLE_ID.WEX.PE.ILLUMINA.atrim.bwa.b37.dupemk.bam
+#
+BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}
 
 ########################################################################################################
 ## run compbio/ngseasy-trimmomatic
@@ -437,7 +443,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter. Removing Ho
 	${DOCKER_RUN} \
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-	--name fastx_artifacts_filter_${SAMPLE_ID}_${NGS_TYPE} \
+	--name fastx_artifacts_filter_${BAM_PREFIX} \
 	-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
 
 ## run trimmomatic
@@ -447,7 +453,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:
 	${DOCKER_RUN} \
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-	--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
+	--name trimmomatic_${BAM_PREFIX} \
 	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 	PE \
 	-threads ${NCPU} \
@@ -469,7 +475,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:FastQC post Trimmomatic" ${LOGFILE}
 	${DOCKER_RUN} \
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-	--name fastqc_post_trimm_${SAMPLE_ID}_${NGS_TYPE} \
+	--name fastqc_post_trimm_${BAM_PREFIX} \
 	-t compbio/ngseasy-fastqc:${VERSION} /usr/local/pipeline/FastQC/fastqc \
 	--threads 4 \
 	--extract \
@@ -503,7 +509,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter " ${LOGFILE}
 	${DOCKER_RUN} \
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-	--name fastx_artifacts_filter_${SAMPLE_ID}_${NGS_TYPE} \
+	--name fastx_artifacts_filter_${BAM_PREFIX} \
 	-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
 
 ## run trimmomatic
@@ -511,7 +517,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter " ${LOGFILE}
 	${DOCKER_RUN} \
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-	--name trimmomatic_${SAMPLE_ID}_${NGS_TYPE} \
+	--name trimmomatic_${BAM_PREFIX} \
 	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 	PE \
 	-threads ${NCPU} \
@@ -532,7 +538,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:START FastQC post Trimmomatic" ${LOGFILE}
 	${DOCKER_RUN} \
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-	--name fastqc_post_trimm_${SAMPLE_ID}_${NGS_TYPE} \
+	--name fastqc_post_trimm_${BAM_PREFIX} \
 	-t compbio/ngseasy-fastqc:${VERSION} /usr/local/pipeline/FastQC/fastqc \
 	--threads 4 \
 	--extract \

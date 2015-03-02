@@ -339,11 +339,10 @@ else
 	FQ2=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_2.filtered.fastq.gz
 fi
 
-
 ########################################################################################################
 ## BAM FILE NAME
 #
-# SAMPLE_ID.WEX.pe.ILLUMINA.atrim.bwa.b37.dupemk.bam
+# SAMPLE_ID.WEX.PE.ILLUMINA.atrim.bwa.b37.dupemk.bam
 #
 BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}
 
