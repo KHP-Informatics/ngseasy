@@ -342,6 +342,7 @@ running_fastq_jobs=`docker ps -a | grep fastqc | grep Up | wc -l`
 while [ $running_fastq_jobs -gt 0 ]; do
 	sleep 30s;
 	running_fastq_jobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
+	logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$running_fastq_jobs]" 
 done
 
 ## call ngseasy_trimmomatic
@@ -361,45 +362,41 @@ running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`
 while [ $running_trimmomatic_jobs -gt 0 ]; do
 	sleep 30s;
 	running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`;
+	logger_ngseasy "[ngseasy]:Number of Docker Trimmomatic jobs running [$running_trimmomatic_jobs]" 
 done
 
 ## call ngseasy_alignment
 #
-logg
-logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
-	/bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
+#logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+#	/bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
 ## Indel realignment 
 ###################################################################################
 
-logger_ngseasy  "[ngseasy]:Calling ngseasy_realn"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-
-	/bin/bash ngseasy_realn  -c ${config_tsv} -d ${project_directory}
+#logger_ngseasy  "[ngseasy]:Calling ngseasy_realn"  ${HOME}/ngseasy_logs/ngseasy.${cnfig_tsv}.${RUNDATE}
+#	/bin/bash ngseasy_realn  -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
 ## Base Quality Score Recalibration
 ###################################################################################
 
-logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-
-	/bin/bash ngseasy_bsqr -c ${config_tsv} -d ${project_directory}
+#logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+#	/bin/bash ngseasy_bsqr -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
 ## Alignment statistics
 ###################################################################################
 
-logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment_qc"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-
-	/bin/bash ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
+#logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment_qc"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+#	/bin/bash ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
 ## Variant calling
 ###################################################################################
-logger_ngseasy  "[ngseasy]:Calling ngseasy_variant_calling"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-
-	/bin/bash ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
+#logger_ngseasy  "[ngseasy]:Calling ngseasy_variant_calling"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+#	/bin/bash ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
 ## CNV Calling: coming soon
