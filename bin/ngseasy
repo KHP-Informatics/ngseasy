@@ -380,13 +380,9 @@ logger_ngseasy  "[ngseasy]:Running ngseasy_alignment"  ${HOME}/ngseasy_logs/ngse
 ## NGS Processing : Indel realignment 
 ###################################################################################
 
-if [[  ]]; then
+logger_ngseasy  "[ngseasy]:Running ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv} .${RUNDATE}
 
-elif [[  ]]; then
-
-else
-
-fi
+	/bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
 
 
 ###################################################################################
