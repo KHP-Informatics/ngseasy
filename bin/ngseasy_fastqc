@@ -127,7 +127,7 @@ then
 	    logger_ngseasy "[ngseasy_fastqc]:ERROR : [${config_tsv}] format issue. Check your file! "
 	    exit 1;
 	    else 
-	    logger_ngseasy "[ngseasy_fastqc]:Numcols of [${config_tsv}] ok...proceeding... "	    
+	    logger_ngseasy "[ngseasy_fastqc]:Numcols of [${config_tsv}] ok...proceeding..."
 fi
 
 ########################################################################################################
