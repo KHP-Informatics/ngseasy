@@ -350,19 +350,17 @@ else
 	exit 1
 fi        
 
+########################################################################################################
+#---------------------------------------FASTQC---------------------------------------------------------#
+########################################################################################################
 
 ########################################################################################################
 ## check if qc'd data alread exists 
 #
-if [ -s "${SOUT}/fastq/${FQ1}_fastqc.zip" ] && [ -s "${SOUT}/fastq/${FQ2}_fastqc.zip" ] 
+if [[ -s "${SOUT}/fastq/${FQ1}_fastqc.zip" ]] && [[ -s "${SOUT}/fastq/${FQ2}_fastqc.zip" ]] 
 then
 	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping this bit" ${LOGFILE}
-	exit 0
-fi
-
-########################################################################################################
-#---------------------------------------FASTQC---------------------------------------------------------#
-########################################################################################################
+elif [[ "$FASTQC" == "qc-fastqc" ]]; then
 
 logger_ngseasy "[ngseasy_fastqc]:START: FastQC on raw Fastq files" ${LOGFILE}
 
@@ -374,26 +372,20 @@ DOCKERHOME="/home/pipeman/ngs_projects"
 ########################################################################################################
 ## Docker OUTPUT SAMPLE DIR 
 #
-SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
+SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
 ########################################################################################################
 ## BAM FILE NAME
 #
 # SAMPLE_ID.WEX.PE.ILLUMINA.atrim.bwa.b37.dupemk.bam
 #
-BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}
+BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}"
 
 ########################################################################################################
 ## Docker run compbio/ngseasy-fastqc
 ## call docker: run as -d in background (-d does not work with --rm=true). 
 ## This runs all containers in background..simultaneuously!
 #
-########################################################################################################
-## QUIT IF no-fastqc option is selected
-#
-if [[ "$FASTQC" == "no-fastqc" ]]; then
-	logger_ngseasy "[ngseasy_fastqc]:no-fastqc option selected. Skipping this sample [${BAM_PREFIX}]" ${LOGFILE}
-else
 logger_ngseasy "[ngseasy_fastqc]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/pipeman/ngs_projects -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman --name fastqc_${BAM_PREFIX} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${F1} ${SOUTDocker}/fastq/${F2}" ${LOGFILE}
 
 	${DOCKER_RUN} \
@@ -402,6 +394,15 @@ logger_ngseasy "[ngseasy_fastqc]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/pip
 	--name fastqc_${BAM_PREFIX} \
 	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
 	/usr/local/pipeline/FastQC/fastqc --threads 2 --extract --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${FQ1} ${SOUTDocker}/fastq/${FQ2}
+
+########################################################################################################
+## QUIT IF no-fastqc option is selected
+#
+elif [[ "$FASTQC" == "no-fastqc" ]]; then
+	logger_ngseasy "[ngseasy_fastqc]:no-fastqc option selected. Skipping this sample [${BAM_PREFIX}]" ${LOGFILE}
+else
+	logger_ngseasy "[ngseasy_fastqc]:ERROR: FASTQC option is not set. Should be one of [qc-fastqc] or [no-fastqc]" ${LOGFILE}
+	exit 1
 fi
 ##
 done < ${RUNFILE}
