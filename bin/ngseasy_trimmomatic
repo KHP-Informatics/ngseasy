@@ -290,7 +290,9 @@ fi
 # ILLUMINA : NA10831_ATCACG_L002_R1_001.fastq.gz
 # Illumina FASTQ files use the following naming scheme:
 # <sample name>_<barcode sequence>_L<lane (0-padded to 3 digits)>_R<read number>_<set number (0-padded to 3 digits>.fastq.gz
+
 logger_ngseasy "[ngseasy_trimmomatic]: Checking Fastq file naming conventions" ${LOGFILE}
+
 if [[ "${FASTQ1}" == *_1.fastq.gz ]] 
 then
 
@@ -362,23 +364,19 @@ else
 	exit 1
 fi        
 
-########################################################################################################
-#---------------------------------------Trimmomatic----------------------------------------------------#
-########################################################################################################
-
-logger_ngseasy "[ngseasy_trimmomatic]:START Trimmomatic+FastQC filtered Fastq files" ${LOGFILE}
-
-## check if qc'd data alread exists 
+########################################################################################################  
+# adapter_fa
 #
-logger_ngseasy "[ngseasy_trimmomatic]:checking if trimmed data exists" ${LOGFILE}
+adapter_fa="/home/pipeman/reference_genomes_b37/contaminant_list.fa"
 
-if [ -s "${SOUT}/fastq/${rawFASTQ1}_1.filtered.fastq.gz" ] && [ -s "${SOUT}/fastq/${rawFASTQ2}_2.filtered.fastq.gz" ]
+if [[ ! -e  "${PROJECT_DIR}/reference_genomes_b37/contaminant_list.fa" ]]
 then
-	logger_ngseasy "[ngseasy_trimmomatic]:Trimmed Data already exists...skipping [ngseasy_trimmomatic]" ${LOGFILE}
+	logger_ngseasy "[ngseasy_trimmomatic]:ERROR: can not find contaminant_list.fa. Exiting" ${LOGFILE}
+	logger_ngseasy "[ngseasy_trimmomatic]:ERROR: please run [make contaminants]" ${LOGFILE}
 	exit 1
+else
+	logger_ngseasy "[ngseasy_trimmomatic]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
 fi
-
-logger_ngseasy "[ngseasy_trimmomatic]:Trimmomatic not run yet" ${LOGFILE}
 
 ########################################################################################################
 # Trimmomatic paired output
@@ -398,19 +396,6 @@ logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 un
 qcSEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}.1.unpaired.fastq.gz;
 qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}.2.unpaired.fastq.gz;
 
-########################################################################################################  
-# adapter_fa
-#
-adapter_fa="/home/pipeman/reference_genomes_b37/contaminant_list.fa"
-
-if [[ ! -e  "${PROJECT_DIR}/reference_genomes_b37/contaminant_list.fa" ]]
-then
-	logger_ngseasy "[ngseasy_trimmomatic]:ERROR: can not find contaminant_list.fa. Exiting" ${LOGFILE}
-	logger_ngseasy "[ngseasy_trimmomatic]:ERROR: please run [make contaminants]" ${LOGFILE}
-	exit 1
-else
-	logger_ngseasy "[ngseasy_trimmomatic]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
-fi
 
 ########################################################################################################
 ## BAM FILE NAME
@@ -420,11 +405,26 @@ fi
 BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}
 
 ########################################################################################################
+#---------------------------------------Trimmomatic----------------------------------------------------#
+########################################################################################################
+
+logger_ngseasy "[ngseasy_trimmomatic]:START Trimmomatic+FastQC filtered Fastq files" ${LOGFILE}
+
+## check if qc'd data alread exists 
+#
+logger_ngseasy "[ngseasy_trimmomatic]:checking if trimmed data exists" ${LOGFILE}
+
+if [ -s "${SOUT}/fastq/${rawFASTQ1}_1.filtered.fastq.gz" ] && [ -s "${SOUT}/fastq/${rawFASTQ2}_2.filtered.fastq.gz" ]
+then
+	logger_ngseasy "[ngseasy_trimmomatic]:Trimmed Data already exists...skipping [ngseasy_trimmomatic]" ${LOGFILE}
+	exit 0
+
+elif [ "$TRIMM" == "atrim" ]]; then
+	logger_ngseasy "[ngseasy_trimmomatic]:Trimmomatic not run yet" ${LOGFILE}
+
+########################################################################################################
 ## run compbio/ngseasy-trimmomatic
 # 
-
-if [[ "$TRIMM" == "atrim" ]]; then
-
 logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files. Adaptor and read quality trimming" ${LOGFILE}
 
 ## make parallel cmd
@@ -551,10 +551,6 @@ logger_ngseasy "[ngseasy_trimmomatic]:START FastQC post Trimmomatic" ${LOGFILE}
 else 
 	logger_ngseasy "[ngseasy_trimmomatic]:Skipping quality control of raw reads" ${LOGFILE}
 fi
-
-## set MINLEN:75 to use with bwa mem and the like
-## plus having shorter crap data aint good is it
-## options to change this in the future eg will add TRIMOPT=${STRING} at some point
   
 ######################################################################################################## 
 ## permissions
