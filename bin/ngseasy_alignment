@@ -97,9 +97,9 @@ fi
 ########################################################################################################  
 ## check config file exists.
 #
-if [ ! -e "${config_tsv}" ] 
+if [[ ! -e "${config_tsv}" ]] 
 then
-	    logger_ngseasy "[ngseasy_alignment]:ERROR : [${config_tsv}] does not exist....exiting "
+	    logger_ngseasy "[ngseasy_alignment]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
 	    ngseasy_alignment_usage;
 	    exit 1;
 else
@@ -109,7 +109,7 @@ fi
 ########################################################################################################
 ## check project_directory exists.
 #
-if [ ! -d "${project_directory}" ]
+if [[ ! -d "${project_directory}" ]]
   then
     logger_ngseasy "[ngseasy_alignment]:ERROR : project_directory [${project_directory}] does not exist "
     ngseasy_alignment_usage;
@@ -147,17 +147,17 @@ hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
 if [[ "${config_tsv}" == *.batch.* ]]
 then
   logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-  RUNFILE=${config_tsv}
+  RUNFILE="${config_tsv}"
   logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 elif [[ "$hasheader" -eq 1 ]]
 then
   logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   logger_ngseasy "[ngseasy_fastqc]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   sed 1d ${config_tsv} > ${config_tsv}.tmp
-  RUNFILE=${config_tsv}.tmp
+  RUNFILE="${config_tsv}.tmp"
   logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 else
-  RUNFILE=${config_tsv}
+  RUNFILE="${config_tsv}"
   logger_ngseasy "[ngseasy_fastqc]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
@@ -225,7 +225,7 @@ $VERSION\t$NGSUSER]"  ${LOGFILE}
 ########################################################################################################
 ## OUTPUT SAMPLE DIR 
 #
-SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
+SOUT="${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}"
 logger_ngseasy "[ngseasy_alignment]:Sample Directory [${SOUT}] "
 
 ########################################################################################################
@@ -255,12 +255,12 @@ logger_ngseasy "[ngseasy_alignment]:Checking genome selected]"  ${LOGFILE}
 
 if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
-  GENOMEINDEX=${REFDIR}/human_g1k_v37
+  GENOMEINDEX="${REFDIR}/human_g1k_v37"
   logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
 
 elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
-  GENOMEINDEX=${REFDIR}/ucsc.hg19
+  GENOMEINDEX="${REFDIR}/ucsc.hg19"
   logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
 
 else
@@ -277,7 +277,7 @@ logger_ngseasy "[ngseasy_alignment]:Docker home directory [${DOCKERHOME}]" ${LOG
 ########################################################################################################
 ## Docker OUTPUT SAMPLE DIR 
 #
-SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
+SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
 logger_ngseasy "[ngseasy_alignment]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
 
@@ -294,11 +294,11 @@ else
 	
 	logger_ngseasy "[ngseasy_alignment]:Setting FQ1:[${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_1.filtered.fastq.gz] " ${LOGFILE}
 
-	FQ1=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_1.filtered.fastq.gz
+	FQ1="${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_1.filtered.fastq.gz"
 	
 	logger_ngseasy "[ngseasy_alignment]:Setting FQ2:[${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_2.filtered.fastq.gz] " ${LOGFILE}
 
-	FQ2=${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_2.filtered.fastq.gz
+	FQ2="${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_2.filtered.fastq.gz"
 fi
 
 ########################################################################################################
@@ -306,7 +306,7 @@ fi
 #
 # SAMPLE_ID.WEX.PE.ILLUMINA.atrim.bwa.b37.dupemk.bam [dupemk.${BSQR}.bam] [dupemk.${BSQR}.${REALN}.bam]
 #
-BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}
+BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}"
 
 logger_ngseasy "[ngseasy_alignment]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE}
 
@@ -630,11 +630,12 @@ done
   docker rm -f alignment_${BAM_PREFIX}
   logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}
 
+## exit of no ALIGNER option is provided
+#
 else
   logger_ngseasy "[ngseasy_alignment]:No ALIGNER option selected. Or ALIGNER option not recognised" ${LOGFILE} 
   logger_ngseasy "[ngseasy_alignment]:ALIGNER Should be one of [bwa] or [stampy] or [novoalign] or [snap] or [bowtie2]" ${LOGFILE} 
   exit 1
-
 fi
 
 ########################################################################################################
