@@ -64,7 +64,7 @@ fi
 #
 if test -z "$2"
 then
-  logger_ngseasy "[ngseasy_trimmomatic]:ERROR:No options found"
+  logger_ngseasy "[ngseasy_trimmomatic]:ERROR:No options found. Exiting"
   ngseasy_trimmomatic_usage
   exit 1
 fi
@@ -73,7 +73,6 @@ fi
 ## get options for command line args
   while  getopts "hc:d:" opt
   do
-
       case ${opt} in
 	  h)
 	  ngseasy_trimmomatic_usage #print help
@@ -89,6 +88,7 @@ fi
 	  ;; 
       esac
   done
+
 ########################################################################################################  
 ## check config file exists.
 #
@@ -106,7 +106,7 @@ fi
 #
 if [ ! -d "${project_directory}" ]
   then
-    logger_ngseasy "[ngseasy_trimmomatic]:ERROR : project_directory [${project_directory}] does not exist "
+    logger_ngseasy "[ngseasy_trimmomatic]:ERROR: project_directory [${project_directory}] does not exist "
     ngseasy_trimmomatic_usage;
     exit 1;
 else
@@ -117,15 +117,16 @@ fi
 ## check Num feilds in  ${config_tsv}
 #
 logger_ngseasy "[ngseasy_trimmomatic]:Reading [${config_tsv}] "
+logger_ngseasy "[ngseasy_trimmomatic]:Checking number of feilds in  [${config_tsv}] "
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
-if [[  "$numcols" -lt 22 ]] 
+if [[  "$numcols" -lt 23 ]] 
 then
-	    logger_ngseasy "[ngseasy_trimmomatic]:ERROR : [${config_tsv}] format issue. Check your file! "
+	    logger_ngseasy "[ngseasy_trimmomatic]:ERROR: [${config_tsv}] format issue. Check your file! "
 	    exit 1;
-	    else 
-	    logger_ngseasy "[ngseasy_trimmomatic]:Numcols of [${config_tsv}] ok...proceeding... "	    
+	else 
+	    logger_ngseasy "[ngseasy_trimmomatic]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "	    
 fi
 
 ########################################################################################################
@@ -215,6 +216,17 @@ $NGSUSER\t
 $DATE]"
 
 ########################################################################################################
+## LOGFILE 
+#
+LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_trimmomatic
+logger_ngseasy "[ngseasy_trimmomatic]:logging to [${LOGFILE}.log]"  ${LOGFILE}
+
+## read config_file
+logger_ngseasy "[ngseasy_trimmomatic]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
+$VERSION\t$NGSUSER]"  ${LOGFILE}
+
+########################################################################################################
 ## Select Genome Build
 #
 
@@ -233,10 +245,6 @@ else
   exit 1
 fi
 
-########################################################################################################
-## LOGFILE 
-#
-LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_trimmomatic
 
 ########################################################################################################
 ## check and make log directory

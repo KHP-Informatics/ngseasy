@@ -122,16 +122,18 @@ fi
 ## check Num feilds in  ${config_tsv}
 #
 logger_ngseasy "[ngseasy_alignment]:Reading [${config_tsv}] "
+logger_ngseasy "[ngseasy_alignment]:Checking number of feilds in  [${config_tsv}] "
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
-if [[  "$numcols" -lt 22 ]] 
+if [[  "$numcols" -lt 23 ]] 
 then
-	    logger_ngseasy "[ngseasy_alignment]:ERROR : [${config_tsv}] format issue. Check your file! "
-	    exit 1;
-	    else 
-	    logger_ngseasy "[ngseasy_alignment]:Numcols of [${config_tsv}] ok...proceeding... "	    
+      logger_ngseasy "[ngseasy_trimmomatic]:ERROR: [${config_tsv}] format issue. Check your file! "
+      exit 1;
+  else 
+      logger_ngseasy "[ngseasy_trimmomatic]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "     
 fi
+
 
 ########################################################################################################
 ## Read config file 
@@ -221,6 +223,12 @@ $DATE]"
 ## LOGFILE 
 #
 LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_alignment
+logger_ngseasy "[ngseasy_alignment]:logging to [${LOGFILE}.log]"  ${LOGFILE}
+
+## read config_file
+logger_ngseasy "[ngseasy_alignment]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
+$VERSION\t$NGSUSER]"  ${LOGFILE}
 
 ########################################################################################################
 ## Select Genome Build
