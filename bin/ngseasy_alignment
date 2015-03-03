@@ -128,10 +128,10 @@ numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
 if [[  "$numcols" -lt 23 ]] 
 then
-      logger_ngseasy "[ngseasy_trimmomatic]:ERROR: [${config_tsv}] format issue. Check your file! "
+      logger_ngseasy "[ngseasy_alignment]:ERROR: [${config_tsv}] format issue. Check your file! "
       exit 1;
   else 
-      logger_ngseasy "[ngseasy_trimmomatic]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "     
+      logger_ngseasy "[ngseasy_alignment]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "     
 fi
 
 
@@ -140,26 +140,26 @@ fi
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
-logger_ngseasy "[ngseasy_fastqc]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy_alignment]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
 
 if [[ "${config_tsv}" == *.batch.* ]]
 then
-  logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_alignment]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   RUNFILE="${config_tsv}"
-  logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_alignment]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 elif [[ "$hasheader" -eq 1 ]]
 then
-  logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-  logger_ngseasy "[ngseasy_fastqc]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_alignment]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_alignment]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   sed 1d ${config_tsv} > ${config_tsv}.tmp
   RUNFILE="${config_tsv}.tmp"
-  logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_alignment]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 else
   RUNFILE="${config_tsv}"
-  logger_ngseasy "[ngseasy_fastqc]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-  logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_alignment]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_alignment]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
 
 ########################################################################################################
@@ -205,8 +205,8 @@ fi
 
 ## LOGFILE 
 #
-LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_alignment
-logger_ngseasy "[ngseasy_alignment]:logging to [${LOGFILE}.log]"  ${LOGFILE}
+LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_alignment"
+logger_ngseasy "[ngseasy_fastqc]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## check and make logfile
 #

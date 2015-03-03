@@ -97,7 +97,7 @@ fi
 ########################################################################################################  
 ## check config file exists.
 #
-if [ ! -e "${config_tsv}" ] 
+if [[ ! -e "${config_tsv}" ]] 
 then
 	    logger_ngseasy "[ngseasy_fastqc]:ERROR : [${config_tsv}] does not exist....exiting "
 	    ngseasy_fastqc_usage;
@@ -109,7 +109,7 @@ fi
 ########################################################################################################
 ## check project_directory exists.
 #
-if [ ! -d "${project_directory}" ]
+if [[ ! -d "${project_directory}" ]]
   then
     logger_ngseasy "[ngseasy_fastqc]:ERROR : project_directory [${project_directory}] does not exist "
     ngseasy_fastqc_usage;
@@ -146,20 +146,20 @@ hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
 
 if [[ "${config_tsv}" == *.batch.* ]]
 then
-	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	RUNFILE=${config_tsv}
-	logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 elif [[ "$hasheader" -eq 1 ]]
 then
-	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	logger_ngseasy "[ngseasy_fastqc]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	sed 1d ${config_tsv} > ${config_tsv}.tmp
-	RUNFILE=${config_tsv}.tmp
-	logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_fastqc]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  sed 1d ${config_tsv} > ${config_tsv}.tmp
+  RUNFILE="${config_tsv}.tmp"
+  logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 else
-	RUNFILE=${config_tsv}
-	logger_ngseasy "[ngseasy_fastqc]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[ngseasy_fastqc]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
 
 ########################################################################################################
@@ -195,7 +195,7 @@ DATE=`date +"%d%m%y"`
 ########################################################################################################
 ## LOGFILE 
 #
-LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_fastqc
+LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_fastqc"
 logger_ngseasy "[ngseasy_fastqc]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## read config_file

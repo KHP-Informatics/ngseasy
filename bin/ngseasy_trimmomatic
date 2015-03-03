@@ -189,7 +189,7 @@ DATE=`date +"%d%m%y"`
 ########################################################################################################
 ## LOGFILE 
 #
-LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_trimmomatic
+LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_trimmomatic"
 logger_ngseasy "[ngseasy_trimmomatic]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## read config_file
