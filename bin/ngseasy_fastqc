@@ -202,8 +202,22 @@ logger_ngseasy "[ngseasy_fastqc]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 logger_ngseasy "[ngseasy_fastqc]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER]"  ${LOGFILE}
-l
 
+########################################################################################################
+## check and make log directory
+#
+if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
+then
+	mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
+fi
+
+########################################################################################################
+## check and make logfile
+#
+if [ ! -e "${LOGFILE}.log" ]
+then
+	touch ${LOGFILE}.log
+fi
 
 ########################################################################################################
 ## Select Genome Build
@@ -225,23 +239,6 @@ else
   exit 1
 fi
 
-########################################################################################################
-## check and make log directory
-#
-if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
-then
-	mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
-fi
-
-########################################################################################################
-## check and make logfile
-#
-if [ ! -e "${LOGFILE}.log" ]
-then
-	touch ${LOGFILE}.log
-fi
-
-logger_ngseasy "[ngseasy_fastqc]:Logging to [${LOGFILE}.log] "
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR 
