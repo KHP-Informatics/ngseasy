@@ -331,7 +331,7 @@ logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${con
 ## Quality Trimming
 ###################################################################################
 
-## check if ngseasy_fastqc still running and wait
+## check if ngseasy_fastqc still running and wait before running ngseasy_trimmomatic
 #
 running_fastq_jobs=`docker ps -a | grep fastqc | grep Up | wc -l`
 
@@ -351,7 +351,7 @@ logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngse
 ## Alignment 
 ###################################################################################
 
-## check if ngseasy_trimmomatic still running and wait
+## check if ngseasy_trimmomatic still running and wait before running ngseasy_alignment
 #
 running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`
 
@@ -363,9 +363,9 @@ done
 
 ## call ngseasy_alignment
 #
+logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
-#logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-#	/bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
+  /bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
 ## Indel realignment 
