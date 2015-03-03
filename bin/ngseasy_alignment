@@ -453,6 +453,12 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam /dev/stdin | \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam && \
   rm -rf ${SOUTDocker}/tmp/*"
+
+if [ -e $"{SOUT}/alignments/${BAM_PREFIX}.tmp.bam" ]; then
+  BWABAM=
+else
+  BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
+fi
   
 ## log docker run 
 #

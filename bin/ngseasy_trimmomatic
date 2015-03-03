@@ -353,7 +353,7 @@ else
 fi        
 
 ########################################################################################################  
-# adapter_fa
+# adapter_fa : check of this is in palce and exit if not
 #
 adapter_fa="/home/pipeman/reference_genomes_b37/contaminant_list.fa"
 
