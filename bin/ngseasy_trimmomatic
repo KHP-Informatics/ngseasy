@@ -419,7 +419,7 @@ then
 	logger_ngseasy "[ngseasy_trimmomatic]:Trimmed Data already exists...skipping [ngseasy_trimmomatic]" ${LOGFILE}
 	exit 0
 
-elif [ "$TRIMM" == "atrim" ]]; then
+elif [[ "$TRIMM" == "atrim" ]]; then
 	logger_ngseasy "[ngseasy_trimmomatic]:Trimmomatic not run yet" ${LOGFILE}
 
 ########################################################################################################
@@ -548,8 +548,11 @@ logger_ngseasy "[ngseasy_trimmomatic]:START FastQC post Trimmomatic" ${LOGFILE}
 	${qcSEFQ1} \
 	${qcSEFQ2}
 
-else 
+elif [[ "$TRIMM" == "no-trim" ]]; then
 	logger_ngseasy "[ngseasy_trimmomatic]:Skipping quality control of raw reads" ${LOGFILE}
+else 
+	logger_ngseasy "[ngseasy_trimmomatic]:ERROR Cant recognise TRIMM option. Should be one of [atrim] [btrim] or [no-trim]" ${LOGFILE}
+	exit 1
 fi
   
 ######################################################################################################## 
