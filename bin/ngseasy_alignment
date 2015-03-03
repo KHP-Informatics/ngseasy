@@ -360,7 +360,19 @@ if [[ "${ALIGNER}" == "bwa" ]]; then
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
   rm -rf ${SOUTDocker}/tmp/*"
-  
+
+## check if running and wait before cleaning up
+#
+logger_ngseasy "[ngseasy]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
+
+running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
+
+while [ $running_alignment_jobs -gt 0 ]; do
+  sleep 5s;
+  running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`;
+  logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
+done
+
 # log docker run 
     docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
     docker rm -f alignment_${BAM_PREFIX}
@@ -399,10 +411,23 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
   rm -rf ${SOUTDocker}/tmp/*"
 
+## check if running and wait before cleaning up
+#
+logger_ngseasy "[ngseasy]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
+
+running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
+
+while [ $running_alignment_jobs -gt 0 ]; do
+  sleep 5s;
+  running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`;
+  logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
+done
+
 ## log docker run 
 #
   docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
   docker rm -f alignment_${BAM_PREFIX}
+
   logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}  
 
 
@@ -416,7 +441,7 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
 ## align wih bwa
 #
   ${DOCKER_RUN} \
-  --name ${ALIGNER}_bwa_${SAMPLE_ID} \
+  --name alignment_${BAM_PREFIX}_bwatmp \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   -t compbio/ngseasy-bwa:${NGSEASYVERSION} sudo /bin/bash -c \
   "/usr/local/pipeline/bwa-0.7.10/bwa mem \
@@ -436,7 +461,19 @@ if [ -e $"{SOUT}/alignments/${BAM_PREFIX}.tmp.bam" ]; then
 else
   BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
 fi
-  
+
+## check if running and wait before cleaning up
+#
+logger_ngseasy "[ngseasy]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
+
+running_alignment_jobs=`docker ps -a | grep lignment_${BAM_PREFIX}_bwatmp  | grep Up | wc -l`
+
+while [ $running_alignment_jobs -gt 0 ]; do
+  sleep 5s;
+  running_alignment_jobs=`docker ps -a | grep lignment_${BAM_PREFIX}_bwatmp | grep Up | wc -l`;
+  logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
+done
+
 ## log docker run 
 #
  docker logs ${ALIGNER}_bwa_${SAMPLE_ID} >> ${LOGFILE}.log
@@ -475,6 +512,18 @@ fi
       rm -rf ${SOUTDocker}/tmp/* && \
       rm ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam"
 
+## check if running and wait before cleaning up
+#
+logger_ngseasy "[ngseasy]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
+
+running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
+
+while [ $running_alignment_jobs -gt 0 ]; do
+  sleep 5s;
+  running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`;
+  logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
+done
+
 ## log docker run 
 #
   docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
@@ -511,6 +560,18 @@ elif [[ "${ALIGNER}" == "bowtie2" ]]; then
       sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
       bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
       rm -rf ${SOUTDocker}/tmp/*"
+
+## check if running and wait before cleaning up
+#
+logger_ngseasy "[ngseasy]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
+
+running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
+
+while [ $running_alignment_jobs -gt 0 ]; do
+  sleep 5s;
+  running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`;
+  logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
+done
 
 ## log docker run 
 #
@@ -551,14 +612,27 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
     rm -rf ${SOUTDocker}/tmp/*"
 
+## check if running and wait before cleaning up
+#
+logger_ngseasy "[ngseasy]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
+
+running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
+
+while [ $running_alignment_jobs -gt 0 ]; do
+  sleep 5s;
+  running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`;
+  logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
+done
+
 ## log docker run 
 #
-    docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
-    docker rm -f alignment_${BAM_PREFIX}
-    logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}
+  docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm -f alignment_${BAM_PREFIX}
+  logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}
 
 else
-  logger_ngseasy " No Aligner selected. Or Aligner not recognised. ALIGNER Should be one of [bwa] or [stampy] or [novoalign] or [snap] or [bowtie2]" ${LOGFILE} 
+  logger_ngseasy "[ngseasy_alignment]:No ALIGNER option selected. Or ALIGNER option not recognised" ${LOGFILE} 
+  logger_ngseasy "[ngseasy_alignment]:ALIGNER Should be one of [bwa] or [stampy] or [novoalign] or [snap] or [bowtie2]" ${LOGFILE} 
   exit 1
 
 fi
