@@ -222,52 +222,32 @@ $DATE]"
 ########################################################################################################
 ## LOGFILE 
 #
-LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_alignment
-logger_ngseasy "[ngseasy_alignment]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
-## read config_file
-logger_ngseasy "[ngseasy_alignment]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
-$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
-$VERSION\t$NGSUSER]"  ${LOGFILE}
-
-########################################################################################################
-## Select Genome Build
-#
-logger_ngseasy "[ngseasy_alignment]:Checking genome selected]"  ${LOGFILE}
-
-if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
-  GENOMEINDEX=${REFDIR}/human_g1k_v37
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
-
-elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
-  GENOMEINDEX=${REFDIR}/ucsc.hg19
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
-
-else
-  logger_ngseasy "[ngseasy_alignment]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
-  exit 1
-fi
-
-
-########################################################################################################
 ## check and make log directory
 #
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
 then
-	mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
+  mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
 fi
 
-########################################################################################################
+## LOGFILE 
+#
+LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_alignment
+logger_ngseasy "[ngseasy_alignment]:logging to [${LOGFILE}.log]"  ${LOGFILE}
+
 ## check and make logfile
 #
 if [ ! -e "${LOGFILE}.log" ]
 then
-	touch ${LOGFILE}.log
+  touch ${LOGFILE}.log
 fi
 
-logger_ngseasy "[ngseasy_alignment]:Logging to [${LOGFILE}.log] "
+## read config_file
+#
+logger_ngseasy "[ngseasy_alignment]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
+$VERSION\t$NGSUSER]"  ${LOGFILE}
+
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR 
@@ -293,6 +273,26 @@ if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
 	logger_ngseasy "[ngseasy_alignment]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
 	exit 1
+fi
+
+########################################################################################################
+## Select Genome Build
+#
+logger_ngseasy "[ngseasy_alignment]:Checking genome selected]"  ${LOGFILE}
+
+if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
+  GENOMEINDEX=${REFDIR}/human_g1k_v37
+  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+
+elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
+  GENOMEINDEX=${REFDIR}/ucsc.hg19
+  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+
+else
+  logger_ngseasy "[ngseasy_alignment]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
+  exit 1
 fi
 
 ########################################################################################################
@@ -331,11 +331,11 @@ fi
 ########################################################################################################
 ## BAM FILE NAME
 #
-# SAMPLE_ID.WEX.PE.ILLUMINA.atrim.bwa.b37.dupemk.bam
+# SAMPLE_ID.WEX.PE.ILLUMINA.atrim.bwa.b37.dupemk.bam [dupemk.${BSQR}.bam] [dupemk.${BSQR}.${REALN}.bam]
 #
 BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}
 
-logger_ngseasy "[ngseasy_alignment]:Setting BAM prefix to [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}] " ${LOGFILE}
+logger_ngseasy "[ngseasy_alignment]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE}
 
 ########################################################################################################
 # PLATFORM UNIT
