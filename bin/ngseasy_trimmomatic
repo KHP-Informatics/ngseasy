@@ -549,7 +549,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:START FastQC post Trimmomatic" ${LOGFILE}
 	${qcSEFQ2}
 
 elif [[ "$TRIMM" == "no-trim" ]]; then
-	logger_ngseasy "[ngseasy_trimmomatic]:Skipping quality control of raw reads" ${LOGFILE}
+	logger_ngseasy "[ngseasy_trimmomatic]:Skipping quality control of raw fastq reads. NOT RECOMMENDED" ${LOGFILE}
 else 
 	logger_ngseasy "[ngseasy_trimmomatic]:ERROR Cant recognise TRIMM option. Should be one of [atrim] [btrim] or [no-trim]" ${LOGFILE}
 	exit 1
@@ -565,5 +565,5 @@ done < ${FILE}
 
 ########################################################################################################
 logger_ngseasy " END: Trimmomatic+FastQC filtered Fastq files " ${LOGFILE}
-sleep 10s
+sleep 5s
 ########################################################################################################

@@ -304,8 +304,8 @@ logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs started [$ndockerjobs]" $
 
 ## while jobs still running ie not equal to 0 then sleep for 10 seconds ####
 #
-logger_ngseasy "[ngseasy]:checking for the number of running Docker FastQC jobs every 1 minute" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-logger_ngseasy "[ngseasy]:when the number of running Docker FastQC jobs hits [0], then next batch will begin" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy]:Checking for the number of running Docker FastQC jobs every 1 minute" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy]:When the number of running Docker FastQC jobs hits [0], the next batch will begin" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 while [ $ndockerjobs -gt 0 ]; do
@@ -336,7 +336,7 @@ logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${con
 running_fastq_jobs=`docker ps -a | grep fastqc | grep Up | wc -l`
 
 while [ $running_fastq_jobs -gt 0 ]; do
-	sleep 30s;
+	sleep 10s;
 	running_fastq_jobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
 	logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$running_fastq_jobs]" 
 done
@@ -356,7 +356,7 @@ logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngse
 running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`
 
 while [ $running_trimmomatic_jobs -gt 0 ]; do
-	sleep 30s;
+	sleep 10s;
 	running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`;
 	logger_ngseasy "[ngseasy]:Number of Docker Trimmomatic jobs running [$running_trimmomatic_jobs]" 
 done
