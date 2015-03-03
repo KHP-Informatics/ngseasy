@@ -296,7 +296,7 @@ logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.$
 
 	/bin/bash ngseasy_fastqc -c ${MYBATCH} -d ${project_directory};
 
-## get n jobs running in background
+## get number of jobs running in background
 #
 ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
 
