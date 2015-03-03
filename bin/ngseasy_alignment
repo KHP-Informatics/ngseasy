@@ -6,6 +6,13 @@
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 #################################################################
 
+#################################################################
+
+########################################################################################################
+## test if docker is intsalled and exit if not
+command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
+
+########################################################################################################
 ## Set version and run date
 #
 NGSEASYVERSION="1.0"
@@ -27,27 +34,6 @@ function logger_ngseasy() {
 }
 
 ########################################################################################################
-## Select Genome Build
-#
-# GENOMEBUILD="b37"
-GENOMEBUILD="hg19"
-
-if [[ "${GENOMEBUILD}" == "b37" ]]; then
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
-  GENOMEINDEX=${REFDIR}/human_g1k_v37
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
-
-elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
-  GENOMEINDEX=${REFDIR}/ucsc.hg19
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
-
-else
-  logger_ngseasy "No genome selected. Exiting. Choose one of [b37] or [hg19]"
-  exit 1
-fi
-
-########################################################################################################
 ## global usage
 #
 function ngseasy_alignment_usage() {
@@ -67,10 +53,6 @@ ngseasy_alignment sets up the NGSeasy docker containers for your aligner of choi
 This is is optomised for Illumina PE data
 "
 }
-
-########################################################################################################
-## test if docker is intsalled and exit if not
-command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
 
 ########################################################################################################
 ## check and make ~/ngseasy_logs if needed
@@ -236,28 +218,30 @@ $NGSUSER\t
 $DATE]"
 
 ########################################################################################################
-## Select Genome Build
-#
-
-if [[ "${GENOMEBUILD}" == "b37" ]]; then
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
-  GENOMEINDEX=${REFDIR}/human_g1k_v37
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
-
-elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
-  GENOMEINDEX=${REFDIR}/ucsc.hg19
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
-
-else
-  logger_ngseasy "No genome selected. Exiting. Choose one of [b37] or [hg19]"
-  exit 1
-fi
-
-########################################################################################################
 ## LOGFILE 
 #
 LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_alignment
+
+########################################################################################################
+## Select Genome Build
+#
+logger_ngseasy "[ngseasy_alignment]:Checking genome selected]"  ${LOGFILE}
+
+if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
+  GENOMEINDEX=${REFDIR}/human_g1k_v37
+  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+
+elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
+  GENOMEINDEX=${REFDIR}/ucsc.hg19
+  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+
+else
+  logger_ngseasy "[ngseasy_alignment]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
+  exit 1
+fi
+
 
 ########################################################################################################
 ## check and make log directory
@@ -317,7 +301,7 @@ SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
 logger_ngseasy "[ngseasy_alignment]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
 
 ########################################################################################################
-## check if Trimmed data alread exists 
+## check if Trimmed data alread exists and use it
 #
 if [ ! -s "${SOUT}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_1.filtered.fastq.gz" ] && [ ! -s "${SOUT}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_2.filtered.fastq.gz" ]
 then
@@ -583,7 +567,7 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}
 
 else
-  logger_ngseasy " No Aligner selected. Or aligner not recognised. Should be one of bwa, stampy, novoalign, snap or bowtie2" ${LOGFILE} 
+  logger_ngseasy " No Aligner selected. Or aligner not recognised. Should be one of [bwa], [stampy], [novoalign], [snap] or [bowtie2]" ${LOGFILE} 
   exit 1
 
 fi

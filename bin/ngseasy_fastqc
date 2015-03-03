@@ -6,6 +6,13 @@
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 #################################################################
 
+#################################################################
+
+########################################################################################################
+## test if docker is intsalled and exit if not
+command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
+
+########################################################################################################
 ## Set version and run date
 #
 NGSEASYVERSION="1.0"
@@ -46,10 +53,6 @@ ngseasy_fastqc sets up the NGSeasy docker fastqc container compbio/ngseasy-fastq
 This is is optomised for PE data, and calls 2 threads as default to process the 2 PE .fastq file simultaneously.
 "
 }
-
-########################################################################################################
-## test if docker is intsalled and exit if not
-command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
 
 ########################################################################################################
 ## check and make ~/ngseasy_logs if needed
