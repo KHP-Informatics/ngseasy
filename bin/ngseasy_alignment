@@ -558,7 +558,7 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}
 
 else
-  logger_ngseasy " No Aligner selected. Or aligner not recognised. Should be one of [bwa], [stampy], [novoalign], [snap] or [bowtie2]" ${LOGFILE} 
+  logger_ngseasy " No Aligner selected. Or Aligner not recognised. ALIGNER Should be one of [bwa] or [stampy] or [novoalign] or [snap] or [bowtie2]" ${LOGFILE} 
   exit 1
 
 fi
