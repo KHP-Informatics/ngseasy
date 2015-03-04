@@ -138,7 +138,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:Checking [${config_tsv}] format" ${HOME}/n
 
 hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
 
-logger_ngseasy "[ngseasy_trimmomatic]:${hasheader} format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy_trimmomatic]:Has header=[${hasheader}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 if [[ "${config_tsv}" -eq *.batch.* ]]; then
 	logger_ngseasy "[ngseasy_trimmomatic]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
