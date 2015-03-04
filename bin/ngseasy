@@ -327,6 +327,7 @@ docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
 
 logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
+echo -e "\n----------------------------------\n"
 ###################################################################################
 ## Quality Trimming
 ###################################################################################
@@ -349,6 +350,7 @@ logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngse
 
 	/bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
 
+echo -e "\n----------------------------------\n"	
 ###################################################################################
 ## Alignment 
 ###################################################################################
@@ -370,7 +372,7 @@ done
 #logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 #  /bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
-
+echo -e "\n----------------------------------\n"
 ###################################################################################
 ## Indel realignment 
 ###################################################################################

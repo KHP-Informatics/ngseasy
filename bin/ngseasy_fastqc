@@ -276,7 +276,7 @@ fi
 # Illumina FASTQ files use the following naming scheme:
 # <sample name>_<barcode sequence>_L<lane (0-padded to 3 digits)>_R<read number>_<set number (0-padded to 3 digits>.fastq.gz
 
-logger_ngseasy "[ngseasy_trimmomatic]: Checking Fastq file naming conventions" ${LOGFILE}
+logger_ngseasy "[ngseasy_fastqc]: Checking Fastq file naming conventions" ${LOGFILE}
 
 if [[ "${FASTQ1}" == *_1.fastq.gz ]] 
 then

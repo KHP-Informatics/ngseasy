@@ -541,7 +541,7 @@ fi
 chmod -R 777 ${SOUT}/*
 
 ## END ##
-done < ${FILE}
+done < ${RUNFILE}
 
 ########################################################################################################
 logger_ngseasy " END: Trimmomatic+FastQC filtered Fastq files " ${LOGFILE}
