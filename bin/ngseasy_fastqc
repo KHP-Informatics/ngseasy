@@ -361,7 +361,7 @@ fi
 ########################################################################################################
 ## check if qc'd data alread exists 
 #
-logger_ngseasy "[ngseasy_fastqc]:Check if FastQc Data already exists" ${LOGFILE}
+logger_ngseasy "[ngseasy_fastqc]:Check if FastQC Data already exists" ${LOGFILE}
 
 if [[ -s "${SOUT}/fastq/${rawFASTQ1}_1_fastqc.zip" ]] && [[ -s "${SOUT}/fastq/${FASTQ2}_2_fastqc.zip" ]] 
 then

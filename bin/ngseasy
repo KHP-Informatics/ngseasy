@@ -129,7 +129,7 @@ fi
 ###########################################################################################
 ## check file and directory exist.
 ###########################################################################################
-
+logger_ngseasy "[ngseasy]:Check if config file [${config_tsv}] exists"
 if [[ ! -e "${config_tsv}" ]] 
 then
 	  usage_ngseasy;
@@ -170,8 +170,9 @@ fi
 ###########################################################################################
 ## check ${project_directory} exists.
 ###########################################################################################
+logger_ngseasy "[ngseasy]:Check if project dir [${project_directory}] exists"
 
-if [[ ! -d "${project_directory}" ]] 
+if [[ ! -d "${project_directory}" ]]
   then
 	  usage_ngseasy;
 	  logger_ngseasy "[ngseasy]:ERROR : ${project_directory} does not exist" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
@@ -208,7 +209,7 @@ else
     logger_ngseasy "[ngseasy]:Assuming fastq files exist and that they are in the right directories....dont worry, ngseasy will check later and tell ya" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
     logger_ngseasy "[ngseasy]:You cant run NGS without the raw fastq files..." ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
-
+echo -e "\n----------------------------------\n"	
 ###########################################################################################
 ## FastQC
 ###########################################################################################
@@ -284,6 +285,7 @@ ndockerjobs=0
 
 ## loop through config files and run fastqc ####
 #
+echo -e "\n----------------------------------\n"
 logger_ngseasy "[ngseasy]:START FASTQC LOOP" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
 
 for MYBATCH in `ls $batchfiles`
@@ -307,7 +309,7 @@ logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs started [$ndockerjobs]" $
 logger_ngseasy "[ngseasy]:Checking for the number of running Docker FastQC jobs every 1 minute" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 logger_ngseasy "[ngseasy]:When the number of running Docker FastQC jobs hits [0], the next batch will begin" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-
+echo -e "\n----------------------------------\n"
 while [ $ndockerjobs -gt 0 ]; do
 	sleep 60s;
 	ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
@@ -318,7 +320,7 @@ done
 ## log the end ####
 #
 logger_ngseasy "[ngseasy]:END FASTQC LOOP" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
-
+echo -e "\n----------------------------------\n"
 ## remove docker Exited containers ####
 #
 logger_ngseasy "[ngseasy]:cleaning up container images" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}	
@@ -343,7 +345,7 @@ while [ $running_fastq_jobs -gt 0 ]; do
 	running_fastq_jobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
 	logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$running_fastq_jobs]" 
 done
-
+echo -e "\n----------------------------------\n"
 ## call ngseasy_trimmomatic
 #
 logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
@@ -366,10 +368,10 @@ while [ $running_trimmomatic_jobs -gt 0 ]; do
 	running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`;
 	logger_ngseasy "[ngseasy]:Number of Docker Trimmomatic jobs running [$running_trimmomatic_jobs]" 
 done
-
+echo -e "\n----------------------------------\n"
 ## call ngseasy_alignment
 #
-#logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 #  /bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
 echo -e "\n----------------------------------\n"
