@@ -248,6 +248,7 @@ fi
 ## OUTPUT SAMPLE DIR 
 #
 SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
+
 logger_ngseasy "[ngseasy_fastqc]:Sample Directory [${SOUT}] "
 
 ########################################################################################################
@@ -367,10 +368,9 @@ fi
 ########################################################################################################
 ## check if qc'd data alread exists 
 #
-logger_ngseasy "[ngseasy_fastqc]:Check if FastQC Data already exists [$fqout1] and [$fqout2]" ${LOGFILE}
 fqout1=${SOUT}/fastq/${rawFASTQ1}_1_fastqc.html
 fqout2=${SOUT}/fastq/${rawFASTQ1}_2_fastqc.html
-
+logger_ngseasy "[ngseasy_fastqc]:Check if FastQC Data already exists [$fqout1] and [$fqout2]" ${LOGFILE}
 
 
 if [[ -s "${SOUT}/fastq/${rawFASTQ1}_1_fastqc.html" ]] && [[ -s "${SOUT}/fastq/${FASTQ2}_2_fastqc.html" ]]; then
@@ -385,7 +385,7 @@ elif [[ -s "${SOUT}/fastq/${illprefix1}_fastqc.html" ]] && [[ -s "${SOUT}/fastq/
 	exit 0
 
 elif [[ "$FASTQC" == "qc-fastqc" ]]; then
-
+echo -e "\n----------------------------------\n"
 logger_ngseasy "[ngseasy_fastqc]:START: FastQC on raw Fastq files" ${LOGFILE}
 
 ########################################################################################################
