@@ -361,9 +361,16 @@ fi
 ########################################################################################################
 ## check if qc'd data alread exists 
 #
-if [[ -s "${SOUT}/fastq/${FQ1}_fastqc.zip" ]] && [[ -s "${SOUT}/fastq/${FQ2}_fastqc.zip" ]] 
+logger_ngseasy "[ngseasy_fastqc]:Check if FastQc Data already exists" ${LOGFILE}
+
+if [[ -s "${SOUT}/fastq/${rawFASTQ1}_1_fastqc.zip" ]] && [[ -s "${SOUT}/fastq/${FASTQ2}_2_fastqc.zip" ]] 
 then
 	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping this bit" ${LOGFILE}
+
+elif [[ -s "${SOUT}/fastq/${FQ1}_fastqc.zip" ]] && [[ -s "${SOUT}/fastq/${FQ2}_fastqc.zip" ]] 
+then
+	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping this bit" ${LOGFILE}
+
 elif [[ "$FASTQC" == "qc-fastqc" ]]; then
 
 logger_ngseasy "[ngseasy_fastqc]:START: FastQC on raw Fastq files" ${LOGFILE}
