@@ -373,13 +373,14 @@ fqout2=${SOUT}/fastq/${rawFASTQ1}_2_fastqc.html
 logger_ngseasy "[ngseasy_fastqc]:Check if FastQC Data already exists [$fqout1] and [$fqout2]" ${LOGFILE}
 
 
-if [[ -s "${SOUT}/fastq/${rawFASTQ1}_1_fastqc.html" ]] && [[ -s "${SOUT}/fastq/${FASTQ2}_2_fastqc.html" ]]; then
+if [[ -e "${SOUT}/fastq/${rawFASTQ1}_1_fastqc.html" ]] && [[ -e "${SOUT}/fastq/${FASTQ2}_2_fastqc.html" ]]; then
 	logger_ngseasy "[ngseasy_fastqc]:Check if FastQC Data already exists [$fqout1] and [$fqout2]" ${LOGFILE}
 	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping this bit" ${LOGFILE}
 	echo -e "\n----------------------------------\n"
 	exit 0
 
-elif [[ -s "${SOUT}/fastq/${illprefix1}_fastqc.html" ]] && [[ -s "${SOUT}/fastq/$illprefix2}_fastqc.html" ]]; then
+elif [[ -e "${SOUT}/fastq/${illprefix1}_fastqc.html" ]] && [[ -e "${SOUT}/fastq/$illprefix2}_fastqc.html" ]]; then
+	logger_ngseasy "[ngseasy_fastqc]:Check if FastQC Data already exists [${SOUT}/fastq/${illprefix1}_fastqc.html] and [${SOUT}/fastq/${illprefix2}_fastqc.html]" ${LOGFILE}
 	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping this bit" ${LOGFILE}
 	echo -e "\n----------------------------------\n"
 	exit 0
