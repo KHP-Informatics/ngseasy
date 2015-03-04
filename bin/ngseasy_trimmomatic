@@ -134,56 +134,58 @@ fi
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
-logger_ngseasy "[ngseasy_fastqc]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy_trimmomatic]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
 
 if [[ "${config_tsv}" == *.batch.* ]]
 then
-	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_trimmomatic]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 	RUNFILE=${config_tsv}
-	logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_trimmomatic]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 elif [[ "$hasheader" -eq 1 ]]
 then
-	logger_ngseasy "[ngseasy_fastqc]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	logger_ngseasy "[ngseasy_fastqc]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_trimmomatic]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_trimmomatic]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 	sed 1d ${config_tsv} > ${config_tsv}.tmp
 	RUNFILE=${config_tsv}.tmp
-	logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_trimmomatic]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 else
 	RUNFILE=${config_tsv}
-	logger_ngseasy "[ngseasy_fastqc]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_trimmomatic]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy_trimmomatic]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
-
+echo -e "\n----------------------------------\n"
+head ${config_tsv}
+echo -e "\n----------------------------------\n"
 ########################################################################################################
 ## Read config and loop through all lines calling fastqc docker
 #
-while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
+while read f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
-PROJECT_ID=$f1;
-SAMPLE_ID=$f2;
-FASTQ1=$f3;
-FASTQ2=$f4;
-PROJECT_DIR=$f5;
-DNA_PREP_LIBRARY_ID=$f6;
-NGS_PLATFORM=$f7;
-NGS_TYPE=$f8;
-BAIT=$f9;
-CAPTURE=$f10;
-GENOMEBUILD=$f11;
-FASTQC=$f12;
-TRIM=$f13;
-BSQR=$f14;
-REALN=$f15;
-ALIGNER=$f16;
-VARCALLER=$f17;
-CNV=$f18;
-ANNOTATOR=$f19;
-CLEANUP=$f20;
-NCPU=$f21;
-VERSION=$f22;
-NGSUSER=$f23;
+PROJECT_ID=$f1
+SAMPLE_ID=$f2
+FASTQ1=$f3
+FASTQ2=$f4
+PROJECT_DIR=$f5
+DNA_PREP_LIBRARY_ID=$f6
+NGS_PLATFORM=$f7
+NGS_TYPE=$f8
+BAIT=$f9
+CAPTURE=$f10
+GENOMEBUILD=$f11
+FASTQC=$f12
+TRIM=$f13
+BSQR=$f14
+REALN=$f15
+ALIGNER=$f16
+VARCALLER=$f17
+CNV=$f18
+ANNOTATOR=$f19
+CLEANUP=$f20
+NCPU=$f21
+VERSION=$f22
+NGSUSER=$f23
 DATE=`date +"%d%m%y"`
 
 ########################################################################################################

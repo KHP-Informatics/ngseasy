@@ -19,9 +19,9 @@ command -v docker >/dev/null 2>&1 || { echo -e "Docker not installed.\nAborting.
 DOCKERVERSION=`docker version`
 DOCKERINFO=`docker info`
 echo -e "\n"[`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:START]":[${USER}]:[`uname -a`]" 
-echo -e "\n---\nDocker Version\n---\n${DOCKERVERSION}\n---\n"Docker Info"\n---\n${DOCKERINFO}\n---\n"
+echo -e "\n----------------------------------\nDocker Version\n----------------------------------\n${DOCKERVERSION}\n----------------------------------\n"Docker Info"\n----------------------------------\n${DOCKERINFO}\n----------------------------------\n"
 echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:START]":[${USER}]:[`uname -a`]"  >> ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY.log
-echo -e "\n---\nDocker Version\n---\n${DOCKERVERSION}\n---\n"Docker Info"\n---\n${DOCKERINFO}\n---\n" >> ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY.log
+echo -e "\n----------------------------------\nDocker Version\n----------------------------------\n${DOCKERVERSION}\n----------------------------------\n"Docker Info"\n----------------------------------\n${DOCKERINFO}\n----------------------------------\n" >> ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY.log
 
 ###########################################################################################
 ## global logging fuction
@@ -66,7 +66,7 @@ then
 else
   logger_ngseasy "${HOME}/ngseasy_logs exists" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
 fi
-
+echo -e "\n----------------------------------\n"
 ## example config: https://docs.google.com/spreadsheets/d/1VWqmMffkVDnvOtRJGlPqOYzXWnIN_IONXQHDAawaN5Q/edit#gid=0
 
 ###########################################################################################
@@ -94,28 +94,28 @@ do
 
    c)
    config_tsv=${OPTARG}
-   echo "-c = ${config_tsv}"
+   echo -e "CONFIG FILE [-c] = ${config_tsv}"
    ;;
 
    d)
    project_directory=${OPTARG}
-   echo "-d = ${project_directory}"
+   echo -e  "PROJECT DIR [-d] = ${project_directory}"
    ;;
 
    p)
    initiate_project=${OPTARG}
-   echo "-p = ${make_dirs}"
+   echo -e "-p = ${make_dirs}"
    ;;
    
    f)
    set_fastq=${OPTARG}
-   echo "-f = ${set_fastq}"
+   echo -e "-f = ${set_fastq}"
    ;;
    
    
    esac
 done
-
+echo -e "\n----------------------------------\n"
 ###########################################################################################
 ## Check options passed in.
 ###########################################################################################
