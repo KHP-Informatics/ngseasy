@@ -364,12 +364,12 @@ qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TR
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
   GENOMEINDEX=${REFDIR}/human_g1k_v37
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
+  logger_ngseasy "[ngseasy_trimmomatic]: Genome Build [${GENOMEBUILD}]"
 
 elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
   GENOMEINDEX=${REFDIR}/ucsc.hg19
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"
+  logger_ngseasy "[ngseasy_trimmomatic]: Genome Build [${GENOMEBUILD}]"
 
 else
   logger_ngseasy "No genome selected. Exiting. Choose one of [b37] or [ß]"
@@ -398,6 +398,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:checking if trimmed data exists" ${LOGFILE
 if [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}.2.filtered.fastq.gz" ]
 then
 	logger_ngseasy "[ngseasy_trimmomatic]:PE Trimmed Data already exists...skipping [ngseasy_trimmomatic]" ${LOGFILE}
+	exit 0
 
 elif [[ "$TRIMM" == "atrim" ]]; then
 	logger_ngseasy "[ngseasy_trimmomatic]:Trimmomatic not run yet" ${LOGFILE}
