@@ -372,10 +372,14 @@ logger_ngseasy "[ngseasy_fastqc]:Check if FastQC Data already exists" ${LOGFILE}
 if [[ -s "${SOUT}/fastq/${rawFASTQ1}_1_fastqc.html" ]] && [[ -s "${SOUT}/fastq/${FASTQ2}_2_fastqc.html" ]] 
 then
 	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping this bit" ${LOGFILE}
+	echo -e "\n----------------------------------\n"
+	exit 0
 
 elif [[ -s "${SOUT}/fastq/${illprefix1}_fastqc.html" ]] && [[ -s "${SOUT}/fastq/$illprefix2}_fastqc.html" ]] 
 then
 	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping this bit" ${LOGFILE}
+	echo -e "\n----------------------------------\n"
+	exit 0
 
 elif [[ "$FASTQC" == "qc-fastqc" ]]; then
 
