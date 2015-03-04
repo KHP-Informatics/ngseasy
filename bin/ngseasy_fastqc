@@ -334,7 +334,10 @@ elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9].fastq.gz ]]
 then
 
 	logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme"
-
+	
+	illprefix1=`basename ${SOUT}/fastq/${FASTQ1} .fastq.gz`
+	illprefix2=`basename ${SOUT}/fastq/${FASTQ2} .fastq.gz`
+	
 	FQ1=${FASTQ1}
 	FQ2=${FASTQ2}
 
@@ -342,7 +345,10 @@ elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9][0-9].fastq.gz ]]
 then
 
 	logger_ngseasy "[ngseasy_fastqc]:Illumina fastq naming scheme"
-
+	
+	illprefix1=`basename ${SOUT}/fastq/${FASTQ1} .fastq.gz`
+	illprefix2=`basename ${SOUT}/fastq/${FASTQ2} .fastq.gz`
+	
 	FQ1=${FASTQ1}
 	FQ2=${FASTQ2}
 
@@ -350,7 +356,7 @@ else
 
 	logger_ngseasy "[ngseasy_fastqc]: Fastq naming format not recognised for files [$FASTQ1] [$FASTQ2]" ${LOGFILE} 
 	logger_ngseasy "[ngseasy_fastqc]: This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE}
-	logger_ngseasy "[ngseasy_fastqc]: or one of Illuminas stoopid names eg [_R1_001.fastq.gz]" ${LOGFILE} 
+	logger_ngseasy "[ngseasy_fastqc]: or one of Illuminas stoopid names eg [_R1_001.fastq.gz]" ${LOGFILE}
 	exit 1
 fi        
 
@@ -367,7 +373,7 @@ if [[ -s "${SOUT}/fastq/${rawFASTQ1}_1_fastqc.zip" ]] && [[ -s "${SOUT}/fastq/${
 then
 	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping this bit" ${LOGFILE}
 
-elif [[ -s "${SOUT}/fastq/${FQ1}_fastqc.zip" ]] && [[ -s "${SOUT}/fastq/${FQ2}_fastqc.zip" ]] 
+elif [[ -s "${SOUT}/fastq/${illprefix1}_fastqc.zip" ]] && [[ -s "${SOUT}/fastq/$illprefix2}_fastqc.zip" ]] 
 then
 	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping this bit" ${LOGFILE}
 
