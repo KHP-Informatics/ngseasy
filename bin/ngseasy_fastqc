@@ -104,6 +104,10 @@ then
 	    exit 1;
 else
 	    logger_ngseasy "[ngseasy_fastqc]:Configuration file found [${config_tsv}] "
+	    if [[ ! -e ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}.log ]]
+	    then
+	    touch ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}.log
+	    fi
 fi
 
 ########################################################################################################
