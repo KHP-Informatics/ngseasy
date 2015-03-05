@@ -155,9 +155,9 @@ else
   logger_ngseasy "[ngseasy_trimmomatic]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   logger_ngseasy "[ngseasy_trimmomatic]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
-echo -e "\n----------------------------------\n"
-head ${config_tsv}
-echo -e "\n----------------------------------\n"
+#echo -e "\n----------------------------------\n"
+#head ${config_tsv}
+#echo -e "\n----------------------------------\n"
 ########################################################################################################
 ## Read config and loop through all lines calling fastqc docker
 #
