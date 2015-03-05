@@ -238,8 +238,8 @@ fi
 #
 if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
-	logger_ngseasy "[ngseasy_fastqc]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in [${SOUT}/fastq/] " ${LOGFILE}
-	logger_ngseasy "[ngseasy_fastqc]: Please run ngseasy_initiate_fastq or copy files to [${SOUT}/fastq/] " ${LOGFILE}
+	logger_ngseasy "[ngseasy_trimmomatic]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in [${SOUT}/fastq/] " ${LOGFILE}
+	logger_ngseasy "[ngseasy_trimmomatic]: Please run ngseasy_initiate_fastq or copy files to [${SOUT}/fastq/] " ${LOGFILE}
 	exit 1
 fi
 

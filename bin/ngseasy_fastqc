@@ -132,10 +132,10 @@ numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
 if [[  "$numcols" -lt 23 ]] 
 then
-	    logger_ngseasy "[ngseasy_trimmomatic]:ERROR: [${config_tsv}] format issue. Check your file! "
+	    logger_ngseasy "[ngseasy_fastqc]:ERROR: [${config_tsv}] format issue. Check your file! "
 	    exit 1;
 	else 
-	    logger_ngseasy "[ngseasy_trimmomatic]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "	    
+	    logger_ngseasy "[ngseasy_fastqc]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "	    
 fi
 
 
@@ -165,7 +165,7 @@ else
   logger_ngseasy "[ngseasy_fastqc]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
-
+head ${RUNFILE}
 ########################################################################################################
 ## Read config and loop through all lines calling fastqc docker
 #
