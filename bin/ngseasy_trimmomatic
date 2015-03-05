@@ -8,7 +8,7 @@
 
 ########################################################################################################
 ## test if docker is intsalled and exit if not
-command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
+command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; sleep 1s; exit 1; }
 
 ########################################################################################################
 ## Set version and run date
@@ -66,7 +66,7 @@ if test -z "$2"
 then
   logger_ngseasy "[ngseasy_trimmomatic]:ERROR:No options found. Exiting"
   ngseasy_trimmomatic_usage
-  exit 1
+  sleep 1s; exit 1
 fi
 
 ########################################################################################################
@@ -96,7 +96,7 @@ if [ ! -e "${config_tsv}" ]
 then
 	    logger_ngseasy "[ngseasy_trimmomatic]:ERROR : [${config_tsv}] does not exist....exiting "
 	    ngseasy_trimmomatic_usage;
-	    exit 1;
+	    sleep 1s; exit 1;
 else
 	    logger_ngseasy "[ngseasy_trimmomatic]:Configuration file found [${config_tsv}] "
 fi
@@ -108,7 +108,7 @@ if [ ! -d "${project_directory}" ]
   then
     logger_ngseasy "[ngseasy_trimmomatic]:ERROR: project_directory [${project_directory}] does not exist "
     ngseasy_trimmomatic_usage;
-    exit 1;
+    sleep 1s; exit 1;
 else
 	    logger_ngseasy "[ngseasy_trimmomatic]:Top Level Project Directory [${project_directory}] "
 fi
@@ -124,7 +124,7 @@ numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 if [[  "$numcols" -lt 23 ]] 
 then
 	    logger_ngseasy "[ngseasy_trimmomatic]:ERROR: [${config_tsv}] format issue. Check your file! "
-	    exit 1;
+	    sleep 1s; exit 1;
 	else 
 	    logger_ngseasy "[ngseasy_trimmomatic]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "	    
 fi
@@ -228,7 +228,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:Sample Directory [${SOUT}] "
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
 	logger_ngseasy "[ngseasy_trimmomatic]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
-	exit 1
+	sleep 1s; exit 1
 else 
 	logger_ngseasy "[ngseasy_trimmomatic]: Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
 fi
@@ -240,7 +240,7 @@ if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
 	logger_ngseasy "[ngseasy_trimmomatic]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in [${SOUT}/fastq/] " ${LOGFILE}
 	logger_ngseasy "[ngseasy_trimmomatic]: Please run ngseasy_initiate_fastq or copy files to [${SOUT}/fastq/] " ${LOGFILE}
-	exit 1
+	sleep 1s; exit 1
 fi
 
 ########################################################################################################
@@ -322,19 +322,19 @@ else
 
 	logger_ngseasy "[ngseasy_trimmomatic]: Fastq naming format not recognised for files [$FASTQ1] [$FASTQ2]" ${LOGFILE} 
 	logger_ngseasy "[ngseasy_trimmomatic]: This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
-	exit 1
+	sleep 1s; exit 1
 fi        
 
 ########################################################################################################  
 # adapter_fa : check of this is in palce and exit if not
 #
-adapter_fa="/home/pipeman/reference_genomes_b37/contaminant_list.fa"
+adapter_fa="/home/pipeman/ngs_projects/reference_genomes_b37/contaminant_list.fa"
 
 if [[ ! -e  "${PROJECT_DIR}/reference_genomes_b37/contaminant_list.fa" ]]
 then
 	logger_ngseasy "[ngseasy_trimmomatic]:ERROR: can not find contaminant_list.fa. Exiting" ${LOGFILE}
 	logger_ngseasy "[ngseasy_trimmomatic]:ERROR: please run [make contaminants]" ${LOGFILE}
-	exit 1
+	sleep 1s; exit 1
 else
 	logger_ngseasy "[ngseasy_trimmomatic]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
 fi
@@ -373,7 +373,7 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
 
 else
   logger_ngseasy "No genome selected. Exiting. Choose one of [b37] or [ß]"
-  exit 1
+  sleep 1s; exit 1
 fi
 
 ########################################################################################################
@@ -401,6 +401,16 @@ then
 
 elif [[ "$TRIM" == "atrim" ]]; then
 	logger_ngseasy "[ngseasy_trimmomatic]:Trimmomatic not run yet" ${LOGFILE}
+
+########################################################################################################
+## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
+#
+DOCKERHOME="/home/pipeman/ngs_projects"
+
+########################################################################################################
+## Docker OUTPUT SAMPLE DIR 
+#
+SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
 ########################################################################################################
 ## run compbio/ngseasy-trimmomatic
@@ -455,7 +465,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:FastQC post Trimmomatic" ${LOGFILE}
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name fastqc_post_trimm_${BAM_PREFIX} \
-	-t compbio/ngseasy-fastqc:${VERSION} /usr/local/pipeline/FastQC/fastqc \
+	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc \
 	--threads 4 \
 	--extract \
 	--quiet \
@@ -519,7 +529,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:START FastQC post Trimmomatic" ${LOGFILE}
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name fastqc_post_trimm_${BAM_PREFIX} \
-	-t compbio/ngseasy-fastqc:${VERSION} /usr/local/pipeline/FastQC/fastqc \
+	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc \
 	--threads 4 \
 	--extract \
 	--quiet \
@@ -534,7 +544,7 @@ elif [[ "${TRIM}" == "notrim" ]]; then
 	logger_ngseasy "[ngseasy_trimmomatic]:Skipping quality control of raw fastq reads. NOT RECOMMENDED" ${LOGFILE}
 else 
 	logger_ngseasy "[ngseasy_trimmomatic]:ERROR Cant recognise TRIM option. Should be one of [atrim] [btrim] or [no-trim]" ${LOGFILE}
-	exit 1
+	sleep 1s; exit 1
 fi
   
 ######################################################################################################## 
