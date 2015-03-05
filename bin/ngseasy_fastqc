@@ -169,7 +169,7 @@ fi
 ########################################################################################################
 ## Read config and loop through all lines calling fastqc docker
 #
-while read f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
 PROJECT_ID=$f1
 SAMPLE_ID=$f2
@@ -368,26 +368,22 @@ fi
 ########################################################################################################
 ## check if qc'd data alread exists 
 #
-fqout1=${SOUT}/fastq/${rawFASTQ1}_1_fastqc.html
-fqout2=${SOUT}/fastq/${rawFASTQ1}_2_fastqc.html
-logger_ngseasy "[ngseasy_fastqc]:Check if FastQC Data already exists [$fqout1] and [$fqout2]" ${LOGFILE}
+fqout1="${SOUT}/fastq/${rawFASTQ1}_1_fastqc.html"
+fqout2="${SOUT}/fastq/${rawFASTQ2}_2_fastqc.html"
 
+if [[ -e "${fqout1}" ]] && [[ -e "${fqout2}" ]]; then
 
-if [[ -e "${SOUT}/fastq/${rawFASTQ1}_1_fastqc.html" ]] && [[ -e "${SOUT}/fastq/${FASTQ2}_2_fastqc.html" ]]; then
 	logger_ngseasy "[ngseasy_fastqc]:Check if FastQC Data already exists [$fqout1] and [$fqout2]" ${LOGFILE}
 	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping this bit" ${LOGFILE}
-	echo -e "\n----------------------------------\n"
-	exit 0
 
 elif [[ -e "${SOUT}/fastq/${illprefix1}_fastqc.html" ]] && [[ -e "${SOUT}/fastq/$illprefix2}_fastqc.html" ]]; then
 	logger_ngseasy "[ngseasy_fastqc]:Check if FastQC Data already exists [${SOUT}/fastq/${illprefix1}_fastqc.html] and [${SOUT}/fastq/${illprefix2}_fastqc.html]" ${LOGFILE}
 	logger_ngseasy "[ngseasy_fastqc]:FastQC Data already exists...skipping this bit" ${LOGFILE}
-	echo -e "\n----------------------------------\n"
-	exit 0
 
 elif [[ "$FASTQC" == "qc-fastqc" ]]; then
-echo -e "\n----------------------------------\n"
-logger_ngseasy "[ngseasy_fastqc]:START: FastQC on raw Fastq files" ${LOGFILE}
+
+	echo -e "\n----------------------------------\n"
+	logger_ngseasy "[ngseasy_fastqc]:START: FastQC on raw Fastq files" ${LOGFILE}
 
 ########################################################################################################
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container

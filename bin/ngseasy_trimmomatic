@@ -138,24 +138,22 @@ logger_ngseasy "[ngseasy_trimmomatic]:Checking [${config_tsv}] format" ${HOME}/n
 
 hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
 
-logger_ngseasy "[ngseasy_trimmomatic]:Has header=[${hasheader}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-
-if [[ "${config_tsv}" -eq *.batch.* ]]; then
-	logger_ngseasy "[ngseasy_trimmomatic]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	RUNFILE=${config_tsv}
-	logger_ngseasy "[ngseasy_trimmomatic]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-
-elif [[ "${hasheader}" -eq 1 ]]; then
-	logger_ngseasy "[ngseasy_trimmomatic]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	logger_ngseasy "[ngseasy_trimmomatic]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	sed 1d ${config_tsv} > ${config_tsv}.tmp
-	RUNFILE=${config_tsv}.tmp
-	logger_ngseasy "[ngseasy_trimmomatic]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-
+if [[ "${config_tsv}" == *.batch.* ]]
+then
+  logger_ngseasy "[ngseasy_trimmomatic}:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[ngseasy_trimmomatic}:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+elif [[ "$hasheader" -eq 1 ]]
+then
+  logger_ngseasy "[ngseasy_trimmomatic]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_trimmomatic]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  sed 1d ${config_tsv} > ${config_tsv}.tmp
+  RUNFILE="${config_tsv}.tmp"
+  logger_ngseasy "[ngseasy_trimmomatic]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 else
-	RUNFILE=${config_tsv}
-	logger_ngseasy "[ngseasy_trimmomatic]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	logger_ngseasy "[ngseasy_trimmomatic]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[ngseasy_trimmomatic]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_trimmomatic]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
 echo -e "\n----------------------------------\n"
 head ${config_tsv}
@@ -550,5 +548,4 @@ done < ${RUNFILE}
 
 ########################################################################################################
 logger_ngseasy " END: Trimmomatic+FastQC filtered Fastq files " ${LOGFILE}
-sleep 5s
 ########################################################################################################
