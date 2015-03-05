@@ -423,7 +423,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:TRIM set to [$TRIM] - adaptor trim. Adapto
 echo -e "
 zcat ${SOUTDocker}/fastq/${FQ1} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/fastq/${FQ1}.art_filt.gz
 zcat ${SOUTDocker}/fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/fastq/${FQ2}.art_filt.gz
-" > ${SOUT}/parallel_fastx.sh
+" > ${SOUT}/parallel_fastx.cmd
 
 ## run fastx_artifacts_filter
 #
@@ -433,7 +433,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter. Removing Ho
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name fastx_artifacts_filter_${BAM_PREFIX} \
-	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
+	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.cmd | parallel -j 2 --no-notice"
 
 ## run trimmomatic
 #
