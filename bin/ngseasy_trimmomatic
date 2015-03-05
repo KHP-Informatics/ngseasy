@@ -398,7 +398,6 @@ logger_ngseasy "[ngseasy_trimmomatic]:checking if trimmed data exists" ${LOGFILE
 if [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}.2.filtered.fastq.gz" ]
 then
 	logger_ngseasy "[ngseasy_trimmomatic]:PE Trimmed Data already exists...skipping [ngseasy_trimmomatic]" ${LOGFILE}
-	exit 0
 
 elif [[ "$TRIMM" == "atrim" ]]; then
 	logger_ngseasy "[ngseasy_trimmomatic]:Trimmomatic not run yet" ${LOGFILE}
