@@ -184,7 +184,7 @@ CNV=$f18
 ANNOTATOR=$f19
 CLEANUP=$f20
 NCPU=$f21
-VERSION=$f22
+NGSEASYVERSION=$f22
 NGSUSER=$f23
 DATE=`date +"%d%m%y"`
 
@@ -423,7 +423,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter. Removing Ho
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name fastx_artifacts_filter_${BAM_PREFIX} \
-	-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
+	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
 
 ## run trimmomatic
 #
@@ -433,7 +433,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name trimmomatic_${BAM_PREFIX} \
-	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 	PE \
 	-threads ${NCPU} \
 	${SOUTDocker}/fastq/${FQ1}.art_filt.gz \
@@ -490,7 +490,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter " ${LOGFILE}
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name fastx_artifacts_filter_${BAM_PREFIX} \
-	-t compbio/ngseasy-trimmomatic:${NGSVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
+	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
 
 ## run trimmomatic
 #
@@ -498,7 +498,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter " ${LOGFILE}
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name trimmomatic_${BAM_PREFIX} \
-	-t compbio/ngseasy-trimmomatic:${NGSVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 	PE \
 	-threads ${NCPU} \
 	${SOUTDocker}/fastq/${FQ1}.art_filt.gz \
