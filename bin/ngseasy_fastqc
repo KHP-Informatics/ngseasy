@@ -427,6 +427,7 @@ elif [[ "$FASTQC" == "no-fastqc" ]]; then
 	logger_ngseasy "[ngseasy_fastqc]:no-fastqc option selected. Skipping this sample [${BAM_PREFIX}]" ${LOGFILE}
 else
 	logger_ngseasy "[ngseasy_fastqc]:ERROR: FASTQC option is not set. Should be one of [qc-fastqc] or [no-fastqc]" ${LOGFILE}
+	sleep 1s
 	exit 1
 fi
 ##
@@ -435,5 +436,5 @@ done < ${RUNFILE}
 
 ########################################################################################################
 #logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
-sleep 5s
+sleep 1s
 ########################################################################################################

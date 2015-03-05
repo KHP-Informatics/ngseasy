@@ -488,24 +488,25 @@ elif [[ "$TRIM" == "btrim" ]]; then
 logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files" ${LOGFILE}
 logger_ngseasy "[ngseasy_trimmomatic]:TRIM set to [$TRIM] - basic trim. Just read quality trimming. No adaptor trimming" ${LOGFILE}
 
+if [[ ! -s ${SOUT}/fastq/${FQ1}.art_filt.gz  ]] && [[ ! -s ${SOUT}/fastq/${FQ2}.art_filt.gz ]]; then 
 ## make parallel cmd
 #
 echo -e "
 zcat ${SOUTDocker}/fastq/${FQ1} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/fastq/${FQ1}.art_filt.gz
 zcat ${SOUTDocker}/fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/fastq/${FQ2}.art_filt.gz
-" > ${SOUT}/parallel_fastx.sh
+" > ${SOUT}/parallel_fastx.cmd
 
-if [[ ! -s ${SOUT}/fastq/${FQ1}.art_filt.gz  ]] && [[ ! -s ${SOUT}/fastq/${FQ2}.art_filt.gz ]]; then 
 ## run fastx_artifacts_filter
 #
-logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter " ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter. Removing Homopolymer reads" ${LOGFILE}
 
 	${DOCKER_RUN} \
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name fastx_artifacts_filter_${BAM_PREFIX} \
-	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
+	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.cmd | parallel -j 2 --no-notice"
 fi
+
 
 ## run trimmomatic
 #
