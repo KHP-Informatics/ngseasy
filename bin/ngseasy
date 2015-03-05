@@ -69,7 +69,6 @@ options:  -c  STRING	configuration file
 if [[ ! -e  ${HOME}/ngseasy_logs ]]
 then
   mkdir ${HOME}/ngseasy_logs
-  global_run_logs="${HOME}/ngseasy_logs"
   logger_ngseasy "making ${HOME}/ngseasy_logs" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
 else
   logger_ngseasy "${HOME}/ngseasy_logs exists" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
@@ -138,40 +137,48 @@ fi
 ## check file and directory exist.
 ###########################################################################################
 logger_ngseasy "[ngseasy]:Check if config file [${config_tsv}] exists"
+
 if [[ ! -e "${config_tsv}" ]] 
 then
 	  usage_ngseasy;
-	  logger_ngseasy "[ngseasy]:ERROR config file [${config_tsv}] does not exist\n"
+	  logger_ngseasy "[ngseasy]:ERROR:config file [${config_tsv}] does not exist. Exiting"
 	  exit 1;
+else 
+	logger_ngseasy "[ngseasy]:config file [${config_tsv}] found"
 fi
 
 ###########################################################################################
 ## Make log file ##
 ###########################################################################################
 
-if [[ ! -e "${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}.log" ]]
+## strip path if user enters config with full path specified
+#
+configfile=`basename ${config_tsv}`
+config_run_log="${HOME}/ngseasy_logs/ngseasy.${configfile}.${RUNDATE}"
+
+if [[ ! -e "${config_run_log}.log" ]]
 then
-	logger_ngseasy "[ngseasy]:Making log file [${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}.log]"
-	touch ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}.log
-	logger_ngseasy "[ngseasy]:Log file [${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}.log]"
+	logger_ngseasy "[ngseasy]:Making log file [${config_run_log}.log]"
+	touch ${config_run_log}.log
+	logger_ngseasy "[ngseasy]:Log file [${config_run_log}.log]"
 else
-	logger_ngseasy "[ngseasy]:Log file [${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}.log]"
+	logger_ngseasy "[ngseasy]:Log file [${config_run_log}.log]"
 fi
 
 ############################################################################################
 ## check Num feilds in  ${config_tsv}
 ###########################################################################################
 
-logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] " ${config_run_log}
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
 if [[  "$numcols" -lt 22 ]] 
 then
-    logger_ngseasy "[ngseasy]:ERROR : [${config_tsv}] format issue. Check your file! " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+    logger_ngseasy "[ngseasy]:ERROR : [${config_tsv}] format issue. Check your file! " ${config_run_log}
     exit 1;
 else 
-    logger_ngseasy "[ngseasy]:Numcols of [${config_tsv}] ok:[$numcols]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}	     
+    logger_ngseasy "[ngseasy]:Numcols of [${config_tsv}] ok:[$numcols]" ${config_run_log}	     
 fi
 
 
@@ -183,7 +190,7 @@ logger_ngseasy "[ngseasy]:Check if project dir [${project_directory}] exists"
 if [[ ! -d "${project_directory}" ]]
   then
 	  usage_ngseasy;
-	  logger_ngseasy "[ngseasy]:ERROR : ${project_directory} does not exist" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	  logger_ngseasy "[ngseasy]:ERROR : ${project_directory} does not exist" ${config_run_log}
 	  exit 1;
 fi
 
@@ -193,11 +200,11 @@ fi
 
 if [[ "${initiate_project}" -eq "1" ]]
 then
-    logger_ngseasy "[ngseasy]:Calling ngseasy_initiate_project"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+    logger_ngseasy "[ngseasy]:Calling ngseasy_initiate_project"  ${config_run_log}
     /bin/bash ngseasy_initiate_project -c ${config_tsv} -d ${project_directory}
 
 else
-   logger_ngseasy  "[ngseasy]:Assuming ngseasy_initiate_project already run. Project and Sample directories exist" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+   logger_ngseasy  "[ngseasy]:Assuming ngseasy_initiate_project already run. Project and Sample directories exist" ${config_run_log}
 fi
 
 
@@ -208,83 +215,83 @@ fi
 
 if [[ "${set_fastq}" -eq "1" ]]
 then
-    logger_ngseasy  "[ngseasy]:Calling ngseasy_initiate_fastq" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-    logger_ngseasy  "[ngseasy]:[cmd]:ngseasy_initiate_fastq -c ${config_tsv} -d ${project_directory}" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+    logger_ngseasy  "[ngseasy]:Calling ngseasy_initiate_fastq" ${config_run_log}
+    logger_ngseasy  "[ngseasy]:[cmd]:ngseasy_initiate_fastq -c ${config_tsv} -d ${project_directory}" ${config_run_log}
     /bin/bash ngseasy_initiate_fastq -c ${config_tsv} -d ${project_directory}
 
 else
-    logger_ngseasy "[ngseasy]:Assuming ngseasy_initiate_fastq already run (or not)" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-    logger_ngseasy "[ngseasy]:Assuming fastq files exist and that they are in the right directories....dont worry, ngseasy will check later and tell ya" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-    logger_ngseasy "[ngseasy]:You cant run NGS without the raw fastq files..." ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+    logger_ngseasy "[ngseasy]:Assuming ngseasy_initiate_fastq already run (or not)" ${config_run_log}
+    logger_ngseasy "[ngseasy]:Assuming fastq files exist and that they are in the right directories....dont worry, ngseasy will check later and tell ya" ${config_run_log}
+    logger_ngseasy "[ngseasy]:You cant run NGS without the raw fastq files..." ${config_run_log}
 fi
 echo -e "\n----------------------------------\n"	
 ###########################################################################################
 ## FastQC
 ###########################################################################################
 
-logger_ngseasy "[ngseasy]:START ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:START ngseasy_fastqc" ${config_run_log} 
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
-logger_ngseasy "[ngseasy]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy]:Checking [${config_tsv}] format" ${config_run_log}
 
-hasheader=`sed 1q ${config_tsv} | grep POJECT_ID | wc -l | awk '{print $1}'`
+hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
 
 if [[ "${config_tsv}" == *.batch.* ]]
 then
-	logger_ngseasy "[ngseasy]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${config_run_log}
 	FILE=${config_tsv}
 
 ## if header present then remove it
 elif [[ "$hasheader" -eq 1 ]]
 then
-	logger_ngseasy "[ngseasy]:[${config_tsv}] header present...gonna remove this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-	logger_ngseasy "[ngseasy]:[cmd]:sed 1d ${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy]:[${config_tsv}] header present...gonna remove this" ${config_run_log}
+	logger_ngseasy "[ngseasy]:[cmd]:sed 1d ${config_tsv} > ${config_tsv}.tmp" ${config_run_log}
 	sed 1d ${config_tsv} > ${config_tsv}.tmp
 	FILE=${config_tsv}.tmp
 else
-	logger_ngseasy "[ngseasy]:[${config_tsv}] is seemingly perfect. Well Done" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+	logger_ngseasy "[ngseasy]:[${config_tsv}] is seemingly perfect. Well Done" ${config_run_log}
 	FILE=${config_tsv}
 fi
 
 ## number of samples to run ####
 #
 numsamples=`wc -l ${config_tsv}.tmp | awk '{print $1}'`  
-logger_ngseasy "[ngseasy]:Number of samples [$numsamples]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:Number of samples [$numsamples]" ${config_run_log} 
 
 ## number of cores available
 # mincpuallowed=8
 numcores=`nproc`
-logger_ngseasy "[ngseasy]:Number of available cores [$numcores]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:Number of available cores [$numcores]" ${config_run_log} 
 
 ## check if number of cpu less than 2 and exit if so ####
 #
 if [[ "$numcores" -lt 2 ]]; then
-	logger_ngseasy "[ngseasy]:Number of available cores less than 2. Exiting " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+	logger_ngseasy "[ngseasy]:Number of available cores less than 2. Exiting " ${config_run_log} 
 	exit 1;
 fi
 
 ## muber of jobs fastqc calls allowed to run at the same time ####
 #
 numjobsallowed=$(expr $numcores / 2)
-logger_ngseasy "[ngseasy]:Number of FastQC Jobs allowed [$numjobsallowed] ie 2 cores per sample" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:Number of FastQC Jobs allowed [$numjobsallowed] ie 2 cores per sample" ${config_run_log} 
 
 ## split config file into batches : N samples per batch. N samples == njobs
 #
 if [[ "$numsamples"  -gt "$numjobsallowed" ]]; then
-	logger_ngseasy "[ngseasyc]:Number samples [$numsamples] greater than number of cpu jobs allowed [$numjobsallowed]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
-	logger_ngseasy "[ngseasy]:splitting config file in to batches of at most [${numjobsallowed}] samples" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
-	logger_ngseasy "[ngseasy]:[cmd]:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+	logger_ngseasy "[ngseasyc]:Number samples [$numsamples] greater than number of cpu jobs allowed [$numjobsallowed]" ${config_run_log} 
+	logger_ngseasy "[ngseasy]:splitting config file in to batches of at most [${numjobsallowed}] samples" ${config_run_log} 
+	logger_ngseasy "[ngseasy]:[cmd]:split -d -l ${numjobsallowed} --additional-suffix=\".batch.config.tmp\" ${config_tsv}.tmp" ${config_run_log} 
 	split -d -l ${numjobsallowed} --additional-suffix=".batch.${config_tsv}.tmp" ${config_tsv}.tmp
 else
-	logger_ngseasy "[ngseasy]:Number of jobs to run [$numsamples]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
-	logger_ngseasy "[ngseasy]:making [original.batch.${config_tsv}.tmp]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+	logger_ngseasy "[ngseasy]:Number of jobs to run [$numsamples]" ${config_run_log} 
+	logger_ngseasy "[ngseasy]:making [original.batch.${config_tsv}.tmp]" ${config_run_log} 
 	cp -v ${config_tsv}.tmp original.batch.${config_tsv}.tmp
 fi
 
 ## get file names to process ####
 #
-logger_ngseasy "[ngseasy]: Getting config file names to process " ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]: Getting config file names to process " ${config_run_log} 
 batchfiles=`ls | grep batch` 
 
 ## set num running jobs counter to 0 ####
@@ -294,15 +301,15 @@ ndockerjobs=0
 ## loop through config files and run fastqc ####
 #
 echo -e "\n----------------------------------\n"
-logger_ngseasy "[ngseasy]:START FASTQC LOOP" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:START FASTQC LOOP" ${config_run_log} 
 
 for MYBATCH in `ls $batchfiles`
 do
-	logger_ngseasy "[ngseasy]:[cmd]:ngseasy_fastqc -c ${MYBATCH} -d ${project_directory}" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+	logger_ngseasy "[ngseasy]:[cmd]:ngseasy_fastqc -c ${MYBATCH} -d ${project_directory}" ${config_run_log} 
 
 ## call ngseasy_fastqc ####
 #
-logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${config_run_log}
 echo -e "\n----------------------------------\n"
 	/bin/bash ngseasy_fastqc -c ${MYBATCH} -d ${project_directory};
 echo -e "\n----------------------------------\n"
@@ -310,15 +317,15 @@ echo -e "\n----------------------------------\n"
 #
 ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
 
-logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs started [$ndockerjobs]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs started [$ndockerjobs]" ${config_run_log}
 
 ## while jobs still running ie not equal to 0 then sleep for 10 seconds ####
 #
-logger_ngseasy "[ngseasy]:Checking for the number of running Docker FastQC jobs every 1 minute" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-logger_ngseasy "[ngseasy]:When the number of running Docker FastQC jobs hits [0], the next batch will begin" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy]:Checking for the number of running Docker FastQC jobs every 1 minute" ${config_run_log}
+logger_ngseasy "[ngseasy]:When the number of running Docker FastQC jobs hits [0], the next batch will begin" ${config_run_log}
 
 echo -e "\n----------------------------------\n"
-logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]" ${config_run_log}
 while [ $ndockerjobs -gt 0 ]; do
 	sleep 60s;
 	ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
@@ -328,15 +335,15 @@ done
 
 ## log the end ####
 #
-logger_ngseasy "[ngseasy]:END FASTQC LOOP" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:END FASTQC LOOP" ${config_run_log} 
 echo -e "\n----------------------------------\n"
 ## remove docker Exited containers ####
 #
-logger_ngseasy "[ngseasy]:cleaning up container images" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}	
-logger_ngseasy "[ngseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy]:cleaning up container images" ${config_run_log}	
+logger_ngseasy "[ngseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${config_run_log}
 docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
 
-logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE} 
+logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${config_run_log} 
 
 echo -e "\n----------------------------------\n"
 ###################################################################################
@@ -357,7 +364,7 @@ done
 echo -e "\n----------------------------------\n"
 ## call ngseasy_trimmomatic
 #
-logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${config_run_log}
 
 	/bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
 
@@ -380,7 +387,7 @@ done
 echo -e "\n----------------------------------\n"
 ## call ngseasy_alignment
 #
-logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${config_run_log}
 
 #  /bin/bash ngseasy_alignment -c ${config_tsv} -d ${project_directory}
 echo -e "\n----------------------------------\n"
@@ -404,20 +411,20 @@ echo -e "\n----------------------------------\n"
 ## Base Quality Score Recalibration
 ###################################################################################
 
-#logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+#logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${config_run_log}
 #	/bin/bash ngseasy_bsqr -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
 ## Alignment statistics
 ###################################################################################
 
-#logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment_qc"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+#logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment_qc"  ${config_run_log}
 #	/bin/bash ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
 ## Variant calling
 ###################################################################################
-#logger_ngseasy  "[ngseasy]:Calling ngseasy_variant_calling"  ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+#logger_ngseasy  "[ngseasy]:Calling ngseasy_variant_calling"  ${config_run_log}
 #	/bin/bash ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
