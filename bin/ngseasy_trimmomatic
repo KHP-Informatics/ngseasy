@@ -399,14 +399,14 @@ if [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1
 then
 	logger_ngseasy "[ngseasy_trimmomatic]:PE Trimmed Data already exists...skipping [ngseasy_trimmomatic]" ${LOGFILE}
 
-elif [[ "$TRIMM" == "atrim" ]]; then
+elif [[ "$TRIM" == "atrim" ]]; then
 	logger_ngseasy "[ngseasy_trimmomatic]:Trimmomatic not run yet" ${LOGFILE}
 
 ########################################################################################################
 ## run compbio/ngseasy-trimmomatic
 # 
 logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files" ${LOGFILE}
-logger_ngseasy "[ngseasy_trimmomatic]:TRIMM set to [$TRIMM] - adaptor trim. Adaptor and read quality trimming" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:TRIM set to [$TRIM] - adaptor trim. Adaptor and read quality trimming" ${LOGFILE}
 
 ## make parallel cmd
 #
@@ -470,10 +470,10 @@ logger_ngseasy "[ngseasy_trimmomatic]:FastQC post Trimmomatic" ${LOGFILE}
 ## Just QC FASTQ NO ADAPTOR TRIM
 # btrim is basic qc-trim
 #
-elif [[ "$TRIMM" == "btrim" ]]; then
+elif [[ "$TRIM" == "btrim" ]]; then
 
 logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files" ${LOGFILE}
-logger_ngseasy "[ngseasy_trimmomatic]:TRIMM set to [$TRIMM] - basic trim. Just read quality trimming. No adaptor trimming" ${LOGFILE}
+logger_ngseasy "[ngseasy_trimmomatic]:TRIM set to [$TRIM] - basic trim. Just read quality trimming. No adaptor trimming" ${LOGFILE}
 
 ## make parallel cmd
 #
@@ -530,10 +530,10 @@ logger_ngseasy "[ngseasy_trimmomatic]:START FastQC post Trimmomatic" ${LOGFILE}
 	${qcSEFQ1} \
 	${qcSEFQ2}
 
-elif [[ "${TRIMM}" == "notrim" ]]; then
+elif [[ "${TRIM}" == "notrim" ]]; then
 	logger_ngseasy "[ngseasy_trimmomatic]:Skipping quality control of raw fastq reads. NOT RECOMMENDED" ${LOGFILE}
 else 
-	logger_ngseasy "[ngseasy_trimmomatic]:ERROR Cant recognise TRIMM option. Should be one of [atrim] [btrim] or [no-trim]" ${LOGFILE}
+	logger_ngseasy "[ngseasy_trimmomatic]:ERROR Cant recognise TRIM option. Should be one of [atrim] [btrim] or [no-trim]" ${LOGFILE}
 	exit 1
 fi
   
