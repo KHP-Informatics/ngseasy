@@ -200,6 +200,16 @@ $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNE
 $VERSION\t$NGSUSER]"  ${LOGFILE}
 
 ########################################################################################################
+## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
+#
+DOCKERHOME="/home/pipeman/ngs_projects"
+
+########################################################################################################
+## Docker OUTPUT SAMPLE DIR 
+#
+SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
+
+########################################################################################################
 ## check and make log directory
 #
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
@@ -403,21 +413,13 @@ elif [[ "$TRIM" == "atrim" ]]; then
 	logger_ngseasy "[ngseasy_trimmomatic]:Trimmomatic not run yet" ${LOGFILE}
 
 ########################################################################################################
-## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
-#
-DOCKERHOME="/home/pipeman/ngs_projects"
-
-########################################################################################################
-## Docker OUTPUT SAMPLE DIR 
-#
-SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
-
-########################################################################################################
 ## run compbio/ngseasy-trimmomatic
 # 
 logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files" ${LOGFILE}
 logger_ngseasy "[ngseasy_trimmomatic]:TRIM set to [$TRIM] - adaptor trim. Adaptor and read quality trimming" ${LOGFILE}
 
+
+if [[ ! -s ${SOUT}/fastq/${FQ1}.art_filt.gz  ]] && [[ ! -s ${SOUT}/fastq/${FQ2}.art_filt.gz ]]; then 
 ## make parallel cmd
 #
 echo -e "
@@ -434,6 +436,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter. Removing Ho
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name fastx_artifacts_filter_${BAM_PREFIX} \
 	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.cmd | parallel -j 2 --no-notice"
+fi
 
 ## run trimmomatic
 #
@@ -492,6 +495,7 @@ zcat ${SOUTDocker}/fastq/${FQ1} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTD
 zcat ${SOUTDocker}/fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/fastq/${FQ2}.art_filt.gz
 " > ${SOUT}/parallel_fastx.sh
 
+if [[ ! -s ${SOUT}/fastq/${FQ1}.art_filt.gz  ]] && [[ ! -s ${SOUT}/fastq/${FQ2}.art_filt.gz ]]; then 
 ## run fastx_artifacts_filter
 #
 logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter " ${LOGFILE}
@@ -501,6 +505,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter " ${LOGFILE}
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name fastx_artifacts_filter_${BAM_PREFIX} \
 	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.sh | parallel -j 2 --no-notice"
+fi
 
 ## run trimmomatic
 #
