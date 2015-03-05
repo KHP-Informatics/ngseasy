@@ -165,7 +165,10 @@ else
   logger_ngseasy "[ngseasy_fastqc]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   logger_ngseasy "[ngseasy_fastqc]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
-head ${RUNFILE}
+
+
+
+#head ${RUNFILE}
 ########################################################################################################
 ## Read config and loop through all lines calling fastqc docker
 #

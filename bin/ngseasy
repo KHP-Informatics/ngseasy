@@ -30,6 +30,7 @@ echo -e "\n"[`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:START]":[${USER}]:[`unam
 echo -e "\n----------------------------------\nDocker Version\n----------------------------------\n${DOCKERVERSION}\n----------------------------------\n"Docker Info"\n----------------------------------\n${DOCKERINFO}\n----------------------------------\n"
 echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:START]":[${USER}]:[`uname -a`]"  >> ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY.log
 echo -e "\n----------------------------------\nDocker Version\n----------------------------------\n${DOCKERVERSION}\n----------------------------------\n"Docker Info"\n----------------------------------\n${DOCKERINFO}\n----------------------------------\n" >> ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY.log
+sleep 1s
 
 ###########################################################################################
 ## global logging fuction
@@ -69,11 +70,11 @@ options:  -c  STRING	configuration file
 if [[ ! -e  ${HOME}/ngseasy_logs ]]
 then
   mkdir ${HOME}/ngseasy_logs
-  logger_ngseasy "making ${HOME}/ngseasy_logs" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
+  logger_ngseasy "[ngseasy]:making ${HOME}/ngseasy_logs" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
 else
-  logger_ngseasy "${HOME}/ngseasy_logs exists" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
+  logger_ngseasy "[ngseasy]:${HOME}/ngseasy_logs exists" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
 fi
-echo -e "\n----------------------------------\n"
+
 ## example config: https://docs.google.com/spreadsheets/d/1VWqmMffkVDnvOtRJGlPqOYzXWnIN_IONXQHDAawaN5Q/edit#gid=0
 
 ###########################################################################################
@@ -122,7 +123,7 @@ do
    
    esac
 done
-echo -e "\n----------------------------------\n"
+
 ###########################################################################################
 ## Check options passed in.
 ###########################################################################################
@@ -130,6 +131,7 @@ echo -e "\n----------------------------------\n"
 if test -z "$2"
 	then
 	usage_ngseasy
+	sleep 1s
 	exit 1
 fi
 
@@ -142,6 +144,7 @@ if [[ ! -e "${config_tsv}" ]]
 then
 	  usage_ngseasy;
 	  logger_ngseasy "[ngseasy]:ERROR:config file [${config_tsv}] does not exist. Exiting"
+	  sleep 1s
 	  exit 1;
 else 
 	logger_ngseasy "[ngseasy]:config file [${config_tsv}] found"
@@ -169,13 +172,14 @@ fi
 ## check Num feilds in  ${config_tsv}
 ###########################################################################################
 
-logger_ngseasy "[ngseasy_fastqc]:Reading [${config_tsv}] " ${config_run_log}
+logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${config_run_log}
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
 if [[  "$numcols" -lt 22 ]] 
 then
-    logger_ngseasy "[ngseasy]:ERROR : [${config_tsv}] format issue. Check your file! " ${config_run_log}
+    logger_ngseasy "[ngseasy]:ERROR:[${config_tsv}] format issue. Check your file! " ${config_run_log}
+    sleep 1s
     exit 1;
 else 
     logger_ngseasy "[ngseasy]:Numcols of [${config_tsv}] ok:[$numcols]" ${config_run_log}	     
@@ -190,7 +194,8 @@ logger_ngseasy "[ngseasy]:Check if project dir [${project_directory}] exists"
 if [[ ! -d "${project_directory}" ]]
   then
 	  usage_ngseasy;
-	  logger_ngseasy "[ngseasy]:ERROR : ${project_directory} does not exist" ${config_run_log}
+	  logger_ngseasy "[ngseasy]:ERROR:${project_directory} does not exist" ${config_run_log}
+	  sleep 1s
 	  exit 1;
 fi
 
@@ -224,12 +229,15 @@ else
     logger_ngseasy "[ngseasy]:Assuming fastq files exist and that they are in the right directories....dont worry, ngseasy will check later and tell ya" ${config_run_log}
     logger_ngseasy "[ngseasy]:You cant run NGS without the raw fastq files..." ${config_run_log}
 fi
-echo -e "\n----------------------------------\n"	
+
 ###########################################################################################
 ## FastQC
 ###########################################################################################
 
-logger_ngseasy "[ngseasy]:START ngseasy_fastqc" ${config_run_log} 
+echo -e "\n###########################################################################################"
+echo -e "## FastQC"
+echo -e "###########################################################################################\n"
+
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
@@ -300,7 +308,7 @@ ndockerjobs=0
 
 ## loop through config files and run fastqc ####
 #
-echo -e "\n----------------------------------\n"
+
 logger_ngseasy "[ngseasy]:START FASTQC LOOP" ${config_run_log} 
 
 for MYBATCH in `ls $batchfiles`
@@ -311,8 +319,10 @@ do
 #
 logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${config_run_log}
 echo -e "\n----------------------------------\n"
+
 	/bin/bash ngseasy_fastqc -c ${MYBATCH} -d ${project_directory};
-echo -e "\n----------------------------------\n"
+
+echo -e "\n----------------------------------\n"	
 ## get number of jobs running in background
 #
 ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
@@ -324,7 +334,6 @@ logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs started [$ndockerjobs]" $
 logger_ngseasy "[ngseasy]:Checking for the number of running Docker FastQC jobs every 1 minute" ${config_run_log}
 logger_ngseasy "[ngseasy]:When the number of running Docker FastQC jobs hits [0], the next batch will begin" ${config_run_log}
 
-echo -e "\n----------------------------------\n"
 logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]" ${config_run_log}
 while [ $ndockerjobs -gt 0 ]; do
 	sleep 60s;
@@ -333,22 +342,22 @@ while [ $ndockerjobs -gt 0 ]; do
 done
 done
 
-## log the end ####
-#
-logger_ngseasy "[ngseasy]:END FASTQC LOOP" ${config_run_log} 
-echo -e "\n----------------------------------\n"
 ## remove docker Exited containers ####
 #
-logger_ngseasy "[ngseasy]:cleaning up container images" ${config_run_log}	
+logger_ngseasy "[ngseasy]:cleaning up compbio/ngseasy-fastqc:${NGSEASYVERSION} container images" ${config_run_log}	
 logger_ngseasy "[ngseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${config_run_log}
 docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
 
 logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${config_run_log} 
 
-echo -e "\n----------------------------------\n"
+
 ###################################################################################
 ## Quality Trimming
 ###################################################################################
+
+echo -e "\n###########################################################################################"
+echo -e "## Quality Trimming"
+echo -e "###########################################################################################\n"
 
 ## check if ngseasy_fastqc still running and wait before running ngseasy_trimmomatic
 #
@@ -361,10 +370,11 @@ while [ $running_fastq_jobs -gt 0 ]; do
 	running_fastq_jobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
 	logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$running_fastq_jobs]" 
 done
-echo -e "\n----------------------------------\n"
+
 ## call ngseasy_trimmomatic
 #
 logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${config_run_log}
+echo -e "\n----------------------------------\n"
 
 	/bin/bash ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory}
 
@@ -372,6 +382,10 @@ echo -e "\n----------------------------------\n"
 ###################################################################################
 ## Alignment 
 ###################################################################################
+
+echo -e "\n###########################################################################################"
+echo -e "## Alignment"
+echo -e "###########################################################################################\n"
 
 ## check if ngseasy_trimmomatic still running and wait before running ngseasy_alignment
 #
