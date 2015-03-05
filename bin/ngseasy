@@ -344,8 +344,10 @@ done
 
 ## remove docker Exited containers ####
 #
+
 logger_ngseasy "[ngseasy]:cleaning up compbio/ngseasy-fastqc:${NGSEASYVERSION} container images" ${config_run_log}	
 logger_ngseasy "[ngseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${config_run_log}
+
 docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
 
 logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${config_run_log} 
