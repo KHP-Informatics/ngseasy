@@ -206,7 +206,7 @@ fi
 ## LOGFILE 
 #
 LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_alignment"
-logger_ngseasy "[ngseasy_fastqc]:logging to [${LOGFILE}.log]"  ${LOGFILE}
+logger_ngseasy "[ngseasy_alignment]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## check and make logfile
 #
@@ -227,6 +227,20 @@ $VERSION\t$NGSUSER]"  ${LOGFILE}
 #
 SOUT="${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}"
 logger_ngseasy "[ngseasy_alignment]:Sample Directory [${SOUT}] "
+
+########################################################################################################
+## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
+#
+DOCKERHOME="/home/pipeman/ngs_projects"
+logger_ngseasy "[ngseasy_alignment]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
+
+########################################################################################################
+## Docker OUTPUT SAMPLE DIR 
+#
+SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
+
+logger_ngseasy "[ngseasy_alignment]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
+
 
 ########################################################################################################
 ## check local dir exists
@@ -268,18 +282,6 @@ else
   exit 1
 fi
 
-########################################################################################################
-## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
-#
-DOCKERHOME="/home/pipeman/ngs_projects"
-logger_ngseasy "[ngseasy_alignment]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
-
-########################################################################################################
-## Docker OUTPUT SAMPLE DIR 
-#
-SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
-
-logger_ngseasy "[ngseasy_alignment]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
 
 ########################################################################################################
 ## check if Trimmed data alread exists and use it
@@ -288,6 +290,7 @@ if [ ! -s "${SOUT}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_1.filtered.fastq.gz" ]
 then
 	logger_ngseasy "[ngseasy_alignment]:ERROR:Trimmed FastQC Data does not exsts. Exiting" ${LOGFILE}
   logger_ngseasy "[ngseasy_alignment]:Please run ngseasy_trimmomatic" ${LOGFILE}
+  sleep 1s
 	exit 1
 else
 	logger_ngseasy "[ngseasy_alignment]:Trimmed FastQC Data exsts" ${LOGFILE}
@@ -635,6 +638,7 @@ done
 else
   logger_ngseasy "[ngseasy_alignment]:No ALIGNER option selected. Or ALIGNER option not recognised" ${LOGFILE} 
   logger_ngseasy "[ngseasy_alignment]:ALIGNER Should be one of [bwa] or [stampy] or [novoalign] or [snap] or [bowtie2]" ${LOGFILE} 
+  sleep 1s
   exit 1
 fi
 
