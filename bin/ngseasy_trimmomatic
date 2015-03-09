@@ -356,7 +356,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 fi
 logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 filtered [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz]" ${LOGFILE}
 
 qcPEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz;
-qcPEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}.2.filtered.fastq.gz;
+qcPEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz;
 
 ########################################################################################################
 # Trimmomatic unpaired ouput
@@ -364,8 +364,8 @@ qcPEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TR
 logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 unpaired [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.unpaired.fastq.gz]" ${LOGFILE}
 logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 unpaired [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.unpaired.fastq.gz]" ${LOGFILE}
 
-qcSEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}.1.unpaired.fastq.gz;
-qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}.2.unpaired.fastq.gz;
+qcSEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.unpaired.fastq.gz;
+qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.unpaired.fastq.gz;
 
 ########################################################################################################
 ## Select Genome Build
