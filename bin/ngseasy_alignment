@@ -362,7 +362,7 @@ elif [[ "${ALIGNER}" == "bwa" ]]; then
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name alignment_${BAM_PREFIX} \
-  -t compbio/ngseasy-bwa:${NGSEASYVERSION} \
+  -t compbio/ngseasy-bwa:${NGSEASYVERSION} /bin/bash -c \
   "/usr/local/bin/bwa mem \
   -M \
   -t ${NCPU} \
@@ -372,7 +372,7 @@ elif [[ "${ALIGNER}" == "bwa" ]]; then
   samblaster --addMateTags | \
   sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin && \
-  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \  
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
   rm -rf ${SOUTDocker}/tmp/*"
