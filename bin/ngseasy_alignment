@@ -5,6 +5,11 @@
 # Version 1.0 
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 #################################################################
+echo -e "\n################################################################"
+echo -e "# Program: ngseasy_alignment"
+echo -e "# Version 1.0"
+echo -e "# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)"
+echo -e "#################################################################\n"
 
 #################################################################
 
@@ -338,12 +343,14 @@ logger_ngseasy "[ngseasy_alignment]:dbSNP file for bam recab hg19 [${DBSNPhg19}]
 #---------------------------------------ALIGNMENT------------------------------------------------------#
 ########################################################################################################
 
+if [[ "${ALIGNER}" == "no-align" ]]; then
+  logger_ngseasy "[ngseasy_alignment]:Skipping Alignment. ALIGNER option [${ALIGNER}] " ${LOGFILE} 
+
+
 ########################################################################################################
 ## BWA 
 #
-if [[ "${ALIGNER}" == "bwa" ]]; then
-  
-  logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}
+elif [[ "${ALIGNER}" == "bwa" ]]; then
 
 # align wih bwa
   ${DOCKER_RUN} \
@@ -366,12 +373,12 @@ if [[ "${ALIGNER}" == "bwa" ]]; then
 
 ## check if running and wait before cleaning up
 #
-logger_ngseasy "[ngseasy]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
+logger_ngseasy "[ngseasy_alignment]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
 
 running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
 
 while [ $running_alignment_jobs -gt 0 ]; do
-  sleep 5s;
+  sleep 60s;
   running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`;
   logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
 done
@@ -416,12 +423,12 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
 
 ## check if running and wait before cleaning up
 #
-logger_ngseasy "[ngseasy]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
+logger_ngseasy "[ngseasy_alignment]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
 
 running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
 
 while [ $running_alignment_jobs -gt 0 ]; do
-  sleep 5s;
+  sleep 60s;
   running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`;
   logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
 done
@@ -467,12 +474,12 @@ fi
 
 ## check if running and wait before cleaning up
 #
-logger_ngseasy "[ngseasy]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
+logger_ngseasy "[ngseasy_alignment]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
 
 running_alignment_jobs=`docker ps -a | grep lignment_${BAM_PREFIX}_bwatmp  | grep Up | wc -l`
 
 while [ $running_alignment_jobs -gt 0 ]; do
-  sleep 5s;
+  sleep 60s;
   running_alignment_jobs=`docker ps -a | grep lignment_${BAM_PREFIX}_bwatmp | grep Up | wc -l`;
   logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
 done
@@ -517,12 +524,12 @@ done
 
 ## check if running and wait before cleaning up
 #
-logger_ngseasy "[ngseasy]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
+logger_ngseasy "[ngseasy_alignment]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
 
 running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
 
 while [ $running_alignment_jobs -gt 0 ]; do
-  sleep 5s;
+  sleep 60s;
   running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`;
   logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
 done
@@ -566,12 +573,12 @@ elif [[ "${ALIGNER}" == "bowtie2" ]]; then
 
 ## check if running and wait before cleaning up
 #
-logger_ngseasy "[ngseasy]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
+logger_ngseasy "[ngseasy_alignment]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
 
 running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
 
 while [ $running_alignment_jobs -gt 0 ]; do
-  sleep 5s;
+  sleep 60s;
   running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`;
   logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
 done
@@ -617,12 +624,12 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
 
 ## check if running and wait before cleaning up
 #
-logger_ngseasy "[ngseasy]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
+logger_ngseasy "[ngseasy_alignment]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
 
 running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
 
 while [ $running_alignment_jobs -gt 0 ]; do
-  sleep 5s;
+  sleep 60s;
   running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`;
   logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
 done
