@@ -216,7 +216,7 @@ fi
 
 ## LOGFILE 
 #
-LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_alignment"
+LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_variant_calling"
 logger_ngseasy "[ngseasy_variant_calling]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## check and make logfile

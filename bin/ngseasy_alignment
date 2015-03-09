@@ -335,16 +335,6 @@ logger_ngseasy "[ngseasy_alignment]:[cmd]:platform_unit=\`zcat \${FQ1} | head -1
 
 logger_ngseasy "[ngseasy_alignment]:PLATFORM UNIT:[$platform_unit]" ${LOGFILE}
 
-########################################################################################################
-# SNP file for bam recab
-# grep -v ^# dbsnp_138.b37.vcf | cut -f 1,2 > dbsnp_138.b37.recab
-# from gatk resources
-#
-DBSNPb37="/home/pipeman/ngs_projects/reference_genomes_b37/dbsnp_138.b37.recab"
-DBSNPhg19="/home/pipeman/ngs_projects/reference_genomes_hg19/dbsnp_138.hg19.recab"
-
-logger_ngseasy "[ngseasy_alignment]:dbSNP file for bam recab b37 [${DBSNPb37}]" ${LOGFILE}
-logger_ngseasy "[ngseasy_alignment]:dbSNP file for bam recab hg19 [${DBSNPhg19}]" ${LOGFILE}
 
 ########################################################################################################
 #---------------------------------------ALIGNMENT------------------------------------------------------#
