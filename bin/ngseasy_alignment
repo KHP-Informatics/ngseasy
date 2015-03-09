@@ -557,7 +557,7 @@ elif [[ "${ALIGNER}" == "bowtie2" ]]; then
     ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} \
+    -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} /bin/bash -c \
     "/usr/local/bin/bowtie2 \
     --end-to-end \
     -threads ${NCPU} \
@@ -607,7 +607,7 @@ logger_ngseasy " START ${ALIGNER} Basic Alignment" ${LOGFILE}
     ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -t compbio/ngseasy-snap:${NGSEASYVERSION} \
+    -t compbio/ngseasy-snap:${NGSEASYVERSION} /bin/bash -c \
     "/usr/local/pipeline/snap/snap \
     paried \
     ${REFDIR} \
