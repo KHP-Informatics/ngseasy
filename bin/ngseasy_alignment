@@ -357,7 +357,7 @@ elif [[ "${ALIGNER}" == "bwa" ]]; then
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name alignment_${BAM_PREFIX} \
   -t compbio/ngseasy-bwa:${NGSEASYVERSION} /bin/bash -c \
-  "/usr/local/pipeline/bwa-0.7.10/bwa mem \
+  "/usr/local/bin/bwa mem \
   -M \
   -t ${NCPU} \
   -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE}' \
@@ -400,7 +400,7 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
   --name alignment_${BAM_PREFIX} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   -t compbio/ngseasy-novoalign:${NGSEASYVERSION} /bin/bash -c \
-    "/usr/local/pipeline/novocraft/novoalign \
+    "/usr/local/bin/novoalign \
    -d ${GENOMEINDEX}.fasta.novoindex \
    -f ${FQ1} ${FQ2} \
    -F STDFQ \
@@ -454,7 +454,7 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
   --name alignment_${BAM_PREFIX}_bwatmp \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   -t compbio/ngseasy-bwa:${NGSEASYVERSION} /bin/bash -c \
-  "/usr/local/pipeline/bwa-0.7.10/bwa mem \
+  "/usr/local/bin/bwa mem \
   -M \
   -t ${NCPU} \
   -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE}' \
@@ -552,7 +552,7 @@ elif [[ "${ALIGNER}" == "bowtie2" ]]; then
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} \
-    "/usr/local/pipeline/bowtie2-2.2.3/bowtie2 \
+    "/usr/local/bin/bowtie2 \
     --end-to-end \
     -threads ${NCPU} \
     -x /home/pipeman/reference_genomes_b37/human_g1k_v37 \
