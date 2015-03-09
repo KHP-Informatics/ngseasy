@@ -321,3 +321,34 @@ fi
 BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}"
 
 logger_ngseasy "[ngseasy_bsqr]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE}
+
+########################################################################################################
+## BSQR
+
+if [[ "${BSQR}" == "no-bsqr" ]]; then
+  
+  logger_ngseasy "[ngseasy_bsqr]:Skipping Base quality score recalibration" ${LOGFILE}
+
+elif [[ "${BSQR}" == "bam-bsqr" ]]; then
+      
+      BAMIN=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam
+      BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-bsqr.bam
+
+  elif [[ "${BSQR}" == "gatk-bsqr"  ]]; then
+
+      BAMIN=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam
+      BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-bsqr.bam
+
+      else
+        logger_ngseasy "[ngseasy_bsqr]:ERROR: Do not recognise BSQR option [${BSQR}]. This should be one or [bam-bsqr] [gatk-bsqr] or [no-bsqr]. Exiting" ${LOGFILE}
+        sleep 2s
+        exit 1
+      fi
+
+######################################################################################################## 
+## permissions
+#
+chmod -R 777 ${SOUT}/*
+
+## END ##
+done < ${RUNFILE}
