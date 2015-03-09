@@ -55,6 +55,16 @@ ngseasy_variant_calling sets up the NGSeasy docker containers for your variant c
 "
 }
 
+
+## Custom utils from bcbio and more This needs to be in Dockerfile
+## also need to add http://genome.sph.umich.edu/wiki/Vt to base image or all callers
+## Taken from https://github.com/chapmanb/bcbio-nextgen/blob/98c75603907cb22a3e4cd4fd78f7e995b80bddfd/bcbio/variation/vcfutils.py#L76
+function fix_ambiguous() {
+
+  awk -F$'\t' -v OFS='\t' '{if ($0 !~ /^#/) gsub(/[KMRYSWBVHDX]/, "N", $4) } {print}'
+
+}
+
 ########################################################################################################
 ## check and make ~/ngseasy_logs if needed
 #
@@ -262,6 +272,7 @@ logger_ngseasy "[ngseasy_variant_calling]:Checking genome selected]"  ${LOGFILE}
 if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
+  REFFASTA="${REFDIR}/human_g1k_v37.fasta"
   logger_ngseasy "[ngseasy_variant_calling]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
 
   #known indels and SNPs
@@ -274,6 +285,7 @@ if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
 elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
+  REFFASTA="${REFDIR}/ucsc.hg19.fasta"
   logger_ngseasy "[ngseasy_variant_calling]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
 
     #known indels and SNPs
@@ -353,6 +365,16 @@ fi
 # Freebayes #
 #-----------------------------------------------------------------------------#
 
+ vcffilter -f 'QUAL > 5' -s | \
+ fix_ambiguous | \
+ vcfallelicprimitives --keep-geno | \
+ vcffixup - | \
+ vcfstreamsort | \
+ vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+ vcfuniqalleles | \
+ bgzip -c > ${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf
+
+
 if [ "${VARCALLER}" == "freebayes" ]
 then
   
@@ -371,7 +393,15 @@ logger_ngseasy " START Variant Calling using Freebayes " ${LOGFILE}
     --min-base-quality 20 \
     --min-repeat-entropy 1 \
     --experimental-gls \
-    --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf;"
+    --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
+    vcffilter -f 'QUAL > 5' -s | \
+    fix_ambig | \
+    vcfallelicprimitives --keep-geno | \
+    vcffixup - | \
+    vcfstreamsort | \
+    vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+    vcfuniqalleles | \
+    bgzip -c > ${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf"
 
     #logs
   docker logs Freebayes_${SAMPLE_ID} >> ${LOGFILE}.log
@@ -391,6 +421,9 @@ fi
 #-----------------------------------------------------------------------------#
 # Platypus #
 #-----------------------------------------------------------------------------#
+ 
+
+
 
 if [ "${VARCALLER}" == "platypus" ]
 then
