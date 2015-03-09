@@ -1,0 +1,11 @@
+#!/bin/bash
+
+## Custom utils from bcbio and more This needs to be in Dockerfile
+## also need to add http://genome.sph.umich.edu/wiki/Vt to base image or all callers
+## Taken from https://github.com/chapmanb/bcbio-nextgen/blob/98c75603907cb22a3e4cd4fd78f7e995b80bddfd/bcbio/variation/vcfutils.py#L76
+function fix_ambiguous() {
+
+  awk -F$'\t' -v OFS='\t' '{if ($0 !~ /^#/) gsub(/[KMRYSWBVHDX]/, "N", $4) } {print}'
+
+}
+

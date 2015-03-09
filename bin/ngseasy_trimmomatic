@@ -405,7 +405,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:START Trimmomatic+FastQC filtered Fastq fi
 #
 logger_ngseasy "[ngseasy_trimmomatic]:checking if trimmed data exists" ${LOGFILE}
 
-if [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}.2.filtered.fastq.gz" ]
+if [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz" ]
 then
 	logger_ngseasy "[ngseasy_trimmomatic]:PE Trimmed Data already exists...skipping [ngseasy_trimmomatic]" ${LOGFILE}
 
