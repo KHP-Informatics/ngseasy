@@ -39,21 +39,19 @@ function logger_ngseasy() {
 ########################################################################################################
 ## global usage
 #
-function ngseasy_alignment_usage() {
+function ngseasy_variant_calling_usage() {
     echo "
-Program: ngseasy_alignment
+Program: ngseasy_variant_calling
 Version 1.0
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
-usage:   ngseasy_alignment -c <config_file> -d <project_directory>
+usage:   ngseasy_variant_calling -c <config_file> -d <project_directory>
 
 options:  -c  STRING  configuration file
           -d  STRING  project directory
           -h  NULL    show this message
 
-ngseasy_alignment sets up the NGSeasy docker containers for your aligner of choice.
-
-This is is optomised for Illumina PE data
+ngseasy_variant_calling sets up the NGSeasy docker containers for your variant caller of choice.
 "
 }
 
@@ -71,8 +69,8 @@ fi
 #
 if test -z "$2"
 then
-  logger_ngseasy "[ngseasy_alignment]:ERROR:No options found"
-  ngseasy_alignment_usage
+  logger_ngseasy "[ngseasy_variant_calling]:ERROR:No options found"
+  ngseasy_variant_calling_usage
   exit 1
 fi
 
@@ -83,7 +81,7 @@ fi
 
       case ${opt} in
     h)
-    ngseasy_alignment_usage #print help
+    ngseasy_variant_calling_usage #print help
     exit 0
     ;;
     
@@ -102,11 +100,11 @@ fi
 #
 if [[ ! -e "${config_tsv}" ]] 
 then
-      logger_ngseasy "[ngseasy_alignment]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
-      ngseasy_alignment_usage;
+      logger_ngseasy "[ngseasy_variant_calling]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
+      ngseasy_variant_calling_usage;
       exit 1;
 else
-      logger_ngseasy "[ngseasy_alignment]:Configuration file found [${config_tsv}] "
+      logger_ngseasy "[ngseasy_variant_calling]:Configuration file found [${config_tsv}] "
 fi
 
 ########################################################################################################
@@ -114,27 +112,27 @@ fi
 #
 if [[ ! -d "${project_directory}" ]]
   then
-    logger_ngseasy "[ngseasy_alignment]:ERROR : project_directory [${project_directory}] does not exist "
-    ngseasy_alignment_usage;
+    logger_ngseasy "[ngseasy_variant_calling]:ERROR : project_directory [${project_directory}] does not exist "
+    ngseasy_variant_calling_usage;
     exit 1;
 else
-      logger_ngseasy "[ngseasy_alignment]:Top Level Project Directory [${project_directory}] "
+      logger_ngseasy "[ngseasy_variant_calling]:Top Level Project Directory [${project_directory}] "
 fi
 
 ########################################################################################################
 ## check Num feilds in  ${config_tsv}
 #
-logger_ngseasy "[ngseasy_alignment]:Reading [${config_tsv}] "
-logger_ngseasy "[ngseasy_alignment]:Checking number of feilds in  [${config_tsv}] "
+logger_ngseasy "[ngseasy_variant_calling]:Reading [${config_tsv}] "
+logger_ngseasy "[ngseasy_variant_calling]:Checking number of feilds in  [${config_tsv}] "
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
 if [[  "$numcols" -lt 23 ]] 
 then
-      logger_ngseasy "[ngseasy_alignment]:ERROR: [${config_tsv}] format issue. Check your file! "
+      logger_ngseasy "[ngseasy_variant_calling]:ERROR: [${config_tsv}] format issue. Check your file! "
       exit 1;
   else 
-      logger_ngseasy "[ngseasy_alignment]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "     
+      logger_ngseasy "[ngseasy_variant_calling]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "     
 fi
 
 
@@ -143,26 +141,26 @@ fi
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
-logger_ngseasy "[ngseasy_alignment]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy_variant_calling]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
 
 if [[ "${config_tsv}" == *.batch.* ]]
 then
-  logger_ngseasy "[ngseasy_alignment]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_variant_calling]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   RUNFILE="${config_tsv}"
-  logger_ngseasy "[ngseasy_alignment]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_variant_calling]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 elif [[ "$hasheader" -eq 1 ]]
 then
-  logger_ngseasy "[ngseasy_alignment]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-  logger_ngseasy "[ngseasy_alignment]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_variant_calling]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_variant_calling]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   sed 1d ${config_tsv} > ${config_tsv}.tmp
   RUNFILE="${config_tsv}.tmp"
-  logger_ngseasy "[ngseasy_alignment]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_variant_calling]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 else
   RUNFILE="${config_tsv}"
-  logger_ngseasy "[ngseasy_alignment]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-  logger_ngseasy "[ngseasy_alignment]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_variant_calling]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_variant_calling]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
 
 ########################################################################################################
@@ -209,7 +207,7 @@ fi
 ## LOGFILE 
 #
 LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_alignment"
-logger_ngseasy "[ngseasy_alignment]:logging to [${LOGFILE}.log]"  ${LOGFILE}
+logger_ngseasy "[ngseasy_variant_calling]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## check and make logfile
 #
@@ -220,7 +218,7 @@ fi
 
 ## read config_file
 #
-logger_ngseasy "[ngseasy_alignment]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+logger_ngseasy "[ngseasy_variant_calling]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER]"  ${LOGFILE}
 
@@ -229,20 +227,20 @@ $VERSION\t$NGSUSER]"  ${LOGFILE}
 ## OUTPUT SAMPLE DIR 
 #
 SOUT="${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}"
-logger_ngseasy "[ngseasy_alignment]:Sample Directory [${SOUT}] "
+logger_ngseasy "[ngseasy_variant_calling]:Sample Directory [${SOUT}] "
 
 ########################################################################################################
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
 #
 DOCKERHOME="/home/pipeman/ngs_projects"
-logger_ngseasy "[ngseasy_alignment]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
+logger_ngseasy "[ngseasy_variant_calling]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
 
 ########################################################################################################
 ## Docker OUTPUT SAMPLE DIR 
 #
 SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
-logger_ngseasy "[ngseasy_alignment]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
+logger_ngseasy "[ngseasy_variant_calling]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
 
 
 ########################################################################################################
@@ -250,67 +248,43 @@ logger_ngseasy "[ngseasy_alignment]:Docker Output directory [${SOUTDocker}]" ${L
 #
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
-  logger_ngseasy "[ngseasy_alignment]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
+  logger_ngseasy "[ngseasy_variant_calling]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
   exit 1
 else 
-  logger_ngseasy "[ngseasy_alignment]: Setting OUTPUT directory to [${SOUT}]" ${LOGFILE}
-fi
-
-########################################################################################################
-## check for fastq files exist
-#
-if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
-then
-  logger_ngseasy "[ngseasy_alignment]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
-  exit 1
+  logger_ngseasy "[ngseasy_variant_calling]: Setting OUTPUT directory to [${SOUT}]" ${LOGFILE}
 fi
 
 ########################################################################################################
 ## Select Genome Build
 #
-logger_ngseasy "[ngseasy_alignment]:Checking genome selected]"  ${LOGFILE}
+logger_ngseasy "[ngseasy_variant_calling]:Checking genome selected]"  ${LOGFILE}
 
 if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+  logger_ngseasy "[ngseasy_variant_calling]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+
+  #known indels and SNPs
+  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.b37.vcf"
+  KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.b37.vcf"
+  KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.b37.vcf"
+  KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.b37.vcf"
+
 
 elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
-  logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+  logger_ngseasy "[ngseasy_variant_calling]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+
+    #known indels and SNPs
+  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.hg19.cf"
+  KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.hg19.vcf"
+  KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.hg19.vcf"
+  KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.hg19.vcf"
 
 else
-  logger_ngseasy "[ngseasy_alignment]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
+  logger_ngseasy "[ngseasy_variant_calling]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
   exit 1
-fi
-
-
-########################################################################################################
-## check if Trimmed data alread exists and use it
-#
-if [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz" ]
-then
-  logger_ngseasy "[ngseasy_alignment]:ERROR:Trimmed FastQC Data does not exsts. Exiting" ${LOGFILE}
-  logger_ngseasy "[ngseasy_alignment]:Please run ngseasy_trimmomatic" ${LOGFILE}
-  sleep 1s
-  exit 1
-else
-  logger_ngseasy "[ngseasy_alignment]:Trimmed FastQC Data exsts" ${LOGFILE}
-  
-  logger_ngseasy "[ngseasy_alignment]:Setting FQ1:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz] " ${LOGFILE}
-
-##############
-## FQ1
-#
-  FQ1="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz"
-  
-  logger_ngseasy "[ngseasy_alignment]:Setting FQ2:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz] " ${LOGFILE}
-
-##############
-## FQ2
-#
-  FQ2="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz"
 fi
 
 ########################################################################################################
@@ -320,118 +294,24 @@ fi
 #
 BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}"
 
-logger_ngseasy "[ngseasy_alignment]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE}
+logger_ngseasy "[ngseasy_variant_calling]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE}
 
-#------------------------------------------------------------------------------------------------------#
+## BAM Files
+#
 
-#usage printing func
-usage() {
-cat << EOF
-  This script sets up the NGSeasy docker Variant Calling
-  See NGSEasy containerized instructions.
+${BAM_PREFIX}.dupemk.bam
+${BAM_PREFIX}.dupemk.bam-bsqr.bam
+${BAM_PREFIX}.dupemk.bam-bsqr.bam-realn.bam
+${BAM_PREFIX}.dupemk.gatk-bsqr.bam
+${BAM_PREFIX}.dupemk.gatk-bsqr.gatk-realn.bam
 
-  ARGUMENTS:
-  -h      Flag: Show this help message
-  -c      NGSeasy project and run configureation file
-  -d      NGSeasy project directory
+# filtered
+${BAM_PREFIX}.dupemk.filtered.bam
+${BAM_PREFIX}.dupemk.bam-bsqr.filtered.bam
+${BAM_PREFIX}.dupemk.bam-bsqr.bam-realn.filtered.bam
+${BAM_PREFIX}.dupemk.gatk-bsqr.filtered.bam
+${BAM_PREFIX}.dupemk.gatk-bsqr.gatk-realn.filtered.bam
 
-  EXAMPLE USAGE:
-    
-    ngseasy_variant_calling -c config.file.tsv -d project_directory
-
-EOF
-}
-
-#get options for command line args
-  while  getopts "hc:d:" opt
-  do
-
-      case ${opt} in
-	  h)
-	  usage #print help
-	  exit 0
-	  ;;
-	  
-	  c)
-	  config_tsv=${OPTARG}
-	  ;;
-
-	  d)
-	  project_directory=${OPTARG}
-	  ;; 
-      esac
-  done
-
-# Check options passed in.
-    if test -z "$2"
-    then
-	usage
-	exit 1
-    fi  
-  
-#check config file exists.
-  if [ ! -e "${config_tsv}" ] 
-  then
-	      echo "ERROR :  ${config_tsv} does not exist....exiting "
-	      usage;
-	      exit 1;
-  fi
-
-#check directory exists.
-  if [ ! -d "${project_directory}" ]
-    then
-      echo "ERROR : project_directory ${project_directory} does not exist "
-      usage;
-      exit 1;
-  fi
-
-#---------------------------------------------------------------------------------#
-
-#Read config file 
-while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
-do
-# set varibales  
-  DATE=`date +"%d%m%y"`
-  PROJECT_ID=$f1
-  SAMPLE_ID=$f2
-  FASTQ1=$f3
-  FASTQ2=$f4
-  PROJECT_DIR=$f5 
-  DNA_PREP_LIBRARY_ID=$f6
-  NGS_PLATFORM=$f7
-  NGS_TYPE=$f8
-  BED_ANNO=$f9
-  PIPELINE=$f10
-  ALIGNER=$f11
-  VARCALLER=$f12
-  GTMODEGATK=$f13
-  CLEANUP=$f14
-  NCPU=$f15
-	VERSION=$f16
-  NGSUSER=$f17
-
-#Logfile 
-LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
-
-#OUTPUT SAMPLE DIR 
-SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
-
-#------------------------Container I/O--------------------------------#
-#run compbio/ngseasy-fastq
-#Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
-DOCKERHOME="/home/pipeman/ngs_projects"
-
-#Docker OUTPUT SAMPLE DIR 
-SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
-
-#bamprefix
-BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}
-
-#known indels and SNPs
-KNOWN_INDELS=/home/pipeman/gatk_resources/Mills_and_1000G_gold_standard.indels.b37.vcf
-KNOWN_SNPS_1000G=/home/pipeman/gatk_resources/1000G_phase1.snps.high_confidence.b37.vcf
-KNOWN_SNPS_OMNI=/home/pipeman/gatk_resources/1000G_omni2.5.b37.vcf
-KNOWN_SNPS_b138=/home/pipeman/gatk_resources/dbsnp_138.b37.vcf
 
 
 #---------Does filtered bam exits, if not then generate it----------------------#
@@ -978,7 +858,7 @@ params_yaml="/home/pipeman/ngseasy_scripts/ensemble.calling.params.yaml"
 fi
 
 #-------------------------------------------------------------------------------------------#
-# Ensemble: Freebayes + Platypus    #
+# fast_ensemble: Freebayes + Platypus    #
 #-------------------------------------------------------------------------------------------#
 
 if [ "${VARCALLER}" == "fast_ensemble" ]
