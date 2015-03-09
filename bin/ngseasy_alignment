@@ -333,7 +333,7 @@ logger_ngseasy "[ngseasy_alignment]:[cmd]:platform_unit=\`zcat \${FQ1} | head -1
 	#platform_unit=`zcat ${FQ1} | head -1 | perl -p -i -e 's/:/\t/' | cut -f 1 | perl -p -i -e 's/@//g'`  
   platform_unit=`zcat ${FQ1} | head -1 | sed 's/:/\t/' - | cut -f 1 | sed 's/@//g' - `  
 
-logger_ngseasy "[ngseasy_alignment]:PLATFORM UNIT:[$platform_unit]" ${LOGFILE}
+logger_ngseasy "[ngseasy_alignment]:PLATFORM UNIT:[${platform_unit}]" ${LOGFILE}
 
 
 ########################################################################################################
