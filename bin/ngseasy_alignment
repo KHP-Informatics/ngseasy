@@ -312,7 +312,7 @@ else
 ##############
 ## FQ2
 #
-	FQ2="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}__2.filtered.fastq.gz"
+	FQ2="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz"
 fi
 
 ########################################################################################################
@@ -362,7 +362,7 @@ elif [[ "${ALIGNER}" == "bwa" ]]; then
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name alignment_${BAM_PREFIX} \
-  -t compbio/ngseasy-bwa:${NGSEASYVERSION} /bin/bash -c \
+  -t compbio/ngseasy-bwa:${NGSEASYVERSION} \
   "/usr/local/bin/bwa mem \
   -M \
   -t ${NCPU} \
