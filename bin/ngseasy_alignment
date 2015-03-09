@@ -291,7 +291,7 @@ fi
 ########################################################################################################
 ## check if Trimmed data alread exists and use it
 #
-if [ ! -s "${SOUT}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_1.filtered.fastq.gz" ] && [ ! -s "${SOUT}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_2.filtered.fastq.gz" ]
+if [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz" ]
 then
 	logger_ngseasy "[ngseasy_alignment]:ERROR:Trimmed FastQC Data does not exsts. Exiting" ${LOGFILE}
   logger_ngseasy "[ngseasy_alignment]:Please run ngseasy_trimmomatic" ${LOGFILE}
