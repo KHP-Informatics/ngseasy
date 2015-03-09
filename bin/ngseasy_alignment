@@ -348,7 +348,7 @@ if [[ "${ALIGNER}" == "no-align" ]]; then
 ## BWA 
 #
 elif [[ "${ALIGNER}" == "bwa" ]]; then
-
+    logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}  
 # align wih bwa
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
