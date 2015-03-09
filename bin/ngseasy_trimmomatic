@@ -530,7 +530,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:START FastQC post Trimmomatic" ${LOGFILE}
 elif [[ "${TRIM}" == "notrim" ]]; then
 	logger_ngseasy "[ngseasy_trimmomatic]:Skipping quality control of raw fastq reads. NOT RECOMMENDED" ${LOGFILE}
 else 
-	logger_ngseasy "[ngseasy_trimmomatic]:ERROR Cant recognise TRIM option. Should be one of [atrim] [btrim] or [no-trim]" ${LOGFILE}
+	logger_ngseasy "[ngseasy_trimmomatic]:ERROR Do not recognise TRIM option. Should be one of [atrim] [btrim] or [no-trim]" ${LOGFILE}
 	sleep 1s; exit 1
 fi
   
