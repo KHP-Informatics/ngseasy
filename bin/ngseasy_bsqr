@@ -266,22 +266,41 @@ then
 fi
 
 ########################################################################################################
-## Select Genome Build
+## Select Genome Build and files
 #
-logger_ngseasy "[ngseasy_bsqr]:Checking genome selected]"  ${LOGFILE}
+logger_ngseasy "[ngseasy_variant_calling]:Checking genome selected]"  ${LOGFILE}
 
 if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
-  logger_ngseasy "[ngseasy_bsqr]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+  REFFASTA="${REFDIR}/human_g1k_v37.fasta"
+  DBSNPb37="${REFDIR}/dbsnp_138.b37.recab"
+  logger_ngseasy "[ngseasy_variant_calling]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+  logger_ngseasy "[ngseasy_variant_calling]:dbSNP file for bam recab b37 [${DBSNPb37}]" ${LOGFILE}
+
+  #known indels and SNPs
+  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.b37.vcf"
+  KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.b37.vcf"
+  KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.b37.vcf"
+  KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.b37.vcf"
+
 
 elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
-  logger_ngseasy "[ngseasy_bsqr]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+  REFFASTA="${REFDIR}/ucsc.hg19.fasta"
+  DBSNPhg19="${REFDIR}/dbsnp_138.hg19.recab"
+  logger_ngseasy "[ngseasy_variant_calling]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+  logger_ngseasy "[ngseasy_variant_calling]:dbSNP file for bam recab hg19 [${DBSNPhg19}]" ${LOGFILE}
+
+  #known indels and SNPs
+  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.hg19.cf"
+  KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.hg19.vcf"
+  KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.hg19.vcf"
+  KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.hg19.vcf"
 
 else
-  logger_ngseasy "[ngseasy_bsqr]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
+  logger_ngseasy "[ngseasy_variant_calling]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
   exit 1
 fi
 
@@ -323,7 +342,12 @@ BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TR
 logger_ngseasy "[ngseasy_bsqr]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE}
 
 ########################################################################################################
+## CHECK BAMS EXIST
+#
+
+########################################################################################################
 ## BSQR
+########################################################################################################
 
 if [[ "${BSQR}" == "no-bsqr" ]]; then
   
@@ -333,6 +357,23 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
       
       BAMIN=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam
       BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-bsqr.bam
+  
+  logger_ngseasy "[ngseasy_bsqr]:[cmd]: bam recab " ${LOGFILE}
+
+  ${DOCKER_RUN} \
+  --rm=true \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name bamrecab_${BAM_PREFIX} \
+  -t compbio/ngseasy-base:${NGSEASYVERSION} \
+  bam \
+  recab \
+  --in ${BAMIN} \
+  --out ${BAMOUT} \
+  --refFile ${REFFASTA} \
+  --dbsnp ${DBSNP} \
+  --storeQualTag OQ \
+  --maxBaseQual 40;
+
 
   elif [[ "${BSQR}" == "gatk-bsqr"  ]]; then
 
@@ -352,3 +393,10 @@ chmod -R 777 ${SOUT}/*
 
 ## END ##
 done < ${RUNFILE}
+#
+    --in ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
+    --out ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
+    --refFile /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
+    --dbsnp ${DBSNP} \
+    --storeQualTag OQ \
+    --maxBaseQual 40
