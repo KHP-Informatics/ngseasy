@@ -272,19 +272,22 @@ fi
 #
 logger_ngseasy "[ngseasy_alignment]:Checking genome selected]"  ${LOGFILE}
 
-if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
+if [[ "${GENOMEBUILD}" == "b37" ]]; then
+  
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
   logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
   logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEINDEX}]"  ${LOGFILE}
   logger_ngseasy "[ngseasy_alignment]: Genome Build [${REFDIR}]"  ${LOGFILE}
 
-elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
+elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
+
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
   logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
   logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEINDEX}]"  ${LOGFILE}
   logger_ngseasy "[ngseasy_alignment]: Genome Build [${REFDIR}]"  ${LOGFILE}
+
 else
   logger_ngseasy "[ngseasy_alignment]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
   exit 1
