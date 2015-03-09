@@ -411,7 +411,7 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name gatkrecab_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
-  "java -Xmx48g -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  "java -Xmx48g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
   -nct ${NCPU} \
   -R ${REFFASTA} \
@@ -421,7 +421,7 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
   -knownSites ${KNOWN_SNPS_1000G} \
   -I ${BAMIN} \
   -o ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.recal_data.table && \
-  java -Xmx48g -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  java -Xmx48g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
   -T PrintReads \
   -nct ${NCPU} \
   -R ${REFFASTA} \
