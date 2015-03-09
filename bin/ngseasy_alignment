@@ -356,7 +356,7 @@ elif [[ "${ALIGNER}" == "bwa" ]]; then
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name alignment_${BAM_PREFIX} \
-  -t compbio/ngseasy-bwa:${NGSEASYVERSION} sudo /bin/bash -c \
+  -t compbio/ngseasy-bwa:${NGSEASYVERSION} /bin/bash -c \
   "/usr/local/pipeline/bwa-0.7.10/bwa mem \
   -M \
   -t ${NCPU} \
@@ -399,7 +399,7 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
   ${DOCKER_RUN} \
   --name alignment_${BAM_PREFIX} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-  -t compbio/ngseasy-novoalign:${NGSEASYVERSION} sudo /bin/bash -c \
+  -t compbio/ngseasy-novoalign:${NGSEASYVERSION} /bin/bash -c \
     "/usr/local/pipeline/novocraft/novoalign \
    -d ${GENOMEINDEX}.fasta.novoindex \
    -f ${FQ1} ${FQ2} \
@@ -453,7 +453,7 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
   ${DOCKER_RUN} \
   --name alignment_${BAM_PREFIX}_bwatmp \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-  -t compbio/ngseasy-bwa:${NGSEASYVERSION} sudo /bin/bash -c \
+  -t compbio/ngseasy-bwa:${NGSEASYVERSION} /bin/bash -c \
   "/usr/local/pipeline/bwa-0.7.10/bwa mem \
   -M \
   -t ${NCPU} \
@@ -497,7 +497,7 @@ done
     ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -t compbio/ngseasy-stampy:${NGSEASYVERSION} sudo /bin/bash -c \
+    -t compbio/ngseasy-stampy:${NGSEASYVERSION} /bin/bash -c \
     "python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
       -g ${GENOMEINDEX} \
       -h ${GENOMEINDEX} \
