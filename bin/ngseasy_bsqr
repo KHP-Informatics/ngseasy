@@ -374,13 +374,32 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
   --storeQualTag OQ \
   --maxBaseQual 40;
 
-
   elif [[ "${BSQR}" == "gatk-bsqr"  ]]; then
 
       BAMIN=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam
       BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-bsqr.bam
+  
+  logger_ngseasy "[ngseasy_bsqr]:START Base quality score recalibration using GATK" ${LOGFILE}
 
-      else
+  ${DOCKER_RUN} \
+  --rm=true \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name gatkrecab_${BAM_PREFIX} \
+  -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
+  "java -Xmx6g -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  -T BaseRecalibrator \
+  -nct ${NCPU} \
+  -R ${REFFASTA} \
+  -I ${BAMIN} \
+  -o ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam. recal_data.table && \
+  java -Xmx6g -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  -T PrintReads \
+  -nct ${NCPU} \
+  -R ${REFFASTA} \
+  -I ${BAMIN} \
+  -BSQR ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam. recal_data.table \
+  -0 ${BAMOUT}"
+else
         logger_ngseasy "[ngseasy_bsqr]:ERROR: Do not recognise BSQR option [${BSQR}]. This should be one or [bam-bsqr] [gatk-bsqr] or [no-bsqr]. Exiting" ${LOGFILE}
         sleep 2s
         exit 1
