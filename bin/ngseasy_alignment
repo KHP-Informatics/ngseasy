@@ -300,13 +300,19 @@ then
 else
 	logger_ngseasy "[ngseasy_alignment]:Trimmed FastQC Data exsts" ${LOGFILE}
 	
-	logger_ngseasy "[ngseasy_alignment]:Setting FQ1:[${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_1.filtered.fastq.gz] " ${LOGFILE}
+	logger_ngseasy "[ngseasy_alignment]:Setting FQ1:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz] " ${LOGFILE}
 
-	FQ1="${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_1.filtered.fastq.gz"
+##############
+## FQ1
+#
+	FQ1="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz"
 	
-	logger_ngseasy "[ngseasy_alignment]:Setting FQ2:[${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_2.filtered.fastq.gz] " ${LOGFILE}
+	logger_ngseasy "[ngseasy_alignment]:Setting FQ2:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz] " ${LOGFILE}
 
-	FQ2="${SOUTDocker}/fastq/${SAMPLE_ID}_${NGS_TYPE}_${TRIM}_2.filtered.fastq.gz"
+##############
+## FQ2
+#
+	FQ2="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}__2.filtered.fastq.gz"
 fi
 
 ########################################################################################################
