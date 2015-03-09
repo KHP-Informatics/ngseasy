@@ -311,18 +311,28 @@ logger_ngseasy "[ngseasy_variant_calling]:Setting BAM prefix to [${BAM_PREFIX}] 
 ## BAM Files
 #
 
-${BAM_PREFIX}.dupemk.bam
-${BAM_PREFIX}.dupemk.bam-bsqr.bam
-${BAM_PREFIX}.dupemk.bam-bsqr.bam-realn.bam
-${BAM_PREFIX}.dupemk.gatk-bsqr.bam
-${BAM_PREFIX}.dupemk.gatk-bsqr.gatk-realn.bam
+if [[ condition ]]; then
+  #statements
+elif [[ condition ]]; then
+  #statements
+elif [[ condition ]]; then
+  #statements
+else
+  #statements
+fi
+
+BAMFILE=${BAM_PREFIX}.dupemk.bam
+BAMFILE=${BAM_PREFIX}.dupemk.bam-bsqr.bam
+BAMFILE=${BAM_PREFIX}.dupemk.bam-bsqr.bam-realn.bam
+BAMFILE=${BAM_PREFIX}.dupemk.gatk-bsqr.bam
+BAMFILE=${BAM_PREFIX}.dupemk.gatk-bsqr.gatk-realn.bam
 
 # filtered
-${BAM_PREFIX}.dupemk.filtered.bam
-${BAM_PREFIX}.dupemk.bam-bsqr.filtered.bam
-${BAM_PREFIX}.dupemk.bam-bsqr.bam-realn.filtered.bam
-${BAM_PREFIX}.dupemk.gatk-bsqr.filtered.bam
-${BAM_PREFIX}.dupemk.gatk-bsqr.gatk-realn.filtered.bam
+BAMFILE=${BAM_PREFIX}.dupemk.filtered.bam
+BAMFILE=${BAM_PREFIX}.dupemk.bam-bsqr.filtered.bam
+BAMFILE=${BAM_PREFIX}.dupemk.bam-bsqr.bam-realn.filtered.bam
+BAMFILE=${BAM_PREFIX}.dupemk.gatk-bsqr.filtered.bam
+BAMFILE=${BAM_PREFIX}.dupemk.gatk-bsqr.gatk-realn.filtered.bam
 
 
 

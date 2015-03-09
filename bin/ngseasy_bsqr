@@ -1,251 +1,323 @@
-#!/bin/bash -x
-# Collection of NGSeasy Functions
-# Stephen Newhouse <stephen.j.newhouse@gmail.com>
-# Version 0.9.0
+#!/bin/bash
 
-##--------------------------------------------------##
-## NGS MarkDuplicates
-##--------------------------------------------------##
+################################################################
+# Program: ngseasy_bsqr
+# Version 1.0 
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+#################################################################
+echo -e "\n################################################################"
+echo -e "# Program: ngseasy_bsqr"
+echo -e "# Version 1.0"
+echo -e "# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)"
+echo -e "#################################################################\n"
 
-#usage printing func
-usage()
-{
-cat << EOF
-  This script sets up the NGSeasy docker GATK container and runs BaseRecalibrator then PrintReads BQSR recalibration on *.realn.bam files
-  See NGSEasy containerized instructions.
+#################################################################
 
-  ARGUMENTS:
-  -h      Flag: Show this help message
-  -c      NGSeasy project and run configureation file
-  -d      NGSeasy project directory
+########################################################################################################
+## test if docker is intsalled and exit if not
+command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
 
-  EXAMPLE USAGE:
-    
-    ngseasy_base_recal -c config.file.tsv -d project_directory
+########################################################################################################
+## Set version and run date
+#
+NGSEASYVERSION="1.0"
+RUNDATE=`date +"%d%m%y"`
 
-EOF
+########################################################################################################
+## docker run command
+#
+DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+
+########################################################################################################
+## global logging fuction
+#
+function logger_ngseasy() {
+ message=${1}
+ mylogfile=${2}
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
 
-#get options for command line args
+########################################################################################################
+## global usage
+#
+function ngseasy_bsqr_usage() {
+    echo "
+Program: ngseasy_bsqr
+Version 1.0
+Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+
+usage:   ngseasy_bsqr -c <config_file> -d <project_directory>
+
+options:  -c  STRING  configuration file
+          -d  STRING  project directory
+          -h  NULL    show this message
+
+ngseasy_bsqr sets up the NGSeasy docker containers for your Base quality score recalibrator of choice ie bamUtil of GATK.
+"
+}
+
+########################################################################################################
+## check and make ~/ngseasy_logs if needed
+#
+if [[ ! -e  ${HOME}/ngseasy_logs ]]
+then
+  mkdir ${HOME}/ngseasy_logs
+  global_run_logs="${HOME}/ngseasy_logs"
+fi
+
+########################################################################################################
+## Check options passed in.
+#
+if test -z "$2"
+then
+  logger_ngseasy "[ngseasy_bsqr]:ERROR:No options found"
+  ngseasy_bsqr_usage
+  exit 1
+fi
+
+########################################################################################################
+## get options for command line args
   while  getopts "hc:d:" opt
   do
 
       case ${opt} in
-	  h)
-	  usage #print help
-	  exit 0
-	  ;;
-	  
-	  c)
-	  config_tsv=${OPTARG}
-	  ;;
+    h)
+    ngseasy_bsqr_usage #print help
+    exit 0
+    ;;
+    
+    c)
+    config_tsv=${OPTARG}
+    ;;
 
-	  d)
-	  project_directory=${OPTARG}
-	  ;; 
+    d)
+    project_directory=${OPTARG}
+    ;; 
       esac
   done
 
-#check config file exists.
-if [ ! -e "${config_tsv}" ] 
+########################################################################################################  
+## check config file exists.
+#
+if [[ ! -e "${config_tsv}" ]] 
 then
-	    echo "ERROR :  ${config_tsv} does not exist....exiting "
-	    usage;
-	    exit 1;
+      logger_ngseasy "[ngseasy_bsqr]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
+      ngseasy_bsqr_usage;
+      exit 1;
+else
+      logger_ngseasy "[ngseasy_bsqr]:Configuration file found [${config_tsv}] "
 fi
 
-#check exists.
-if [ ! -d "${project_directory}" ]
+########################################################################################################
+## check project_directory exists.
+#
+if [[ ! -d "${project_directory}" ]]
   then
-    echo "ERROR : project_directory ${project_directory} does not exist "
-    usage;
+    logger_ngseasy "[ngseasy_bsqr]:ERROR : project_directory [${project_directory}] does not exist "
+    ngseasy_bsqr_usage;
     exit 1;
+else
+      logger_ngseasy "[ngseasy_bsqr]:Top Level Project Directory [${project_directory}] "
 fi
 
-#---------------------------------------------------------------------------------#
-#Read config file 
-while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
-do
-# set varibales  
-  DATE=`date +"%d%m%y"`
-  PROJECT_ID=$f1
-  SAMPLE_ID=$f2
-  FASTQ1=$f3
-  FASTQ2=$f4
-  PROJECT_DIR=$f5 
-  DNA_PREP_LIBRARY_ID=$f6
-  NGS_PLATFORM=$f7
-  NGS_TYPE=$f8
-  BED_ANNO=$f9
-  PIPELINE=$f10
-  ALIGNER=$f11
-  VARCALLER=$f12
-  GTMODEGATK=$f13
-  CLEANUP=$f14
-  NCPU=$f15
-	VERSION=$f16
-  NGSUSER=$f17
+########################################################################################################
+## check Num feilds in  ${config_tsv}
+#
+logger_ngseasy "[ngseasy_bsqr]:Reading [${config_tsv}] "
+logger_ngseasy "[ngseasy_bsqr]:Checking number of feilds in  [${config_tsv}] "
 
+numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
-#Logfile 
-LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
-
-#OUTPUT SAMPLE DIR 
-SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
-
-#------------------------Container I/O--------------------------------#
-#run compbio/ngseasy-fastq
-#Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
-DOCKERHOME="/home/pipeman/ngs_projects"
-
-#Docker OUTPUT SAMPLE DIR 
-SOUTDocker=${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}
-
-#bamprefix
-BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${NGS_PLATFORM}.${ALIGNER}
-
-#known indels and SNPs
-KNOWN_INDELS=/home/pipeman/gatk_resources/Mills_and_1000G_gold_standard.indels.b37.vcf
-KNOWN_SNPS_1000G=/home/pipeman/gatk_resources/1000G_phase1.snps.high_confidence.b37.vcf
-KNOWN_SNPS_OMNI=/home/pipeman/gatk_resources/1000G_omni2.5.b37.vcf
-KNOWN_SNPS_b138=/home/pipeman/gatk_resources/dbsnp_138.b37.vcf
-
-
-#---------------------------------------------------------------------------------#
-if [ ! -e ${SOUT}/alignments/${BAM_PREFIX}.recal.bam ]
+if [[  "$numcols" -lt 23 ]] 
 then
+      logger_ngseasy "[ngseasy_bsqr]:ERROR: [${config_tsv}] format issue. Check your file! "
+      exit 1;
+  else 
+      logger_ngseasy "[ngseasy_bsqr]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "     
+fi
 
-# BaseRecalibrator pre recal
-	logger_ngseasy " START BaseRecalibrator  "  ${LOGFILE}
 
-  docker run \
-  -P \
-  --name BaseRecalibrator_${SAMPLE_ID} \
-  --volumes-from volumes_container \
-  -t compbio/ngseasy-gatk:${VERSION} \
-  java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar \
-  -T BaseRecalibrator \
-  -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-  -nct ${NCPU}  \
-  -I ${SOUTDocker}/alignments/${BAM_PREFIX}.realn.bam \
-  -o ${SOUTDocker}/alignments/${BAM_PREFIX}.realn.bam.BaseRecalibrator.table \
-  --knownSites ${KNOWN_INDELS} \
-  --knownSites ${KNOWN_SNPS_1000G} \
-  --knownSites ${KNOWN_SNPS_OMNI} \
-  --knownSites ${KNOWN_SNPS_b138};
+########################################################################################################
+## Read config file 
 
-  docker logs BaseRecalibrator_${SAMPLE_ID} >> ${LOGFILE}.log
+## check ${config_tsv}. is this a batch file or the orginal config file 
+#
+logger_ngseasy "[ngseasy_bsqr]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
-  docker rm BaseRecalibrator_${SAMPLE_ID}
+hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
 
-  logger_ngseasy " END BaseRecalibrator  "  ${LOGFILE}
+if [[ "${config_tsv}" == *.batch.* ]]
+then
+  logger_ngseasy "[ngseasy_bsqr]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[ngseasy_bsqr]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+elif [[ "$hasheader" -eq 1 ]]
+then
+  logger_ngseasy "[ngseasy_bsqr]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_bsqr]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  sed 1d ${config_tsv} > ${config_tsv}.tmp
+  RUNFILE="${config_tsv}.tmp"
+  logger_ngseasy "[ngseasy_bsqr]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+else
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[ngseasy_bsqr]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_bsqr]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+fi
 
-#PrintReads BQSR recalibration 
-  logger_ngseasy " START PrintReads BQSR recalibration   "  ${LOGFILE}
+########################################################################################################
+## Read config and loop through all lines calling fastqc docker
+#
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
+do
+PROJECT_ID=$f1;
+SAMPLE_ID=$f2;
+FASTQ1=$f3;
+FASTQ2=$f4;
+PROJECT_DIR=$f5;
+DNA_PREP_LIBRARY_ID=$f6;
+NGS_PLATFORM=$f7;
+NGS_TYPE=$f8;
+BAIT=$f9;
+CAPTURE=$f10;
+GENOMEBUILD=$f11;
+FASTQC=$f12;
+TRIM=$f13;
+BSQR=$f14;
+REALN=$f15;
+ALIGNER=$f16;
+VARCALLER=$f17;
+CNV=$f18;
+ANNOTATOR=$f19;
+CLEANUP=$f20;
+NCPU=$f21;
+NGSEASYVERSION=$f22;
+NGSUSER=$f23;
+DATE=`date +"%d%m%y"`
 
-  docker run \
-  -P \
-  --name PrintReads_${SAMPLE_ID} \
-  --volumes-from volumes_container \
-  -t compbio/ngseasy-gatk:${VERSION} \
-  java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar \
-  -T PrintReads \
-  -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-  -nct ${NCPU} \
-  --baq RECALCULATE \
-  --baqGapOpenPenalty 40 \
-  --BQSR ${SOUTDocker}/alignments/${BAM_PREFIX}.realn.bam.BaseRecalibrator.table \
-  -I ${SOUTDocker}/alignments/${BAM_PREFIX}.realn.bam \
-  -o ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam;
+########################################################################################################
+## LOGFILE 
+#
 
-  docker logs PrintReads_${SAMPLE_ID} >> ${LOGFILE}.log
+## check and make log directory
+#
+if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
+then
+  mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
+fi
 
-  docker rm PrintReads_${SAMPLE_ID}
+## LOGFILE 
+#
+LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_bsqr"
+logger_ngseasy "[ngseasy_bsqr]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
-#index bam
-	logger_ngseasy " START samtools index [${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam]  "  ${LOGFILE}
+## check and make logfile
+#
+if [ ! -e "${LOGFILE}.log" ]
+then
+  touch ${LOGFILE}.log
+fi
 
-  docker run \
-  -P \
-  --name samtools_index_${SAMPLE_ID} \
-  --volumes-from volumes_container \
-  -t compbio/ngseasy-samtools:${VERSION} \
-  /usr/local/pipeline/samtools/samtools index ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam
+## read config_file
+#
+logger_ngseasy "[ngseasy_bsqr]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
+$VERSION\t$NGSUSER]"  ${LOGFILE}
 
-  docker logs samtools_index_${SAMPLE_ID} >> ${LOGFILE}.log
 
-  docker rm samtools_index_${SAMPLE_ID}
+########################################################################################################
+## OUTPUT SAMPLE DIR 
+#
+SOUT="${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}"
+logger_ngseasy "[ngseasy_bsqr]:Sample Directory [${SOUT}] "
 
-  logger_ngseasy " END PrintReads BQSR recalibration  "  ${LOGFILE}
+########################################################################################################
+## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
+#
+DOCKERHOME="/home/pipeman/ngs_projects"
+logger_ngseasy "[ngseasy_bsqr]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
 
-# BaseRecalibrator post recal
-  logger_ngseasy " START BaseRecalibrator post recal  "  ${LOGFILE}
+########################################################################################################
+## Docker OUTPUT SAMPLE DIR 
+#
+SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
-  docker run \
-  -P \
-  --name BaseRecalibrator_${SAMPLE_ID} \
-  --volumes-from volumes_container \
-  -t compbio/ngseasy-gatk:${VERSION} \
-  java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar \
-  -T BaseRecalibrator \
-  -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-  -nct ${NCPU}  \
-  -I ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
-  -o ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam.BaseRecalibrator.table \
-  --knownSites ${KNOWN_INDELS} \
-  --knownSites ${KNOWN_SNPS_1000G} \
-  --knownSites ${KNOWN_SNPS_OMNI} \
-  --knownSites ${KNOWN_SNPS_b138};
+logger_ngseasy "[ngseasy_bsqr]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
 
-  docker logs BaseRecalibrator_${SAMPLE_ID} >> ${LOGFILE}.log
 
-  docker rm BaseRecalibrator_${SAMPLE_ID}
+########################################################################################################
+## check local dir exists
+#
+if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
+then
+  logger_ngseasy "[ngseasy_bsqr]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
+  exit 1
+else 
+  logger_ngseasy "[ngseasy_bsqr]: Setting OUTPUT directory to [${SOUT}]" ${LOGFILE}
+fi
 
-  logger_ngseasy " END BaseRecalibrator post recal "  ${LOGFILE}
+########################################################################################################
+## check for fastq files exist
+#
+if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
+then
+  logger_ngseasy "[ngseasy_bsqr]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
+  exit 1
+fi
+
+########################################################################################################
+## Select Genome Build
+#
+logger_ngseasy "[ngseasy_bsqr]:Checking genome selected]"  ${LOGFILE}
+
+if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
+  GENOMEINDEX="${REFDIR}/human_g1k_v37"
+  logger_ngseasy "[ngseasy_bsqr]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+
+elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
+  GENOMEINDEX="${REFDIR}/ucsc.hg19"
+  logger_ngseasy "[ngseasy_bsqr]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
 
 else
-  logger_ngseasy " [${SOUT}/alignments/${BAM_PREFIX}.recal.bam]  already exists"  ${LOGFILE}
+  logger_ngseasy "[ngseasy_bsqr]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
+  exit 1
 fi
 
-# AnalyzeCovariates post recal plots ~ needs R rehsape and gplots
-# https://github.com/broadgsa/gatk-protected/blob/323f22f852c90a6cf53ece5e72c165b1166ad8c7/public/gatk-tools-public/src/main/resources/org/broadinstitute/gatk/utils/recalibration/BQSR.R
-# 
-# install.packages(c("ggplot2","gplots","reshape","grid","tools","gsalib"),dependencies=TRUE)
-#library("ggplot2")
-#library(gplots)
-#library("reshape")
-#library("grid")
-#library("tools") #For compactPDF in R 2.13+
-#library(gsalib)
-#AnalyzeCovariates keeps failing - due to R. GATK dont document R requirements for these scripts to work!  
-#install.packages(c("ggplot2","gplots","reshape","grid","tools","gsalib"),dependencies=TRUE)
-#Warning message:
-#packages 'grid', 'tools' are not available (for R version 3.1.1)
-#Drop plots of recal data - save csv 
+
+########################################################################################################
+## check if Trimmed data alread exists and use it
 #
-  logger_ngseasy " START AnalyzeCovariates post recal  "  ${LOGFILE}
+if [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz" ]
+then
+  logger_ngseasy "[ngseasy_bsqr]:ERROR:Trimmed FastQC Data does not exsts. Exiting" ${LOGFILE}
+  logger_ngseasy "[ngseasy_bsqr]:Please run ngseasy_trimmomatic -c ${config_tsv} -d ${PROJECT_DIR}" ${LOGFILE}
+  sleep 1s
+  exit 1
+else
+  logger_ngseasy "[ngseasy_bsqr]:Trimmed FastQC Data exsts" ${LOGFILE}
+  
+  logger_ngseasy "[ngseasy_bsqr]:Setting FQ1:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz] " ${LOGFILE}
 
-  docker run \
-  -P \
-  --name AnalyzeCovariates_${SAMPLE_ID} \
-  --volumes-from volumes_container \
-  -t compbio/ngseasy-gatk:${VERSION} \
-  java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar \
-  -T AnalyzeCovariates \
-  -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-  -before ${SOUTDocker}/alignments/${BAM_PREFIX}.realn.bam.BaseRecalibrator.table \
-  -after ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam.BaseRecalibrator.table \
-  -csv ${SOUTDocker}/reports/${BAM_PREFIX}.recal.bam.BaseRecalibrator.BQSR.csv \
-#  -plots ${SOUTDocker}/reports/${BAM_PREFIX}.recal.bam.BaseRecalibrator.BQSR.pdf;
+##############
+## FQ1
 #
-  docker logs AnalyzeCovariates_${SAMPLE_ID} >> ${LOGFILE}.log#
+  FQ1="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz"
+  
+  logger_ngseasy "[ngseasy_bsqr]:Setting FQ2:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz] " ${LOGFILE}
 
-  docker rm AnalyzeCovariates_${SAMPLE_ID}
+##############
+## FQ2
+#
+  FQ2="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz"
+fi
 
-  logger_ngseasy " END AnalyzeCovariates post recal "  ${LOGFILE}
+########################################################################################################
+## BAM FILE NAME
+#
+# SAMPLE_ID.WEX.PE.ILLUMINA.atrim.bwa.b37.dupemk.bam [dupemk.${BSQR}.bam] [dupemk.${BSQR}.${REALN}.bam]
+#
+BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}"
 
-
-#------permissions------------#
-chmod -R 777 ${SOUT}/*
-
-done < ${config_tsv}
+logger_ngseasy "[ngseasy_bsqr]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE}
