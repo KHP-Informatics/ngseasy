@@ -168,6 +168,10 @@ fi
 ########################################################################################################
 ## Read config and loop through all lines calling fastqc docker
 #
+GENOMEBUILD=""
+REFDIR=""
+GENOMEINDEX=""
+
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
 PROJECT_ID=$f1;
@@ -294,9 +298,9 @@ elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
   logger_ngseasy "[ngseasy_variant_calling]:dbSNP file for bam recab hg19 [${DBSNPhg19}]" ${LOGFILE}
 
   #known indels and SNPs
-  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.hg19.cf"
-  KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.hg19.vcf"
-  KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.hg19.vcf"
+  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf"
+  KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.hg19.sites.vcf"
+  KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.hg19.sites.vcf"
   KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.hg19.vcf"
 
 else
@@ -386,13 +390,17 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name gatkrecab_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
-  "java -Xmx6g -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  "java -Xmx48g -jar /usr/local/bin/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
   -nct ${NCPU} \
   -R ${REFFASTA} \
+  -knownSites ${KNOWN_INDELS} \
+  -knownSites ${KNOWN_SNPS_b138} \
+  -knownSites ${KNOWN_SNPS_OMNI} \
+  -knownSites ${KNOWN_SNPS_1000G} \
   -I ${BAMIN} \
-  -o ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam. recal_data.table && \
-  java -Xmx6g -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  -o ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.recal_data.table && \
+  java -Xmx48g -jar /usr/local/bin/GenomeAnalysisTK.jar \
   -T PrintReads \
   -nct ${NCPU} \
   -R ${REFFASTA} \
@@ -400,10 +408,10 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
   -BSQR ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam. recal_data.table \
   -0 ${BAMOUT}"
 else
-        logger_ngseasy "[ngseasy_bsqr]:ERROR: Do not recognise BSQR option [${BSQR}]. This should be one or [bam-bsqr] [gatk-bsqr] or [no-bsqr]. Exiting" ${LOGFILE}
-        sleep 2s
-        exit 1
-      fi
+  logger_ngseasy "[ngseasy_bsqr]:ERROR: Do not recognise BSQR option [${BSQR}]. This should be one or [bam-bsqr] [gatk-bsqr] or [no-bsqr]. Exiting" ${LOGFILE}
+  sleep 2s
+  exit 1
+fi
 
 ######################################################################################################## 
 ## permissions
