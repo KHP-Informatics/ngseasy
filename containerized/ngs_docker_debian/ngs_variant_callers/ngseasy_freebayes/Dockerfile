@@ -1,12 +1,12 @@
 # Base image
-FROM compbio/ngseasy-base:latest
+FROM compbio/ngseasy-base:1.0
 
 # Maintainer 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
-ENV HOME /root
-ENV DEBIAN_FRONTEND noninteractive
+# ENV HOME /root
+# ENV DEBIAN_FRONTEND noninteractive
 
 # Update
 RUN apt-get update -y && apt-get upgrade -y
@@ -16,10 +16,10 @@ RUN cd /usr/local/pipeline \
   && git clone --recursive git://github.com/ekg/freebayes.git \
   && cd /usr/local/pipeline/freebayes \
   && make \
-  && chmod -R 755 /usr/local/pipeline/freebayes \
-  && chown -R pipeman:ngsgroup /usr/local/pipeline/freebayes \
+  && chmod -R 777 /usr/local/pipeline/freebayes \
   && sed -i '$aPATH=${PATH}:/usr/local/pipeline/freebayes/bin' /home/pipeman/.bashrc \
-  && echo "alias ngsFreebayes='/usr/local/pipeline/freebayes/bin'" >>  /home/pipeman/.bashrc
+  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/freebayes/bin' ~/.bashrc \
+  && cp -v /usr/local/pipeline/freebayes/bin/* /usr/local/bin
 
 
 #-------------------------------PERMISSIONS--------------------------
@@ -31,7 +31,7 @@ RUN chown -R pipeman:ngsgroup /usr/local/pipeline
 RUN rm -rf /tmp/*
 
 #open ports private only
-EXPOSE 80
+EXPOSE 8080
 
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]

@@ -1,0 +1,164 @@
+#!/bin/bash -e -x
+
+################################################################
+# Program: ngseasy
+# Version 1.0 
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+#################################################################
+
+
+## global usage
+function usage_ngseasy() {
+    echo "
+Program: ngseasy
+Version 1.0
+Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+
+usage:   ngseasy -c <config_file> -d <project_directory> [options]
+
+options:  -t  1=quality trim [default], 0=no quality trimming 
+          -g  1=GATK, 0=No GATK [default] 
+          -r  1=Indel Realignment, 0=No Indel Realignment [default]
+          -h  show this message 
+"
+}
+
+### set defaults
+trimm=1
+gatk=0
+realign=1
+project_directory=""
+config_tsv=""
+
+## Check options passed in.
+    if test -z "$2"
+    then
+	usage_ngseasy
+	exit 1
+    f
+
+## get options for command line args
+while  getopts "hc:d:tgr" opt
+do
+
+  case ${opt} in
+
+   h)
+   usage_ngseasy #print help
+   exit 0
+   ;;
+
+   c)
+   config_tsv=${OPTARG}
+   echo "-c = ${config_tsv}"
+   ;;
+
+   d)
+   project_directory=${OPTARG}
+   echo "-d = ${project_directory}"
+   ;; 
+
+   t)
+   trimm=${OPTARG}
+   echo "-t = ${trimm}"
+   ;; 
+ 
+   g)
+   gatk=${OPTARG}
+   echo "-d = ${gatk}"
+   ;; 
+ 
+   r)
+   realign=${OPTARG}
+   echo "-d = ${realign}"
+   ;; 
+   
+  esac
+
+done
+
+#check exists.
+if [ ! -e "${config_tsv}" ] 
+  then
+	  usage_ngseasy;
+	  echo "ERROR : ${config_tsv} does not exist\n"
+	  exit 1;
+fi
+
+#check exists.
+if [ ! -d "${project_directory}" ] 
+  then
+	  usage_ngseasy;
+	  echo "ERROR :  ${project_directory} does not exist\n"
+	  exit 1;
+fi
+
+## begin reading config file line by line
+  
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17
+do
+
+# set varibales
+  DATE=`date +"%d%m%y"`
+  PROJECT_ID=$f1
+  SAMPLE_ID=$f2
+  FASTQ1=$f3
+  FASTQ2=$f4
+ # PROJECT_DIR=$f5
+  PROJECT_DIR=${project_directory}
+  DNA_PREP_LIBRARY_ID=$f6
+  NGS_PLATFORM=$f7
+  NGS_TYPE=$f8
+  BED_ANNO=$f9
+  PIPELINE=$f10
+  ALIGNER=$f11
+  VARCALLER=$f12
+  GTMODEGATK=$f13
+  CLEANUP=$f14
+  NCPU=$f15
+  VERSION=$f16
+  NGSUSER=$f17
+
+#mounted docker dir
+#script run in docker container and will look for volumes specifef in ngseasy_volumes_contaier
+DOCKERHOME="/home/pipeman/ngs_projects"
+
+#log it 
+LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}
+
+logger_ngseasy "ngseasy: run pipeline: ${PIPELINE}"  ${LOGFILE}
+
+#OUTPUT SAMPLE DIR
+# /home/pipeman/ngs_projects/ is the mounted docker volume
+
+SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
+
+#time stamp
+run=`date +"%d%m%y-%H%M%S"`
+
+#make sample spec config file and save to sample run folder 
+echo "${PROJECT_ID} ${SAMPLE_ID} ${FASTQ1} ${FASTQ2} ${PROJECT_DIR} ${DNA_PREP_LIBRARY_ID} ${NGS_PLATFORM} ${NGS_TYPE} ${BED_ANNO} ${PIPELINE} ${ALIGNER} ${VARCALLER} ${GTMODEGATK} ${CLEANUP} ${NCPU} ${VERSION} ${NGSUSER}" | perl -p -i -e 's/ /\t/g' > ${SOUT}/${SAMPLE_ID}_${PIPELINE}_${run}.config.tsv
+
+#sample config 
+sample_config=${SOUT}/${SAMPLE_ID}_${PIPELINE}_${run}.config.tsv
+
+logger_ngseasy "Running: bash ${PIPELINE} -c ${sample_config} -d ${PROJECT_DIR}" ${LOGFILE}
+
+/bin/bash ${PIPELINE} -c ${sample_config} -d ${PROJECT_DIR} -t ${trimm} -g ${gatk} -r ${realign}
+
+done < ${config_tsv}
+
+
+ngseasy_full
+ngseasy_fastqc
+ngseasy_trimmomatic
+ngseasy_alignment
+ngseasy_indel_realn
+ngseasy_base_recal
+ngseasy_ogap_realn
+ngseasy_bamutil_base_recal
+ngseasy_variant_calling
+
+
+
+

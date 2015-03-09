@@ -1,5 +1,5 @@
 # Base image
-FROM compbio/ngseasy-base:latest
+FROM compbio/ngseasy-base:1.0
 
 # Maintainer 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
@@ -16,6 +16,7 @@ RUN apt-get update && \
 
 # + ANNOVAR (see licence, and registration)
 # Available on reg:  http://www.openbioinformatics.org/annovar/download/Ht8qRwQSTi/annovar.latest.tar.gz
+# 11.2014 : http://www.openbioinformatics.org/annovar/download/g4EUwyphi9/annovar.latest.tar.gz
 
 RUN wget -O /tmp/annovar.latest.tar.gz http://www.openbioinformatics.org/annovar/download/g4EUwyphi9/annovar.latest.tar.gz \
   && tar xzvf /tmp/annovar.latest.tar.gz -C /usr/local/pipeline/ \
@@ -28,7 +29,7 @@ COPY get_annovar_databases.sh /usr/local/pipeline/annovar/
 COPY get_annovar_gene_databases.sh /usr/local/pipeline/annovar/
 
 # RUN Them
-RUN /bin/bash /usr/local/pipeline/annovar/get_annovar_gene_databases.sh && /bin/bash /usr/local/pipeline/annovar/get_annovar_databases.sh
+# RUN /bin/bash /usr/local/pipeline/annovar/get_annovar_gene_databases.sh && /bin/bash /usr/local/pipeline/annovar/get_annovar_databases.sh
   
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 776 /usr/local/pipeline/
@@ -41,7 +42,7 @@ RUN usermod -a -G sudo pipeman
 RUN rm -rf /tmp/*
 
 # open ports private only
-EXPOSE 80
+EXPOSE 8080
 
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]

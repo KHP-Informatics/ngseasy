@@ -1,14 +1,11 @@
-# Delly Dockerfile
-#
-# Version 0.0.3
-# build with: sudo docker build --rm --no-cache -t delly - < Dockerfile
-# run with: sudo docker run -i -t delly /bin/bash
+FROM compbio/ngseasy-base:1.0
 
-# use the ubuntu base image
-# FROM ubuntu:13.10
-FROM ubuntu
+# Maintainer from Tobias Rausch rausch@embl.de
+MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
-MAINTAINER Tobias Rausch rausch@embl.de
+# Set correct environment variables.
+# ENV HOME /root
+# ENV DEBIAN_FRONTEND noninteractive
 
 # update package repository
 RUN apt-get update
@@ -20,5 +17,34 @@ RUN apt-get install -y build-essential g++ git cmake zlib1g-dev libboost-date-ti
 ENV BOOST_ROOT /usr
 
 # install delly
-RUN git clone --recursive https://github.com/tobiasrausch/delly.git
-RUN cd delly/ ; make all
+RUN cd /usr/local/pipeline && \
+    wget https://github.com/tobiasrausch/delly/releases/download/v0.6.1/delly_v0.6.1_CentOS5.4_x86_64bit && \
+    wget https://github.com/tobiasrausch/delly/releases/download/v0.6.1/delly_v0.6.1_parallel_linux_x86_64bit && \
+    mv -v delly_v0.6.1_CentOS5.4_x86_64bit delly && \
+    mv -v delly_v0.6.1_parallel_linux_x86_64bit delly-parallel && \
+    chmod -R 777 /usr/local/pipeline && \
+    cp -v delly /usr/local/bin && \
+    cp -v delly-parallel /usr/local/bin
+
+#-------------------------------PERMISSIONS--------------------------
+RUN chmod -R 777 /usr/local/pipeline
+RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+
+#---------------------------------------------------------------------
+#Cleanup the temp dir
+RUN rm -rf /tmp/*
+
+#open ports private only
+EXPOSE 8080
+
+# Use baseimage-docker's bash.
+CMD ["/bin/bash"]
+
+#Clean up APT when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get autoclean && apt-get autoremove -y && rm -rf /var/lib/{apt,dpkg,cache,log}/
+
+
+
+
+

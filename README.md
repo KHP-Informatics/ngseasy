@@ -1,3 +1,5 @@
+![NGSeasy_logo](https://github.com/KHP-Informatics/ngseasy/blob/sjn_dev/figs/NGSeasy_logo_0.0.1.png "NGSeasy_logo")
+
 NGSeasy (beta)
 ===================
 ** This is the latest dev project **  
@@ -8,7 +10,7 @@ NGSeasy (beta)
 Publication: pending
 
 Authors: Stephen J Newhouse, Amos Folarin , Maximilian Kerz  
-Release Version: **1.0.0b**  
+Release Version: **1.0.0**  
 
 ****************
 ### [A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box] 
@@ -16,8 +18,6 @@ Release Version: **1.0.0b**
 <a href="https://twitter.com/share" class="twitter-share-button" data-via="s_j_newhouse">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**
-
-**Getting started: [The 12 Easy Steps to NGS Freedom!](https://github.com/KHP-Informatics/ngs#the-12-easy-steps-to-ngs-freedom)**  
 
 
 **Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
@@ -111,13 +111,13 @@ The NGSeasy pipelines implement the following :-
     - **[STAMPY](http://www.well.ox.ac.uk/project-stampy)**   
     - **[NOVOALIGN](http://www.novocraft.com)**  
     - **[BOWTIE2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)**  
-    - *[SNAP](http://snap.cs.berkeley.edu/): COMING SOON!*
+    - **[SNAP](http://snap.cs.berkeley.edu/)**  
     
-- **SAM/BAM sorting and indexing** with **[SAMTOOLS](https://github.com/samtools/samtools)**.  
+- **SAM/BAM sorting and indexing** with **[SAMBAMBA](https://github.com/lomereiter/sambamba)**.  
 
 - **Read Group information added** using **[PICARDTOOLS](http://broadinstitute.github.io/picard/):[AddOrReplaceReadGroups](http://broadinstitute.github.io/picard/command-line-overview.html#AddOrReplaceReadGroups)** 
 
-- **Duplicate marking** with **[PICARDTOOLS](http://broadinstitute.github.io/picard/):[MarkDuplicates](http://broadinstitute.github.io/picard/command-line-overview.html#MarkDuplicates)**.  
+- **Duplicate marking** with **[SAMBLASTER](https://github.com/GregoryFaust/samblaster)**.  
 
 >For academic users and/or commercial/clinical groups whom have paid for GATK licensing, the next steps are to perform   
 
@@ -152,7 +152,8 @@ The NGSeasy pipelines implement the following :-
     - **[cn.MOPS](http://www.bioinf.jku.at/software/cnmops/): in Dev**
     - **[m-HMM](https://www.stt.msu.edu/users/hengwang/mHMM.html): in Dev**
     - **[ExomeDepth](http://cran.r-project.org/web/packages/ExomeDepth/index.html): in Dev**
-    - *[SLOPE](http://www-genepi.med.utah.edu/suppl/SLOPE/index.html) : COMING SOON!*
+    - **[SLOPE](http://www-genepi.med.utah.edu/suppl/SLOPE/index.html): in Dev and not tested**  
+    - **[cnvnator](http://sv.gersteinlab.org/): in Dev**  
 
 - **Variant annotation** using using one of the following or a combibation of if the `ensemble` methods are called. 
     - **[SnpEff](http://snpeff.sourceforge.net/): in Dev** 
@@ -193,35 +194,45 @@ for base quality score recalibration.
 - bamaddrg https://github.com/ekg/bamaddrg  
 - bamtools https://github.com/ekg/bamtools  
 
+********
+
+## A Special note on the base image.
+
+We include the following - what we think of as - **_NGS Powertools_** in the **[compbio/ngseasy-base]()** image. 
+These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files in multiple ways.
+
+ 1.  samtools  
+ 2.  bcftools  
+ 3.  vcftools  
+ 4.  vcflib  
+ 5.  bamUtil  
+ 6.  bedtools2  
+ 7.  ogap  
+ 8.  samblaster  
+ 9.  sambamba  
+ 10. bamleftalign  
+ 11. seqtk  
+ 12. parallel  
+
+This image is used as the base of all our compbio/ngseasy-* tools.   
+
+**Why not a separate containers per application?** The more docker-esque approach, would be to have separate containers for each NGS tool. 
+However, this belies the fact that many of these tools interact in a deep way, allowing pipes and streamlined system calls for manipulating
+the output of NGS pipelines (BED/SAM/BAM/VCF files). Therefore, we built  these into a single development environment for ngseasy.
 
 ************
+
 
 Dockerised NGSeasy
 ==========================
 ![docker](https://github.com/KHP-Informatics/ngs/blob/master/figs/Docker_container_engine_logo.png "Docker")  
 
-The following section describes getting the Dockerised NGSeasy Pipeline(s) and Resources, project set up and running NGSeasy in **12 easy steps**.  
+The following section describes getting the Dockerised NGSeasy Pipeline(s) and Resources, project set up and running NGSeasy.
 
-Getting all resources and building required tools will take a few hours depending on network connections and any random "ghosts in the machine".
+Getting all resources and building required tools will take a few hours depending on network connections and any random "ghosts in the machine" - half a day in reality.
+But once you're set up, thats it - you are good to go.
 
-*****
-
-## The 12 Easy Steps to NGS Freedom!
-
-**1. [Install Docker](https://github.com/KHP-Informatics/ngs#1-install-docker)**  
-**2. [Get NGSeasy Automated build Container Images](https://github.com/KHP-Informatics/ngs#2-get-ngseasy-automated-build-container-images)**  
-**3. [Make NGSeasy project directory](https://github.com/KHP-Informatics/ngs#3-make-ngseasy-project-directory)**  
-**4. [Download NGSeasy Resources](https://github.com/KHP-Informatics/ngs#4-download-ngseasy-resources)**  
-**5. [Get NGSeasy Sripts](https://github.com/KHP-Informatics/ngs#5-get-ngseasy-sripts)**  
-**6. [Manually Build required NGSeasy Container Images](https://github.com/KHP-Informatics/ngs#6-manually-build-required-ngseasy-container-images)**  
-**7. [Manually Build NGSeasy Variant Annotaion Container Images](https://github.com/KHP-Informatics/ngs#7-manually-build-ngseasy-variant-annotaion-container-images)**  
-**8. [Set up NGSeasy Project Working Directories](https://github.com/KHP-Informatics/ngs#8-set-up-ngseasy-project-working-directories)**  
-**9. [NGSeasy Project configuration file](https://github.com/KHP-Informatics/ngs#9-ngseasy-project-configuration-file)**  
-**10. [Copy Project Fastq files to relevent Project/Sample Directories](https://github.com/KHP-Informatics/ngs#10-copy-project-fastq-files-to-relevent-projectsample-directories)**  
-**11. [Start the NGSeasy Volume Contaier](https://github.com/KHP-Informatics/ngs#11-start-the-ngseasy-volume-contaier)**  
-**12. [Running an NGSeasy full pipeline : from raw fastq to vcf calls](https://github.com/KHP-Informatics/ngs#12-running-an-ngseasy-full-pipeline--from-raw-fastq-to-vcf-calls)**  
-
-*****
+******
 ## 1. Install Docker
 
 Follow the simple instructions in the links provided below  
@@ -232,18 +243,70 @@ Follow the simple instructions in the links provided below
 
 A full set of instructions for multiple operating systems are available on the [Docker website](https://docs.docker.com/installation/).
 
-## 2. Get NGSeasy Automated build Container Images
+## 2. Get NGSeasy
 
-All NGSeasy Docker images can be pulled down from **[compbio Docker Hub](https://hub.docker.com/u/compbio/)** or using the script [get_containers.sh](https://github.com/KHP-Informatics/ngs/blob/master/bin/get_containers.sh)
+We provide a simple Makefile to pull all of the public nsgeasy components, scripts and set up to correct project directory structre on your local machines.
 
-```bash
-# get images
-bash get_containers.sh v1.0
+```{bash}
+
+git clone https://github.com/KHP-Informatics/ngseasy.git
+
+cd ngseasy
+
+make all
+
 ```
 
-### Dockerised and Automated Builds ##
+Setting up the initial project can take up a day, depending on your local network connections and speeds.
 
-The following opensource tools are all provided as automated builds. 
+
+## 3. Set up NGSeasy Project configuration file
+
+In Excel make config file and save as [TAB] Delimited file with ``.tsv`` extenstion.  
+See Example provided and [GoogleDoc](https://docs.google.com/spreadsheets/d/1kp1Nyw0x3zXqO2Wm2Z25ErJ0Z-Uoab8tjRPq9h4sonk/edit?usp=sharing). Remove the header from this file before running the pipeline. This sets up Information related to: Project Name, Sample Name, Library Type, Pipeline to call, NCPU.
+
+The [config.file.tsv] should contain the following 15 columns for each sample to be run through a pipeline:- 
+
+|Variable|type|Description|Options/Examples|
+|--------|--------|--------|--------|
+POJECT_ID|string|Project ID|Cancer|
+SAMPLE_ID|string|Sample ID| T100|
+FASTQ1|string|Raw fastq file name read 1| foo_1_fq.gz|
+FASTQ2|string|Raw fastq file name read 1| foo_2_fq.gz|
+PROJECT_DIR|string|Project Directory| /medida/ngs_projects |
+DNA_PREP_LIBRARY_ID|string|DNA Libray Prep ID| Custom_Cancer |
+NGS_PLATFORM|string|Platform Name| ILLUMINA |
+NGS_TYPE|string|Experiment type| WGS, WEX, TGS |
+BAIT|string|user supplied bed file|
+CAPTURE|string|user supplied bed file|
+FASTQC|string|run FastQc|skip, qc-fastq|
+TRIM|string|run Trimmomatic|skip, qc-trimm, qc-adaptor|
+BSQR|string|Base Quality Score Recalibration|skip, bam-recab, gatk-recab|
+REALN|string|Bam Realignment around indels|skip,bam-realn, gatk-realn|
+ALIGNER|string|Aligner|skip, bwa, bowtie2, stampy, snap, novoalign|
+VARCALLER|string|Variant Caller|ensemble,ensemble-fast, freebayes, platypus, UnifiedGenotyper, HaplotypeCaller|
+CNV|string|CNV Caller|skip, lump, delly, exomedepth|
+ANNOTATOR|string|Choose annotator|skip|
+CLEANUP|string|Clean Up Files (TRUE/FALSE)|TRUE/FALSE|
+NCPU|number|Number of cores to call|1..n|
+VERSION|number|NGSeasy Version |1.0|
+NGSUSER|string|user email address|stephen.j.newhouse@gmail.com|
+
+
+## 4. Run NGSeasy
+
+```{bash}
+
+```
+
+All NGSeasy Docker images can be pulled down from **[compbio Docker Hub](https://hub.docker.com/u/compbio/)** or using the Makefile.  
+We provide an Amazon EBS data volume with indexed genomes: XXXXXX  
+
+*****************************
+
+### Dockerised NGS Tools
+
+The following opensource tools are all provided. 
 
 | Tool | Build |
 |-------------|----------------------|
@@ -273,7 +336,7 @@ docker pull compbio/ngseasy-${TOOL}
 
 *******
 
-## 3. Make NGSeasy project directory
+## The NGSeasy project directory
 The user needs to make the relevent directory structures on their local machine before starting an NGS run. 
 
 On our sysetm we typically set up a top-level driectory called **ngs_projects** within which we store output from all our individual NGS projects. 

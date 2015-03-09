@@ -23,7 +23,7 @@ RUN wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/pro
   && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/FastQC/jbzip2-0.9.jar:/usr/local/pipeline/FastQC/sam-1.103.jar' /home/pipeman/.bashrc \
   && sed -i '$aPATH=${PATH}:/usr/local/pipeline/FastQC' /home/pipeman/.bashrc \
   && echo "alias ngsFastqc='/usr/local/pipeline/FastQC'" >>  /home/pipeman/.bashrc \
-  && cp -vr /usr/local/pipeline/FastQC/* /usr/local/bin
+  && cp -vr /usr/local/pipeline/FastQC/fastqc /usr/local/bin \
   && wget -O /tmp/Trimmomatic-0.32.zip http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.32.zip \
   && unzip /tmp/Trimmomatic-0.32.zip -d /usr/local/pipeline/ \
   && chown -R pipeman:ngsgroup /usr/local/pipeline/Trimmomatic-0.32 \
@@ -31,15 +31,7 @@ RUN wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/pro
   && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Trimmomatic-0.32' /home/pipeman/.bashrc \
   && echo "alias ngsTrimfq='/usr/local/pipeline/Trimmomatic-0.32'" >>  /home/pipeman/.bashrc \
   && cp -vr /usr/local/pipeline/Trimmomatic-0.32/* /usr/local/bin \
-  && cd /usr/local/pipeline/ \
-  && git clone https://github.com/lh3/seqtk.git \
-  && chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk \
-  && cd /usr/local/pipeline/seqtk/ \
-  && make \
-  && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/seqtk' /home/pipeman/.bashrc \
-  && echo "alias ngsSeqtk='/usr/local/pipeline/seqtk'" >>  /home/pipeman/.bashrc \
-  && cp -vr /usr/local/pipeline/seqtk/* /usr/local/bin
-  
+   
 # picard ----------------------------------------------------------------------
 RUN wget -O /tmp/picard-tools-1.119.zip http://sourceforge.net/projects/picard/files/picard-tools/1.119/picard-tools-1.119.zip \
     && mkdir /usr/local/pipeline/picardtools \
