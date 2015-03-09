@@ -12,7 +12,31 @@ echo -e "# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)"
 echo -e "#################################################################\n"
 
 #################################################################
-
+REFDIR=""
+GENOMEINDEX=""
+PROJECT_ID=""
+SAMPLE_ID=""
+FASTQ1=""
+FASTQ2=""
+PROJECT_DIR=""
+DNA_PREP_LIBRARY_ID=""
+NGS_PLATFORM=""
+NGS_TYPE=""
+BAIT=""
+CAPTURE=""
+GENOMEBUILD=""
+FASTQC=""
+TRIM=""
+BSQR=""
+REALN=""
+ALIGNER=""
+VARCALLER=""
+CNV=""
+ANNOTATOR=""
+CLEANUP=""
+NCPU=""
+NGSEASYVERSION=""
+NGSUSER=""
 ########################################################################################################
 ## test if docker is intsalled and exit if not
 command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
@@ -170,10 +194,6 @@ fi
 ########################################################################################################
 ## Read config and loop through all lines calling fastqc docker
 #
-GENOMEBUILD=""
-REFDIR=""
-GENOMEINDEX=""
-
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
 PROJECT_ID=$f1;
@@ -293,7 +313,7 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   logger_ngseasy "[ngseasy_alignment]: Genome Build [${GENOMEINDEX}]"  ${LOGFILE}
   logger_ngseasy "[ngseasy_alignment]: Genome Build [${REFDIR}]"  ${LOGFILE}
   sleep 1s
-  
+
 else
   logger_ngseasy "[ngseasy_alignment]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
   exit 1
