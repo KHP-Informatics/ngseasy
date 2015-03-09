@@ -358,7 +358,7 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
       BAMIN=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam
       BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-bsqr.bam
   
-  logger_ngseasy "[ngseasy_bsqr]:[cmd]: bam recab " ${LOGFILE}
+  logger_ngseasy "[ngseasy_bsqr]:START Base quality score recalibration using bam recab" ${LOGFILE}
 
   ${DOCKER_RUN} \
   --rm=true \
