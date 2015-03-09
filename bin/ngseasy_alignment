@@ -271,6 +271,9 @@ fi
 ## Select Genome Build
 #
 logger_ngseasy "[ngseasy_alignment]:Checking genome selected]"  ${LOGFILE}
+GENOMEBUILD=""
+REFDIR=""
+GENOMEINDEX=""
 
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
   
