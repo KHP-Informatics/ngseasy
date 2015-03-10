@@ -372,7 +372,7 @@ logger_ngseasy "[ngseasy_alignment]:PLATFORM UNIT:[${platform_unit}]" ${LOGFILE}
 #---------------------------------------ALIGNMENT------------------------------------------------------#
 ########################################################################################################
 
-## check if alignmet already run and stop
+## check if alignmet already run and stop BAM and bed must exits and bam must be bigger than orginal fastq file
 #
 
 if [[ -e "${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam" ]]  && [[ -s "${SOUT}/reports/${BAM_PREFIX}.dupemk.bed" ]]; then
