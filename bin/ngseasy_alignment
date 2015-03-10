@@ -594,8 +594,8 @@ elif [[ "${ALIGNER}" == "bowtie2" ]]; then
     --rg LB:${DNA_PREP_LIBRARY_ID} \
     -1 ${FQ1} \
     -2 ${FQ2} \
-    -S ${SOUTDocker}/alignments/${BAM_PREFIX}.raw.sam | \
-      samblaster --addMateTags | \
+    -S ${SOUTDocker}/alignments/${BAM_PREFIX}.raw.sam && \
+      sambamba view -t ${NCPU} -S ${SOUTDocker}/alignments/${BAM_PREFIX}.raw.sam /dev/stdout | samblaster --addMateTags | \
       sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
       sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o /${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin && \
       sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
