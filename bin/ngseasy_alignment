@@ -477,12 +477,16 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
 
   logger_ngseasy "[ngseasy_alignment]:START Basic ${ALIGNER} Alignment: Running bwa mem first " ${LOGFILE}
 
-if [[ ! -e $"{SOUT}/alignments/${BAM_PREFIX}.tmp.bam" ]]; then
+if [[  -e "${SOUT}/alignments/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.bwa.${GENOMEBUILD}.dupemk.bam" ]]; then
+
+  BWABAM=${SOUTDocker}/alignments/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.bwa.${GENOMEBUILD}.dupemk.bam
+
+else
 ## align wih bwa
-#
+
   ${DOCKER_RUN} \
-  --name alignment_${BAM_PREFIX}_bwatmp \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name alignment_${BAM_PREFIX}_bwatmp \
   -t compbio/ngseasy-bwa:${NGSEASYVERSION} /bin/bash -c \
   "/usr/local/bin/bwa mem \
   -M \
@@ -498,10 +502,9 @@ if [[ ! -e $"{SOUT}/alignments/${BAM_PREFIX}.tmp.bam" ]]; then
   wait
 
   BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
-
-else
-  BWABAM=${SOUTDocker}/alignments/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.bwa.${GENOMEBUILD}.dupemk.bam
+  
 fi
+wait
 
 ## check if running and wait before cleaning up
 #
