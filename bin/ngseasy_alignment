@@ -372,7 +372,11 @@ logger_ngseasy "[ngseasy_alignment]:PLATFORM UNIT:[${platform_unit}]" ${LOGFILE}
 #---------------------------------------ALIGNMENT------------------------------------------------------#
 ########################################################################################################
 
-if [[ "${ALIGNER}" == "no-align" ]]; then
+if [[ -e "${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam" ]]  && [[ -e "${SOUT}/reports/${BAM_PREFIX}.dupemk.bam.flagstat" ]]; then
+
+  logger_ngseasy "[ngseasy_alignment]:Skipping Alignment. Looks like BAM file already exists [${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam] " ${LOGFILE} 
+
+elif [[ "${ALIGNER}" == "no-align" ]]; then
   logger_ngseasy "[ngseasy_alignment]:Skipping Alignment. ALIGNER option [${ALIGNER}] " ${LOGFILE} 
 
 
@@ -399,12 +403,14 @@ elif [[ "${ALIGNER}" == "bwa" ]]; then
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
   rm -rf ${SOUTDocker}/tmp/*"
+wait
 
 ## check if running and wait before cleaning up
 #
 logger_ngseasy "[ngseasy_alignment]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
 
 running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
+logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
 
 while [ $running_alignment_jobs -gt 0 ]; do
   sleep 60s;
@@ -449,12 +455,13 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
   rm -rf ${SOUTDocker}/tmp/*"
-
+wait
 ## check if running and wait before cleaning up
 #
 logger_ngseasy "[ngseasy_alignment]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
 
 running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
+logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
 
 while [ $running_alignment_jobs -gt 0 ]; do
   sleep 60s;
@@ -511,6 +518,7 @@ wait
 logger_ngseasy "[ngseasy_alignment]:checking if ${ALIGNER} BWA container is still running and wait before logging and cleaning up" ${LOGFILE} 
 
 running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX}_bwatmp  | grep Up | wc -l`
+logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
 
 while [ $running_alignment_jobs -gt 0 ]; do
   sleep 60s;
@@ -560,6 +568,7 @@ done
 logger_ngseasy "[ngseasy_alignment]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
 
 running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
+logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
 
 while [ $running_alignment_jobs -gt 0 ]; do
   sleep 60s;
@@ -579,35 +588,37 @@ done
 # 
 elif [[ "${ALIGNER}" == "bowtie2" ]]; then
 
+  FAST="--end-to-end --sensitive"
+  SLOW="--local --sensitive-local"
+
     logger_ngseasy "[ngseasy_alignment]:START ${ALIGNER} Basic Alignment" ${LOGFILE}  
 
     ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} /bin/bash -c "/usr/local/bin/bowtie2 --local --sensitive-local --threads ${NCPU} -x ${GENOMEINDEX} \
+    -I 50 -X 10000 \
     --rg-id ${BAM_PREFIX} \
     --rg SM:${BAM_PREFIX} \
     --rg PU:${NGS_PLATFORM} \
     --rg LB:${DNA_PREP_LIBRARY_ID} \
     --rg DT:${RUNDATE} \
-    -I 50 -X 10000 \
-    -1 ${FQ1} \
-    -2 ${FQ2} \
-    -S ${SOUTDocker}/alignments/${BAM_PREFIX}.raw.sam && \
-      sambamba view -t ${NCPU} -S ${SOUTDocker}/alignments/${BAM_PREFIX}.raw.sam /dev/stdout | samblaster --addMateTags | \
-      sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
-      sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o /${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin && \
-      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
-      sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
-      bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
-      rm -rf ${SOUTDocker}/tmp/*"
-      wait
+    -1 ${FQ1} -2 ${FQ2} | \
+    samblaster --addMateTags | \
+    sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
+    sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o /${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin && \
+    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
+    sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
+    bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
+    rm -rf ${SOUTDocker}/tmp/*"
+    wait
 
 ## check if running and wait before cleaning up
 #
 logger_ngseasy "[ngseasy_alignment]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
 
 running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX} | grep Up | wc -l`
+logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
 
 while [ $running_alignment_jobs -gt 0 ]; do
   sleep 60s;
@@ -633,12 +644,9 @@ logger_ngseasy "[ngseasy_alignment]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
     ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -t compbio/ngseasy-snap:${NGSEASYVERSION} /bin/bash -c \
-    "/usr/local/pipeline/snap/snap \
-    paried \
+    -t compbio/ngseasy-snap:${NGSEASYVERSION} /bin/bash -c "/usr/local/pipeline/snap/snap paried \
     ${REFDIR} \
-    ${FQ1} \
-    ${FQ2} \
+    ${FQ1} ${FQ2} \
     -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
     -R @RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE} \
     -so \
