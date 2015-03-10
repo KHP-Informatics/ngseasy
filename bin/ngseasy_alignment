@@ -475,8 +475,9 @@ done
 #
 elif [[ "${ALIGNER}" == "stampy" ]]; then
 
-  logger_ngseasy " START Basic ${ALIGNER} Alignment: Running bwa mem first " ${LOGFILE}
+  logger_ngseasy "[ngseasy_alignment]:START Basic ${ALIGNER} Alignment: Running bwa mem first " ${LOGFILE}
 
+if [[ ! -e $"{SOUT}/alignments/${BAM_PREFIX}.tmp.bam" ]]; then
 ## align wih bwa
 #
   ${DOCKER_RUN} \
@@ -494,29 +495,30 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam /dev/stdin | \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam && \
   rm -rf ${SOUTDocker}/tmp/*"
+  wait
 
-if [ -e $"{SOUT}/alignments/${BAM_PREFIX}.tmp.bam" ]; then
-  BWABAM=
-else
   BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
+
+else
+  BWABAM=${SOUTDocker}/alignments/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.bwa.${GENOMEBUILD}.dupemk.bam
 fi
 
 ## check if running and wait before cleaning up
 #
-logger_ngseasy "[ngseasy_alignment]:checking if ${ALIGNER} container is still running and wait before logging and cleaning up" ${LOGFILE} 
+logger_ngseasy "[ngseasy_alignment]:checking if ${ALIGNER} BWA container is still running and wait before logging and cleaning up" ${LOGFILE} 
 
-running_alignment_jobs=`docker ps -a | grep lignment_${BAM_PREFIX}_bwatmp  | grep Up | wc -l`
+running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX}_bwatmp  | grep Up | wc -l`
 
 while [ $running_alignment_jobs -gt 0 ]; do
   sleep 60s;
-  running_alignment_jobs=`docker ps -a | grep lignment_${BAM_PREFIX}_bwatmp | grep Up | wc -l`;
+  running_alignment_jobs=`docker ps -a | grep alignment_${BAM_PREFIX}_bwatmp | grep Up | wc -l`;
   logger_ngseasy "[ngseasy_alignment]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
 done
 
 ## log docker run 
 #
- docker logs ${ALIGNER}_bwa_${SAMPLE_ID} >> ${LOGFILE}.log
- docker rm -f ${ALIGNER}_bwa_${SAMPLE_ID}
+ docker logs alignment_${BAM_PREFIX}_bwatmp >> ${LOGFILE}.log
+ docker rm -f alignment_${BAM_PREFIX}_bwatmp
 
 ########################################################################################################
 ## stampy 
@@ -541,15 +543,14 @@ done
       --noautosense \
       --insertsize=500 \
       --insertsd=100 \
-      -M ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bwa.bam | \
+      -M ${BWABAM} | \
       samblaster --addMateTags | \
       sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
       sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin && \
       sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \  
       sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
       bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
-      rm -rf ${SOUTDocker}/tmp/* && \
-      rm ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam"
+      rm -rf ${SOUTDocker}/tmp/*"
 
 ## check if running and wait before cleaning up
 #
