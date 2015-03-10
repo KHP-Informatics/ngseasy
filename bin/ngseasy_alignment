@@ -379,6 +379,14 @@ if [[ -e "${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam" ]]  && [[ -s "${SOU
 
   logger_ngseasy "[ngseasy_alignment]:Skipping Alignment. Looks like BAM file already exists [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam] " ${LOGFILE}
 
+# BAMSIZE=$(du -sb ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam | awk '{ print ${1} }')
+# FQSIZE=$($(du -sb ${SOUT}/fastq/${FASTQ1} | awk '{ print ${1} }')
+#  if [[ ${FQSIZE} -gt ${BAMSIZE} ]]; then
+#   logger_ngseasy "[ngseasy_alignment]:FASTQ bigger than BAM...something wrong. Exiting" ${LOGFILE}
+#   sleep 2s
+#   exit 1
+#  fi
+
 elif [[ "${ALIGNER}" == "no-align" ]]; then
   logger_ngseasy "[ngseasy_alignment]:Skipping Alignment. ALIGNER option [${ALIGNER}] " ${LOGFILE} 
 
