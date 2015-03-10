@@ -377,21 +377,20 @@ logger_ngseasy "[ngseasy_bsqr]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE
 if  [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-bsqr.bam" ]]; then
   
   logger_ngseasy "[ngseasy_bsqr]:Skipping Base quality score recalibration. Looks like you already ran it [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-bsqr.bam]" ${LOGFILE}
-  logger_ngseasy "[ngseasy_alignment]:Checking file sizes" ${LOGFILE}
+  logger_ngseasy "[ngseasy_bsqr]:Checking file sizes" ${LOGFILE}
 
 BAMSIZE=$(du -sb ${SOUT}/alignments/${BAM_PREFIX}.bam-bsqr.bam | awk '{ print ${1} }')
 FQSIZE=$(du -sb ${SOUT}/fastq/${FQ1} | awk '{ print ${1} }')
 
 if [[ "${FQSIZE}" -gt "${BAMSIZE}" ]]; then
-  logger_ngseasy "[ngseasy_alignment]:ERROR:FASTQ bigger than BAM. Something wrong here" ${LOGFILE}
-  logger_ngseasy "[ngseasy_alignment]:Alignment may have broke at somepoint" ${LOGFILE}
-  logger_ngseasy "[ngseasy_alignment]:Check your output" ${LOGFILE}
-  logger_ngseasy "[ngseasy_alignment]:Try and re-run ngseasy_alignment" ${LOGFILE}
-  logger_ngseasy "[ngseasy_alignment]:Exiting" ${LOGFILE}
+  logger_ngseasy "[ngseasy_bsqr]:ERROR:FASTQ bigger than BAM. Something wrong here" ${LOGFILE}
+  logger_ngseasy "[ngseasy_bsqr]:Alignment may have broke at somepoint" ${LOGFILE}
+  logger_ngseasy "[ngseasy_bsqr]:Check your output" ${LOGFILE}
+  logger_ngseasy "[ngseasy_bsqr]:Exiting" ${LOGFILE}
   sleep 2s
   exit 1
 else
-  
+
 elif [[ "${BSQR}" == "no-bsqr" ]]; then
   
   logger_ngseasy "[ngseasy_bsqr]:Skipping Base quality score recalibration" ${LOGFILE}

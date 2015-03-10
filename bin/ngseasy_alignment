@@ -388,9 +388,10 @@ if [[ "${FQSIZE}" -gt "${BAMSIZE}" ]]; then
   logger_ngseasy "[ngseasy_alignment]:Alignment may have broke at somepoint" ${LOGFILE}
   logger_ngseasy "[ngseasy_alignment]:Check your output" ${LOGFILE}
   logger_ngseasy "[ngseasy_alignment]:Try and re-run ngseasy_alignment" ${LOGFILE}
-  logger_ngseasy "[ngseasy_alignment]:Exiting ${LOGFILE}
+  logger_ngseasy "[ngseasy_alignment]:Exiting" ${LOGFILE}
   sleep 2s
   exit 1
+
 else
   logger_ngseasy "[ngseasy_alignment]:Skipping Alignment" ${LOGFILE}
 fi
