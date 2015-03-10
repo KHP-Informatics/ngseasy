@@ -161,7 +161,7 @@ RUN apt-get clean && \
     apt-get remove -y asciidoc && \
     apt-get autoclean && \
     apt-get autoremove -y && \
-    rm -rf /var/lib/{apt,dpkg,cache,log}/ &&
+    rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
     rm -rf /usr/local/pipeline/*
 
 
