@@ -375,7 +375,7 @@ logger_ngseasy "[ngseasy_alignment]:PLATFORM UNIT:[${platform_unit}]" ${LOGFILE}
 ## check if alignmet already run and stop
 #
 
-if [[ -e "${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam" ]]  && [[ -s "${SOUT}/reports/${BAM_PREFIX}.dupemk.bam.fbed" ]]; then
+if [[ -e "${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam" ]]  && [[ -s "${SOUT}/reports/${BAM_PREFIX}.dupemk.bed" ]]; then
 
   logger_ngseasy "[ngseasy_alignment]:Skipping Alignment. Looks like BAM file already exists [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam] " ${LOGFILE}
 
@@ -593,15 +593,16 @@ done
 # 
 elif [[ "${ALIGNER}" == "bowtie2" ]]; then
 
-  FAST="--end-to-end --sensitive"
-  SLOW="--local --sensitive-local"
+# will provide options for tweaking all option in the future
+FAST="--end-to-end --sensitive"
+SLOW="--local --sensitive-local"
 
     logger_ngseasy "[ngseasy_alignment]:START ${ALIGNER} Basic Alignment" ${LOGFILE}  
 
     ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} /bin/bash -c "/usr/local/bin/bowtie2 --local --sensitive-local --threads ${NCPU} -x ${GENOMEINDEX} \
+    -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} /bin/bash -c "/usr/local/bin/bowtie2 ${FAST} --threads ${NCPU} -x ${GENOMEINDEX} \
     -I 50 -X 10000 \
     --rg-id ${BAM_PREFIX} \
     --rg SM:${BAM_PREFIX} \
