@@ -372,13 +372,15 @@ logger_ngseasy "[ngseasy_alignment]:PLATFORM UNIT:[${platform_unit}]" ${LOGFILE}
 #---------------------------------------ALIGNMENT------------------------------------------------------#
 ########################################################################################################
 
-if [[ -e "${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam" ]]  && [[ -e "${SOUT}/reports/${BAM_PREFIX}.dupemk.bam.flagstat" ]]; then
+## check if alignmet already run and stop
+#
 
-  logger_ngseasy "[ngseasy_alignment]:Skipping Alignment. Looks like BAM file already exists [${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam] " ${LOGFILE} 
+if [[ -e "${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam" ]]  && [[ -s "${SOUT}/reports/${BAM_PREFIX}.dupemk.bam.fbed" ]]; then
+
+  logger_ngseasy "[ngseasy_alignment]:Skipping Alignment. Looks like BAM file already exists [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam] " ${LOGFILE}
 
 elif [[ "${ALIGNER}" == "no-align" ]]; then
   logger_ngseasy "[ngseasy_alignment]:Skipping Alignment. ALIGNER option [${ALIGNER}] " ${LOGFILE} 
-
 
 ########################################################################################################
 ## BWA 
@@ -482,14 +484,17 @@ done
 #
 elif [[ "${ALIGNER}" == "stampy" ]]; then
 
-  logger_ngseasy "[ngseasy_alignment]:START Basic ${ALIGNER} Alignment: Running bwa mem first " ${LOGFILE}
+  logger_ngseasy "[ngseasy_alignment]:START Basic ${ALIGNER} Alignment" ${LOGFILE}
 
 if [[  -e "${SOUT}/alignments/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.bwa.${GENOMEBUILD}.dupemk.bam" ]]; then
 
   BWABAM=${SOUTDocker}/alignments/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.bwa.${GENOMEBUILD}.dupemk.bam
+  logger_ngseasy "[ngseasy_alignment]:BWA aligned data exits. Using [${BWABAM}] for mapping with stampy" ${LOGFILE} 
 
 else
 ## align wih bwa
+  logger_ngseasy "[ngseasy_alignment]:BWA aligned data does not exit" ${LOGFILE} 
+  logger_ngseasy "[ngseasy_alignment]:Aligning with BWA" ${LOGFILE} 
 
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
