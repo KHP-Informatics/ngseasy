@@ -603,6 +603,7 @@ elif [[ "${ALIGNER}" == "bowtie2" ]]; then
       sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
       bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
       rm -rf ${SOUTDocker}/tmp/*"
+      wait
 
 ## check if running and wait before cleaning up
 #
