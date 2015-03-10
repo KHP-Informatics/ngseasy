@@ -584,14 +584,13 @@ elif [[ "${ALIGNER}" == "bowtie2" ]]; then
     ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} /bin/bash -c "/usr/local/bin/bowtie2 \
-    --end-to-end \
-    -threads ${NCPU} \
-    -x /home/pipeman/reference_genomes_b37/human_g1k_v37 \
+    -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} /bin/bash -c "/usr/local/bin/bowtie2 --local --sensitive-local --threads ${NCPU} -x ${GENOMEINDEX} \
     --rg-id ${BAM_PREFIX} \
     --rg SM:${BAM_PREFIX} \
     --rg PU:${NGS_PLATFORM} \
     --rg LB:${DNA_PREP_LIBRARY_ID} \
+    --rg DT:${RUNDATE} \
+    -I 50 -X 10000 \
     -1 ${FQ1} \
     -2 ${FQ2} \
     -S ${SOUTDocker}/alignments/${BAM_PREFIX}.raw.sam && \
