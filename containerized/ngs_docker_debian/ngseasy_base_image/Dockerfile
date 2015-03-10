@@ -125,6 +125,21 @@ RUN cd /usr/local/pipeline && \
     make clean && \
     make all && \
     make install
+
+# vt
+RUN cd /usr/local/pipeline && \
+    git clone https://github.com/atks/vt.git && \
+    chmod -R 777 vt/ && \
+    cd vt && \
+    make && \
+    cp -v vt /usr/local/bin 
+
+# vawk
+RUN cd /usr/local/pipeline && \
+    git clone https://github.com/cc2qe/vawk.git && \
+    chmod -R 777 vawk/ && \
+    cp -v vawk/vawk /usr/local/bin
+
   
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline 
