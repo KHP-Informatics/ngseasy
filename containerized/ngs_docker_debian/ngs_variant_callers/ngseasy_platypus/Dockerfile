@@ -9,7 +9,7 @@ ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 # Update
-RUN apt-get update -y && apt-get upgrade && apt-get install -y python-dev 
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y python-dev 
 
 # cython
 RUN cd /tmp && \
