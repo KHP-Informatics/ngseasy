@@ -5,19 +5,44 @@ FROM compbio/ngseasy-base:1.0
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
-# ENV HOME /root
+ENV HOME /root
+ENV DEBIAN_FRONTEND noninteractive
 
 # Update
-RUN apt-get update -y && apt-get install -y python-dev
+RUN apt-get update -y && apt-get upgrade && apt-get install -y python-dev 
+
+# cython
+RUN cd /tmp && \
+	wget http://cython.org/release/Cython-0.22.tar.gz && \
+	chmod 777 Cython-0.22.tar.gz && \
+	tar xvf Cython-0.22.tar.gz && \
+	cd Cython-0.22 && \
+	python setup.py install
  
 #-----------------------------PLATYPUS-------------------------------
-RUN wget -O /tmp/Platypus-latest.tgz http://www.well.ox.ac.uk/bioinformatics/Software/Platypus-latest.tgz \
-  && tar xvf /tmp/Platypus-latest.tgz -C /usr/local/pipeline/ \
-  && cd /usr/local/pipeline/Platypus_0.7.9.1 \
-  && /bin/bash /usr/local/pipeline/Platypus_0.7.9.1/buildPlatypus.sh \
-  && chmod -R 755 /usr/local/pipeline/Platypus_0.7.9.1 \
-  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.9.1' /home/pipeman/.bashrc \
-  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.9.1' ~/.bashrc
+RUN cd /tmp && \
+	git clone https://github.com/samtools/htslib.git && \
+	chmod -R 777 htslib && \
+	cd htslib && \
+	autoconf && \
+	./configure  && \
+	make && \
+	make install
+
+RUN cd /usr/local/pipeline && \
+       git clone --recursive https://github.com/andyrimmer/Platypus.git && \
+       chmod -R 777 Platypus && \
+       cd Platypus && \
+       make && \
+       cp -vrf ./* /usr/local/bin
+
+#RUN wget -O /tmp/Platypus-latest.tgz http://www.well.ox.ac.uk/bioinformatics/Software/Platypus-latest.tgz \
+#  && tar xvf /tmp/Platypus-latest.tgz -C /usr/local/pipeline/ \
+#  && cd /usr/local/pipeline/Platypus_0.7.9.1 \
+#  && /bin/bash /usr/local/pipeline/Platypus_0.7.9.1/buildPlatypus.sh \
+#  && chmod -R 755 /usr/local/pipeline/Platypus_0.7.9.1 \
+#  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.9.1' /home/pipeman/.bashrc \
+#  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.9.1' ~/.bashrc
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 766 /usr/local/pipeline/***

@@ -17,7 +17,7 @@ RUN wget -O /tmp/bwa-0.7.12.tar.bz2 http://sourceforge.net/projects/bio-bwa/file
     && chmod -R 777 /usr/local/pipeline \
     && cd /usr/local/pipeline/bwa-0.7.12 && make \
     && cp -v /usr/local/pipeline/bwa-0.7.12/bwa /usr/local/bin
-    
+  
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline/bwa-0.7.12
