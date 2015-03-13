@@ -130,12 +130,13 @@ RUN cd /usr/local/pipeline && \
     chmod -R 777 vawk/ && \
     cp -v vawk/vawk /usr/local/bin && \
     apt-get install -y bison flex byacc && \
-    && \cd /usr/local/pipeline && \
-    git clome https://github.com/lh3/bioawk.git && \
+    cd /usr/local/pipeline && \
+    git clone https://github.com/lh3/bioawk.git && \
     chmod -R 777 bioawk/ && \
     cd bioawk && \
     make && \
-    cp -v vawk/vawk /usr/local/bin
+    cp -v bioawk /usr/local/bin && \
+    cp -v maketab /usr/local/bin
 
   
 #-------------------------------PERMISSIONS--------------------------
