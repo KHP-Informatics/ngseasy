@@ -12,7 +12,7 @@ ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 # Remain current
-RUN apt-get update &&  apt-get upgrade -y && apt-get dist-upgrade -y
+RUN apt-get update &&  apt-get upgrade -y && apt-get dist-upgrade -y && apt-get install -y ldc
 
 #--------------STANDARD NGS TOOLS----------------------------------------------------------------------------------------------#
 # Tools used for processing SAM/BAM/BED/VCF files
@@ -65,9 +65,9 @@ RUN cd /usr/local/pipeline && \
     make && \ 
     cp samblaster /usr/local/bin/ && \
     cd /usr/local/pipeline && \ 
-    curl -OL https://github.com/lomereiter/sambamba/releases/download/v0.5.0-alpha/sambamba_v5.0.0-alpha_linux.tar.bz2 && \ 
-    tar -xvf sambamba_v5.0.0-alpha_linux.tar.bz2 && \ 
-    cp sambamba_v5.0.0-alpha sambamba && \
+    curl -OL https://github.com/lomereiter/sambamba/releases/download/v0.5.1/sambamba_v0.5.1_linux.tar.bz2 && \ 
+    tar -xjvf sambamba_v0.5.1_linux.tar.bz2 && \ 
+    mv sambamba_v0.5.1 sambamba && \
     chmod +rwx sambamba && \
     cp sambamba /usr/local/bin/
 
