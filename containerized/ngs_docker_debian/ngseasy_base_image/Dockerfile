@@ -12,7 +12,7 @@ ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 # Remain current
-RUN apt-get update && apt-get dist-upgrade -y
+RUN apt-get update &&  apt-get upgrade -y && apt-get dist-upgrade -y
 
 #--------------STANDARD NGS TOOLS----------------------------------------------------------------------------------------------#
 # Tools used for processing SAM/BAM/BED/VCF files
@@ -26,6 +26,8 @@ RUN cd /usr/local/pipeline && \
     git clone --branch=develop git://github.com/samtools/bcftools.git && \
     git clone --branch=develop git://github.com/samtools/samtools.git && \
     cd /usr/local/pipeline/htslib && \
+    autoconf && \
+    ./configure  && \
     make && \
     make install && \
     cd /usr/local/pipeline/bcftools && \
@@ -44,43 +46,30 @@ RUN cd /usr/local/pipeline && \
     make && \
     make install
 
-# libStatGen    
+# libStatGen and bamUtil
 RUN cd /usr/local/pipeline && \
     git clone https://github.com/statgen/libStatGen.git && \
     cd libStatGen && \
-    make all
-
-# bamUtil    
-RUN cd /usr/local/pipeline && \
+    make all && \
+    cd /usr/local/pipeline && \
     git clone https://github.com/statgen/bamUtil.git && \
     cd bamUtil && \
     make cloneLib && \
     make all && \
     make install
 
-# samblaster    
+# samblaster and sambamba
 RUN cd /usr/local/pipeline && \ 
     git clone git://github.com/GregoryFaust/samblaster.git && \ 
     cd samblaster && \ 
     make && \ 
-    cp samblaster /usr/local/bin/
-    
-# sambamba
-RUN cd /usr/local/pipeline && \ 
+    cp samblaster /usr/local/bin/ && \
+    cd /usr/local/pipeline && \ 
     curl -OL https://github.com/lomereiter/sambamba/releases/download/v0.5.0-alpha/sambamba_v5.0.0-alpha_linux.tar.bz2 && \ 
     tar -xvf sambamba_v5.0.0-alpha_linux.tar.bz2 && \ 
     cp sambamba_v5.0.0-alpha sambamba && \
     chmod +rwx sambamba && \
     cp sambamba /usr/local/bin/
-
-# vcftools 
-RUN cd /usr/local/pipeline/ && \
-    wget -O /tmp/vcftools_0.1.12b.tar.gz http://sourceforge.net/projects/vcftools/files/vcftools_0.1.12b.tar.gz && \
-    tar xzvf /tmp/vcftools_0.1.12b.tar.gz -C /usr/local/pipeline/  && \
-    export PERL5LIB=/usr/local/pipeline/vcftools_0.1.12b/perl/  && \
-    cd /usr/local/pipeline/vcftools_0.1.12b/ && \
-    make && \
-    cp -vrf /usr/local/pipeline/vcftools_0.1.12b/bin/*  /usr/local/bin/
 
 # seqtk and trimadap
 RUN cd /usr/local/pipeline/ && \
@@ -93,16 +82,14 @@ RUN cd /usr/local/pipeline/ && \
     cp -v trimadap /usr/local/bin/ && \
     sed  -i '$aPATH=${PATH}:/usr/local/pipeline/seqtk' /root/.bashrc
 
-# ogap    
+# ogap  and bamleftalign  
 RUN cd /usr/local/pipeline/ && \
     git clone --recursive https://github.com/ekg/ogap.git && \
     cd ogap && \
     make all && \
     chmod -R 777 ./* && \
-    cp -v ogap /usr/local/bin/
-
-# bamleftalign (from Freebayes)
-RUN cd /usr/local/pipeline/ && \
+    cp -v ogap /usr/local/bin/ && \
+    cd /usr/local/pipeline/ && \
     git clone --recursive git://github.com/ekg/freebayes.git && \
     cd freebayes && \
     make all && \
@@ -110,34 +97,44 @@ RUN cd /usr/local/pipeline/ && \
     cp bin/bamleftalign /usr/local/bin/ && \
     rm -frv /usr/local/pipeline/freebayes
 
-# vcflib    
+# vcftools and vcflib and bedtools2 and vt
 RUN cd /usr/local/pipeline/ && \
+    wget -O /tmp/vcftools_0.1.12b.tar.gz http://sourceforge.net/projects/vcftools/files/vcftools_0.1.12b.tar.gz && \
+    tar xzvf /tmp/vcftools_0.1.12b.tar.gz -C /usr/local/pipeline/  && \
+    export PERL5LIB=/usr/local/pipeline/vcftools_0.1.12b/perl/  && \
+    cd /usr/local/pipeline/vcftools_0.1.12b/ && \
+    make && \
+    cp -vrf /usr/local/pipeline/vcftools_0.1.12b/bin/*  /usr/local/bin/ && \
+    cd /usr/local/pipeline/ && \
     rm -rfv /usr/local/pipeline/vcflib && \
     git clone --recursive git://github.com/ekg/vcflib.git && \
     cd vcflib && \
     make && \
-    cp ./bin/* /usr/local/bin/
- 
-# bedtools2
-RUN cd /usr/local/pipeline && \
+    cp ./bin/* /usr/local/bin/ && \
+    cd /usr/local/pipeline && \
     git clone https://github.com/arq5x/bedtools2.git && \
     cd bedtools2 && \
     make clean && \
     make all && \
-    make install
-
-# vt
-RUN cd /usr/local/pipeline && \
+    make install && \
+    cd /usr/local/pipeline && \
     git clone https://github.com/atks/vt.git && \
     chmod -R 777 vt/ && \
     cd vt && \
     make && \
     cp -v vt /usr/local/bin 
 
-# vawk
+# vawk and bioawk
 RUN cd /usr/local/pipeline && \
     git clone https://github.com/cc2qe/vawk.git && \
     chmod -R 777 vawk/ && \
+    cp -v vawk/vawk /usr/local/bin && \
+    apt-get install -y bison flex byacc && \
+    && \cd /usr/local/pipeline && \
+    git clome https://github.com/lh3/bioawk.git && \
+    chmod -R 777 bioawk/ && \
+    cd bioawk && \
+    make && \
     cp -v vawk/vawk /usr/local/bin
 
   
