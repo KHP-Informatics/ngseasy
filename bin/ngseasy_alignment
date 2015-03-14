@@ -407,7 +407,7 @@ elif [[ "${ALIGNER}" == "no-align" ]]; then
 elif [[ "${ALIGNER}" == "bwa" ]]; then
     logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}  
 # align wih bwa
-  ${DOCKER_RUN} \
+  time ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name alignment_${BAM_PREFIX} \
   -t compbio/ngseasy-bwa:${NGSEASYVERSION} /bin/bash -c \
@@ -452,7 +452,7 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
 
   logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}
 
-  ${DOCKER_RUN} \
+  time ${DOCKER_RUN} \
   --name alignment_${BAM_PREFIX} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   -t compbio/ngseasy-novoalign:${NGSEASYVERSION} /bin/bash -c \
@@ -515,7 +515,7 @@ else
   logger_ngseasy "[ngseasy_alignment]:BWA aligned data does not exit" ${LOGFILE} 
   logger_ngseasy "[ngseasy_alignment]:Aligning with BWA" ${LOGFILE} 
 
-  ${DOCKER_RUN} \
+  time ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name alignment_${BAM_PREFIX}_bwatmp \
   -t compbio/ngseasy-bwa:${NGSEASYVERSION} /bin/bash -c \
@@ -560,7 +560,7 @@ done
 # 
   logger_ngseasy "[ngseasy_alignment]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}  
 
-    ${DOCKER_RUN} \
+    time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -t compbio/ngseasy-stampy:${NGSEASYVERSION} /bin/bash -c \
@@ -618,7 +618,7 @@ SLOW="--local --sensitive-local"
 
     logger_ngseasy "[ngseasy_alignment]:START ${ALIGNER} Basic Alignment" ${LOGFILE}  
 
-    ${DOCKER_RUN} \
+    time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} /bin/bash -c "/usr/local/bin/bowtie2 ${FAST} --threads ${NCPU} -x ${GENOMEINDEX} \
@@ -666,7 +666,7 @@ elif [[ "${ALIGNER}" == "snap" ]]; then
 
 logger_ngseasy "[ngseasy_alignment]:START ${ALIGNER} Basic Alignment" ${LOGFILE}  
 
-    ${DOCKER_RUN} \
+    time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -t compbio/ngseasy-snap:${NGSEASYVERSION} /bin/bash -c "/usr/local/pipeline/snap/snap paried \
