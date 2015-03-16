@@ -31,7 +31,7 @@ RUN cd /tmp && \
 # speedseq-------------------------------------------------------------
 ENV ROOTSYS /usr/local/root
 
-RUN pip install scipy mumpy pysam 
+RUN apt-get install -y python-numpy python-matplotlib python-reportlab python-pip python-scipy python-pysam
 
 RUN cd /usr/local/pipeline && \
   git clone --recursive https://github.com/cc2qe/speedseq && \
