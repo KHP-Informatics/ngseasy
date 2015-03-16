@@ -669,7 +669,7 @@ logger_ngseasy "[ngseasy_alignment]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
     time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -t compbio/ngseasy-snap:${NGSEASYVERSION} /bin/bash -c "/usr/local/pipeline/snap/snap paried \
+    -t compbio/ngseasy-snap:${NGSEASYVERSION} /bin/bash -c "/usr/local/pipeline/snap/snap paired \
     ${REFDIR} \
     ${FQ1} ${FQ2} \
     -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
