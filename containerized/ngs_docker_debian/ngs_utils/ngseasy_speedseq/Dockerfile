@@ -19,12 +19,13 @@ RUN apt-get install -y libX11-dev libXpm-dev libXft-dev libXext-dev
 RUN cd /tmp && \
     curl -OL ftp://root.cern.ch/root/root_v5.34.20.source.tar.gz && \
     tar -xvf root_v5.34.20.source.tar.gz && \
-    cd root && \
+    chmod -R 777 ./root && \
+    cd ./root && \
     ./configure && \
-    make && \
+    make -j30 && \
     cd .. && \
     mv root /usr/local && \
-	echo "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
+    echo "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
     . /root/.bashrc
 
    
