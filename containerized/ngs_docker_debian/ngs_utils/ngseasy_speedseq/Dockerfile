@@ -25,8 +25,8 @@ RUN cd /tmp && \
     make -j30 && \
     cd .. && \
     mv root /usr/local && \
-    echo "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
-    . /root/.bashrc
+    echo "source /usr/local/root/bin/thisroot.sh" >> ${HOME}/.bashrc  && \
+    . ${HOME}/.bashrc
 
    
 # speedseq-------------------------------------------------------------
