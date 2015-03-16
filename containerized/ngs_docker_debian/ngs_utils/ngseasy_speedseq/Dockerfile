@@ -5,7 +5,7 @@ FROM compbio/ngseasy-base:1.0
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
-ENV HOME /root
+#ENV HOME /home/root
 ENV DEBIAN_FRONTEND noninteractive
 
 # general purpose tools
@@ -14,6 +14,9 @@ RUN apt-get install -y python python-dev python-yaml ncurses-dev python-numpy py
 
 # install dependencies
 RUN apt-get install -y libX11-dev libXpm-dev libXft-dev libXext-dev
+
+# make .bashrc 
+RUN touch ${HOME}/.bashrc 
 
 # get ROOT
 RUN cd /tmp && \
@@ -26,9 +29,8 @@ RUN cd /tmp && \
     cd .. && \
     mv root /usr/local
 
-RUN touch ${HOME}/.bashrc && \
-    echo "source /usr/local/root/bin/thisroot.sh" >> ${HOME}/.bashrc  && \
-    . ${HOME}/.bashrc
+#RUN echo "source /usr/local/root/bin/thisroot.sh" >> ${HOME}/.bashrc  && \
+#    source ${HOME}/.bashrc
 
    
 # speedseq-------------------------------------------------------------
