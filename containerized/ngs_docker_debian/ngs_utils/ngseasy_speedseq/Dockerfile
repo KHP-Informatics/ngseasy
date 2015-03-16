@@ -24,8 +24,9 @@ RUN cd /tmp && \
     ./configure && \
     make -j30 && \
     cd .. && \
-    mv root /usr/local && \
-    touch ${HOME}/.bashrc && \
+    mv root /usr/local
+
+RUN touch ${HOME}/.bashrc && \
     echo "source /usr/local/root/bin/thisroot.sh" >> ${HOME}/.bashrc  && \
     . ${HOME}/.bashrc
 
