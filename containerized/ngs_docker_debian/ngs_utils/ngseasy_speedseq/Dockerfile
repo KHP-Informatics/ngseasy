@@ -23,9 +23,8 @@ RUN cd /tmp && \
     ./configure && \
     make && \
     cd .. && \
-    mv root /usr/local
-
-RUN  echo "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
+    mv root /usr/local && \
+	echo "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
     . /root/.bashrc
 
    
