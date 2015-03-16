@@ -31,6 +31,8 @@ RUN cd /tmp && \
 # speedseq-------------------------------------------------------------
 ENV ROOTSYS /usr/local/root
 
+RUN pip install scipy mumpy pysam 
+
 RUN cd /usr/local/pipeline && \
   git clone --recursive https://github.com/cc2qe/speedseq && \
   chmod -R 777 ./speedseq
