@@ -38,11 +38,13 @@ ENV ROOTSYS /usr/local/root
 
 RUN cd /usr/local/pipeline && \
   git clone --recursive https://github.com/cc2qe/speedseq && \
-  chmod -R 777 ./speedseq && \
-  cd /usr/local/pipeline/speedseq/src/ && \
+  chmod -R 777 ./speedseq
+
+RUN cd /usr/local/pipeline/speedseq/src/ && \
   sed -i 's/ROOTFLAGS = -m64 -O3/#ROOTFLAGS = -m64 -O3/g' Makefile && \
-  sed -i 's/#ROOTFLAGS = -pthread -m64/ROOTFLAGS = -pthread -m64/g' Makefile && \ 
-  cd /usr/local/pipeline/speedseq && \
+  sed -i 's/#ROOTFLAGS = -pthread -m64/ROOTFLAGS = -pthread -m64/g' Makefile
+
+RUN  cd /usr/local/pipeline/speedseq && \
   make
 
 #-------------------------------PERMISSIONS--------------------------
