@@ -673,7 +673,7 @@ logger_ngseasy "[ngseasy_alignment]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
     ${REFDIR} \
     ${FQ1} ${FQ2} \
     -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam \
-    -R @RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE} \
+    -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE}' \
     -so \
     -t ${NCPU} \
     -b \
