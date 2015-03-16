@@ -5,7 +5,6 @@ FROM compbio/ngseasy-base:1.0
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
-#ENV HOME /home/root
 ENV DEBIAN_FRONTEND noninteractive
 
 # general purpose tools
@@ -28,10 +27,6 @@ RUN cd /tmp && \
     make -j30 && \
     cd .. && \
     mv root /usr/local
-
-#RUN echo "source /usr/local/root/bin/thisroot.sh" >> ${HOME}/.bashrc  && \
-#    source ${HOME}/.bashrc
-
    
 # speedseq-------------------------------------------------------------
 ENV ROOTSYS /usr/local/root
@@ -46,6 +41,8 @@ RUN cd /usr/local/pipeline/speedseq/src/cnvnator && \
 
 RUN  cd /usr/local/pipeline/speedseq && \
   make
+
+ENV PATH /usr/local/pipeline/speedseq/bin:${PATH}
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
