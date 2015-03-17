@@ -679,7 +679,7 @@ logger_ngseasy "[ngseasy_alignment]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
     -H 300000 \
     -h 300 \
     -d 15 \
-    -mcp 1000000 \
+    -mcp 6000000 \
     -map \
     -pre \
     -I \
