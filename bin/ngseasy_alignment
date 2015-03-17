@@ -676,9 +676,9 @@ logger_ngseasy "[ngseasy_alignment]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
     -b \
     -M \
     -s 50 1000 \
-    -H 16000 \
+    -H 300000 \
     -h 300 \
-    -d 8 \
+    -d 15 \
     -mcp 1000000 \
     -map \
     -pre \
