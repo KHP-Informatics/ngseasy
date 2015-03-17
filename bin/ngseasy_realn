@@ -50,7 +50,7 @@ RUNDATE=`date +"%d%m%y"`
 ########################################################################################################
 ## docker run command
 #
-DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+DOCKER_RUN="time docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
 
 ########################################################################################################
 ## global logging fuction
@@ -409,12 +409,13 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name bamrecab_${BAM_PREFIX} \
   -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
-  "time sambamba view -t ${NCPU} -f bam ${BAMIN} /dev/stdout | \
+  "sambamba view -t ${NCPU} -f bam ${BAMIN} /dev/stdout | \
   bamleftalign --refFile ${REFFASTA} -c | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam /dev/stdin && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam-realn.flagstat && \
-  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam-realn.bed"
+  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam-realn.bed && \
+  awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam-realn.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam-realn.bed.intervals"
 wait
 
 ########################################################################################################
@@ -432,23 +433,35 @@ wait
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name gatkrecab_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
-  "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
-  -T BaseRecalibrator \
-  -nct ${NCPU} \
+  "awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed.intervals && \
+  time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  -T RealignerTargetCreator \
+  -nt ${NCPU} \
   -R ${REFFASTA} \
-  -knownSites ${KNOWN_INDELS} \
-  -knownSites ${KNOWN_SNPS_b138} \
-  -knownSites ${KNOWN_SNPS_OMNI} \
-  -knownSites ${KNOWN_SNPS_1000G} \
+  -l INFO \
+  -L ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed.intervals \
+  -known ${KNOWN_INDELS} \
+  --mismatchFraction 0.30 \
+  --maxIntervalSize 650 \
   -I ${BAMIN} \
-  -o ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.recal_data.table && \
-  time java -Xmx48g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
-  -T PrintReads \
-  -nct ${NCPU} \
+  -o ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.ForIndelRealigner.intervals && \
+  time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  -T IndelRealigner \
+  -nt ${NCPU} \
   -R ${REFFASTA} \
+  -l INFO \
+  -L ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed.intervals \
   -I ${BAMIN} \
-  -BSQR ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam. recal_data.table \
-  -o ${BAMOUT}"
+  --maxReadsInMemory 300000 \
+  --maxReadsForRealignment 50000 \
+  --maxReadsForConsensuses 500 \
+  --maxConsensuses 100 \
+  --targetIntervals ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.ForIndelRealigner.intervals \
+  -o ${BAMOUT} && \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam && \
+  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.gatk-realn.flagstat && \
+  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.gatk-realn.bed && \
+  awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.gatk-realn.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.gatk-realn.bed.intervals"
 wait
 
 else
@@ -456,6 +469,7 @@ else
   sleep 2s
   exit 1
 fi
+
 
 ######################################################################################################## 
 ## permissions
