@@ -390,6 +390,8 @@ if [[ "${FQSIZE}" -gt "${BAMSIZE}" ]]; then
   sleep 2s
   exit 1
 else
+  logger_ngseasy "[ngseasy_realn]:Checking file sizes [PASSED]. All seems just fine" ${LOGFILE}
+fi
 
 elif [[ "${REALN}" == "no-realn" ]]; then
   
@@ -400,7 +402,7 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
       BAMIN=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam
       BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-bsqr.bam
   
-  logger_ngseasy "[ngseasy_realn]:START Indel Realignment using bamLeftAlign" ${LOGFILE}
+  logger_ngseasy "[ngseasy_realn]:START Indel Realignment using bamleftalign" ${LOGFILE}
 
   ${DOCKER_RUN} \
   --rm=true \

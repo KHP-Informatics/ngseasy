@@ -411,7 +411,7 @@ elif [[ "${ALIGNER}" == "bwa" ]]; then
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name alignment_${BAM_PREFIX} \
   -t compbio/ngseasy-bwa:${NGSEASYVERSION} /bin/bash -c \
-  "/usr/local/bin/bwa mem \
+  "time /usr/local/bin/bwa mem \
   -M \
   -t ${NCPU} \
   -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE}' \
@@ -456,7 +456,7 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
   --name alignment_${BAM_PREFIX} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   -t compbio/ngseasy-novoalign:${NGSEASYVERSION} /bin/bash -c \
-    "/usr/local/bin/novoalign \
+    "time /usr/local/bin/novoalign \
    -d ${GENOMEINDEX}.fasta.novoindex \
    -f ${FQ1} ${FQ2} \
    -F STDFQ \
@@ -519,7 +519,7 @@ else
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name alignment_${BAM_PREFIX}_bwatmp \
   -t compbio/ngseasy-bwa:${NGSEASYVERSION} /bin/bash -c \
-  "/usr/local/bin/bwa mem \
+  "time /usr/local/bin/bwa mem \
   -M \
   -t ${NCPU} \
   -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE}' \
@@ -564,7 +564,7 @@ done
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -t compbio/ngseasy-stampy:${NGSEASYVERSION} /bin/bash -c \
-    "python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
+    "time python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
       -g ${GENOMEINDEX} \
       -h ${GENOMEINDEX} \
       -t ${NCPU} \
@@ -621,7 +621,7 @@ SLOW="--local --sensitive-local"
     time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} /bin/bash -c "/usr/local/bin/bowtie2 ${FAST} --threads ${NCPU} -x ${GENOMEINDEX} \
+    -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} /bin/bash -c "time /usr/local/bin/bowtie2 ${FAST} --threads ${NCPU} -x ${GENOMEINDEX} \
     -I 50 -X 10000 \
     --rg-id ${BAM_PREFIX} \
     --rg SM:${BAM_PREFIX} \
@@ -669,7 +669,7 @@ logger_ngseasy "[ngseasy_alignment]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
     time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -t compbio/ngseasy-snap:${NGSEASYVERSION} /bin/bash -c "/usr/local/pipeline/snap/snap paired \
+    -t compbio/ngseasy-snap:${NGSEASYVERSION} /bin/bash -c "time /usr/local/pipeline/snap/snap paired \
     ${REFDIR} \
     ${FQ1} ${FQ2} \
     -t ${NCPU} \

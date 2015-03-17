@@ -395,7 +395,7 @@ logger_ngseasy " START Variant Calling using Freebayes " ${LOGFILE}
   -P \
   --name Freebayes_${SAMPLE_ID} \
   --volumes-from volumes_container \
-  -t compbio/ngseasy-freebayes:${VERSION} /bin/bash -c \
+  -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
   "time /usr/local/pipeline/freebayes/bin/freebayes \
     -f /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
     -b ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
