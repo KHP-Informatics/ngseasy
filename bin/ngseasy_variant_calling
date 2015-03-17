@@ -333,17 +333,14 @@ else
 fi
 
 BAMFILE=${BAM_PREFIX}.dupemk.bam
-BAMFILE=${BAM_PREFIX}.dupemk.bam-bsqr.bam
-BAMFILE=${BAM_PREFIX}.dupemk.bam-bsqr.bam-realn.bam
-BAMFILE=${BAM_PREFIX}.dupemk.gatk-bsqr.bam
-BAMFILE=${BAM_PREFIX}.dupemk.gatk-bsqr.gatk-realn.bam
+BAMFILE=${BAM_PREFIX}.dupemk.bam-realn.bam
+BAMFILE=${BAM_PREFIX}.dupemk.bam-realn.bam-bsqr.bam
+BAMFILE=${BAM_PREFIX}.dupemk.gatk-realn.bam
+BAMFILE=${BAM_PREFIX}.dupemk.gatk-realn.gatk-bsqr.bam
+BAMFILE=${BAM_PREFIX}.dupemk.no-realn.bam
+BAMFILE=${BAM_PREFIX}.dupemk.no-realn.no-bsqr.bam
 
 # filtered
-BAMFILE=${BAM_PREFIX}.dupemk.filtered.bam
-BAMFILE=${BAM_PREFIX}.dupemk.bam-bsqr.filtered.bam
-BAMFILE=${BAM_PREFIX}.dupemk.bam-bsqr.bam-realn.filtered.bam
-BAMFILE=${BAM_PREFIX}.dupemk.gatk-bsqr.filtered.bam
-BAMFILE=${BAM_PREFIX}.dupemk.gatk-bsqr.gatk-realn.filtered.bam
 
 
 
