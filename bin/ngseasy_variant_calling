@@ -360,7 +360,7 @@ then
   --name samtools_filter_${SAMPLE_ID} \
   --volumes-from volumes_container \
   -t compbio/ngseasy-samtools:${VERSION} /bin/bash -c \
-  "/usr/local/pipeline/samtools/samtools \
+  "time /usr/local/pipeline/samtools/samtools \
   view \
   -b \
   -h \
@@ -386,16 +386,6 @@ fi
 # Freebayes #
 #-----------------------------------------------------------------------------#
 
- vcffilter -f 'QUAL > 5' -s | \
- fix_ambiguous | \
- vcfallelicprimitives --keep-geno | \
- vcffixup - | \
- vcfstreamsort | \
- vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
- vcfuniqalleles | \
- bgzip -c > ${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf
-
-
 if [ "${VARCALLER}" == "freebayes" ]
 then
   
@@ -406,7 +396,7 @@ logger_ngseasy " START Variant Calling using Freebayes " ${LOGFILE}
   --name Freebayes_${SAMPLE_ID} \
   --volumes-from volumes_container \
   -t compbio/ngseasy-freebayes:${VERSION} /bin/bash -c \
-  "/usr/local/pipeline/freebayes/bin/freebayes \
+  "time /usr/local/pipeline/freebayes/bin/freebayes \
     -f /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
     -b ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
     --min-coverage 10 \
@@ -443,12 +433,6 @@ fi
 #-----------------------------------------------------------------------------#
 # Platypus #
 #-----------------------------------------------------------------------------#
- 
-["--hapScoreThreshold", "10", "--scThreshold", "0.99", "--filteredReadsFrac", "0.9",
-                    "--rmsmqThreshold", "20", "--qdThreshold", "0", "--abThreshold", "0.0001",
-                    "--minVarFreq", "0.0"
-
-
 if [ "${VARCALLER}" == "platypus" ]
 then
 
@@ -463,7 +447,7 @@ then
   docker run -P \
   --name platypus_${SAMPLE_ID} \
   --volumes-from volumes_container \
-  -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c "python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
+  -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
       --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
       --refFile=${REFFASTA} \
@@ -498,7 +482,7 @@ then
   docker run -P \
       --name platypus_${SAMPLE_ID} \
       --volumes-from volumes_container \
-      -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c "python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
+      -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
         --nCPU ${NCPU} \
         --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
         --refFile=${REFFASTA} \
@@ -560,8 +544,8 @@ then
   -P \
   --name UnifiedGenotyper_${SAMPLE_ID} \
   --volumes-from volumes_container \
-  -t compbio/ngseasy-gatk:${VERSION} \
-  java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar \
+  -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
+  "time java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar \
   -T UnifiedGenotyper \
   -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
   -nct ${NCPU} \
@@ -595,7 +579,7 @@ then
   --annotation ReadPosRankSumTest \
   --annotation SpanningDeletions \
   --annotation TandemRepeatAnnotator \
-  --annotation VariantType;
+  --annotation VariantType;"
 
 #logs
   docker logs UnifiedGenotyper_${SAMPLE_ID} >> ${LOGFILE}.log

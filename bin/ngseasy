@@ -413,18 +413,25 @@ echo -e "\n----------------------------------\n"
 ###################################################################################
 ## Indel realignment 
 ###################################################################################
-#logger_ngseasy "[ngseasy]:check if ngseasy_alignment still running and wait before running ngseasy_realn"
 
-#running_alignment_jobs=`docker ps -a | grep alignment | grep Up | wc -l`
+echo -e "\n###########################################################################################"
+echo -e "## Indel realignment "
+echo -e "###########################################################################################\n"
 
-#while [ $running_alignment_jobs -gt 0 ]; do
-#  sleep 10s;
-#  running_alignment_jobs=`docker ps -a | grep alignment | grep Up | wc -l`;
-#  logger_ngseasy "[ngseasy]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
-#done
+logger_ngseasy "[ngseasy]:check if ngseasy_alignment still running and wait before running ngseasy_realn"
 
-#logger_ngseasy  "[ngseasy]:Calling ngseasy_realn"  ${HOME}/ngseasy_logs/ngseasy.${cnfig_tsv}.${RUNDATE}
-#	/bin/bash ngseasy_realn  -c ${config_tsv} -d ${project_directory}
+running_alignment_jobs=`docker ps -a | grep alignment | grep Up | wc -l`
+
+while [ $running_alignment_jobs -gt 0 ]; do
+  sleep 10s;
+  running_alignment_jobs=`docker ps -a | grep alignment | grep Up | wc -l`;
+  logger_ngseasy "[ngseasy]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
+done
+
+echo -e "\n----------------------------------\n"
+logger_ngseasy  "[ngseasy]:Calling ngseasy_realn"  ${HOME}/ngseasy_logs/ngseasy.${cnfig_tsv}.${RUNDATE}
+	/bin/bash ngseasy_realn -c ${config_tsv} -d ${project_directory}
+echo -e "\n----------------------------------\n"
 
 ###################################################################################
 ## Base Quality Score Recalibration
@@ -433,6 +440,12 @@ echo -e "\n----------------------------------\n"
 #logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${config_run_log}
 #	/bin/bash ngseasy_bsqr -c ${config_tsv} -d ${project_directory}
 
+##################################################################################
+## Variant calling
+###################################################################################
+#logger_ngseasy  "[ngseasy]:Calling ngseasy_variant_calling"  ${config_run_log}
+#	/bin/bash ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
+
 ###################################################################################
 ## Alignment statistics
 ###################################################################################
@@ -440,11 +453,6 @@ echo -e "\n----------------------------------\n"
 #logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment_qc"  ${config_run_log}
 #	/bin/bash ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
 
-###################################################################################
-## Variant calling
-###################################################################################
-#logger_ngseasy  "[ngseasy]:Calling ngseasy_variant_calling"  ${config_run_log}
-#	/bin/bash ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
 
 ###################################################################################
 ## CNV Calling: coming soon

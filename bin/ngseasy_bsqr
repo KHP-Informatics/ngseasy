@@ -406,15 +406,15 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
   --rm=true \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name bamrecab_${BAM_PREFIX} \
-  -t compbio/ngseasy-base:${NGSEASYVERSION} \
-  /usr/local/bin/bam \
+  -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
+  "time /usr/local/bin/bam \
   recab \
   --in ${BAMIN} \
   --out ${BAMOUT} \
   --refFile ${REFFASTA} \
   --dbsnp ${DBSNP} \
   --storeQualTag OQ \
-  --maxBaseQual 40;
+  --maxBaseQual 40;"
 wait
 
 ########################################################################################################
@@ -432,7 +432,7 @@ wait
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name gatkrecab_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
-  "java -Xmx48g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
   -nct ${NCPU} \
   -R ${REFFASTA} \
@@ -442,13 +442,13 @@ wait
   -knownSites ${KNOWN_SNPS_1000G} \
   -I ${BAMIN} \
   -o ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.recal_data.table && \
-  java -Xmx48g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  time java -Xmx48g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
   -T PrintReads \
   -nct ${NCPU} \
   -R ${REFFASTA} \
   -I ${BAMIN} \
   -BSQR ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam. recal_data.table \
-  -0 ${BAMOUT}"
+  -o ${BAMOUT}"
 wait
 
 else
