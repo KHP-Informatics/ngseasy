@@ -400,7 +400,7 @@ elif [[ "${REALN}" == "no-realn" ]]; then
 elif [[ "${REALN}" == "bam-realn" ]]; then
       
       BAMIN=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam
-      BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-bsqr.bam
+      BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam
   
   logger_ngseasy "[ngseasy_realn]:START Indel Realignment using bamleftalign" ${LOGFILE}
 
@@ -411,11 +411,11 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
   -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
   "sambamba view -t ${NCPU} -f bam ${BAMIN} /dev/stdout | \
   bamleftalign --refFile ${REFFASTA} -c | \
-  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam /dev/stdin && \
-  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam && \
-  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam-realn.flagstat && \
-  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam-realn.bed && \
-  awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam-realn.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam-realn.bed.intervals"
+  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam /dev/stdin && \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
+  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.flagstat && \
+  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
+  awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed.intervals"
 wait
 
 ########################################################################################################
@@ -424,7 +424,7 @@ wait
   elif [[ "${REALN}" == "gatk-realn"  ]]; then
 
       BAMIN=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam
-      BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam
+      BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam
   
   logger_ngseasy "[ngseasy_realn]:START Indel Realignment using GATK" ${LOGFILE}
 
@@ -458,10 +458,10 @@ wait
   --maxConsensuses 100 \
   --targetIntervals ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.ForIndelRealigner.intervals \
   -o ${BAMOUT} && \
-  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam && \
-  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.gatk-realn.flagstat && \
-  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.gatk-realn.bed && \
-  awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.gatk-realn.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.gatk-realn.bed.intervals"
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
+  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.flagstat && \
+  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
+  awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed.intervals"
 wait
 
 else

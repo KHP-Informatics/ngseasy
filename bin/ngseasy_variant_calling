@@ -347,6 +347,7 @@ BAMFILE=${BAM_PREFIX}.dupemk.gatk-bsqr.gatk-realn.filtered.bam
 
 
 
+
 #---------Does filtered bam exits, if not then generate it----------------------#
 
 if [ ! -s "${SOUT}/alignments/${BAM_PREFIX}.filtered.bam" ]
@@ -386,34 +387,36 @@ fi
 # Freebayes #
 #-----------------------------------------------------------------------------#
 
+
 if [ "${VARCALLER}" == "freebayes" ]
 then
   
-logger_ngseasy " START Variant Calling using Freebayes " ${LOGFILE}
+logger_ngseasy " START Variant Calling using freebayes-parallel " ${LOGFILE}
 
   docker run \
   -P \
   --name Freebayes_${SAMPLE_ID} \
   --volumes-from volumes_container \
   -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-  "time /usr/local/pipeline/freebayes/bin/freebayes \
-    -f /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-    -b ${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
-    --min-coverage 10 \
-    --min-mapping-quality 20 \
-    --min-base-quality 20 \
-    --min-repeat-entropy 1 \
-    --experimental-gls \
-    --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
-    cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
-    vcffilter -f 'QUAL > 5' -s | \
-    fix_ambiguous | \
-    vcfallelicprimitives --keep-geno | \
-    vcffixup - | \
-    vcfstreamsort | \
-    vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
-    vcfuniqalleles | \
-    bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf"
+  "bamtools coverage -in ${BAMFILE} | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${REFFASTA} 1000 > ${REFFASTA}.1000.regions && \
+  /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${REFFASTA}.1000.regions ${NCPU} \
+  -f ${REFFASTA} \
+  -b ${BAMFILE} \
+  --min-coverage 10 \
+  --min-mapping-quality 20 \
+  --min-base-quality 20 \
+  --min-repeat-entropy 1 \
+  --experimental-gls \
+  --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
+  cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+  vcffilter -f 'QUAL > 5' -s | \
+  fix_ambiguous | \
+  vcfallelicprimitives --keep-geno | \
+  vcffixup - | \
+  vcfstreamsort | \
+  vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+  vcfuniqalleles | \
+  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf"
 
     #logs
   docker logs Freebayes_${SAMPLE_ID} >> ${LOGFILE}.log
