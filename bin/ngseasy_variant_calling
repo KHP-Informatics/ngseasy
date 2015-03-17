@@ -36,6 +36,16 @@ function logger_ngseasy() {
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
 
+## Custom utils from bcbio and more This needs to be in Dockerfile
+## also need to add http://genome.sph.umich.edu/wiki/Vt to base image or all callers
+## Taken from https://github.com/chapmanb/bcbio-nextgen/blob/98c75603907cb22a3e4cd4fd78f7e995b80bddfd/bcbio/variation/vcfutils.py#L76
+function fix_ambiguous() {
+
+  awk -F$'\t' -v OFS='\t' '{if ($0 !~ /^#/) gsub(/[KMRYSWBVHDX]/, "N", $4) } {print}'
+
+}
+
+
 ########################################################################################################
 ## global usage
 #
@@ -308,6 +318,7 @@ BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TR
 
 logger_ngseasy "[ngseasy_variant_calling]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE}
 
+###################################################################################
 ## BAM Files
 #
 
@@ -404,14 +415,15 @@ logger_ngseasy " START Variant Calling using Freebayes " ${LOGFILE}
     --min-repeat-entropy 1 \
     --experimental-gls \
     --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
+    cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
     vcffilter -f 'QUAL > 5' -s | \
-    fix_ambig | \
+    fix_ambiguous | \
     vcfallelicprimitives --keep-geno | \
     vcffixup - | \
     vcfstreamsort | \
     vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
     vcfuniqalleles | \
-    bgzip -c > ${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf"
+    bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf"
 
     #logs
   docker logs Freebayes_${SAMPLE_ID} >> ${LOGFILE}.log
@@ -432,7 +444,9 @@ fi
 # Platypus #
 #-----------------------------------------------------------------------------#
  
-
+["--hapScoreThreshold", "10", "--scThreshold", "0.99", "--filteredReadsFrac", "0.9",
+                    "--rmsmqThreshold", "20", "--qdThreshold", "0", "--abThreshold", "0.0001",
+                    "--minVarFreq", "0.0"
 
 
 if [ "${VARCALLER}" == "platypus" ]
@@ -449,11 +463,12 @@ then
   docker run -P \
   --name platypus_${SAMPLE_ID} \
   --volumes-from volumes_container \
-  -t compbio/ngseasy-platypus:${VERSION} python /usr/local/pipeline/Platypus_0.7.9.1/Platypus.py callVariants \
+  -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c "python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
       --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
-      --refFile=/home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
+      --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+      --assemble=1 \
       --filterDuplicates=0 \
       --minReads=10 \
       --minMapQual=20 \
@@ -464,7 +479,16 @@ then
       --rmsmqThreshold 20 \
       --qdThreshold 0 \
       --abThreshold 0.0001 \
-      --minVarFreq 0.0;
+      --minVarFreq 0.0 && \
+      cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+      vcffilter -f 'QUAL > 5' -s | \
+      fix_ambiguous | \
+      vcfallelicprimitives --keep-geno | \
+      vcffixup - | \
+      vcfstreamsort | \
+      vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+      vcfuniqalleles | \
+      bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf"
       
   # copy vcf to cohort vcf directory
   cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
@@ -474,23 +498,34 @@ then
   docker run -P \
       --name platypus_${SAMPLE_ID} \
       --volumes-from volumes_container \
-      -t compbio/ngseasy-platypus:${VERSION} python /usr/local/pipeline/Platypus_0.7.9.1/Platypus.py callVariants \
+      -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c "python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
         --nCPU ${NCPU} \
         --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
-        --refFile=/home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
+        --refFile=${REFFASTA} \
         --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+        --assemble=1 \
         --filterDuplicates=1 \
         --minReads=10 \
         --minMapQual=20 \
         --minBaseQual=20 \
         --hapScoreThreshold 10 \
-	--scThreshold 0.99 \
-	--filteredReadsFrac 0.9 \
-	--rmsmqThreshold 20 \
-	--qdThreshold 0 \
-	--abThreshold 0.0001 \
-	--minVarFreq 0.0;
-        
+      	--scThreshold 0.99 \
+      	--filteredReadsFrac 0.9 \
+      	--rmsmqThreshold 20 \
+      	--qdThreshold 0 \
+      	--abThreshold 0.0001 \
+      	--minVarFreq 0.0;
+        cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+        vcffilter -f 'QUAL > 5' -s | \
+        fix_ambiguous | \
+        vcfallelicprimitives --keep-geno | \
+        vcffixup - | \
+        vcfstreamsort | \
+        vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+        vcfuniqalleles | \
+        bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf"
+      
+              
 #logs
   docker logs platypus_${SAMPLE_ID} >> ${LOGFILE}.log
   docker rm platypus_${SAMPLE_ID}

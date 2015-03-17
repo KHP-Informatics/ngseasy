@@ -417,6 +417,7 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
   --maxBaseQual 40;
 wait
 
+########################################################################################################
 ## GATK BaseRecalibrator and PrintReads
 #
   elif [[ "${BSQR}" == "gatk-bsqr"  ]]; then
