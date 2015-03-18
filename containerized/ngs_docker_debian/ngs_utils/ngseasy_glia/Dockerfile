@@ -15,9 +15,9 @@ RUN apt-get update &&  apt-get upgrade -y && apt-get dist-upgrade -y
 # glia
 RUN cd /usr/local/pipeline && \
     git clone --recursive https://github.com/ekg/glia.git && \
-    chmod -R 777 glia \
-    cd glia \
-    make \
+    chmod -R 777 glia && \
+    cd glia && \
+    make && \
     cp -v glia /usr/local/bin
   
 #-------------------------------PERMISSIONS--------------------------
