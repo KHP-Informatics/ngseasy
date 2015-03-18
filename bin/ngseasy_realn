@@ -404,14 +404,14 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
   
   logger_ngseasy "[ngseasy_realn]:START Indel Realignment using glia" ${LOGFILE}
 
-##  9049ffc198cb036c024687dec922b576d75269ef
+## glia build march 2015 9049ffc198cb036c024687dec922b576d75269ef
   ${DOCKER_RUN} \
   --rm=true \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name bamrecab_${BAM_PREFIX} \
   -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
   "sambamba view -t ${NCPU} -f bam ${BAMIN} | \
-  /usr/local/bin/glia -Rr -w 1500 -S 200 -Q 200 -G 4 -u -f ${REFFASTA} -v ${KNOWN_INDELS} | \
+  glia -Rr -w 1500 -S 200 -Q 200 -G 4 -u -f ${REFFASTA} -v ${KNOWN_INDELS} | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam /dev/stdin && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.flagstat && \
