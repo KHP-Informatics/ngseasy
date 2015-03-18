@@ -37,6 +37,11 @@ CLEANUP=""
 NCPU=""
 NGSEASYVERSION=""
 NGSUSER=""
+REFFASTA=""
+KNOWN_INDELS=""
+KNOWN_SNPS_1000G=""
+KNOWN_SNPS_OMNI=""
+KNOWN_SNPS_b138=""
 ########################################################################################################
 ## test if docker is intsalled and exit if not
 command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
