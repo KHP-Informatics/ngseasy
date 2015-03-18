@@ -292,13 +292,13 @@ logger_ngseasy "[ngseasy_realn]:Checking genome selected"  ${LOGFILE}
 
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
 
-REFDIR=""
-GENOMEINDEX=""
-REFFASTA=""
-KNOWN_INDELS=""
-KNOWN_SNPS_1000G=""
-KNOWN_SNPS_OMNI=""
-KNOWN_SNPS_b138=""
+  REFDIR=""
+  GENOMEINDEX=""
+  REFFASTA=""
+  KNOWN_INDELS=""
+  KNOWN_SNPS_1000G=""
+  KNOWN_SNPS_OMNI=""
+  KNOWN_SNPS_b138=""
 
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
@@ -314,16 +314,18 @@ KNOWN_SNPS_b138=""
   KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.b37.vcf"
   KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.b37.vcf"
   KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.b37.vcf"
+  
+  logger_ngseasy "[ngseasy_realn]:KNOWN_INDELS [${KNOWN_INDELS}]"  ${LOGFILE}
 
 elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
 
-REFDIR=""
-GENOMEINDEX=""
-REFFASTA=""
-KNOWN_INDELS=""
-KNOWN_SNPS_1000G=""
-KNOWN_SNPS_OMNI=""
-KNOWN_SNPS_b138=""
+  REFDIR=""
+  GENOMEINDEX=""
+  REFFASTA=""
+  KNOWN_INDELS=""
+  KNOWN_SNPS_1000G=""
+  KNOWN_SNPS_OMNI=""
+  KNOWN_SNPS_b138=""
 
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
@@ -338,6 +340,8 @@ KNOWN_SNPS_b138=""
   KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.hg19.sites.vcf"
   KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.hg19.sites.vcf"
   KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.hg19.vcf"
+
+  logger_ngseasy "[ngseasy_realn]:KNOWN_INDELS [${KNOWN_INDELS}]"  ${LOGFILE}
 
 else
   logger_ngseasy "[ngseasy_realn]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
@@ -395,34 +399,34 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
   awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed.intervals" ${LOGFILE}
 
 ## 
-  ${DOCKER_RUN} \
-  --rm=true \
-  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-  --name bamrecab_${BAM_PREFIX} \
-  -t compbio/ngseasy-glia:${NGSEASYVERSION} /bin/bash -c \
-  "sambamba view -t ${NCPU} -f bam ${BAMIN} | \
-  bamleftalign -f ${REFFASTA} -c -d | \
-  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam /dev/stdin && \
-  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
-  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.flagstat && \
-  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
-  awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed.intervals"
-  wait
-
-## glia build march 2015 9049ffc198cb036c024687dec922b576d75269ef
 #  ${DOCKER_RUN} \
 #  --rm=true \
 #  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 #  --name bamrecab_${BAM_PREFIX} \
 #  -t compbio/ngseasy-glia:${NGSEASYVERSION} /bin/bash -c \
 #  "sambamba view -t ${NCPU} -f bam ${BAMIN} | \
-#  glia -Rr -w 1500 -S 200 -Q 200 -G 4 -u -f ${REFFASTA} -v ${KNOWN_INDELS} | \
+#  bamleftalign -f ${REFFASTA} -c -d | \
 #  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam /dev/stdin && \
 #  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
 #  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.flagstat && \
 #  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
 #  awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed.intervals"
 #  wait
+
+## glia build march 2015 9049ffc198cb036c024687dec922b576d75269ef
+  ${DOCKER_RUN} \
+  --rm=true \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name glia_${BAM_PREFIX} \
+  -t compbio/ngseasy-glia:${NGSEASYVERSION} /bin/bash -c \
+  "sambamba view -t ${NCPU} -f bam ${BAMIN} | \
+  glia -Rr -w 1500 -S 200 -Q 200 -G 4 -u -f ${REFFASTA} -v ${KNOWN_INDELS} | \
+  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam /dev/stdin && \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
+  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.flagstat && \
+  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
+  awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed.intervals"
+  wait
 
 #   
 ########################################################################################################
