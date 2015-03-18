@@ -411,14 +411,14 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
   --name bamrecab_${BAM_PREFIX} \
   -t compbio/ngseasy-glia:${NGSEASYVERSION} /bin/bash -c \
   "sambamba view -t ${NCPU} -f bam ${BAMIN} | \
-  glia -Rr -w 1500 -S 200 -Q 200 -G 4 -u -f ${REFFASTA} -v ${KNOWN_INDELS} | \
+  bamleftalign -f ${REFFASTA} -c -d | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam /dev/stdin && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
   awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed.intervals"
 wait
-
+#   glia -Rr -w 1500 -S 200 -Q 200 -G 4 -u -f ${REFFASTA} -v ${KNOWN_INDELS} | \
 ########################################################################################################
 ## GATK BaseRecalibrator and PrintReads
 #

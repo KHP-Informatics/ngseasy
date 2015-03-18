@@ -20,10 +20,9 @@ RUN cd /usr/local/pipeline && \
     make && \
     cp -v ./glia /usr/local/bin/ && \
     cd /usr/local/pipeline && \
-    wget https://github.com/ekg/freebayes/archive/v0.9.20.tar.gz && \
-    tar -xvf v0.9.20.tar.gz && \
-    chmod -R 777 freebayes-0.9.20 && \
-    cd freebayes-0.9.20 && \
+    git clone --branch v0.9.20 --recursive git://github.com/ekg/freebayes.git  && \
+    chmod -R 777 freebayes && \
+    cd freebayes && \
     make && \
     cp -v ./bin/* /usr/local/bin/
   
