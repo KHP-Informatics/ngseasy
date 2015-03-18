@@ -341,7 +341,7 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.hg19.sites.vcf"
   KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.hg19.vcf"
 
-  logger_ngseasy "[ngseasy_realn]:KNOWN_INDELS [${KNOWN_INDELS}]"  ${LOGFILE}
+  logger_ngseasy "[ngseasy_realn]:KNOWN_INDELS [${KNOWN_INDELS}]" ${LOGFILE}
 
 else
   logger_ngseasy "[ngseasy_realn]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
@@ -390,8 +390,8 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
       BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam
   
   logger_ngseasy "[ngseasy_realn]:START Indel Realignment using glia" ${LOGFILE}
-  logger_ngseasy "[ngseasy_realn]:sambamba view -t ${NCPU} -f bam ${BAMIN} | \
-  bamleftalign -f ${REFFASTA} -c -d | \
+  logger_ngseasy "[ngseasy_realn]:[cmd]:sambamba view -t ${NCPU} -f bam ${BAMIN} | \
+  glia -Rr -w 1500 -S 200 -Q 200 -G 4 -u -f ${REFFASTA} -v ${KNOWN_INDELS} | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam /dev/stdin && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.flagstat && \
