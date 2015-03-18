@@ -55,7 +55,7 @@ RUNDATE=`date +"%d%m%y"`
 ########################################################################################################
 ## docker run command
 #
-DOCKER_RUN="time docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
 
 ########################################################################################################
 ## global logging fuction
@@ -274,7 +274,6 @@ SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
 logger_ngseasy "[ngseasy_realn]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
 
-
 ########################################################################################################
 ## check local dir exists
 #
@@ -287,25 +286,27 @@ else
 fi
 
 ########################################################################################################
-## check for fastq files exist
-#
-if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
-then
-  logger_ngseasy "[ngseasy_realn]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
-  exit 1
-fi
-
-########################################################################################################
 ## Select Genome Build and files
 #
-logger_ngseasy "[ngseasy_realn]:Checking genome selected]"  ${LOGFILE}
+logger_ngseasy "[ngseasy_realn]:Checking genome selected"  ${LOGFILE}
 
-if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
+if [[ "${GENOMEBUILD}" == "b37" ]]; then
+
+REFDIR=""
+GENOMEINDEX=""
+REFFASTA=""
+KNOWN_INDELS=""
+KNOWN_SNPS_1000G=""
+KNOWN_SNPS_OMNI=""
+KNOWN_SNPS_b138=""
+
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
   REFFASTA="${REFDIR}/human_g1k_v37.fasta"
   DBSNPb37="${REFDIR}/dbsnp_138.b37.recab"
+  
   logger_ngseasy "[ngseasy_realn]:Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+  logger_ngseasy "[ngseasy_realn]:Fasta [${REFFASTA}]"  ${LOGFILE}
   logger_ngseasy "[ngseasy_realn]:dbSNP file for bam recab b37 [${DBSNPb37}]" ${LOGFILE}
 
   #known indels and SNPs
@@ -314,12 +315,22 @@ if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
   KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.b37.vcf"
   KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.b37.vcf"
 
-elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
+elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
+
+REFDIR=""
+GENOMEINDEX=""
+REFFASTA=""
+KNOWN_INDELS=""
+KNOWN_SNPS_1000G=""
+KNOWN_SNPS_OMNI=""
+KNOWN_SNPS_b138=""
+
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
   REFFASTA="${REFDIR}/ucsc.hg19.fasta"
   DBSNPhg19="${REFDIR}/dbsnp_138.hg19.recab"
   logger_ngseasy "[ngseasy_realn]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+  logger_ngseasy "[ngseasy_realn]:Fasta [${REFFASTA}]"  ${LOGFILE}
   logger_ngseasy "[ngseasy_realn]:dbSNP file for bam recab hg19 [${DBSNPhg19}]" ${LOGFILE}
 
   #known indels and SNPs
