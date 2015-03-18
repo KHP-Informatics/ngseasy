@@ -416,7 +416,7 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name bamrecab_${BAM_PREFIX} \
   -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
-  "sambamba view -t ${NCPU} -f bam ${BAMIN} | \
+  "sambamba view -t ${NCPU} -f bam ${BAMIN} chrM | \
   bamleftalign --fasta-reference ${REFFASTA} -d -c | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam /dev/stdin && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
