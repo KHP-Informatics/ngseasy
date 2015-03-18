@@ -77,7 +77,7 @@ options:  -c  STRING  configuration file
           -d  STRING  project directory
           -h  NULL    show this message
 
-ngseasy_realn sets up the NGSeasy docker containers for Indel Realignment using bamLeftAlign or GATK.
+ngseasy_realn sets up the NGSeasy docker containers for Indel Realignment using glia or GATK.
 "
 }
 
@@ -402,31 +402,22 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
       BAMIN=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam
       BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam
   
-  logger_ngseasy "[ngseasy_realn]:START Indel Realignment using bamleftalign" ${LOGFILE}
+  logger_ngseasy "[ngseasy_realn]:START Indel Realignment using glia" ${LOGFILE}
 
-## 
+##  9049ffc198cb036c024687dec922b576d75269ef
   ${DOCKER_RUN} \
   --rm=true \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name bamrecab_${BAM_PREFIX} \
   -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-  "cp /usr/local/bin/bamleftalign ${SOUTDocker}/alignments/ && \
-  sambamba view -t ${NCPU} -f bam ${BAMIN} chr15 | \
-  ${SOUTDocker}/alignments/bamleftalign --fasta-reference ${REFFASTA} -d -c | \
+  "sambamba view -t ${NCPU} -f bam ${BAMIN} | \
+  /usr/local/bin/glia -Rr -w 1500 -S 200 -Q 200 -G 4 -u -f ${REFFASTA} -v ${KNOWN_INDELS} | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam /dev/stdin && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
   awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed.intervals"
 wait
-
-"sambamba view -t ${NCPU} -f bam ${BAMIN} | \
-/usr/local/bin/glia -Rr -w 1500 -S 200 -Q 200 -G 4 -f ${REFFASTA} -v ${KNOWN_INDELS} | \
-sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam /dev/stdin && \
-sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
-sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.flagstat && \
-bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
-awk '{print $1":"$2"-"$3}' ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed.intervals"
 
 ########################################################################################################
 ## GATK BaseRecalibrator and PrintReads
