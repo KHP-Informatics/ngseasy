@@ -336,7 +336,7 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   logger_ngseasy "[ngseasy_realn]:dbSNP file for bam recab hg19 [${DBSNPhg19}]" ${LOGFILE}
 
   #known indels and SNPs
-  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf"
+  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.gz"
   KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.hg19.sites.vcf"
   KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.hg19.sites.vcf"
   KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.hg19.vcf"
