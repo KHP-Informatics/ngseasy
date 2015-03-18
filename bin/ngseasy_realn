@@ -409,7 +409,7 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
   --rm=true \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name bamrecab_${BAM_PREFIX} \
-  -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
+  -t compbio/ngseasy-glia:${NGSEASYVERSION} /bin/bash -c \
   "sambamba view -t ${NCPU} -f bam ${BAMIN} | \
   glia -Rr -w 1500 -S 200 -Q 200 -G 4 -u -f ${REFFASTA} -v ${KNOWN_INDELS} | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam /dev/stdin && \
