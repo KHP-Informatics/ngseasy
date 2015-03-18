@@ -18,7 +18,14 @@ RUN cd /usr/local/pipeline && \
     chmod -R 777 ./glia && \
     cd ./glia && \
     make && \
-    cp -v ./glia /usr/local/bin/
+    cp -v ./glia /usr/local/bin/ && \
+    cd /usr/local/pipeline && \
+    wget https://github.com/ekg/freebayes/archive/v0.9.20.tar.gz && \
+    tar -xvf v0.9.20.tar.gz && \
+    chmod -R 777 freebayes-0.9.20 && \
+    cd freebayes-0.9.20 && \
+    make && \
+    cp -v ./bin/* /usr/local/bin/
   
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline 
