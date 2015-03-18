@@ -300,7 +300,7 @@ if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
   REFFASTA="${REFDIR}/human_g1k_v37.fasta"
   DBSNPb37="${REFDIR}/dbsnp_138.b37.recab"
-  logger_ngseasy "[ngseasy_realn]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+  logger_ngseasy "[ngseasy_realn]:Genome Build [${GENOMEBUILD}]" ${LOGFILE}
   logger_ngseasy "[ngseasy_realn]:dbSNP file for bam recab b37 [${DBSNPb37}]" ${LOGFILE}
 
   #known indels and SNPs
@@ -315,7 +315,7 @@ elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
   REFFASTA="${REFDIR}/ucsc.hg19.fasta"
   DBSNPhg19="${REFDIR}/dbsnp_138.hg19.recab"
-  logger_ngseasy "[ngseasy_realn]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+  logger_ngseasy "[ngseasy_realn]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
   logger_ngseasy "[ngseasy_realn]:dbSNP file for bam recab hg19 [${DBSNPhg19}]" ${LOGFILE}
 
   #known indels and SNPs
