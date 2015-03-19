@@ -534,7 +534,6 @@ elif [[ "${REALN}" == "gatk-realn"  ]]; then
   -o ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.ForIndelRealigner.intervals && \
   time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
   -T IndelRealigner \
-  -nct ${NCPU} \
   -R ${REFFASTA} \
   -l INFO \
   --unsafe ALL \
