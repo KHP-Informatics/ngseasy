@@ -400,24 +400,49 @@ if  [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam" ]]; then
   logger_ngseasy "[ngseasy_realn]:Skipping Indel Realignment. Looks like you already ran it [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam]" ${LOGFILE}
   logger_ngseasy "[ngseasy_realn]:Checking file sizes" ${LOGFILE}
 
-BAMSIZE=$(du -sb ${SOUT}/alignments/${BAM_PREFIX}.bam-realn.bam | awk '{ print ${1} }')
-FQSIZE=$(du -sb ${SOUT}/fastq/${FQ1} | awk '{ print ${1} }')
+  BAMSIZE=$(du -sb ${SOUT}/alignments/${BAM_PREFIX}.bam-realn.bam | awk '{ print ${1} }')
+  FQSIZE=$(du -sb ${SOUT}/fastq/${FQ1} | awk '{ print ${1} }')
 
-if [[ "${FQSIZE}" -gt "${BAMSIZE}" ]]; then
-  logger_ngseasy "[ngseasy_realn]:ERROR:FASTQ bigger than BAM. Something wrong here" ${LOGFILE}
-  logger_ngseasy "[ngseasy_realn]:Alignment may have broke at somepoint" ${LOGFILE}
-  logger_ngseasy "[ngseasy_realn]:Check your output" ${LOGFILE}
-  logger_ngseasy "[ngseasy_realn]:Exiting" ${LOGFILE}
-  sleep 2s
-  exit 1
-else
-  logger_ngseasy "[ngseasy_realn]:Checking file sizes [PASSED]. All seems just fine" ${LOGFILE}
-fi
+  if [[ "${FQSIZE}" -gt "${BAMSIZE}" ]]; then
+    logger_ngseasy "[ngseasy_realn]:ERROR:FASTQ bigger than BAM. Something wrong here" ${LOGFILE}
+    logger_ngseasy "[ngseasy_realn]:Alignment may have broke at somepoint" ${LOGFILE}
+    logger_ngseasy "[ngseasy_realn]:Check your output" ${LOGFILE}
+    logger_ngseasy "[ngseasy_realn]:Exiting" ${LOGFILE}
+    sleep 2s
+    exit 1
+  else
+    logger_ngseasy "[ngseasy_realn]:Checking file sizes [PASSED]. All seems just fine" ${LOGFILE}
+  fi
 
+elif  [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam" ]]; then
+  
+  logger_ngseasy "[ngseasy_realn]:Skipping Indel Realignment. Looks like you already ran it [${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam]" ${LOGFILE}
+  logger_ngseasy "[ngseasy_realn]:Checking file sizes" ${LOGFILE}
+
+  BAMSIZE=$(du -sb ${SOUT}/alignments/${BAM_PREFIX}.gatk-realn.bam | awk '{ print ${1} }')
+  FQSIZE=$(du -sb ${SOUT}/fastq/${FQ1} | awk '{ print ${1} }')
+
+  if [[ "${FQSIZE}" -gt "${BAMSIZE}" ]]; then
+    logger_ngseasy "[ngseasy_realn]:ERROR:FASTQ bigger than BAM. Something wrong here" ${LOGFILE}
+    logger_ngseasy "[ngseasy_realn]:Alignment may have broke at somepoint" ${LOGFILE}
+    logger_ngseasy "[ngseasy_realn]:Check your output" ${LOGFILE}
+    logger_ngseasy "[ngseasy_realn]:Exiting" ${LOGFILE}
+    sleep 2s
+    exit 1
+  else
+    logger_ngseasy "[ngseasy_realn]:Checking file sizes [PASSED]. All seems just fine" ${LOGFILE}
+  fi
+
+########################################################################################################
+## if no-realn
+#
 elif [[ "${REALN}" == "no-realn" ]]; then
   
   logger_ngseasy "[ngseasy_realn]:Skipping Indel Realignment" ${LOGFILE}
 
+########################################################################################################
+## bam-realn using glia
+#
 elif [[ "${REALN}" == "bam-realn" ]]; then
       
       BAMIN=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam
@@ -425,11 +450,6 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
   
   logger_ngseasy "[ngseasy_realn]:START Indel Realignment using glia" ${LOGFILE}
   sleep 1s
-
-## glia build march 2015 9049ffc198cb036c024687dec922b576d75269ef
-# remove outher contigs and keep to regular chromosomes
-# glia error and cant find index for '' when including the native bam with all extra contigs
-#
 
 ########################################################################################################
 ## transpose function
@@ -456,7 +476,9 @@ function transpose() {
 ########################################################################################################
 ## chrom list to subset BAM to - taken from bed file
 #
+chroms=""
 chroms=$(cut -f 1 ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed | uniq | transpose)
+logger_ngseasy "[ngseasy_realn]:chroms [${chroms}]" ${LOGFILE}
 
   time ${DOCKER_RUN} \
   --rm=true \
@@ -487,8 +509,11 @@ chroms=$(cut -f 1 ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed | uniq | transpose)
       BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam
   
   logger_ngseasy "[ngseasy_realn]:START Indel Realignment using GATK" ${LOGFILE}
+  #chroms=""
+  #chroms=$(cut -f 1 ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed | uniq | transpose)
+  #logger_ngseasy "[ngseasy_realn]:chroms [${chroms}]" ${LOGFILE}
   
-  awk '{print $1":"$2"-"$3}' ${SOUTD}/reports/${BAM_PREFIX}.dupemk.bed > ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed.intervals && \
+  awk '{print $1":"$2"-"$3}' ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed > ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed.intervals
   
  time ${DOCKER_RUN} \
   --rm=true \
@@ -500,6 +525,8 @@ chroms=$(cut -f 1 ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed | uniq | transpose)
   -nt ${NCPU} \
   -R ${REFFASTA} \
   -l INFO \
+  --unsafe ALL \
+  --validation_strictness SILENT \
   -L ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed.intervals \
   -known ${KNOWN_INDELS} \
   --mismatchFraction 0.30 \
@@ -511,6 +538,8 @@ chroms=$(cut -f 1 ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed | uniq | transpose)
   -nt ${NCPU} \
   -R ${REFFASTA} \
   -l INFO \
+  --unsafe ALL \
+  --validation_strictness SILENT \
   -L ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed.intervals \
   -I ${BAMIN} \
   --maxReadsInMemory 300000 \
