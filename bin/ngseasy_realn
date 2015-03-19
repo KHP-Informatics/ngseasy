@@ -527,7 +527,6 @@ elif [[ "${REALN}" == "gatk-realn"  ]]; then
   -l INFO \
   --unsafe ALL \
   --validation_strictness SILENT \
-  -L ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed.intervals \
   -known ${KNOWN_INDELS} \
   --mismatchFraction 0.30 \
   --maxIntervalSize 650 \
@@ -540,7 +539,6 @@ elif [[ "${REALN}" == "gatk-realn"  ]]; then
   -l INFO \
   --unsafe ALL \
   --validation_strictness SILENT \
-  -L ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed.intervals \
   -I ${BAMIN} \
   --maxReadsInMemory 300000 \
   --maxReadsForRealignment 50000 \
@@ -557,7 +555,7 @@ else
   exit 1
 fi
 
-
+#   -L ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed.intervals \
 ######################################################################################################## 
 ## permissions
 #
