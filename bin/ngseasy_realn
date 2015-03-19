@@ -431,7 +431,8 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
 # glia error and cant find index for '' when including the native bam with all extra contigs
 #
 
-## get chromsomes mapped
+########################################################################################################
+## transpose function
 #
 function transpose() {
     awk '
@@ -452,8 +453,10 @@ function transpose() {
   }' ${1}
 }
 
+########################################################################################################
+## chrom list to subset BAM to - taken from bed file
+#
 chroms=$(cut -f 1 ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed | uniq | transpose)
-
 
   time ${DOCKER_RUN} \
   --rm=true \
