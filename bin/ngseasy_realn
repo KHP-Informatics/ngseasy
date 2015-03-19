@@ -395,13 +395,13 @@ logger_ngseasy "[ngseasy_realn]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFIL
 ## Indel Realignment
 ########################################################################################################
 
-if  [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam" ]]; then
+if  [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam" ]] && [[ "${REALN}" == "bam-realn" ]]; then
   
   logger_ngseasy "[ngseasy_realn]:Skipping Indel Realignment. Looks like you already ran it [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam]" ${LOGFILE}
   logger_ngseasy "[ngseasy_realn]:Checking file sizes" ${LOGFILE}
 
-  BAMSIZE=$(du -sb ${SOUT}/alignments/${BAM_PREFIX}.bam-realn.bam | awk '{ print ${1} }')
-  FQSIZE=$(du -sb ${SOUT}/fastq/${FQ1} | awk '{ print ${1} }')
+  BAMSIZE=$(du -sb ${SOUT}/alignments/${BAM_PREFIX}.bam-realn.bam | awk '{ print $1 }')
+  FQSIZE=$(du -sb ${SOUT}/fastq/${FQ1} | awk '{ print $1')
 
   if [[ "${FQSIZE}" -gt "${BAMSIZE}" ]]; then
     logger_ngseasy "[ngseasy_realn]:ERROR:FASTQ bigger than BAM. Something wrong here" ${LOGFILE}
@@ -414,13 +414,13 @@ if  [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam" ]]; then
     logger_ngseasy "[ngseasy_realn]:Checking file sizes [PASSED]. All seems just fine" ${LOGFILE}
   fi
 
-elif  [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam" ]]; then
+elif  [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam" ]] && [[ "${REALN}" == "gatk-realn" ]]; then
   
   logger_ngseasy "[ngseasy_realn]:Skipping Indel Realignment. Looks like you already ran it [${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam]" ${LOGFILE}
   logger_ngseasy "[ngseasy_realn]:Checking file sizes" ${LOGFILE}
 
-  BAMSIZE=$(du -sb ${SOUT}/alignments/${BAM_PREFIX}.gatk-realn.bam | awk '{ print ${1} }')
-  FQSIZE=$(du -sb ${SOUT}/fastq/${FQ1} | awk '{ print ${1} }')
+  BAMSIZE=$(du -sb ${SOUT}/alignments/${BAM_PREFIX}.gatk-realn.bam | awk '{ print $1 }')
+  FQSIZE=$(du -sb ${SOUT}/fastq/${FQ1} | awk '{ print $1}')
 
   if [[ "${FQSIZE}" -gt "${BAMSIZE}" ]]; then
     logger_ngseasy "[ngseasy_realn]:ERROR:FASTQ bigger than BAM. Something wrong here" ${LOGFILE}
