@@ -433,7 +433,7 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name glia_${BAM_PREFIX} \
   -t compbio/ngseasy-glia:${NGSEASYVERSION} /bin/bash -c \
-  "sambamba view -t ${NCPU} -f bam ${BAMIN} chrM,chr1,chr2,chr3,chr4,chr5,chr6,chr7,chr8,chr9,chr10,chr11,chr12,chr13,chr14,chr15,chr16,chr17,chr18,chr19,chr20,chr21,chr22,chrX,chrY | \
+  "sambamba view -t ${NCPU} -f bam ${BAMIN} chrM chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX chrY | \
   glia -Rru -w 1000 -S 100 -Q 100 -G 4 -f ${REFFASTA} -v ${KNOWN_INDELS} | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam /dev/stdin && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
