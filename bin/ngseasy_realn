@@ -493,17 +493,17 @@ logger_ngseasy "[ngseasy_realn]:chroms [${chroms}]" ${LOGFILE}
   wait
 
 # chrM chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX chrY 
- #&& \
- # sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.flagstat && \
- # sambamba view -t ${NCPU} -F \"mapping_quality>0\" -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | \
- # bedtools bamtobed | \
- # bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
- # awk '{print \$1":"\$2"-"\$3}' ${SOUT}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed > ${SOUT}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed.intervals && \
+#&& \
+# sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.flagstat && \
+# sambamba view -t ${NCPU} -F \"mapping_quality>0\" -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | \
+# bedtools bamtobed | \
+# bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
+# awk '{print \$1":"\$2"-"\$3}' ${SOUT}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed > ${SOUT}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed.intervals && \
 
 ########################################################################################################
 ## GATK BaseRecalibrator and PrintReads
 #
-  elif [[ "${REALN}" == "gatk-realn"  ]]; then
+elif [[ "${REALN}" == "gatk-realn"  ]]; then
 
       BAMIN=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam
       BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam
