@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ################################################################
-# Program: ngseasy_realn
+# Program: ngseasy_bsqr
 # Version 1.0 
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 #################################################################
@@ -71,19 +71,19 @@ function logger_ngseasy() {
 ########################################################################################################
 ## global usage
 #
-function ngseasy_realn_usage() {
+function ngseasy_bsqr_usage() {
     echo "
-Program: ngseasy_realn
+Program: ngseasy_bsqr
 Version 1.0
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
-usage:   ngseasy_realn -c <config_file> -d <project_directory>
+usage:   ngseasy_bsqr -c <config_file> -d <project_directory>
 
 options:  -c  STRING  configuration file
           -d  STRING  project directory
           -h  NULL    show this message
 
-ngseasy_realn sets up the NGSeasy docker containers for Indel Realignment using glia or GATK.
+ngseasy_bsqr sets up the NGSeasy docker containers for Base quality score recalibration using bam recab or GATK.
 "
 }
 
@@ -102,7 +102,7 @@ fi
 if test -z "$2"
 then
   logger_ngseasy "[${NGSEASY_STEP}]:ERROR:No options found"
-  ngseasy_realn_usage
+  ngseasy_bsqr_usage
   exit 1
 fi
 
@@ -113,7 +113,7 @@ fi
 
       case ${opt} in
     h)
-    ngseasy_realn_usage #print help
+    ngseasy_bsqr_usage #print help
     exit 0
     ;;
     
@@ -133,7 +133,7 @@ fi
 if [[ ! -e "${config_tsv}" ]] 
 then
       logger_ngseasy "[${NGSEASY_STEP}]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
-      ngseasy_realn_usage;
+      ngseasy_bsqr_usage;
       exit 1;
 else
       logger_ngseasy "[${NGSEASY_STEP}]:Configuration file found [${config_tsv}] "
@@ -145,7 +145,7 @@ fi
 if [[ ! -d "${project_directory}" ]]
   then
     logger_ngseasy "[${NGSEASY_STEP}]:ERROR : project_directory [${project_directory}] does not exist "
-    ngseasy_realn_usage;
+    ngseasy_bsqr_usage;
     exit 1;
 else
       logger_ngseasy "[${NGSEASY_STEP}]:Top Level Project Directory [${project_directory}] "
@@ -471,6 +471,75 @@ elif [[ "${BSQR}" == "gatk-bsqr" ]]; then
     logger_ngseasy "[${NGSEASY_STEP}]:START Base quality score recalibration using GATK" ${LOGFILE}
     logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM I/O " ${LOGFILE}
     logger_ngseasy "[${NGSEASY_STEP}]:Will use Indel-realigned BAM [dupemk.gatk-realn.bam] if found. If not then raw BAM [dupemk.bam] is used" ${LOGFILE}
+
+## set bam file input and output
+  if [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam" ]]; then
+
+    BAMIN="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam"
+    BAMOUT="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.gatk-recab.bam"
+
+    logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM INPUT [${BAMIN}] " ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM OUTPUT [${BAMOUT}] " ${LOGFILE}
+
+  elif [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam" ]]; then
+
+    logger_ngseasy "[${NGSEASY_STEP}]:Can not find [${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam] " ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Using [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam]" ${LOGFILE}
+    
+    BAMIN="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam"
+    BAMOUT="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-recab.bam"
+
+    logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM INPUT [${BAMIN}] " ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM OUTPUT [${BAMOUT}] " ${LOGFILE}
+
+# exit if cant find anything
+else
+
+  logger_ngseasy "[${NGSEASY_STEP}]:ERROR: Can not find required BAM files in [${SOUT}/alignments/]. Exiting" ${LOGFILE}
+  ls ${SOUT}/alignments/
+  sleep 1s
+  exit 1
+fi
+
+########################################################################################################
+## run GATK BSQR
+#
+  logger_ngseasy "[${NGSEASY_STEP}]:Run GATK BSQR" ${LOGFILE}
+
+  time ${DOCKER_RUN} \
+  --rm=true \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name recab_${BAM_PREFIX} \
+  -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
+  "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  -T BaseRecalibrator \
+  -nct ${NCPU} \
+  -R ${REFFASTA} \
+  -l INFO \
+  --unsafe ALL \
+  --validation_strictness SILENT \
+  -knownSites ${KNOWN_INDELS} \
+  -knownSites ${KNOWN_SNPS_b138} \
+  -knownSites ${KNOWN_SNPS_OMNI} \
+  -knownSites ${KNOWN_SNPS_1000G} \
+  --covariate \
+  --covariate \
+  --covariate \
+  --covariate \
+  -I ${BAMIN} \
+  -o ${SOUTDocker}/reports/${BAM_PREFIX}.recal_data.table && \
+  time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  -T PrinReads \
+  -nct ${NCPU} \
+  -R ${REFFASTA} \
+  -l INFO \
+  --unsafe ALL \
+  --validation_strictness SILENT \
+  -I ${BAMIN} \
+  -o ${BAMOUT} && \
+  sambamba index ${BAMOUT} \
+  rm -fr ${SOUTDocker}/tmp/*"
+  wait
 
 ## exit if cant recognise options
 else
