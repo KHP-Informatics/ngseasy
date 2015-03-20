@@ -51,6 +51,7 @@ command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not ins
 #
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
+NGSEASY_STEP="ngseasy_realn"
 
 ########################################################################################################
 ## docker run command
@@ -100,7 +101,7 @@ fi
 #
 if test -z "$2"
 then
-  logger_ngseasy "[ngseasy_realn]:ERROR:No options found"
+  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:No options found"
   ngseasy_realn_usage
   exit 1
 fi
@@ -131,11 +132,11 @@ fi
 #
 if [[ ! -e "${config_tsv}" ]] 
 then
-      logger_ngseasy "[ngseasy_realn]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
+      logger_ngseasy "[${NGSEASY_STEP}]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
       ngseasy_realn_usage;
       exit 1;
 else
-      logger_ngseasy "[ngseasy_realn]:Configuration file found [${config_tsv}] "
+      logger_ngseasy "[${NGSEASY_STEP}]:Configuration file found [${config_tsv}] "
 fi
 
 ########################################################################################################
@@ -143,27 +144,27 @@ fi
 #
 if [[ ! -d "${project_directory}" ]]
   then
-    logger_ngseasy "[ngseasy_realn]:ERROR : project_directory [${project_directory}] does not exist "
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR : project_directory [${project_directory}] does not exist "
     ngseasy_realn_usage;
     exit 1;
 else
-      logger_ngseasy "[ngseasy_realn]:Top Level Project Directory [${project_directory}] "
+      logger_ngseasy "[${NGSEASY_STEP}]:Top Level Project Directory [${project_directory}] "
 fi
 
 ########################################################################################################
 ## check Num feilds in  ${config_tsv}
 #
-logger_ngseasy "[ngseasy_realn]:Reading [${config_tsv}] "
-logger_ngseasy "[ngseasy_realn]:Checking number of feilds in  [${config_tsv}] "
+logger_ngseasy "[${NGSEASY_STEP}]:Reading [${config_tsv}] "
+logger_ngseasy "[${NGSEASY_STEP}]:Checking number of feilds in  [${config_tsv}] "
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
 if [[  "$numcols" -lt 23 ]] 
 then
-      logger_ngseasy "[ngseasy_realn]:ERROR: [${config_tsv}] format issue. Check your file! "
+      logger_ngseasy "[${NGSEASY_STEP}]:ERROR: [${config_tsv}] format issue. Check your file! "
       exit 1;
   else 
-      logger_ngseasy "[ngseasy_realn]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "     
+      logger_ngseasy "[${NGSEASY_STEP}]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "     
 fi
 
 
@@ -172,26 +173,26 @@ fi
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
-logger_ngseasy "[ngseasy_realn]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[${NGSEASY_STEP}]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
 
 if [[ "${config_tsv}" == *.batch.* ]]
 then
-  logger_ngseasy "[ngseasy_realn]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   RUNFILE="${config_tsv}"
-  logger_ngseasy "[ngseasy_realn]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 elif [[ "$hasheader" -eq 1 ]]
 then
-  logger_ngseasy "[ngseasy_realn]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-  logger_ngseasy "[ngseasy_realn]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   sed 1d ${config_tsv} > ${config_tsv}.tmp
   RUNFILE="${config_tsv}.tmp"
-  logger_ngseasy "[ngseasy_realn]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 else
   RUNFILE="${config_tsv}"
-  logger_ngseasy "[ngseasy_realn]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-  logger_ngseasy "[ngseasy_realn]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
 
 ########################################################################################################
@@ -272,8 +273,8 @@ fi
 
 ## LOGFILE 
 #
-LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_realn"
-logger_ngseasy "[ngseasy_realn]:logging to [${LOGFILE}.log]"  ${LOGFILE}
+LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}"
+logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## check and make logfile
 #
@@ -284,7 +285,7 @@ fi
 
 ## read config_file
 #
-logger_ngseasy "[ngseasy_realn]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+logger_ngseasy "[${NGSEASY_STEP}]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER]"  ${LOGFILE}
 
@@ -293,36 +294,36 @@ $VERSION\t$NGSUSER]"  ${LOGFILE}
 ## OUTPUT SAMPLE DIR 
 #
 SOUT="${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}"
-logger_ngseasy "[ngseasy_realn]:Sample Directory [${SOUT}] "
+logger_ngseasy "[${NGSEASY_STEP}]:Sample Directory [${SOUT}] "
 
 ########################################################################################################
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
 #
 DOCKERHOME="/home/pipeman/ngs_projects"
-logger_ngseasy "[ngseasy_realn]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
 
 ########################################################################################################
 ## Docker OUTPUT SAMPLE DIR 
 #
 SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
-logger_ngseasy "[ngseasy_realn]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
 
 ########################################################################################################
 ## check local dir exists
 #
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
-  logger_ngseasy "[ngseasy_realn]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
   exit 1
 else 
-  logger_ngseasy "[ngseasy_realn]: Setting OUTPUT directory to [${SOUT}]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]: Setting OUTPUT directory to [${SOUT}]" ${LOGFILE}
 fi
 
 ########################################################################################################
 ## Select Genome Build and files
 #
-logger_ngseasy "[ngseasy_realn]:Checking genome selected"  ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:Checking genome selected"  ${LOGFILE}
 
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
 # reset options as getting bleed through
@@ -339,9 +340,9 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
   REFFASTA="${REFDIR}/human_g1k_v37.fasta"
   DBSNPb37="${REFDIR}/dbsnp_138.b37.recab"
   
-  logger_ngseasy "[ngseasy_realn]:Genome Build [${GENOMEBUILD}]" ${LOGFILE}
-  logger_ngseasy "[ngseasy_realn]:Fasta [${REFFASTA}]"  ${LOGFILE}
-  logger_ngseasy "[ngseasy_realn]:dbSNP file for bam recab b37 [${DBSNPb37}]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab b37 [${DBSNPb37}]" ${LOGFILE}
 
   #known indels and SNPs
   KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.b37.vcf"
@@ -349,7 +350,7 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
   KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.b37.vcf"
   KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.b37.vcf"
   
-  logger_ngseasy "[ngseasy_realn]:KNOWN_INDELS [${KNOWN_INDELS}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:KNOWN_INDELS [${KNOWN_INDELS}]"  ${LOGFILE}
 
 elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
 
@@ -365,9 +366,9 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
   REFFASTA="${REFDIR}/ucsc.hg19.fasta"
   DBSNPhg19="${REFDIR}/dbsnp_138.hg19.recab"
-  logger_ngseasy "[ngseasy_realn]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
-  logger_ngseasy "[ngseasy_realn]:Fasta [${REFFASTA}]"  ${LOGFILE}
-  logger_ngseasy "[ngseasy_realn]:dbSNP file for bam recab hg19 [${DBSNPhg19}]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab hg19 [${DBSNPhg19}]" ${LOGFILE}
 
   #known indels and SNPs
   KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.gz"
@@ -375,10 +376,10 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.hg19.sites.vcf"
   KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.hg19.vcf"
 
-  logger_ngseasy "[ngseasy_realn]:KNOWN_INDELS [${KNOWN_INDELS}]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:KNOWN_INDELS [${KNOWN_INDELS}]" ${LOGFILE}
 
 else
-  logger_ngseasy "[ngseasy_realn]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
   exit 1
 fi
 
@@ -389,7 +390,7 @@ fi
 #
 BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}"
 
-logger_ngseasy "[ngseasy_realn]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE}
 
 ########################################################################################################
 ## Indel Realignment
@@ -397,40 +398,40 @@ logger_ngseasy "[ngseasy_realn]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFIL
 
 if  [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam" ]] && [[ "${REALN}" == "bam-realn" ]]; then
   
-  logger_ngseasy "[ngseasy_realn]:Skipping Indel Realignment. Looks like you already ran it [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam]" ${LOGFILE}
-  logger_ngseasy "[ngseasy_realn]:Checking file sizes" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Skipping Indel Realignment. Looks like you already ran it [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Checking file sizes" ${LOGFILE}
 
   BAMSIZE=$(du -sb ${SOUT}/alignments/${BAM_PREFIX}.bam-realn.bam | awk '{ print $1 }')
   FQSIZE=$(du -sb ${SOUT}/fastq/${FQ1} | awk '{ print $1')
 
   if [[ "${FQSIZE}" -gt "${BAMSIZE}" ]]; then
-    logger_ngseasy "[ngseasy_realn]:ERROR:FASTQ bigger than BAM. Something wrong here" ${LOGFILE}
-    logger_ngseasy "[ngseasy_realn]:Alignment may have broke at somepoint" ${LOGFILE}
-    logger_ngseasy "[ngseasy_realn]:Check your output" ${LOGFILE}
-    logger_ngseasy "[ngseasy_realn]:Exiting" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:FASTQ bigger than BAM. Something wrong here" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Alignment may have broke at somepoint" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Check your output" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Exiting" ${LOGFILE}
     sleep 2s
     exit 1
   else
-    logger_ngseasy "[ngseasy_realn]:Checking file sizes [PASSED]. All seems just fine" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Checking file sizes [PASSED]. All seems just fine" ${LOGFILE}
   fi
 
 elif  [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam" ]] && [[ "${REALN}" == "gatk-realn" ]]; then
   
-  logger_ngseasy "[ngseasy_realn]:Skipping Indel Realignment. Looks like you already ran it [${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam]" ${LOGFILE}
-  logger_ngseasy "[ngseasy_realn]:Checking file sizes" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Skipping Indel Realignment. Looks like you already ran it [${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Checking file sizes" ${LOGFILE}
 
   BAMSIZE=$(du -sb ${SOUT}/alignments/${BAM_PREFIX}.gatk-realn.bam | awk '{ print $1 }')
   FQSIZE=$(du -sb ${SOUT}/fastq/${FQ1} | awk '{ print $1}')
 
   if [[ "${FQSIZE}" -gt "${BAMSIZE}" ]]; then
-    logger_ngseasy "[ngseasy_realn]:ERROR:FASTQ bigger than BAM. Something wrong here" ${LOGFILE}
-    logger_ngseasy "[ngseasy_realn]:Alignment may have broke at somepoint" ${LOGFILE}
-    logger_ngseasy "[ngseasy_realn]:Check your output" ${LOGFILE}
-    logger_ngseasy "[ngseasy_realn]:Exiting" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:FASTQ bigger than BAM. Something wrong here" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Alignment may have broke at somepoint" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Check your output" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Exiting" ${LOGFILE}
     sleep 2s
     exit 1
   else
-    logger_ngseasy "[ngseasy_realn]:Checking file sizes [PASSED]. All seems just fine" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Checking file sizes [PASSED]. All seems just fine" ${LOGFILE}
   fi
 
 ########################################################################################################
@@ -438,7 +439,7 @@ elif  [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam" ]] && [[ "$
 #
 elif [[ "${REALN}" == "no-realn" ]]; then
   
-  logger_ngseasy "[ngseasy_realn]:Skipping Indel Realignment" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Skipping Indel Realignment" ${LOGFILE}
 
 ########################################################################################################
 ## bam-realn using glia
@@ -448,7 +449,7 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
       BAMIN=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam
       BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam
   
-  logger_ngseasy "[ngseasy_realn]:START Indel Realignment using glia" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:START Indel Realignment using glia" ${LOGFILE}
   sleep 1s
 
 ########################################################################################################
@@ -478,7 +479,7 @@ function transpose() {
 #
 chroms=""
 chroms=$(cut -f 1 ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed | uniq | transpose)
-logger_ngseasy "[ngseasy_realn]:chroms [${chroms}]" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:chroms [${chroms}]" ${LOGFILE}
 
   time ${DOCKER_RUN} \
   --rm=true \
@@ -508,10 +509,10 @@ elif [[ "${REALN}" == "gatk-realn"  ]]; then
       BAMIN=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam
       BAMOUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam
   
-  logger_ngseasy "[ngseasy_realn]:START Indel Realignment using GATK" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:START Indel Realignment using GATK" ${LOGFILE}
   #chroms=""
   #chroms=$(cut -f 1 ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed | uniq | transpose)
-  #logger_ngseasy "[ngseasy_realn]:chroms [${chroms}]" ${LOGFILE}
+  #logger_ngseasy "[${NGSEASY_STEP}]:chroms [${chroms}]" ${LOGFILE}
   
   awk '{print $1":"$2"-"$3}' ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed > ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed.intervals
   
@@ -549,7 +550,7 @@ elif [[ "${REALN}" == "gatk-realn"  ]]; then
 wait
 
 else
-  logger_ngseasy "[ngseasy_realn]:ERROR: Do not recognise REALN option [${REALN}]. This should be one or [bam-realn] [gatk-realn] or [no-realn]. Exiting" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:ERROR: Do not recognise REALN option [${REALN}]. This should be one or [bam-realn] [gatk-realn] or [no-realn]. Exiting" ${LOGFILE}
   sleep 2s
   exit 1
 fi
