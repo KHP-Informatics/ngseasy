@@ -353,6 +353,7 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
   
   logger_ngseasy "[${NGSEASY_STEP}]:KNOWN_INDELS [${KNOWN_INDELS}]"  ${LOGFILE}
 
+## HG19
 elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
 
   REFDIR=""
@@ -535,6 +536,9 @@ fi
   -l INFO \
   --unsafe ALL \
   --validation_strictness SILENT \
+  --baq RECALCULATE \
+  --baqGapOpenPenalty 40 \
+  --BQSR ${SOUTDocker}/reports/${BAM_PREFIX}.recal_data.table \
   -I ${BAMIN} \
   -o ${BAMOUT} && \
   sambamba index ${BAMOUT} \
@@ -547,7 +551,6 @@ else
   sleep 1s
   exit 1
 fi
-
 
 ######################################################################################################## 
 ## permissions
