@@ -405,7 +405,6 @@ if [[ "${BSQR}" == "no-bsqr" ]]; then
   # Skip if set to skip
   logger_ngseasy "[${NGSEASY_STEP}]: Skipping Base quality score recalibration. BSQR set to [${BSQR}] " ${LOGFILE}
   sleep 1s
-  exit
 
 ########################################################################################################
 ## BAMTUIL RECAB
