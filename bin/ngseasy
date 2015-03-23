@@ -437,8 +437,14 @@ echo -e "\n----------------------------------\n"
 ## Base Quality Score Recalibration
 ###################################################################################
 
-#logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${config_run_log}
-#	/bin/bash ngseasy_bsqr -c ${config_tsv} -d ${project_directory}
+echo -e "\n###########################################################################################"
+echo -e "## Base Quality Score Recalibration "
+echo -e "###########################################################################################\n"
+
+
+logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${config_run_log}
+
+	/bin/bash ngseasy_bsqr -c ${config_tsv} -d ${project_directory}
 
 ##################################################################################
 ## Variant calling
