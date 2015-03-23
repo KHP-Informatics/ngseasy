@@ -522,10 +522,6 @@ fi
   -knownSites ${KNOWN_SNPS_b138} \
   -knownSites ${KNOWN_SNPS_OMNI} \
   -knownSites ${KNOWN_SNPS_1000G} \
-  --covariate \
-  --covariate \
-  --covariate \
-  --covariate \
   -I ${BAMIN} \
   -o ${SOUTDocker}/reports/${BAM_PREFIX}.recal_data.table && \
   time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
