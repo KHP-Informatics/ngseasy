@@ -594,7 +594,9 @@ done
       RGPU=${platform_unit} \
       RGSM=${BAM_PREFIX} \
       RGDT=${RUNDATE} && \
-      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam"
+      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
+      sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
+      bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed"
 
 ## check if running and wait before cleaning up
 #
