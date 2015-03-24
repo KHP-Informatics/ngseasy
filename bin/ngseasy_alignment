@@ -608,7 +608,8 @@ SLOW="--local --sensitive-local"
 ########################################################################################################
 # SNAP
 # 
-# align wih snap sorts and dupe marks the file anyway
+# align wih snap sorts and dupe marks the file anyway: but we choose to run same tools samblaster
+# sambamba for consistency
 #
 elif [[ "${ALIGNER}" == "snap" ]]; then
 
