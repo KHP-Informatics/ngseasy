@@ -542,7 +542,7 @@ fi
 
 ## exit if cant recognise options
 else
-  logger_ngseasy "[${NGSEASY_STEP}]:Can not recognise options. BSQR set to [${BSQR}]. This must be one of [no-bsqr] [bam-bsqr] [gatk-bsqr] " ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Can not recognise options. BSQR set to [${BSQR}]. This must be one of [no-bsqr] [bam-bsqr] or [gatk-bsqr] " ${LOGFILE}
   sleep 1s
   exit 1
 fi

@@ -384,6 +384,7 @@ if [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam" ]]  && [[ -s "${SOUT}/rep
 
   logger_ngseasy "[${NGSEASY_STEP}]:Looks like aligned BAM file already exists [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam] " ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Skipping Alignment" ${LOGFILE}
+  sleep 1s
 
 ## move on
 #
