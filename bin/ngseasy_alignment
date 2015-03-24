@@ -543,11 +543,17 @@ fi
       --name alignmentpicard_${BAM_PREFIX} \
       -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
       -t compbio/ngseasy-picardtools:${NGSEASYVERSION} /bin/bash -c \
-      "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/picard-tools-1.129/picard.jar AddOrReplaceReadGroups \
+      "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/picard-tools-1.129/picard.jar CleanSam \
       TMP_DIR=${SOUTDocker}/tmp \
       CREATE_INDEX=FALSE \
       VALIDATION_STRINGENCY=SILENT \
-      INPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.CleanSam \
+      INPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam \
+      OUTPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmpcleansam.bam && \
+      time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/picard-tools-1.129/picard.jar AddOrReplaceReadGroups \
+      TMP_DIR=${SOUTDocker}/tmp \
+      CREATE_INDEX=FALSE \
+      VALIDATION_STRINGENCY=SILENT \
+      INPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmpcleansam.bam \
       OUTPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam  \
       RGID=${BAM_PREFIX}\tSM:${BAM_PREFIX} \
       RGLB=${DNA_PREP_LIBRARY_ID} \
@@ -557,7 +563,9 @@ fi
       RGDT=${RUNDATE} && \
       sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
       sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
-      bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed"
+      bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmpcleansam.bam && \
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam"
       wait
       sleep 1s
 ## log docker run 
