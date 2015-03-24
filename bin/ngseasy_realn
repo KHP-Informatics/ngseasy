@@ -484,7 +484,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:chroms [${chroms}]" ${LOGFILE}
   time ${DOCKER_RUN} \
   --rm=true \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-  --name glia_${BAM_PREFIX} \
+  --name glia_realn_${BAM_PREFIX} \
   -t compbio/ngseasy-glia:${NGSEASYVERSION} /bin/bash -c \
   "sambamba view -t ${NCPU} -f bam ${BAMIN} ${chroms} | \
   glia -Rru -w 1000 -S 100 -Q 100 -G 4 -f ${REFFASTA} -v ${KNOWN_INDELS} | \
@@ -519,7 +519,7 @@ elif [[ "${REALN}" == "gatk-realn"  ]]; then
  time ${DOCKER_RUN} \
   --rm=true \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-  --name gatkrecab_${BAM_PREFIX} \
+  --name gatk_realn_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
   "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
   -T RealignerTargetCreator \

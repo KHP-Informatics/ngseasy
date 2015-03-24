@@ -450,7 +450,7 @@ fi
   time ${DOCKER_RUN} \
   --rm=true \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-  --name recab_${BAM_PREFIX} \
+  --name bam_recab_${BAM_PREFIX} \
   -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
   "bam recab \
   --in ${BAMIN} \
@@ -509,7 +509,7 @@ fi
   time ${DOCKER_RUN} \
   --rm=true \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-  --name recab_${BAM_PREFIX} \
+  --name gatk_recab_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
   "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
   -T BaseRecalibrator \
