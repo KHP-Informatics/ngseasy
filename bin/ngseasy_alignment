@@ -577,7 +577,7 @@ done
       wait
 
   logger_ngseasy "[${NGSEASY_STEP}]:Adding RG info to ${ALIGNER} Aligned BAM" ${LOGFILE}  
-
+## Add RG info back to stampy and generate stats
   time ${DOCKER_RUN} \
       --name alignmentpicard_${BAM_PREFIX} \
       -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
