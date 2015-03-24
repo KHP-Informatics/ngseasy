@@ -505,9 +505,7 @@ else
   BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
 fi
 
-########################################################################################################
-## stampy 
-# 
+## stampy on bwa aligned data
   logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}  
 
     time ${DOCKER_RUN} \
