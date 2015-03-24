@@ -305,18 +305,18 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
   
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
-  logger_ngseasy "[${NGSEASY_STEP}]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]: Genome Build [${GENOMEINDEX}]"  ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]: Genome Build [${REFDIR}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEINDEX}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${REFDIR}]"  ${LOGFILE}
   sleep 1s
 
 elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
 
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
-  logger_ngseasy "[${NGSEASY_STEP}]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]: Genome Build [${GENOMEINDEX}]"  ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]: Genome Build [${REFDIR}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEINDEX}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${REFDIR}]"  ${LOGFILE}
   sleep 1s
 
 else
