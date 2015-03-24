@@ -383,23 +383,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:PLATFORM UNIT:[${platform_unit}]" ${LOGFILE}
 if [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam" ]]  && [[ -s "${SOUT}/reports/${BAM_PREFIX}.dupemk.bed" ]]; then
 
   logger_ngseasy "[${NGSEASY_STEP}]:Looks like aligned BAM file already exists [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam] " ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]:Checking file sizes" ${LOGFILE}
-
-BAMSIZE=$(du -sb ${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam | awk '{ print ${1} }')
-FQSIZE=$(du -sb ${SOUT}/fastq/${FQ1} | awk '{ print ${1} }')
-
-if [[ "${FQSIZE}" -gt "${BAMSIZE}" ]]; then
-  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:FASTQ bigger than BAM. Something wrong here" ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]:Alignment may have broke at somepoint" ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]:Check your output" ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]:Try and re-run ngseasy_alignment" ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]:Exiting" ${LOGFILE}
-  sleep 2s
-  exit 1
-
-else
   logger_ngseasy "[${NGSEASY_STEP}]:Skipping Alignment" ${LOGFILE}
-fi
 
 ## move on
 #
