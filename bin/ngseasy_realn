@@ -452,7 +452,6 @@ chroms=$(cut -f 1 ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed | uniq | transpose)
 logger_ngseasy "[${NGSEASY_STEP}]:chroms [${chroms}]" ${LOGFILE}
 
   time ${DOCKER_RUN} \
-  --rm=true \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name glia_realn_${BAM_PREFIX} \
   -t compbio/ngseasy-glia:${NGSEASYVERSION} /bin/bash -c \
@@ -462,6 +461,10 @@ logger_ngseasy "[${NGSEASY_STEP}]:chroms [${chroms}]" ${LOGFILE}
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
   rm -fr ${SOUTDocker}/tmp/*"
   wait
+## log docker run 
+#
+ docker logs glia_realn_${BAM_PREFIX} >> ${LOGFILE}.log
+ docker rm -f glia_realn_${BAM_PREFIX}  
 
 # chrM chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX chrY 
 # && \
@@ -487,7 +490,6 @@ elif [[ "${REALN}" == "gatk-realn"  ]]; then
   awk '{print $1":"$2"-"$3}' ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed > ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed.intervals
   
  time ${DOCKER_RUN} \
-  --rm=true \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name gatk_realn_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
@@ -518,6 +520,10 @@ elif [[ "${REALN}" == "gatk-realn"  ]]; then
   -o ${BAMOUT} && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam"
 wait
+## log docker run 
+#
+ docker logs gatk_realn_${BAM_PREFIX} >> ${LOGFILE}.log
+ docker rm -f gatk_realn_${BAM_PREFIX}  
 
 else
   logger_ngseasy "[${NGSEASY_STEP}]:ERROR: Do not recognise REALN option [${REALN}]. This should be one or [bam-realn] [gatk-realn] or [no-realn]. Exiting" ${LOGFILE}

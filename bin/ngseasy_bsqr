@@ -448,7 +448,6 @@ fi
   logger_ngseasy "[${NGSEASY_STEP}]:Run bam recab" ${LOGFILE}
 
   time ${DOCKER_RUN} \
-  --rm=true \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name bam_recab_${BAM_PREFIX} \
   -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
@@ -463,6 +462,11 @@ fi
   sambamba index ${BAMOUT} && \
   rm -fr ${SOUTDocker}/tmp/*"
   wait
+
+## log docker run 
+#
+ docker logs bam_recab_${BAM_PREFIX} >> ${LOGFILE}.log
+ docker rm -f bam_recab_${BAM_PREFIX}  
 
 ########################################################################################################
 ## GATK 
@@ -507,7 +511,6 @@ fi
   logger_ngseasy "[${NGSEASY_STEP}]:Run GATK BSQR" ${LOGFILE}
 
   time ${DOCKER_RUN} \
-  --rm=true \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name gatk_recab_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
@@ -539,6 +542,11 @@ fi
   sambamba index ${BAMOUT} \
   rm -fr ${SOUTDocker}/tmp/*"
   wait
+
+## log docker run 
+#
+ docker logs gatk_recab_${BAM_PREFIX} >> ${LOGFILE}.log
+ docker rm -f gatk_recab_${BAM_PREFIX}  
 
 ## exit if cant recognise options
 else
