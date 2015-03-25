@@ -516,8 +516,12 @@ elif [[ "${REALN}" == "gatk-realn"  ]]; then
   --maxConsensuses 100 \
   --targetIntervals ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.ForIndelRealigner.intervals \
   -o ${BAMOUT} && \
-  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam"
-wait
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam
+  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bam.flagstat && \
+  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
+  rm -rf ${SOUTDocker}/tmp/*"
+  wait
+  sleep 1s
 ## log docker run 
 #
  docker logs gatk_realn_${BAM_PREFIX} >> ${LOGFILE}.log
