@@ -464,9 +464,9 @@ fi
   --maxBaseQual 40 | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${BAMOUT} /dev/stdin && \
   sambamba index ${BAMOUT} && \
-  rm -fr ${SOUTDocker}/tmp/*"
+  rm -rf ${SOUTDocker}/tmp/*"
   wait
-
+  sleep 1s
 ## log docker run 
 #
  docker logs bam_recab_${BAM_PREFIX} >> ${LOGFILE}.log
@@ -546,7 +546,7 @@ fi
   sambamba index ${BAMOUT} \
   rm -fr ${SOUTDocker}/tmp/*"
   wait
-
+  sleep 1s
 ## log docker run 
 #
  docker logs gatk_recab_${BAM_PREFIX} >> ${LOGFILE}.log
