@@ -12,7 +12,7 @@ MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 RUN apt-get update && apt-get upgrade -y
     
 # + stampy (registration required, get compressed file and put in context dir for the build)
-
+	
 RUN wget -O /tmp/stampy-latest.tgz  http://www.well.ox.ac.uk/~gerton/software/Stampy/stampy-latest.tgz \
     && tar xvf /tmp/stampy-latest.tgz -C /usr/local/pipeline/ \
     && sed -i 's/-Wl//' /usr/local/pipeline/stampy-1.0.23/makefile \

@@ -405,7 +405,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:START Trimmomatic+FastQC filtered Fastq fi
 #
 logger_ngseasy "[ngseasy_trimmomatic]:checking if trimmed data exists" ${LOGFILE}
 
-if [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz" ]
+if [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}.2.filtered.fastq.gz" ]
 then
 	logger_ngseasy "[ngseasy_trimmomatic]:PE Trimmed Data already exists...skipping [ngseasy_trimmomatic]" ${LOGFILE}
 
@@ -419,6 +419,25 @@ logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files" ${LOGFILE}
 logger_ngseasy "[ngseasy_trimmomatic]:TRIM set to [$TRIM] - adaptor trim. Adaptor and read quality trimming" ${LOGFILE}
 
 
+if [[ ! -s ${SOUT}/fastq/${FQ1}.art_filt.gz  ]] && [[ ! -s ${SOUT}/fastq/${FQ2}.art_filt.gz ]]; then 
+## make parallel cmd
+#
+echo -e "
+zcat ${SOUTDocker}/fastq/${FQ1} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/fastq/${FQ1}.art_filt.gz
+zcat ${SOUTDocker}/fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/fastq/${FQ2}.art_filt.gz
+" > ${SOUT}/parallel_fastx.cmd
+
+## run fastx_artifacts_filter
+#
+logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter. Removing Homopolymer reads" ${LOGFILE}
+
+	${DOCKER_RUN} \
+	--rm=true \
+	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+	--name fastx_artifacts_filter_${BAM_PREFIX} \
+	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.cmd | parallel -j 2 --no-notice"
+fi
+
 ## run trimmomatic
 #
 logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 AVGQUAL:2 MINLEN:75 " ${LOGFILE}
@@ -430,8 +449,8 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:
 	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 	PE \
 	-threads ${NCPU} \
-	${SOUTDocker}/fastq/${FQ1} \
-	${SOUTDocker}/fastq/${FQ2} \
+	${SOUTDocker}/fastq/${FQ1}.art_filt.gz \
+	${SOUTDocker}/fastq/${FQ2}.art_filt.gz \
 	${qcPEFQ1} ${qcSEFQ1} \
 	${qcPEFQ2} ${qcSEFQ2} \
 	ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
@@ -498,8 +517,8 @@ fi
 	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 	PE \
 	-threads ${NCPU} \
-	${SOUTDocker}/fastq/${FQ1} \
-	${SOUTDocker}/fastq/${FQ2} \
+	${SOUTDocker}/fastq/${FQ1}.art_filt.gz \
+	${SOUTDocker}/fastq/${FQ2}.art_filt.gz \
 	${qcPEFQ1} ${qcSEFQ1} \
 	${qcPEFQ2} ${qcSEFQ2} \
 	LEADING:3 \
@@ -530,7 +549,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:START FastQC post Trimmomatic" ${LOGFILE}
 elif [[ "${TRIM}" == "notrim" ]]; then
 	logger_ngseasy "[ngseasy_trimmomatic]:Skipping quality control of raw fastq reads. NOT RECOMMENDED" ${LOGFILE}
 else 
-	logger_ngseasy "[ngseasy_trimmomatic]:ERROR Do not recognise TRIM option. Should be one of [atrim] [btrim] or [no-trim]" ${LOGFILE}
+	logger_ngseasy "[ngseasy_trimmomatic]:ERROR Cant recognise TRIM option. Should be one of [atrim] [btrim] or [no-trim]" ${LOGFILE}
 	sleep 1s; exit 1
 fi
   

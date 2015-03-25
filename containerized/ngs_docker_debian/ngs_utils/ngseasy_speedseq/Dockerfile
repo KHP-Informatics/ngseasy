@@ -5,7 +5,6 @@ FROM compbio/ngseasy-base:1.0
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
-ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 # general purpose tools
@@ -15,31 +14,37 @@ RUN apt-get install -y python python-dev python-yaml ncurses-dev python-numpy py
 # install dependencies
 RUN apt-get install -y libX11-dev libXpm-dev libXft-dev libXext-dev
 
+# make .bashrc 
+RUN touch ${HOME}/.bashrc 
+
 # get ROOT
 RUN cd /tmp && \
     curl -OL ftp://root.cern.ch/root/root_v5.34.20.source.tar.gz && \
     tar -xvf root_v5.34.20.source.tar.gz && \
-    cd root && \
+    chmod -R 777 ./root && \
+    cd ./root && \
     ./configure && \
-    make && \
+    make -j30 && \
     cd .. && \
     mv root /usr/local
-
-RUN  echo "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
-    . /root/.bashrc
-
    
 # speedseq-------------------------------------------------------------
 ENV ROOTSYS /usr/local/root
 
+RUN apt-get install -y python-numpy python-matplotlib python-reportlab python-pip python-scipy python-pysam
+
 RUN cd /usr/local/pipeline && \
   git clone --recursive https://github.com/cc2qe/speedseq && \
-  chmod -R 777 ./speedseq && \
-  cd /usr/local/pipeline/speedseq/src/ && \
-  sed -i s/ROOTFLAGS = -m64 -O3/#ROOTFLAGS = -m64 -O3/g Makefile && \
-  sed -i s/#ROOTFLAGS = -pthread -m64/ROOTFLAGS = -pthread -m64/g Makefile && \ 
-  cd /usr/local/pipeline/speedseq && \
+  chmod -R 777 ./speedseq
+
+RUN cd /usr/local/pipeline/speedseq/src/cnvnator && \
+  sed -i 's/ROOTFLAGS = -m64 -O3/#ROOTFLAGS = -m64 -O3/g' Makefile && \
+  sed -i 's/#ROOTFLAGS = -pthread -m64/ROOTFLAGS = -pthread -m64/g' Makefile
+
+RUN  cd /usr/local/pipeline/speedseq && \
   make
+
+ENV PATH /usr/local/pipeline/speedseq/bin:${PATH}
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline

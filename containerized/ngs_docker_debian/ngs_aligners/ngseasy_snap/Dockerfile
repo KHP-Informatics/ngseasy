@@ -12,13 +12,12 @@ MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 RUN apt-get update -y && apt-get upgrade -y
 
 # + snap
-RUN wget -O /tmp/snap-1.0beta.16-linux.tar.gz http://snap.cs.berkeley.edu/downloads/snap-1.0beta.16-linux.tar.gz \
-    && tar xvf /tmp/snap-1.0beta.16-linux.tar.gz -C /usr/local/pipeline/ \
-    && cd /usr/local/pipeline/snap-1.0beta.16-linux \
-    && chmod -R 777 /usr/local/pipeline/snap-1.0beta.16-linux \
-    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/snap-1.0beta.16-linux' /home/pipeman/.bashrc \
-    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/snap-1.0beta.16-linux' ~/.bashrc \
-    && cp -v /usr/local/pipeline/snap-1.0beta.16-linux/* /usr/local/bin/
+RUN cd /usr/local/pipeline && \
+	git clone https://github.com/amplab/snap.git && \
+	chmod -R 777 snap && \	
+	cd snap && \
+	make && \
+	cp snap /usr/local/bin 
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline

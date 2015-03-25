@@ -12,12 +12,12 @@ MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 RUN apt-get update -y && apt-get upgrade -y
 
 # + bowtie
-RUN wget -O /tmp/bowtie2-2.2.4-linux-x86_64.zip http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.4/bowtie2-2.2.4-linux-x86_64.zip \
-    && unzip /tmp/bowtie2-2.2.4-linux-x86_64.zip -d /usr/local/pipeline/ \
+RUN wget -O /tmp/bowtie2-2.2.5-linux-x86_64.zip http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.5/bowtie2-2.2.5-linux-x86_64.zip \
+    && unzip /tmp/bowtie2-2.2.5-linux-x86_64.zip -d /usr/local/pipeline/ \
     && chmod -R 777 /usr/local/pipeline/ \  
-    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/bowtie2-2.2.4:/usr/local/pipeline/bowtie2-2.2.4/scripts' /home/pipeman/.bashrc \
-    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/bowtie2-2.2.4:/usr/local/pipeline/bowtie2-2.2.4/scripts' ~/.bashrc \
-    && cp -v /usr/local/pipeline/bowtie2-2.2.4/bowtie* /usr/local/bin/
+    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/bowtie2-2.2.5:/usr/local/pipeline/bowtie2-2.2.5/scripts' /home/pipeman/.bashrc \
+    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/bowtie2-2.2.5:/usr/local/pipeline/bowtie2-2.2.5/scripts' ~/.bashrc \
+    && cp -v /usr/local/pipeline/bowtie2-2.2.5/bowtie* /usr/local/bin/
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
