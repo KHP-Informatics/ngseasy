@@ -421,14 +421,14 @@ elif [[ "${ALIGNER}" == "bwa" ]]; then
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
   rm -rf ${SOUTDocker}/tmp/*"
-wait
-sleep 1s
+  wait
+  sleep 1s
 
 # log docker run 
-    docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
-    docker rm -f alignment_${BAM_PREFIX}
+docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
+docker rm -f alignment_${BAM_PREFIX}
 
-    logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}  
+logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}  
 
 ########################################################################################################
 ## novoalign 
