@@ -453,7 +453,7 @@ function transpose() {
 chroms=""
 chroms=$(cut -f 1 ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed | uniq | transpose)
 logger_ngseasy "[${NGSEASY_STEP}]:chroms [${chroms}]" ${LOGFILE}
-
+# docker run. note flags
   time ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name glia_realn_${BAM_PREFIX} \
