@@ -197,7 +197,7 @@ else
 fi
 
 ########################################################################################################
-## Read config and loop through all lines calling fastqc docker
+## Read config and loop through all lines calling aln docker
 #
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
@@ -254,6 +254,10 @@ fi
 logger_ngseasy "[${NGSEASY_STEP}]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER]"  ${LOGFILE}
+# copy config settings to dir
+echo -e "$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
+$VERSION\t$NGSUSER" >> ${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}/config_files/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}.config
 
 
 ########################################################################################################
@@ -407,21 +411,24 @@ elif [[ "${ALIGNER}" == "bwa" ]]; then
   -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE}' \
   ${GENOMEINDEX}.fasta \
   ${FQ1} ${FQ2} | \
-  samblaster --addMateTags | \
+  samblaster --addMateTags --excludeDups \
+  --discordantFile ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam \
+  --splitterFile ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam \
+  --unmappedFile ${SOUTDocker}/alignments/${BAM_PREFIX}.unmapped.fastq \
   sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
   rm -rf ${SOUTDocker}/tmp/*"
-wait
-sleep 1s
+  wait
+  sleep 1s
 
 # log docker run 
-    docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
-    docker rm -f alignment_${BAM_PREFIX}
+docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
+docker rm -f alignment_${BAM_PREFIX}
 
-    logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}  
+logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}  
 
 ########################################################################################################
 ## novoalign 
@@ -441,21 +448,23 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
    --3Prime \
    -g 40 \
    -x 6 \
-   -r All 100 \
    -i PE 500,100 \
    -c ${NCPU} \
    -k \
    -K ${SOUTDocker}/alignments/${BAM_PREFIX}.K.stats \
    -o SAM $'@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}' | \
-  samblaster --addMateTags | \
+  samblaster --addMateTags --excludeDups \
+  --discordantFile ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam \
+  --splitterFile ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam \
+  --unmappedFile ${SOUTDocker}/alignments/${BAM_PREFIX}.unmapped.fastq \
   sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin  && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
   rm -rf ${SOUTDocker}/tmp/*"
-wait
-sleep 1s
+  wait
+  sleep 1s
 
 ## log docker run 
 #
@@ -492,7 +501,7 @@ else
   -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE}' \
   ${GENOMEINDEX}.fasta \
   ${FQ1} ${FQ2} | \
-  samblaster --addMateTags | \
+  samblaster --addMateTags \
   sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam /dev/stdin | \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam && \
@@ -527,7 +536,10 @@ fi
       --insertsize=500 \
       --insertsd=100 \
       -M ${BWABAM} | \
-      samblaster --addMateTags | \
+      samblaster --addMateTags --excludeDups \
+      --discordantFile ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam \
+      --splitterFile ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam \
+      --unmappedFile ${SOUTDocker}/alignments/${BAM_PREFIX}.unmapped.fastq \
       sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
       sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam /dev/stdin && \
       sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam && \
@@ -596,7 +608,10 @@ SLOW="--local --sensitive-local"
     --rg LB:${DNA_PREP_LIBRARY_ID} \
     --rg DT:${RUNDATE} \
     -1 ${FQ1} -2 ${FQ2} | \
-    samblaster --addMateTags | \
+    samblaster --addMateTags --excludeDups \
+    --discordantFile ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam \
+    --splitterFile ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam \
+    --unmappedFile ${SOUTDocker}/alignments/${BAM_PREFIX}.unmapped.fastq \
     sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
     sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o /${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin && \
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
@@ -640,7 +655,10 @@ logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
     -I \
     -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE}' \
     -o -sam -  | \
-    samblaster --addMateTags | \
+    samblaster --addMateTags --excludeDups \
+    --discordantFile ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam \
+    --splitterFile ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam \
+    --unmappedFile ${SOUTDocker}/alignments/${BAM_PREFIX}.unmapped.fastq \
     sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
     sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o /${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin && \
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \

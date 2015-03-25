@@ -196,7 +196,7 @@ else
 fi
 
 ########################################################################################################
-## Read config and loop through all lines calling fastqc docker
+## Read config and loop through all lines calling realn docker
 #
 
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
@@ -288,7 +288,10 @@ fi
 logger_ngseasy "[${NGSEASY_STEP}]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER]"  ${LOGFILE}
-
+# copy config settings to dir
+echo -e "$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
+$VERSION\t$NGSUSER" >> ${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}/config_files/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}.config
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR 
@@ -423,7 +426,7 @@ elif [[ "${REALN}" == "bam-realn" ]]; then
   sleep 1s
 
 ########################################################################################################
-## transpose function
+## transpose function - need to add this and others to base images
 #
 function transpose() {
     awk '
@@ -450,29 +453,24 @@ function transpose() {
 chroms=""
 chroms=$(cut -f 1 ${SOUT}/reports/${BAM_PREFIX}.dupemk.bed | uniq | transpose)
 logger_ngseasy "[${NGSEASY_STEP}]:chroms [${chroms}]" ${LOGFILE}
-
+# docker run. note flags
   time ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name glia_realn_${BAM_PREFIX} \
   -t compbio/ngseasy-glia:${NGSEASYVERSION} /bin/bash -c \
-  "sambamba view -t ${NCPU} -f bam ${BAMIN} ${chroms} | \
+  "sambamba view -t ${NCPU} -f bam -F \"not (unmapped or mate_is_unmapped) and mapping_quality >=0\" ${BAMIN} ${chroms} | \
   glia -Rru -w 1000 -S 100 -Q 100 -G 4 -f ${REFFASTA} -v ${KNOWN_INDELS} | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam /dev/stdin && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam && \
-  rm -fr ${SOUTDocker}/tmp/*"
+  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bam.flagstat && \
+  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
+  rm -rf ${SOUTDocker}/tmp/*"
   wait
+  sleep 1s
 ## log docker run 
 #
  docker logs glia_realn_${BAM_PREFIX} >> ${LOGFILE}.log
  docker rm -f glia_realn_${BAM_PREFIX}  
-
-# chrM chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX chrY 
-# && \
-# sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.flagstat && \
-# sambamba view -t ${NCPU} -F \"mapping_quality>0\" -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | \
-# bedtools bamtobed | \
-# bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
-# awk '{print \$1":"\$2"-"\$3}' ${SOUT}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed > ${SOUT}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed.intervals && \
 
 ########################################################################################################
 ## GATK BaseRecalibrator and PrintReads
@@ -518,8 +516,12 @@ elif [[ "${REALN}" == "gatk-realn"  ]]; then
   --maxConsensuses 100 \
   --targetIntervals ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.ForIndelRealigner.intervals \
   -o ${BAMOUT} && \
-  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam"
-wait
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam
+  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bam.flagstat && \
+  bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.${REALN}.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.${REALN}.bed && \
+  rm -rf ${SOUTDocker}/tmp/*"
+  wait
+  sleep 1s
 ## log docker run 
 #
  docker logs gatk_realn_${BAM_PREFIX} >> ${LOGFILE}.log

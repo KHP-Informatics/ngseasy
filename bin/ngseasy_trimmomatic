@@ -6,6 +6,12 @@
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 #################################################################
 
+echo -e "\n################################################################"
+echo -e "# Program: ngseasy_trimmomatic"
+echo -e "# Version 1.0 "
+echo -e "# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)"
+echo -e "#################################################################/n"
+
 ########################################################################################################
 ## test if docker is intsalled and exit if not
 command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; sleep 1s; exit 1; }
@@ -15,6 +21,36 @@ command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not ins
 #
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
+
+#################################################################
+# clear stuff up
+REFDIR=""
+GENOMEINDEX=""
+PROJECT_ID=""
+SAMPLE_ID=""
+FASTQ1=""
+FASTQ2=""
+PROJECT_DIR=""
+DNA_PREP_LIBRARY_ID=""
+NGS_PLATFORM=""
+NGS_TYPE=""
+BAIT=""
+CAPTURE=""
+GENOMEBUILD=""
+FASTQC=""
+TRIM=""
+BSQR=""
+REALN=""
+ALIGNER=""
+VARCALLER=""
+CNV=""
+ANNOTATOR=""
+CLEANUP=""
+NCPU=""
+NGSEASYVERSION=""
+NGSUSER=""
+RUNDATE=""
+NGSEASY_STEP=""
 
 ########################################################################################################
 ## docker run command
