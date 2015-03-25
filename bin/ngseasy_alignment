@@ -463,8 +463,8 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
   rm -rf ${SOUTDocker}/tmp/*"
-wait
-sleep 1s
+  wait
+  sleep 1s
 
 ## log docker run 
 #
