@@ -230,13 +230,8 @@ else
 fi
 
 ###########################################################################################
-## FastQC
+## FastQC: will run as many jobs as allowed by nproc on system
 ###########################################################################################
-
-echo -e "\n###########################################################################################"
-echo -e "## FastQC"
-echo -e "###########################################################################################\n"
-
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
@@ -354,10 +349,6 @@ logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${config_run_log}
 ## Quality Trimming
 ###################################################################################
 
-echo -e "\n###########################################################################################"
-echo -e "## Quality Trimming"
-echo -e "###########################################################################################\n"
-
 logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${config_run_log}
 
 	/bin/bash  ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory} 2>&1 | tee -a  ${config_run_log}.log
@@ -366,10 +357,6 @@ logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${config_run_log}
 ###################################################################################
 ## Alignment 
 ###################################################################################
-
-echo -e "\n###########################################################################################"
-echo -e "## Alignment"
-echo -e "###########################################################################################\n"
 
 logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${config_run_log}
 
@@ -382,10 +369,6 @@ logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${config_run_log}
 ## Indel realignment 
 ###################################################################################
 
-echo -e "\n###########################################################################################"
-echo -e "## Indel realignment "
-echo -e "###########################################################################################\n"
-
 logger_ngseasy  "[ngseasy]:Calling ngseasy_realn"  ${config_run_log}
 
 	/bin/bash ngseasy_realn -c ${config_tsv} -d ${project_directory} 2>&1 | tee -a  ${config_run_log}.log
@@ -394,10 +377,6 @@ logger_ngseasy  "[ngseasy]:Calling ngseasy_realn"  ${config_run_log}
 ###################################################################################
 ## Base Quality Score Recalibration
 ###################################################################################
-
-echo -e "\n###########################################################################################"
-echo -e "## Base Quality Score Recalibration "
-echo -e "###########################################################################################\n"
 
 logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${config_run_log}
 
