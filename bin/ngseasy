@@ -317,11 +317,9 @@ do
 ## call ngseasy_fastqc ####
 #
 logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${config_run_log}
-echo -e "\n----------------------------------\n"
 
-	/bin/bash  ngseasy_fastqc -c ${MYBATCH} -d ${project_directory};
+	/bin/bash  ngseasy_fastqc -c ${MYBATCH} -d ${project_directory};	
 
-echo -e "\n----------------------------------\n"	
 ## get number of jobs running in background
 #
 ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
@@ -375,11 +373,10 @@ done
 ## call ngseasy_trimmomatic
 #
 logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${config_run_log}
-echo -e "\n----------------------------------\n"
 
 	/bin/bash  ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory} 2>&1 | tee -a  ${config_run_log}.log
 
-echo -e "\n----------------------------------\n"	
+
 ###################################################################################
 ## Alignment 
 ###################################################################################
@@ -400,13 +397,13 @@ while [ $running_trimmomatic_jobs -gt 0 ]; do
 	running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`;
 	logger_ngseasy "[ngseasy]:Number of Docker Trimmomatic jobs running [$running_trimmomatic_jobs]" 
 done
-echo -e "\n----------------------------------\n"
+
 ## call ngseasy_alignment
 #
 logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${config_run_log}
 
 	/bin/bash  ngseasy_alignment -c ${config_tsv} -d ${project_directory} 2>&1 | tee -a  ${config_run_log}.log
-echo -e "\n----------------------------------\n"
+
 
 ## to add: option if NCPU less than nproc or 8, 16 then call mulitple alignments at the same 
 
@@ -428,10 +425,11 @@ while [ $running_alignment_jobs -gt 0 ]; do
   logger_ngseasy "[ngseasy]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
 done
 
-echo -e "\n----------------------------------\n"
+
 logger_ngseasy  "[ngseasy]:Calling ngseasy_realn"  ${config_run_log}
+
 	/bin/bash ngseasy_realn -c ${config_tsv} -d ${project_directory} 2>&1 | tee -a  ${config_run_log}.log
-echo -e "\n----------------------------------\n"
+
 
 ###################################################################################
 ## Base Quality Score Recalibration
@@ -451,10 +449,11 @@ while [ $running_realignment_jobs -gt 0 ]; do
   logger_ngseasy "[ngseasy]:Number of Docker Re-Alignmnet jobs running [$running_realignment_jobs]" 
 done
 
-echo -e "\n----------------------------------\n"
+
 logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${config_run_log}
+
 	/bin/bash ngseasy_bsqr -c ${config_tsv} -d ${project_directory} 2>&1 | tee -a  ${config_run_log}.log
-echo -e "\n----------------------------------\n"
+
 
 ##################################################################################
 ## Variant calling
