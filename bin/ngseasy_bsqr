@@ -442,7 +442,7 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
 else
 
   logger_ngseasy "[${NGSEASY_STEP}]:ERROR: Can not find required BAM files in [${SOUT}/alignments/]. Exiting" ${LOGFILE}
-  ls ${SOUT}/alignments/
+  #ls ${SOUT}/alignments/
   sleep 1s
   exit 1
 fi
