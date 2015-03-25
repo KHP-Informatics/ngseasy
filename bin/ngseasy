@@ -358,18 +358,6 @@ echo -e "\n#####################################################################
 echo -e "## Quality Trimming"
 echo -e "###########################################################################################\n"
 
-## check if ngseasy_fastqc still running and wait before running ngseasy_trimmomatic
-#
-logger_ngseasy "[ngseasy]:check if ngseasy_fastqc still running and wait before running ngseasy_trimmomatic"
-
-running_fastq_jobs=`docker ps -a | grep fastqc | grep Up | wc -l`
-
-while [ $running_fastq_jobs -gt 0 ]; do
-	sleep 10s;
-	running_fastq_jobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
-	logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$running_fastq_jobs]" 
-done
-
 ## call ngseasy_trimmomatic
 #
 logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${config_run_log}
@@ -385,21 +373,6 @@ echo -e "\n#####################################################################
 echo -e "## Alignment"
 echo -e "###########################################################################################\n"
 
-## check if ngseasy_trimmomatic still running and wait before running ngseasy_alignment
-#
-logger_ngseasy "[ngseasy]:check if ngseasy_trimmomatic still running and wait before running ngseasy_alignment"
-
-running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`
-logger_ngseasy "[ngseasy]:Number of Docker Trimmomatic jobs running [$running_trimmomatic_jobs]" 
-
-while [ $running_trimmomatic_jobs -gt 0 ]; do
-	sleep 10s;
-	running_trimmomatic_jobs=`docker ps -a | grep trimmomatic | grep Up | wc -l`;
-	logger_ngseasy "[ngseasy]:Number of Docker Trimmomatic jobs running [$running_trimmomatic_jobs]" 
-done
-
-## call ngseasy_alignment
-#
 logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment"  ${config_run_log}
 
 	/bin/bash  ngseasy_alignment -c ${config_tsv} -d ${project_directory} 2>&1 | tee -a  ${config_run_log}.log
@@ -415,17 +388,6 @@ echo -e "\n#####################################################################
 echo -e "## Indel realignment "
 echo -e "###########################################################################################\n"
 
-logger_ngseasy "[ngseasy]:check if ngseasy_alignment still running and wait before running ngseasy_realn"
-
-running_alignment_jobs=`docker ps -a | grep alignment | grep Up | wc -l`
-
-while [ $running_alignment_jobs -gt 0 ]; do
-  sleep 10s;
-  running_alignment_jobs=`docker ps -a | grep alignment | grep Up | wc -l`;
-  logger_ngseasy "[ngseasy]:Number of Docker Alignmnet jobs running [$running_alignment_jobs]" 
-done
-
-
 logger_ngseasy  "[ngseasy]:Calling ngseasy_realn"  ${config_run_log}
 
 	/bin/bash ngseasy_realn -c ${config_tsv} -d ${project_directory} 2>&1 | tee -a  ${config_run_log}.log
@@ -438,17 +400,6 @@ logger_ngseasy  "[ngseasy]:Calling ngseasy_realn"  ${config_run_log}
 echo -e "\n###########################################################################################"
 echo -e "## Base Quality Score Recalibration "
 echo -e "###########################################################################################\n"
-
-logger_ngseasy "[ngseasy]:check if ngseasy_alignment still running and wait before running ngseasy_realn"
-
-running_realignment_jobs=`docker ps -a | grep realn | grep Up | wc -l`
-
-while [ $running_realignment_jobs -gt 0 ]; do
-  sleep 10s;
-  running_alignment_jobs=`docker ps -a | grep realn | grep Up | wc -l`;
-  logger_ngseasy "[ngseasy]:Number of Docker Re-Alignmnet jobs running [$running_realignment_jobs]" 
-done
-
 
 logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${config_run_log}
 
