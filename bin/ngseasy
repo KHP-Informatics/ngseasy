@@ -459,14 +459,14 @@ logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${config_run_log}
 ## Variant calling
 ###################################################################################
 #logger_ngseasy  "[ngseasy]:Calling ngseasy_variant_calling"  ${config_run_log}
-#	/bin/bash ngseasy_variant_calling -c ${config_tsv} -d ${project_directory}
+#	/bin/bash ngseasy_variant_calling -c ${config_tsv} -d ${project_directory} 2>&1 | tee -a  ${config_run_log}.log
 
 ###################################################################################
 ## Alignment statistics
 ###################################################################################
 
 #logger_ngseasy  "[ngseasy]:Calling ngseasy_alignment_qc"  ${config_run_log}
-#	/bin/bash ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory}
+#	/bin/bash ngseasy_alignment_qc -c ${config_tsv} -d ${project_directory} 2>&1 | tee -a  ${config_run_log}.log
 
 
 ###################################################################################
