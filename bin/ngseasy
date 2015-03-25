@@ -358,8 +358,6 @@ echo -e "\n#####################################################################
 echo -e "## Quality Trimming"
 echo -e "###########################################################################################\n"
 
-## call ngseasy_trimmomatic
-#
 logger_ngseasy "[ngseasy]:Calling ngseasy_trimmomatic" ${config_run_log}
 
 	/bin/bash  ngseasy_trimmomatic -c ${config_tsv} -d ${project_directory} 2>&1 | tee -a  ${config_run_log}.log
