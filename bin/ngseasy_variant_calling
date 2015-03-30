@@ -79,6 +79,11 @@ function fix_ambiguous() {
 
 }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
 ########################################################################################################
 ## global usage
 #
@@ -145,7 +150,11 @@ fi
 if [[ ! -e "${config_tsv}" ]] 
 then
       logger_ngseasy "[${NGSEASY_STEP}]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
+<<<<<<< HEAD
       ngseasy_bsqr_usage;
+=======
+      ngseasy_variant_calling_usage;
+>>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
       exit 1;
 else
       logger_ngseasy "[${NGSEASY_STEP}]:Configuration file found [${config_tsv}] "
@@ -157,7 +166,11 @@ fi
 if [[ ! -d "${project_directory}" ]]
   then
     logger_ngseasy "[${NGSEASY_STEP}]:ERROR : project_directory [${project_directory}] does not exist "
+<<<<<<< HEAD
     ngseasy_bsqr_usage;
+=======
+    ngseasy_variant_calling_usage;
+>>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
     exit 1;
 else
       logger_ngseasy "[${NGSEASY_STEP}]:Top Level Project Directory [${project_directory}] "
@@ -284,7 +297,11 @@ fi
 
 ## LOGFILE 
 #
+<<<<<<< HEAD
 LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}"
+=======
+LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_variant_calling"
+>>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
 logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## check and make logfile
@@ -324,6 +341,10 @@ logger_ngseasy "[${NGSEASY_STEP}]:Docker home directory [${DOCKERHOME}]" ${LOGFI
 SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
 logger_ngseasy "[${NGSEASY_STEP}]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
 
 ########################################################################################################
 ## check local dir exists
@@ -339,6 +360,7 @@ fi
 ########################################################################################################
 ## Select Genome Build and files
 #
+<<<<<<< HEAD
 logger_ngseasy "[${NGSEASY_STEP}]:Checking genome selected"  ${LOGFILE}
 
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
@@ -351,15 +373,22 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
   KNOWN_SNPS_OMNI=""
   KNOWN_SNPS_b138=""
   DBSNP_RECAB=""
+=======
+logger_ngseasy "[${NGSEASY_STEP}]:Checking genome selected]"  ${LOGFILE}
+>>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
 
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
   REFFASTA="${REFDIR}/human_g1k_v37.fasta"
+<<<<<<< HEAD
   DBSNP_RECAB="${REFDIR}/dbsnp_138.b37.recab"
 
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab b37 [${DBSNPb37}]" ${LOGFILE}
+=======
+  logger_ngseasy "[${NGSEASY_STEP}]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+>>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
 
   #known indels and SNPs
   KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.b37.vcf"
@@ -384,11 +413,15 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
   REFFASTA="${REFDIR}/ucsc.hg19.fasta"
+<<<<<<< HEAD
   DBSNP_RECAB="${REFDIR}/dbsnp_138.hg19.recab"
 
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab hg19 [${DBSNPhg19}]" ${LOGFILE}
+=======
+  logger_ngseasy "[${NGSEASY_STEP}]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+>>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
 
   #known indels and SNPs
   KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.gz"
@@ -515,6 +548,15 @@ else
   logger_ngseasy " Filtered BAM [${SOUT}/alignments/${BAM_PREFIX}.filtered.bam] Exists  "  ${LOGFILE}
 fi
 
+########################################################################################################
+## callable regions
+##
+sambamba view -t 36 -F "mapping_quality>0" -f bam NA12878.WEX.100bp30x.PE.ILLUMINA.atrim.snap.hg19.dupemk.bam | bedtools bamtobed | bedtools merge > mapped.reads.bed
+sambamba view -t 36 -F "mapping_quality>0" -f bam NA12878.WEX.100bp30x.PE.ILLUMINA.atrim.snap.hg19.dupemk.bam | bedtools genomecov -split -ibam stdin -bga -max 500 > genomecov.bed
+awk '$4>0' genomecov.bed > genomecov.DP1.bed 
+bedtools intersect -a NA12878.WEX.100bp30x.PE.ILLUMINA.atrim.snap.hg19.dupemk.bed -b genomecov.DP1.bed > callable.regsions.bed
+bedtools intersect -a genomecov.DP1.bed -b NA12878.WEX.100bp30x.PE.ILLUMINA.atrim.snap.hg19.dupemk.bed > callable.regsions2.bed
+bedtools genomecov -a mapped.reads.bed -b 
 
 
 ########################################################################################################
