@@ -36,6 +36,8 @@ RUN cd /usr/local/pipeline && \
        make && \
        cp -vrf ./* /usr/local/bin
 
+ADD fix_ambiguous /usr/local/bin/
+
 #RUN wget -O /tmp/Platypus-latest.tgz http://www.well.ox.ac.uk/bioinformatics/Software/Platypus-latest.tgz \
 #  && tar xvf /tmp/Platypus-latest.tgz -C /usr/local/pipeline/ \
 #  && cd /usr/local/pipeline/Platypus_0.7.9.1 \
