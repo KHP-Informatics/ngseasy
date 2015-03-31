@@ -23,7 +23,7 @@ RUN cd /usr/local/pipeline \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/lumpy-sv/bin' /home/pipeman/.bashrc \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/lumpy-sv/bin' ~/.bashrc
 
-
+ADD fix_ambiguous /usr/local/bin/
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
 RUN chown -R pipeman:ngsgroup /usr/local/pipeline

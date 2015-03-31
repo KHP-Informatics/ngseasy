@@ -21,6 +21,7 @@ RUN cd /usr/local/pipeline \
   && sed -i '$aPATH=${PATH}:/usr/local/pipeline/freebayes/bin' ~/.bashrc \
   && cp -v /usr/local/pipeline/freebayes/bin/* /usr/local/bin
 
+ADD fix_ambiguous /usr/local/bin/
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline

@@ -26,6 +26,7 @@ RUN cd /usr/local/pipeline && \
     cp -v delly /usr/local/bin && \
     cp -v delly-parallel /usr/local/bin
 
+ADD fix_ambiguous /usr/local/bin/
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
 RUN chown -R pipeman:ngsgroup /usr/local/pipeline
