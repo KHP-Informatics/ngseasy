@@ -566,8 +566,8 @@ logger_ngseasy " START Variant Calling using freebayes-parallel " ${LOGFILE}
   ${DOCKER_RUN} \
   --name Freebayes_${BAM_PREFIX} \
   -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-  "bamtools coverage -in ${SOUTDocker}/${BAMFILE} | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${REFFASTA} 1000 > ${REFFASTA}.1000.regions && \
-  /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${REFFASTA}.1000.regions \
+  "time bamtools coverage -in ${SOUTDocker}/${BAMFILE} | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${REFFASTA} 1000 > ${REFFASTA}.1000.regions && \
+  time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${REFFASTA}.1000.regions \
   ${NCPU} \
   -f ${REFFASTA} \
   -b ${SOUTDocker}/${BAMFILE} \
@@ -577,7 +577,7 @@ logger_ngseasy " START Variant Calling using freebayes-parallel " ${LOGFILE}
   --min-repeat-entropy 1 \
   --experimental-gls \
   --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
-  cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+  time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
   vcffilter -f 'QUAL > 5' -s | \
   fix_ambiguous | \
   vcfallelicprimitives --keep-geno | \
@@ -615,10 +615,10 @@ then
   logger_ngseasy " NGS_TYPE is Targeted/WEX so no duplicate filtering  "  ${LOGFILE}
   # for exome/whole genome data no duplicate filtering
   
-  docker run -P \
+  ${DOCKER_RUN} \
   --name platypus_${SAMPLE_ID} \
-  --volumes-from volumes_container \
-  -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
+  -t compbio/ngseasy-platypus:${NGSEASYVERSION} /bin/bash -c \
+  "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
       --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
       --refFile=${REFFASTA} \
@@ -635,7 +635,7 @@ then
       --qdThreshold 0 \
       --abThreshold 0.0001 \
       --minVarFreq 0.0 && \
-      cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+      time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
       vcffilter -f 'QUAL > 5' -s | \
       fix_ambiguous | \
       vcfallelicprimitives --keep-geno | \
@@ -652,38 +652,37 @@ then
   
   else
   
-  docker run -P \
-      --name platypus_${SAMPLE_ID} \
-      --volumes-from volumes_container \
-      -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
-        --nCPU ${NCPU} \
-        --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
-        --refFile=${REFFASTA} \
-        --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
-        --assemble=1 \
-        --filterDuplicates=1 \
-        --minReads=10 \
-        --minMapQual=20 \
-        --minBaseQual=20 \
-        --hapScoreThreshold 10 \
-      	--scThreshold 0.99 \
-      	--filteredReadsFrac 0.9 \
-      	--rmsmqThreshold 20 \
-      	--qdThreshold 0 \
-      	--abThreshold 0.0001 \
-      	--minVarFreq 0.0;
-        cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
-        vcffilter -f 'QUAL > 5' -s | \
-        fix_ambiguous | \
-        vcfallelicprimitives --keep-geno | \
-        vcffixup - | \
-        vcfstreamsort | \
-        vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
-        vcfuniqalleles | \
-        bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-        tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
-
-      
+  ${DOCKER_RUN} \
+  --name platypus_${BAM_PREFIX} \
+  -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c \
+  "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
+  --nCPU ${NCPU} \
+  --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
+  --refFile=${REFFASTA} \
+  --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+  --assemble=1 \
+  --filterDuplicates=1 \
+  --minReads=10 \
+  --minMapQual=20 \
+  --minBaseQual=20 \
+  --hapScoreThreshold 10 \
+  --scThreshold 0.99 \
+  --filteredReadsFrac 0.9 \
+  --rmsmqThreshold 20 \
+  --qdThreshold 0 \
+  --abThreshold 0.0001 \
+  --minVarFreq 0.0;
+   time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+   vcffilter -f 'QUAL > 5' -s | \
+   fix_ambiguous | \
+   vcfallelicprimitives --keep-geno | \
+   vcffixup - | \
+   vcfstreamsort | \
+   vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+   vcfuniqalleles | \
+   bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+   tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
+  
               
 #logs
   docker logs platypus_${SAMPLE_ID} >> ${LOGFILE}.log
@@ -751,7 +750,7 @@ then
   --annotation SpanningDeletions \
   --annotation TandemRepeatAnnotator \
   --annotation VariantType && \
-  cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+  time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
   vcffilter -f 'QUAL > 5' -s | \
   fix_ambiguous | \
   vcfallelicprimitives --keep-geno | \
@@ -788,7 +787,6 @@ then
   
   ${DOCKER_RUN} 
   --name HaplotypeCaller_${BAM_PREFIX} \
-  --volumes-from volumes_container \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
   "time java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar \
   -T HaplotypeCaller \
