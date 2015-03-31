@@ -523,59 +523,18 @@ fi
 # filtered
 
 #---------Does filtered bam exits, if not then generate it----------------------#
-
-if [ ! -s "${SOUT}/alignments/${BAM_PREFIX}.filtered.bam" ]
-then
-
-  logger_ngseasy " Filtered BAM [${SOUT}/alignments/${BAM_PREFIX}.filtered.bam] Does Not Exist "  ${LOGFILE}
-  logger_ngseasy " START samtools view -bh -q 20 -F 1796 [${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam]  "  ${LOGFILE}
-
-  docker run \
-  -P \
-  --name samtools_filter_${SAMPLE_ID} \
-  --volumes-from volumes_container \
-  -t compbio/ngseasy-samtools:${VERSION} /bin/bash -c \
-  "time /usr/local/pipeline/samtools/samtools \
-  view \
-  -b \
-  -h \
-  -q 20 \
-  -F 1796 \
-  ${bam_file} > ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam; 
-  /usr/local/pipeline/samtools/samtools index ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam"
-
-  docker logs samtools_filter_${SAMPLE_ID} >> ${LOGFILE}.log
-  docker rm samtools_filter_${SAMPLE_ID}
-
-  cp -v ${SOUT}/alignments/${BAM_PREFIX}.filtered.bai ${SOUT}/alignments/${BAM_PREFIX}.filtered.bam.bai;
-
-  logger_ngseasy " END samtools view -b -h -q 20 -F 1796 [${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam]  "  ${LOGFILE}
-
-else
-
-  logger_ngseasy " Filtered BAM [${SOUT}/alignments/${BAM_PREFIX}.filtered.bam] Exists  "  ${LOGFILE}
-fi
-
-########################################################################################################
+##################################################
 ## callable regions
 ##
-sambamba view -t 36 -F "mapping_quality>0" -f bam NA12878.WEX.100bp30x.PE.ILLUMINA.atrim.snap.hg19.dupemk.bam | bedtools bamtobed | bedtools merge > mapped.reads.bed
-sambamba view -t 36 -F "mapping_quality>0" -f bam NA12878.WEX.100bp30x.PE.ILLUMINA.atrim.snap.hg19.dupemk.bam | bedtools genomecov -split -ibam stdin -bga -max 500 > genomecov.bed
-awk '$4>0' genomecov.bed > genomecov.DP1.bed 
-bedtools intersect -a NA12878.WEX.100bp30x.PE.ILLUMINA.atrim.snap.hg19.dupemk.bed -b genomecov.DP1.bed > callable.regsions.bed
-bedtools intersect -a genomecov.DP1.bed -b NA12878.WEX.100bp30x.PE.ILLUMINA.atrim.snap.hg19.dupemk.bed > callable.regsions2.bed
-bedtools genomecov -a mapped.reads.bed -b 
-
-
-########################################################################################################
-## callable regions
-##
-sambamba view -t 36 -F "mapping_quality>0" -f bam NA12878.WEX.100bp30x.PE.ILLUMINA.atrim.snap.hg19.dupemk.bam | bedtools bamtobed | bedtools merge > mapped.reads.bed
-sambamba view -t 36 -F "mapping_quality>0" -f bam NA12878.WEX.100bp30x.PE.ILLUMINA.atrim.snap.hg19.dupemk.bam | bedtools genomecov -split -ibam stdin -bga -max 500 > genomecov.bed
-awk '$4>0' genomecov.bed > genomecov.DP1.bed 
-bedtools intersect -a NA12878.WEX.100bp30x.PE.ILLUMINA.atrim.snap.hg19.dupemk.bed -b genomecov.DP1.bed > callable.regsions.bed
-bedtools intersect -a genomecov.DP1.bed -b NA12878.WEX.100bp30x.PE.ILLUMINA.atrim.snap.hg19.dupemk.bed > callable.regsions2.bed
-bedtools genomecov -a mapped.reads.bed -b 
+  ${DOCKER_RUN} \
+  --name callable_regions_${BAM_PREFIX} \
+  -t compbio/ngseasy-base:{NGSEASYVERSION} /bin/bash -c "sambamba view -t ${NCPU} \
+  -F \"mapping_quality>0 and paired and (not umapped)\" \
+  -f bam ${SOUTDocker}/${BAMFILE} | bedtools bamtobed | bedtools merge > ${SOUTDocker}/${BAMFILE}.mapped.reads.bed && \
+  sambamba view -t ${NCPU} \
+  -F \"mapping_quality>0 and paired and (not umapped)\" \
+  -f bam ${SOUTDocker}/${BAMFILE} | bedtools genomecov -split -ibam stdin -bga -max 500 | awk '$4>0' > ${SOUTDocker}/${BAMFILE}.genomecov.bed && \
+  "
 
 
 ########################################################################################################
@@ -588,15 +547,13 @@ then
   
 logger_ngseasy " START Variant Calling using freebayes-parallel " ${LOGFILE}
 
-  docker run \
-  -P \
+  ${DOCKER_RUN} \
   --name Freebayes_${SAMPLE_ID} \
-  --volumes-from volumes_container \
   -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-  "bamtools coverage -in ${BAMFILE} | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${REFFASTA} 1000 > ${REFFASTA}.1000.regions && \
+  "bamtools coverage -in ${SOUTDocker}/${BAMFILE} | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${REFFASTA} 1000 > ${REFFASTA}.1000.regions && \
   /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${REFFASTA}.1000.regions ${NCPU} \
   -f ${REFFASTA} \
-  -b ${BAMFILE} \
+  -b ${SOUTDocker}/${BAMFILE} \
   --min-coverage 10 \
   --min-mapping-quality 20 \
   --min-base-quality 20 \
@@ -723,8 +680,6 @@ then
   fi
 
 fi
-
-
 
 #-----------------------------------------------------------------------------#
 # UnifiedGenotyper #
