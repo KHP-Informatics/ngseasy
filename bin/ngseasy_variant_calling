@@ -70,20 +70,7 @@ function logger_ngseasy() {
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
 
-## Custom utils from bcbio and more This needs to be in Dockerfile
-## also need to add http://genome.sph.umich.edu/wiki/Vt to base image or all callers
-## Taken from https://github.com/chapmanb/bcbio-nextgen/blob/98c75603907cb22a3e4cd4fd78f7e995b80bddfd/bcbio/variation/vcfutils.py#L76
-function fix_ambiguous() {
 
-  awk -F$'\t' -v OFS='\t' '{if ($0 !~ /^#/) gsub(/[KMRYSWBVHDX]/, "N", $4) } {print}'
-
-}
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
 ########################################################################################################
 ## global usage
 #
@@ -150,11 +137,8 @@ fi
 if [[ ! -e "${config_tsv}" ]] 
 then
       logger_ngseasy "[${NGSEASY_STEP}]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
-<<<<<<< HEAD
-      ngseasy_bsqr_usage;
-=======
       ngseasy_variant_calling_usage;
->>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
+      sleep 1s
       exit 1;
 else
       logger_ngseasy "[${NGSEASY_STEP}]:Configuration file found [${config_tsv}] "
@@ -166,11 +150,8 @@ fi
 if [[ ! -d "${project_directory}" ]]
   then
     logger_ngseasy "[${NGSEASY_STEP}]:ERROR : project_directory [${project_directory}] does not exist "
-<<<<<<< HEAD
-    ngseasy_bsqr_usage;
-=======
     ngseasy_variant_calling_usage;
->>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
+    sleep 1s
     exit 1;
 else
       logger_ngseasy "[${NGSEASY_STEP}]:Top Level Project Directory [${project_directory}] "
@@ -520,9 +501,6 @@ else
   exit 1
 fi
 
-# filtered
-
-#---------Does filtered bam exits, if not then generate it----------------------#
 ##################################################
 ## callable regions
 ##
@@ -533,20 +511,37 @@ if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]]  && [[ ! -e  "${SOU
 
   ${DOCKER_RUN} \
   --name callable_regions_${BAM_PREFIX} \
-  -t compbio/ngseasy-base:{NGSEASYVERSION} /bin/bash -c "sambamba view -t ${NCPU} \
-  -F \"mapping_quality>0 and paired and (not umapped)\" \
+  -t compbio/ngseasy-base:{NGSEASYVERSION} /bin/bash -c \
+  "sambamba view -t ${NCPU} \
+  -F \"mapping_quality>0 and paired and (not unmapped)\" \
   -f bam ${SOUTDocker}/alignments/${BAMFILE} | bedtools bamtobed | bedtools merge > ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed && \
   sambamba view -t ${NCPU} \
-  -F \"mapping_quality>0 and paired and (not umapped)\" \
-  -f bam ${SOUTDocker}//alignments/${BAMFILE} | bedtools genomecov -split -ibam stdin -bga -max 500 | awk '$4>0' > ${SOUTDocker}/reports/${BAMFILE}.genomecov.bed && \
+  -F \"mapping_quality>0 and paired and (not unmapped)\" \
+  -f bam ${SOUTDocker}/alignments/${BAMFILE} | bedtools genomecov -split -ibam stdin -bga -max 500 | awk '$4>0' > ${SOUTDocker}/reports/${BAMFILE}.genomecov.bed && \
   awk \'{print \$1}' ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed
   "
 
 elif [[ -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]]  && [[ -e  "${SOUT}/reports/${BAMFILE}.genomecov.bed"  ]]
-  logger_ngseasy "[${NGSEASY_STEP}]:Mapped Reads and Callable Regions found" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Mapped Reads [${SOUT}/reports/${BAMFILE}.mapped.reads.bed]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Callable Regions [${SOUT}/reports/${BAMFILE}.genomecov.bed]" ${LOGFILE}
 else
-  
+  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find Mapped Reads [${SOUT}/reports/${BAMFILE}.mapped.reads.bed] " ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find Callable Regions [${SOUT}/reports/${BAMFILE}.genomecov.bed]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Exiting" ${LOGFILE}
+  sleep 1s
+  exit 1
 fi
+
+########################################################################################################
+## fix_ambiguous
+## Custom utils from bcbio and more This needs to be in Dockerfile
+## also need to add http://genome.sph.umich.edu/wiki/Vt to base image or all callers
+## Taken from https://github.com/chapmanb/bcbio-nextgen/blob/98c75603907cb22a3e4cd4fd78f7e995b80bddfd/bcbio/variation/vcfutils.py#L76
+function fix_ambiguous() {
+
+  awk -F$'\t' -v OFS='\t' '{if ($0 !~ /^#/) gsub(/[KMRYSWBVHDX]/, "N", $4) } {print}'
+
+}
 
 
 ########################################################################################################
@@ -560,10 +555,11 @@ then
 logger_ngseasy " START Variant Calling using freebayes-parallel " ${LOGFILE}
 
   ${DOCKER_RUN} \
-  --name Freebayes_${SAMPLE_ID} \
+  --name Freebayes_${BAM_PREFIX} \
   -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
   "bamtools coverage -in ${SOUTDocker}/${BAMFILE} | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${REFFASTA} 1000 > ${REFFASTA}.1000.regions && \
-  /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${REFFASTA}.1000.regions ${NCPU} \
+  /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${REFFASTA}.1000.regions \
+  ${NCPU} \
   -f ${REFFASTA} \
   -b ${SOUTDocker}/${BAMFILE} \
   --min-coverage 10 \
@@ -582,14 +578,12 @@ logger_ngseasy " START Variant Calling using freebayes-parallel " ${LOGFILE}
   vcfuniqalleles | \
   bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf"
 
-    #logs
-  docker logs Freebayes_${SAMPLE_ID} >> ${LOGFILE}.log
-
-  docker rm Freebayes_${SAMPLE_ID}
-
-# copy vcf to cohort vcf directory
-
-cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
+  #logs
+   docker logs Freebayes_${SAMPLE_ID} >> ${LOGFILE}.log
+   docker rm Freebayes_${SAMPLE_ID}
+  
+  # copy vcf to cohort vcf directory
+  cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
 
 # logs
 logger_ngseasy " copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
