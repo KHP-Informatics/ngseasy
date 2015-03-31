@@ -297,11 +297,7 @@ fi
 
 ## LOGFILE 
 #
-<<<<<<< HEAD
 LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}"
-=======
-LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_variant_calling"
->>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
 logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## check and make logfile
@@ -321,8 +317,6 @@ echo -e "$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBR
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER" >> ${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}/config_files/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}.config
 
-
-
 ########################################################################################################
 ## OUTPUT SAMPLE DIR 
 #
@@ -341,10 +335,6 @@ logger_ngseasy "[${NGSEASY_STEP}]:Docker home directory [${DOCKERHOME}]" ${LOGFI
 SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
 logger_ngseasy "[${NGSEASY_STEP}]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
-<<<<<<< HEAD
-=======
-
->>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
 
 ########################################################################################################
 ## check local dir exists
@@ -360,7 +350,6 @@ fi
 ########################################################################################################
 ## Select Genome Build and files
 #
-<<<<<<< HEAD
 logger_ngseasy "[${NGSEASY_STEP}]:Checking genome selected"  ${LOGFILE}
 
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
@@ -373,22 +362,15 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
   KNOWN_SNPS_OMNI=""
   KNOWN_SNPS_b138=""
   DBSNP_RECAB=""
-=======
-logger_ngseasy "[${NGSEASY_STEP}]:Checking genome selected]"  ${LOGFILE}
->>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
 
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
   REFFASTA="${REFDIR}/human_g1k_v37.fasta"
-<<<<<<< HEAD
   DBSNP_RECAB="${REFDIR}/dbsnp_138.b37.recab"
 
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab b37 [${DBSNPb37}]" ${LOGFILE}
-=======
-  logger_ngseasy "[${NGSEASY_STEP}]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
->>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
 
   #known indels and SNPs
   KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.b37.vcf"
@@ -413,15 +395,12 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
   REFFASTA="${REFDIR}/ucsc.hg19.fasta"
-<<<<<<< HEAD
   DBSNP_RECAB="${REFDIR}/dbsnp_138.hg19.recab"
 
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab hg19 [${DBSNPhg19}]" ${LOGFILE}
-=======
-  logger_ngseasy "[${NGSEASY_STEP}]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
->>>>>>> 895f5ae440a073dde4855d7cabdd12a13dffab89
+
 
   #known indels and SNPs
   KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.gz"
@@ -457,6 +436,14 @@ if [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "no-bsqr" ]]; then
  
   logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [no-realn] and BSQR set to [no-bsqr]" ${LOGFILE} 
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+# exit if no BAMFILE
+  if [[ ! -e "${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+
   logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
 
 # no realn plus bam bsqr
@@ -466,6 +453,14 @@ elif [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
   
   logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [no-realn] and BSQR set to [bam-bsqr]" ${LOGFILE} 
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+  # exit if no BAMFILE
+  if [[ ! -e "${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+
   logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
 
 # no realn plus gatk bsqr
@@ -475,6 +470,14 @@ elif [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "gatk-bsqr" ]]; then
 
   logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [no-realn] and BSQR set to [gatk-bsqr]" ${LOGFILE} 
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+    # exit if no BAMFILE
+  if [[ ! -e "${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+  
   logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
 
 # bam-realn bam-bsqr
@@ -484,6 +487,14 @@ elif [[ "${REALN}" == "bam-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
   
   logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [bam-realn] and BSQR set to [bam-bsqr]" ${LOGFILE} 
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+  # exit if no BAMFILE
+  if [[ ! -e "${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+  
   logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
 
 # gatk-realn gatk-bsqr
@@ -493,6 +504,14 @@ elif [[ "${REALN}" == "gatk-realn" ]] && [[ "${BSQR}" == "gatk-bsqr" ]]; then
  
   logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [gatk-realn] and BSQR set to [bam-bsqr]" ${LOGFILE}  
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+   # exit if no BAMFILE
+  if [[ ! -e "${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+  
   logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
 
 else
@@ -501,18 +520,7 @@ else
   exit 1
 fi
 
-BAMFILE=${BAM_PREFIX}.dupemk.bam
-BAMFILE=${BAM_PREFIX}.dupemk.bam-realn.bam
-BAMFILE=${BAM_PREFIX}.dupemk.bam-realn.bam-bsqr.bam
-BAMFILE=${BAM_PREFIX}.dupemk.gatk-realn.bam
-BAMFILE=${BAM_PREFIX}.dupemk.gatk-realn.gatk-bsqr.bam
-BAMFILE=${BAM_PREFIX}.dupemk.no-realn.bam
-BAMFILE=${BAM_PREFIX}.dupemk.no-realn.no-bsqr.bam
-
 # filtered
-
-
-
 
 #---------Does filtered bam exits, if not then generate it----------------------#
 
