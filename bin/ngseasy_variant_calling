@@ -429,7 +429,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGF
 #
 logger_ngseasy "[${NGSEASY_STEP}]:NGSeasy will look for and use the indel re-aligned and base quality score recalibrated data if available" ${LOGFILE}
 
-# no realn or bsqr
+# no realn and no bsqr so sue dupemk.bam
 if [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "no-bsqr" ]]; then
 
   BAMFILE="${BAM_PREFIX}.dupemk.bam"
@@ -480,7 +480,7 @@ elif [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "gatk-bsqr" ]]; then
   
   logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
 
-# bam-realn bam-bsqr
+# bam-realn and bam-bsqr
 elif [[ "${REALN}" == "bam-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
 
   BAMFILE="${BAM_PREFIX}.dupemk.bam-realn.bam-bsqr.bam"
@@ -497,7 +497,7 @@ elif [[ "${REALN}" == "bam-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
   
   logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
 
-# gatk-realn gatk-bsqr
+# gatk-realn and gatk-bsqr
 elif [[ "${REALN}" == "gatk-realn" ]] && [[ "${BSQR}" == "gatk-bsqr" ]]; then
 
   BAMFILE="${BAM_PREFIX}.dupemk.gatk-realn.gatk-bsqr.bam"
