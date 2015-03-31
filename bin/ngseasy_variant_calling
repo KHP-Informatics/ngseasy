@@ -542,8 +542,10 @@ if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]]  && [[ ! -e  "${SOU
   awk \'{print \$1}' ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed
   "
 
+elif [[ -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]]  && [[ -e  "${SOUT}/reports/${BAMFILE}.genomecov.bed"  ]]
+  logger_ngseasy "[${NGSEASY_STEP}]:Mapped Reads and Callable Regions found" ${LOGFILE}
 else
-  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find required BAM File for Variant Calling" ${LOGFILE}
+  
 fi
 
 
