@@ -526,15 +526,25 @@ fi
 ##################################################
 ## callable regions
 ##
+
+if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]]  && [[ ! -e  "${SOUT}/reports/${BAMFILE}.genomecov.bed"  ]] ; then
+  
+  logger_ngseasy "[${NGSEASY_STEP}]:Generating Mapped Reads BED File and Callable Regions File" ${LOGFILE}
+
   ${DOCKER_RUN} \
   --name callable_regions_${BAM_PREFIX} \
   -t compbio/ngseasy-base:{NGSEASYVERSION} /bin/bash -c "sambamba view -t ${NCPU} \
   -F \"mapping_quality>0 and paired and (not umapped)\" \
-  -f bam ${SOUTDocker}/${BAMFILE} | bedtools bamtobed | bedtools merge > ${SOUTDocker}/${BAMFILE}.mapped.reads.bed && \
+  -f bam ${SOUTDocker}/alignments/${BAMFILE} | bedtools bamtobed | bedtools merge > ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed && \
   sambamba view -t ${NCPU} \
   -F \"mapping_quality>0 and paired and (not umapped)\" \
-  -f bam ${SOUTDocker}/${BAMFILE} | bedtools genomecov -split -ibam stdin -bga -max 500 | awk '$4>0' > ${SOUTDocker}/${BAMFILE}.genomecov.bed && \
+  -f bam ${SOUTDocker}//alignments/${BAMFILE} | bedtools genomecov -split -ibam stdin -bga -max 500 | awk '$4>0' > ${SOUTDocker}/reports/${BAMFILE}.genomecov.bed && \
+  awk \'{print \$1}' ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed
   "
+
+else
+  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find required BAM File for Variant Calling" ${LOGFILE}
+fi
 
 
 ########################################################################################################
