@@ -557,11 +557,10 @@ fi
 #user  34m54.756s
 #sys 1m44.810s
 
-
 if [ "${VARCALLER}" == "freebayes" ]
-then
-  
-logger_ngseasy " START Variant Calling using freebayes-parallel " ${LOGFILE}
+  then
+
+  logger_ngseasy " START Variant Calling using freebayes-parallel " ${LOGFILE}
 
   ${DOCKER_RUN} \
   --name Freebayes_${BAM_PREFIX} \
@@ -588,37 +587,36 @@ logger_ngseasy " START Variant Calling using freebayes-parallel " ${LOGFILE}
   bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
   tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
 
-  #logs
-   docker logs Freebayes_${SAMPLE_ID} >> ${LOGFILE}.log
-   docker rm Freebayes_${SAMPLE_ID}
+#logs
+docker logs Freebayes_${BAM_PREFIX} >> ${LOGFILE}.log
+docker rm Freebayes_${BAM_PREFIX}
   
-  # copy vcf to cohort vcf directory
-  cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
+# copy vcf to cohort vcf directory
+logger_ngseasy "[${NGSEASY_STEP}]:copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
+cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
 
 # logs
-logger_ngseasy " copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
-logger_ngseasy " END Variant Calling using Freebayes "  ${LOGFILE}
-
-fi
+logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFILE}
 
 #-----------------------------------------------------------------------------#
 # Platypus #
 #-----------------------------------------------------------------------------#
-if [ "${VARCALLER}" == "platypus" ]
-then
+elif [ "${VARCALLER}" == "platypus" ]
+  then
 
   logger_ngseasy " START Variant Calling using Platypus "  ${LOGFILE}
-  
+
   if [ "${NGS_TYPE}" == "TGS" ] || [ "${NGS_TYPE}" == "WEX" ]
-  then
-  
-  logger_ngseasy " NGS_TYPE is Targeted/WEX so no duplicate filtering  "  ${LOGFILE}
-  # for exome/whole genome data no duplicate filtering
-  
-  ${DOCKER_RUN} \
-  --name platypus_${SAMPLE_ID} \
-  -t compbio/ngseasy-platypus:${NGSEASYVERSION} /bin/bash -c \
-  "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
+    then
+
+    logger_ngseasy " NGS_TYPE set to [${NGS_TYPE}] Targeted/WEX, so no duplicate filtering  "  ${LOGFILE}
+
+    # for exome/whole genome data no duplicate filtering
+
+    ${DOCKER_RUN} \
+    --name platypus_${SAMPLE_ID} \
+    -t compbio/ngseasy-platypus:${NGSEASYVERSION} /bin/bash -c \
+    "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
       --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
       --refFile=${REFFASTA} \
@@ -646,66 +644,60 @@ then
       bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
 
-      
-  # copy vcf to cohort vcf directory
-  cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
-  
-  else
-  
-  ${DOCKER_RUN} \
-  --name platypus_${BAM_PREFIX} \
-  -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c \
-  "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
-  --nCPU ${NCPU} \
-  --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
-  --refFile=${REFFASTA} \
-  --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
-  --assemble=1 \
-  --filterDuplicates=1 \
-  --minReads=10 \
-  --minMapQual=20 \
-  --minBaseQual=20 \
-  --hapScoreThreshold 10 \
-  --scThreshold 0.99 \
-  --filteredReadsFrac 0.9 \
-  --rmsmqThreshold 20 \
-  --qdThreshold 0 \
-  --abThreshold 0.0001 \
-  --minVarFreq 0.0;
-   time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
-   vcffilter -f 'QUAL > 5' -s | \
-   fix_ambiguous | \
-   vcfallelicprimitives --keep-geno | \
-   vcffixup - | \
-   vcfstreamsort | \
-   vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
-   vcfuniqalleles | \
-   bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-   tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
-  
-              
+      # copy vcf to cohort vcf directory
+      cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
+
+    else
+
+      ${DOCKER_RUN} \
+      --name platypus_${BAM_PREFIX} \
+      -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c \
+      "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
+      --nCPU ${NCPU} \
+      --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
+      --refFile=${REFFASTA} \
+      --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+      --assemble=1 \
+      --filterDuplicates=1 \
+      --minReads=10 \
+      --minMapQual=20 \
+      --minBaseQual=20 \
+      --hapScoreThreshold 10 \
+      --scThreshold 0.99 \
+      --filteredReadsFrac 0.9 \
+      --rmsmqThreshold 20 \
+      --qdThreshold 0 \
+      --abThreshold 0.0001 \
+      --minVarFreq 0.0 && \
+      time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+      vcffilter -f 'QUAL > 5' -s | \
+      fix_ambiguous | \
+      vcfallelicprimitives --keep-geno | \
+      vcffixup - | \
+      vcfstreamsort | \
+      vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+      vcfuniqalleles | \
+      bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+      tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
+           
 #logs
-  docker logs platypus_${SAMPLE_ID} >> ${LOGFILE}.log
-  docker rm platypus_${SAMPLE_ID}
+docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
+docker rm platypus_${BAM_PREFIX}
 
-  # copy vcf to cohort vcf directory
-  cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
+# copy vcf to cohort vcf directory
+logger_ngseasy "[${NGSEASY_STEP}]:copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
+cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
 
- #logs 
-  logger_ngseasy " copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
-    
-  logger_ngseasy " END Variant Calling using Platypus "  ${LOGFILE}
+#logs 
+logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Platypus "  ${LOGFILE}
   
   fi
-
-fi
-
 #-----------------------------------------------------------------------------#
 # UnifiedGenotyper #
 #-----------------------------------------------------------------------------#
 
-if [ "${VARCALLER}" == "UnifiedGenotyper" ]
-then
+elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
+  then
 
 # requires /alignments/${BAM_PREFIX}.filtered.bam
 
@@ -713,7 +705,7 @@ then
   logger_ngseasy " START GATK UnifiedGenotyper " ${LOGFILE}
 
   ${DOCKER_RUN} \
-  --name UnifiedGenotyper_${SAMPLE_ID} \
+  --name UnifiedGenotyper_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
   "time java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar \
   -T UnifiedGenotyper \
@@ -773,13 +765,11 @@ then
 
   logger_ngseasy " END Variant Calling using UnifiedGenotyper "  ${LOGFILE}
 
-fi
-
 #-----------------------------------------------------------------------------#
 # HaplotypeCaller #
 #-----------------------------------------------------------------------------#
 
-if [ "${VARCALLER}" == "HaplotypeCaller" ]
+elif [ "${VARCALLER}" == "HaplotypeCaller" ]
 then
   ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
  
@@ -848,13 +838,11 @@ then
 
   logger_ngseasy " END Variant Calling using HaplotypeCaller "  ${LOGFILE}
 
-fi
-
 #-------------------------------------------------------------------------------------------#
 # Ensemble: Freebayes + Platypus + HaplotypeCaller then CombineVariants   #
 #-------------------------------------------------------------------------------------------#
 
-if [ "${VARCALLER}" == "ensemble" ]
+elif [ "${VARCALLER}" == "ensemble" ]
 then
 
   logger_ngseasy " START Ensembl Variant Calling using Freebayes + Platypus + UnifiedGenotyper + HaplotypeCaller "  ${LOGFILE}
