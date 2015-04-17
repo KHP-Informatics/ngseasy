@@ -577,8 +577,7 @@ if [ "${VARCALLER}" == "freebayes" ]
   --name Freebayes_${BAM_PREFIX} \
   -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
   "time bamtools coverage -in ${SOUTDocker}/${BAMFILE} | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${REFFASTA} 1000 > ${REFFASTA}.1000.regions && \
-  time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${REFFASTA}.1000.regions \
-  ${NCPU} \
+  time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${REFFASTA}.1000.regions ${NCPU} \
   -f ${REFFASTA} \
   -b ${SOUTDocker}/${BAMFILE} \
   --min-coverage 10 \
