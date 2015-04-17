@@ -649,6 +649,10 @@ elif [ "${VARCALLER}" == "platypus" ]
       vcfuniqalleles | \
       bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
+      sleep 1s
+      #logs
+      docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
+      docker rm platypus_${BAM_PREFIX}
 
     else
 
@@ -682,6 +686,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       vcfuniqalleles | \
       bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
+      sleep 1s
            
 #logs
 docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
