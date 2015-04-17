@@ -514,16 +514,13 @@ if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]] && [[ ! -e  "${SOUT
   ${DOCKER_RUN} \
   --name callable_regions_${BAM_PREFIX} \
   -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
-  "time sambamba view -t ${NCPU} -F \"mapping_quality>0 and paired and (not unmapped)\" \
-  -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
+  "time sambamba view -t ${NCPU} -F \"mapping_quality>0 and paired and (not unmapped)\" -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
   bedtools bamtobed | \
   bedtools merge > ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed && \
-  time sambamba view -t ${NCPU} -F \"mapping_quality>0 and paired and (not unmapped)\" \
-  -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
+  time sambamba view -t ${NCPU} -F \"mapping_quality>0 and paired and (not unmapped)\" -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
   bedtools genomecov -split -ibam stdin -bga -max 500 | \
-  awk '$4>0' > ${SOUTDocker}/reports/${BAMFILE}.genomecov.bed && \
-  awk \'{print \$1}' ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed
-  "
+  awk \'\$4>0\' > ${SOUTDocker}/reports/${BAMFILE}.genomecov.bed && \
+  awk \'{print \$1}\' ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed"
   sleep 1s
   docker logs callable_regions_${BAM_PREFIX} >> ${LOGFILE}.log
   docker rm callable_regions_${BAM_PREFIX}
