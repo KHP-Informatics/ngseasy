@@ -479,6 +479,7 @@ if [[ ! -e "${BAMOUTi}" ]]; then
  docker rm -f bam_recab_${BAM_PREFIX}  
 else
    logger_ngseasy "[${NGSEASY_STEP}]:Already run bam recab..Skipping" ${LOGFILE}
+   sleep 1s
 fi
 
 ########################################################################################################
@@ -564,9 +565,10 @@ if [[ ! -e "${BAMOUTi}" ]]; then
 #
  docker logs gatk_recab_${BAM_PREFIX} >> ${LOGFILE}.log
  docker rm -f gatk_recab_${BAM_PREFIX} 
-  
+
 else
    logger_ngseasy "[${NGSEASY_STEP}]:Already run bam recab..Skipping" ${LOGFILE}
+   sleep 1s
 fi
 
 ## exit if cant recognise options
