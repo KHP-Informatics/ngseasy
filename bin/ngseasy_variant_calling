@@ -511,7 +511,7 @@ if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]]  && [[ ! -e  "${SOU
 
   ${DOCKER_RUN} \
   --name callable_regions_${BAM_PREFIX} \
-  -t compbio/ngseasy-base:{NGSEASYVERSION} /bin/bash -c \
+  -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
   "sambamba view -t ${NCPU} \
   -F \"mapping_quality>0 and paired and (not unmapped)\" \
   -f bam ${SOUTDocker}/alignments/${BAMFILE} | bedtools bamtobed | bedtools merge > ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed && \
@@ -590,10 +590,6 @@ if [ "${VARCALLER}" == "freebayes" ]
 #logs
 docker logs Freebayes_${BAM_PREFIX} >> ${LOGFILE}.log
 docker rm Freebayes_${BAM_PREFIX}
-  
-# copy vcf to cohort vcf directory
-logger_ngseasy "[${NGSEASY_STEP}]:copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
-cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
 
 # logs
 logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFILE}
@@ -644,9 +640,6 @@ elif [ "${VARCALLER}" == "platypus" ]
       bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
 
-      # copy vcf to cohort vcf directory
-      cp -v ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
-
     else
 
       ${DOCKER_RUN} \
@@ -683,10 +676,6 @@ elif [ "${VARCALLER}" == "platypus" ]
 #logs
 docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
 docker rm platypus_${BAM_PREFIX}
-
-# copy vcf to cohort vcf directory
-logger_ngseasy "[${NGSEASY_STEP}]:copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
-cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
 
 #logs 
 logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Platypus "  ${LOGFILE}
@@ -755,14 +744,7 @@ elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
 
 #logs
   docker logs UnifiedGenotyper_${SAMPLE_ID} >> ${LOGFILE}.log
-
   docker rm UnifiedGenotyper_${SAMPLE_ID}
-
-  # copy vcf to cohort vcf directory
-  cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
-
-  logger_ngseasy " copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
-
   logger_ngseasy " END Variant Calling using UnifiedGenotyper "  ${LOGFILE}
 
 #-----------------------------------------------------------------------------#
@@ -828,14 +810,7 @@ then
 
 #logs
   docker logs HaplotypeCaller_${SAMPLE_ID} >> ${LOGFILE}.log
-
   docker rm HaplotypeCaller_${SAMPLE_ID}
-
-  # copy vcf to cohort vcf directory
-  cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
-
-  logger_ngseasy " copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
-
   logger_ngseasy " END Variant Calling using HaplotypeCaller "  ${LOGFILE}
 
 #-------------------------------------------------------------------------------------------#
@@ -1223,7 +1198,7 @@ params_yaml="/home/pipeman/ngseasy_scripts/ensemble.fast.calling.params.yaml"
   -P \
   --name bcbio-variation_${SAMPLE_ID} \
   --volumes-from volumes_container \
-  -t compbio/ngseasy-bcbio-variation:${VERSION} java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/bcbio/bcbio.variation-0.1.7-standalone.jar variant-ensemble \
+  -t compbio/ngseasy-bcbio-variation:${NGSEASYVERSION} java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/bcbio/bcbio.variation-0.1.7-standalone.jar variant-ensemble \
   ${params_yaml} \
   /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
   ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.ensemble.vcf \

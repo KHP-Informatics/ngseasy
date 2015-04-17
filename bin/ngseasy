@@ -313,7 +313,7 @@ do
 #
 logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${config_run_log}
 
-	/bin/bash  ngseasy_fastqc -c ${MYBATCH} -d ${project_directory};	
+	/bin/bash  ngseasy_fastqc -c ${MYBATCH} -d ${project_directory}  2>&1 | tee -a  ${config_run_log}.log	
 
 ## get number of jobs running in background
 #
@@ -336,11 +336,16 @@ done
 
 ## remove docker Exited containers ####
 #
+ndockerjobs=`docker ps -a | grep fastqc | grep Exited | wc -l`;
 
-logger_ngseasy "[ngseasy]:cleaning up compbio/ngseasy-fastqc:${NGSEASYVERSION} container images" ${config_run_log}	
-logger_ngseasy "[ngseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${config_run_log}
+if [ $ndockerjobs -gt 0 ]; then 
 
-docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
+  logger_ngseasy "[ngseasy]:cleaning up compbio/ngseasy-fastqc:${NGSEASYVERSION} container images" ${config_run_log}  
+  logger_ngseasy "[ngseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${config_run_log}
+  
+  docker rm -f $(docker ps -a | grep fastqc  | grep Exited | awk '{print $1}')
+
+fi
 
 logger_ngseasy "[ngseasy]:END ngseasy_fastqc" ${config_run_log} 
 
@@ -386,8 +391,10 @@ logger_ngseasy  "[ngseasy]:Calling ngseasy_bsqr"  ${config_run_log}
 ##################################################################################
 ## Variant calling
 ###################################################################################
-#logger_ngseasy  "[ngseasy]:Calling ngseasy_variant_calling"  ${config_run_log}
-#	/bin/bash ngseasy_variant_calling -c ${config_tsv} -d ${project_directory} 2>&1 | tee -a  ${config_run_log}.log
+
+logger_ngseasy  "[ngseasy]:Calling ngseasy_variant_calling"  ${config_run_log}
+
+  /bin/bash ngseasy_variant_calling -c ${config_tsv} -d ${project_directory} 2>&1 | tee -a  ${config_run_log}.log
 
 ###################################################################################
 ## Alignment statistics
