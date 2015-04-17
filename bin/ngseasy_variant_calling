@@ -537,6 +537,9 @@ else
 
 fi
 
+# tmp: stop here until this works
+exit 1
+
 ########################################################################################################
 ## fix_ambiguous
 ## Custom utils from bcbio and more This needs to be in Dockerfile
