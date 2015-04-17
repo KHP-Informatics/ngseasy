@@ -524,6 +524,9 @@ if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]] && [[ ! -e  "${SOUT
   awk '$4>0' > ${SOUTDocker}/reports/${BAMFILE}.genomecov.bed && \
   awk \'{print \$1}' ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed
   "
+  sleep 1s
+  docker logs callable_regions_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm callable_regions_${BAM_PREFIX}
 
 elif [[ -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]]  && [[ -e  "${SOUT}/reports/${BAMFILE}.genomecov.bed"  ]]; then
 
