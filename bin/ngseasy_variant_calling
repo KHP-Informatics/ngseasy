@@ -519,16 +519,18 @@ if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]] && [[ ! -e  "${SOUT
   bedtools bamtobed | \
   bedtools merge > ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed && \
   time sambamba view -t ${NCPU} -F \"mapping_quality>0 and paired and (not unmapped)\" -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
-  bedtools genomecov -split -ibam stdin -bga -max 500 | awk \'$4>0\' > ${SOUTDocker}/reports/${BAMFILE}.genomecov.bed"
+  bedtools genomecov -split -ibam stdin -bga -max 500 | awk '\$4>0' > ${SOUTDocker}/reports/${BAMFILE}.genomecov.bed"
   sleep 1s
   docker logs callable_regions_${BAM_PREFIX} >> ${LOGFILE}.log
   docker rm callable_regions_${BAM_PREFIX}
 
+# move on
 elif [[ -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]]  && [[ -e  "${SOUT}/reports/${BAMFILE}.genomecov.bed"  ]]; then
 
   logger_ngseasy "[${NGSEASY_STEP}]:Mapped Reads [${SOUT}/reports/${BAMFILE}.mapped.reads.bed]" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Callable Regions [${SOUT}/reports/${BAMFILE}.genomecov.bed]" ${LOGFILE}
 
+# cant find shit
 else
   logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find Mapped Reads [${SOUT}/reports/${BAMFILE}.mapped.reads.bed] " ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find Callable Regions [${SOUT}/reports/${BAMFILE}.genomecov.bed]" ${LOGFILE}
