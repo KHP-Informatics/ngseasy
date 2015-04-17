@@ -512,6 +512,7 @@ if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]] && [[ ! -e  "${SOUT
   logger_ngseasy "[${NGSEASY_STEP}]:Generating Mapped Reads BED File and Callable Regions File" ${LOGFILE}
 
   ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name callable_regions_${BAM_PREFIX} \
   -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
   "time sambamba view -t ${NCPU} -F \"mapping_quality>0 and paired and (not unmapped)\" -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
@@ -571,6 +572,7 @@ if [ "${VARCALLER}" == "freebayes" ]
   logger_ngseasy " START Variant Calling using freebayes-parallel " ${LOGFILE}
 
   ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name Freebayes_${BAM_PREFIX} \
   -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
   "time bamtools coverage -in ${SOUTDocker}/${BAMFILE} | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${REFFASTA} 1000 > ${REFFASTA}.1000.regions && \
@@ -618,6 +620,7 @@ elif [ "${VARCALLER}" == "platypus" ]
     # for exome/whole genome data no duplicate filtering
 
     ${DOCKER_RUN} \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     --name platypus_${SAMPLE_ID} \
     -t compbio/ngseasy-platypus:${NGSEASYVERSION} /bin/bash -c \
     "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
@@ -655,6 +658,7 @@ elif [ "${VARCALLER}" == "platypus" ]
     else
 
       ${DOCKER_RUN} \
+      -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
       --name platypus_${BAM_PREFIX} \
       -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c \
       "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
@@ -707,6 +711,7 @@ elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
   logger_ngseasy " START GATK UnifiedGenotyper " ${LOGFILE}
 
   ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name UnifiedGenotyper_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
   "time java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar \
@@ -770,7 +775,8 @@ then
  
   logger_ngseasy " START Variant Calling using HaplotypeCaller "  ${LOGFILE}
   
-  ${DOCKER_RUN} 
+  ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name HaplotypeCaller_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
   "time java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar \
