@@ -422,8 +422,8 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
   if [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam" ]]; then
 
     BAMIN="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam"
-    BAMOUT="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam-recab.bam"
-    BAMOUTi="${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam-recab.bam"
+    BAMOUT="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam-bsqr.bam"
+    BAMOUTi="${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam-bsqr.bam"
 
 # names
     logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM INPUT [${BAMIN}] " ${LOGFILE}
@@ -435,8 +435,8 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
     logger_ngseasy "[${NGSEASY_STEP}]:Using [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam]" ${LOGFILE}
     
     BAMIN="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam"
-    BAMOUT="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-recab.bam"
-    BAMOUTi="${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-recab.bam"
+    BAMOUT="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-bsqr.bam"
+    BAMOUTi="${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-bsqr.bam"
 
     logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM INPUT [${BAMIN}] " ${LOGFILE}
     logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM OUTPUT [${BAMOUT}] " ${LOGFILE}
@@ -494,8 +494,8 @@ elif [[ "${BSQR}" == "gatk-bsqr" ]]; then
   if [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam" ]]; then
 
     BAMIN="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam"
-    BAMOUT="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.gatk-recab.bam"
-    BAMOUTi="${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.gatk-recab.bam"
+    BAMOUT="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.gatk-bsqr.bam"
+    BAMOUTi="${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.gatk-bsqr.bam"
 
     logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM INPUT [${BAMIN}] " ${LOGFILE}
     logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM OUTPUT [${BAMOUT}] " ${LOGFILE}
@@ -506,8 +506,8 @@ elif [[ "${BSQR}" == "gatk-bsqr" ]]; then
     logger_ngseasy "[${NGSEASY_STEP}]:Using [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam]" ${LOGFILE}
     
     BAMIN="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam"
-    BAMOUT="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-recab.bam"
-    BAMOUTi="${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-recab.bam"
+    BAMOUT="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-bsqr.bam"
+    BAMOUTi="${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-bsqr.bam"
 
     logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM INPUT [${BAMIN}] " ${LOGFILE}
     logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM OUTPUT [${BAMOUT}] " ${LOGFILE}
@@ -567,7 +567,7 @@ if [[ ! -e "${BAMOUTi}" ]]; then
  docker rm -f gatk_recab_${BAM_PREFIX} 
 
 else
-   logger_ngseasy "[${NGSEASY_STEP}]:Already run bam recab..Skipping" ${LOGFILE}
+   logger_ngseasy "[${NGSEASY_STEP}]:Already run GATK BSQR..Skipping" ${LOGFILE}
    sleep 1s
 fi
 
