@@ -322,10 +322,10 @@ logger_ngseasy "[${NGSEASY_STEP}]:Docker Output directory [${SOUTDocker}]" ${LOG
 #
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
-  logger_ngseasy "[${NGSEASY_STEP}]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
   exit 1
 else 
-  logger_ngseasy "[${NGSEASY_STEP}]: Setting OUTPUT directory to [${SOUT}]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting OUTPUT directory to [${SOUT}]" ${LOGFILE}
 fi
 
 ########################################################################################################
