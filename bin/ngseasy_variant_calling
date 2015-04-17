@@ -420,7 +420,7 @@ if [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "no-bsqr" ]]; then
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
 
 # exit if no BAMFILE
-  if [[ ! -e "${BAMFILE}" ]]; then
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
     logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
     sleep 1s
     exit 1
@@ -437,7 +437,7 @@ elif [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
 
   # exit if no BAMFILE
-  if [[ ! -e "${BAMFILE}" ]]; then
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
     logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
     sleep 1s
     exit 1
@@ -454,7 +454,7 @@ elif [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "gatk-bsqr" ]]; then
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
 
     # exit if no BAMFILE
-  if [[ ! -e "${BAMFILE}" ]]; then
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
     logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
     sleep 1s
     exit 1
@@ -471,7 +471,7 @@ elif [[ "${REALN}" == "bam-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
 
   # exit if no BAMFILE
-  if [[ ! -e "${BAMFILE}" ]]; then
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
     logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
     sleep 1s
     exit 1
@@ -488,7 +488,7 @@ elif [[ "${REALN}" == "gatk-realn" ]] && [[ "${BSQR}" == "gatk-bsqr" ]]; then
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
 
    # exit if no BAMFILE
-  if [[ ! -e "${BAMFILE}" ]]; then
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
     logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
     sleep 1s
     exit 1
