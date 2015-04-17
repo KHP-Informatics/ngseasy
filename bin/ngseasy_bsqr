@@ -424,9 +424,17 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
     BAMIN="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam"
     BAMOUT="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam-recab.bam"
 
+# exit if file already exists
+    if [[ ! -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam-recab.bam" ]]; then
+      logger_ngseasy "[${NGSEASY_STEP}]:Skipping Base quality score recalibration.[${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam-recab.bam]" ${LOGFILE}
+      sleep 1s
+      exit
+    fi
+    
+# names
     logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM INPUT [${BAMIN}] " ${LOGFILE}
     logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM OUTPUT [${BAMOUT}] " ${LOGFILE}
-
+# use dupemk if files dont 
   elif [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam" ]]; then
 
     logger_ngseasy "[${NGSEASY_STEP}]:Can not find [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam] " ${LOGFILE}

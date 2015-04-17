@@ -521,15 +521,18 @@ if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]]  && [[ ! -e  "${SOU
   awk \'{print \$1}' ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed
   "
 
-elif [[ -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]]  && [[ -e  "${SOUT}/reports/${BAMFILE}.genomecov.bed"  ]]
+elif [[ -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]]  && [[ -e  "${SOUT}/reports/${BAMFILE}.genomecov.bed"  ]]; then
+
   logger_ngseasy "[${NGSEASY_STEP}]:Mapped Reads [${SOUT}/reports/${BAMFILE}.mapped.reads.bed]" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Callable Regions [${SOUT}/reports/${BAMFILE}.genomecov.bed]" ${LOGFILE}
+
 else
   logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find Mapped Reads [${SOUT}/reports/${BAMFILE}.mapped.reads.bed] " ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find Callable Regions [${SOUT}/reports/${BAMFILE}.genomecov.bed]" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Exiting" ${LOGFILE}
   sleep 1s
   exit 1
+
 fi
 
 ########################################################################################################
