@@ -608,7 +608,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFI
 
 ########################################################################################################
 # Platypus #
-#-----------------------------------------------------------------------------#
+
 elif [ "${VARCALLER}" == "platypus" ]
   then
 
@@ -627,7 +627,7 @@ elif [ "${VARCALLER}" == "platypus" ]
     -t compbio/ngseasy-platypus:${NGSEASYVERSION} /bin/bash -c \
     "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
-      --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
+      --bamFiles=${BAMFILE} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --assemble=1 \
@@ -665,7 +665,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c \
       "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
-      --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
+      --bamFiles=${BAMFILE} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --assemble=1 \
@@ -720,7 +720,7 @@ elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
   -T UnifiedGenotyper \
   -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
   -nct ${NCPU} \
-  -I ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
+  -I ${BAMFILE} \
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
@@ -785,7 +785,7 @@ then
   -T HaplotypeCaller \
   -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
   -nct ${NCPU} \
-  -I ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
+  -I ${BAMFILE} \
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
@@ -1233,7 +1233,8 @@ fi
 #------------------------------------------------------------------------------------------#
 # END ALL
 #------------------------------------------------------------------------------------------#
-  logger_ngseasy " END Ensembl Variant Calling using Freebayes + Platypus "  ${LOGFILE}
+  logger_ngseasy " END Ensembl Variant Calling  "  ${LOGFILE}
+  sleep 1s
 
 ######################################################################################################## 
 ## permissions
