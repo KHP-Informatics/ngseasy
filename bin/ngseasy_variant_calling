@@ -345,11 +345,15 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
   KNOWN_SNPS_OMNI=""
   KNOWN_SNPS_b138=""
   DBSNP_RECAB=""
+  GENOMEFILE=""
+  FAI=""
 
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
   REFFASTA="${REFDIR}/human_g1k_v37.fasta"
   DBSNP_RECAB="${REFDIR}/dbsnp_138.b37.recab"
+  GENOMEFILE="${REFDIR}/b37.genome"
+  FAI="${REFDIR}/human_g1k_v37.fasta.fai"
 
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
@@ -374,11 +378,15 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   KNOWN_SNPS_OMNI=""
   KNOWN_SNPS_b138=""
   DBSNP_RECAB=""
+  GENOMEFILE=""
+  FAI=""
 
   REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
   REFFASTA="${REFDIR}/ucsc.hg19.fasta"
   DBSNP_RECAB="${REFDIR}/dbsnp_138.hg19.recab"
+  GENOMEFILE="${REFDIR}/hg19.genome"
+  FAI="${REFDIR}/ucsc.hg19.fasta.fai"
 
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
@@ -578,7 +586,7 @@ if [ "${VARCALLER}" == "freebayes" ]
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name Freebayes_${BAM_PREFIX} \
   -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-  "time bamtools coverage -in ${SOUTDocker}/${BAMFILE} | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${REFFASTA} 1000 > ${REFFASTA}.1000.regions && \
+  "time bedtools genomecov -ibam ${SOUTDocker}/alignments/${BAMFILE} -g ${GENOMEFILE} -d | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${FAI} 1000 > ${REFFASTA}.1000.regions && \
   time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${REFFASTA}.1000.regions ${NCPU} \
   -f ${REFFASTA} \
   -b ${SOUTDocker}/alignments/${BAMFILE} \
