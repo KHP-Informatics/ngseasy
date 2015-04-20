@@ -581,13 +581,37 @@ if [ "${VARCALLER}" == "freebayes" ]
   then
 
   logger_ngseasy " START Variant Calling using freebayes-parallel " ${LOGFILE}
+# 60GB RAM and FAILS
+#  ${DOCKER_RUN} \
+#  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+#  --name Freebayes_${BAM_PREFIX} \
+#  -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
+#  "time bedtools genomecov -split -ibam ${SOUTDocker}/alignments/${BAMFILE} -g ${GENOMEFILE} -d | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${FAI} 1000 > ${REFFASTA}.1000.regions && \
+#  time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${REFFASTA}.1000.regions ${NCPU} \
+#  -f ${REFFASTA} \
+#  -b ${SOUTDocker}/alignments/${BAMFILE} \
+#  --min-coverage 10 \
+#  --min-mapping-quality 20 \
+#  --min-base-quality 20 \
+#  --min-repeat-entropy 1 \
+#  --experimental-gls \
+#  --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
+#  time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+#  vcffilter -f 'QUAL > 5' -s | \
+#  fix_ambiguous | \
+#  vcfallelicprimitives --keep-geno | \
+#  vcffixup - | \
+#  vcfstreamsort | \
+#  vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+#  vcfuniqalleles | \
+#  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+#  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
 
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name Freebayes_${BAM_PREFIX} \
   -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-  "time bedtools genomecov -ibam ${SOUTDocker}/alignments/${BAMFILE} -g ${GENOMEFILE} -d | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${FAI} 1000 > ${REFFASTA}.1000.regions && \
-  time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${REFFASTA}.1000.regions ${NCPU} \
+  "time /usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${FAI} 10000) ${NCPU} \
   -f ${REFFASTA} \
   -b ${SOUTDocker}/alignments/${BAMFILE} \
   --min-coverage 10 \
