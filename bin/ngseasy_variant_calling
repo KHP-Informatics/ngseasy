@@ -620,7 +620,8 @@ elif [ "${VARCALLER}" == "platypus" ]
     logger_ngseasy " NGS_TYPE set to [${NGS_TYPE}] Targeted/WEX, so no duplicate filtering  "  ${LOGFILE}
 
     # for exome/whole genome data no duplicate filtering
-
+    # note plat used NR instead of DP
+    
     ${DOCKER_RUN} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     --name platypus_${BAM_PREFIX} \
@@ -635,6 +636,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       --minReads=10 \
       --minMapQual=20 \
       --minBaseQual=20 \
+      --maxSize 5000 \
       --hapScoreThreshold 10 \
       --scThreshold 0.99 \
       --filteredReadsFrac 0.9 \
@@ -673,6 +675,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       --minReads=10 \
       --minMapQual=20 \
       --minBaseQual=20 \
+      --maxSize 5000 \
       --hapScoreThreshold 10 \
       --scThreshold 0.99 \
       --filteredReadsFrac 0.9 \
