@@ -623,7 +623,7 @@ elif [ "${VARCALLER}" == "platypus" ]
 
     ${DOCKER_RUN} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    --name platypus_${SAMPLE_ID} \
+    --name platypus_${BAM_PREFIX} \
     -t compbio/ngseasy-platypus:${NGSEASYVERSION} /bin/bash -c \
     "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
