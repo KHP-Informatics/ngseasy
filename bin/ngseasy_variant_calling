@@ -581,7 +581,7 @@ if [ "${VARCALLER}" == "freebayes" ]
   "time bamtools coverage -in ${SOUTDocker}/${BAMFILE} | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${REFFASTA} 1000 > ${REFFASTA}.1000.regions && \
   time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${REFFASTA}.1000.regions ${NCPU} \
   -f ${REFFASTA} \
-  -b ${SOUTDocker}/${BAMFILE} \
+  -b ${SOUTDocker}/alignments/${BAMFILE} \
   --min-coverage 10 \
   --min-mapping-quality 20 \
   --min-base-quality 20 \
@@ -627,7 +627,7 @@ elif [ "${VARCALLER}" == "platypus" ]
     -t compbio/ngseasy-platypus:${NGSEASYVERSION} /bin/bash -c \
     "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
-      --bamFiles=${BAMFILE} \
+      --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --assemble=1 \
@@ -665,7 +665,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c \
       "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
-      --bamFiles=${BAMFILE} \
+      --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --assemble=1 \
@@ -720,7 +720,7 @@ elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
   -T UnifiedGenotyper \
   -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
   -nct ${NCPU} \
-  -I ${BAMFILE} \
+  -I ${SOUTDocker}/alignments/${BAMFILE} \
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
@@ -785,7 +785,7 @@ then
   -T HaplotypeCaller \
   -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
   -nct ${NCPU} \
-  -I ${BAMFILE} \
+  -I ${SOUTDocker}/alignments/${BAMFILE} \
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
