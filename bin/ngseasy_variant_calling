@@ -577,7 +577,7 @@ fi
 #user  34m54.756s
 #sys 1m44.810s
 
-# awk '{print $1":"$2".."$3}' BAM > test.regions
+# awk '{print $1":"$2".."$3}' BAM > test.regions this Fing works woop woop
 
 if [ "${VARCALLER}" == "freebayes" ]
   then
@@ -608,14 +608,14 @@ if [ "${VARCALLER}" == "freebayes" ]
 #  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
 #  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
 
-
-#   "time /usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${FAI} 10000) ${NCPU} \
+# quick fix to get mapped regrions file for freebayes-parallel
+awk '{print \$1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.mapped.regions
 
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name Freebayes_${BAM_PREFIX} \
   -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-  "time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${SOUTDocker}/reports/test.regions ${NCPU} \
+  "time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${SOUTDocker}/reports/${BAMFILE}.mapped.regions ${NCPU} \
   -f ${REFFASTA} \
   -b ${SOUTDocker}/alignments/${BAMFILE} \
   --min-coverage 10 \
