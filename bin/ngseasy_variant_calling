@@ -332,7 +332,8 @@ fi
 ########################################################################################################
 ## Select Genome Build and files
 #
-logger_ngseasy "[${NGSEASY_STEP}]:Checking genome selected"  ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:Checking selected Genome"  ${LOGFILE}
+sleep 1s
 
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
 # reset options as getting bleed through
@@ -392,7 +393,8 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   logger_ngseasy "[${NGSEASY_STEP}]:KNOWN_INDELS [${KNOWN_INDELS}]" ${LOGFILE}
 
 else
-  logger_ngseasy "[${NGSEASY_STEP}]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:No genome selected. Exiting. Choose one of [b37] or [hg19]. [b38 coming soon]"  ${LOGFILE}
+  sleep 1s
   exit 1
 fi
 
