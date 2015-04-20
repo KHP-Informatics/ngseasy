@@ -594,7 +594,6 @@ if [ "${VARCALLER}" == "freebayes" ]
 #  --min-mapping-quality 20 \
 #  --min-base-quality 20 \
 #  --min-repeat-entropy 1 \
-#  --experimental-gls \
 #  --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
 #  time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
 #  vcffilter -f 'QUAL > 5' -s | \
@@ -618,7 +617,6 @@ if [ "${VARCALLER}" == "freebayes" ]
   --min-mapping-quality 20 \
   --min-base-quality 20 \
   --min-repeat-entropy 1 \
-  --experimental-gls \
   --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
   time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
   vcffilter -f 'QUAL > 5' -s | \
