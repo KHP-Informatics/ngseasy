@@ -577,6 +577,8 @@ fi
 #user  34m54.756s
 #sys 1m44.810s
 
+# awk '{print $1":"$2".."$3}' BAM > test.regions
+
 if [ "${VARCALLER}" == "freebayes" ]
   then
 
@@ -606,11 +608,14 @@ if [ "${VARCALLER}" == "freebayes" ]
 #  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
 #  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
 
+
+#   "time /usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${FAI} 10000) ${NCPU} \
+
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name Freebayes_${BAM_PREFIX} \
   -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-  "time /usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${FAI} 10000) ${NCPU} \
+  "time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${SOUTDocker}/alignments/test.regions ${NCPU} \
   -f ${REFFASTA} \
   -b ${SOUTDocker}/alignments/${BAMFILE} \
   --min-coverage 10 \
