@@ -332,7 +332,8 @@ fi
 ########################################################################################################
 ## Select Genome Build and files
 #
-logger_ngseasy "[${NGSEASY_STEP}]:Checking genome selected"  ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:Checking selected Genome"  ${LOGFILE}
+sleep 1s
 
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
 # reset options as getting bleed through
@@ -392,7 +393,8 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   logger_ngseasy "[${NGSEASY_STEP}]:KNOWN_INDELS [${KNOWN_INDELS}]" ${LOGFILE}
 
 else
-  logger_ngseasy "[${NGSEASY_STEP}]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:No genome selected. Exiting. Choose one of [b37] or [hg19]. [b38 coming soon]"  ${LOGFILE}
+  sleep 1s
   exit 1
 fi
 
@@ -579,7 +581,7 @@ if [ "${VARCALLER}" == "freebayes" ]
   "time bamtools coverage -in ${SOUTDocker}/${BAMFILE} | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${REFFASTA} 1000 > ${REFFASTA}.1000.regions && \
   time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${REFFASTA}.1000.regions ${NCPU} \
   -f ${REFFASTA} \
-  -b ${SOUTDocker}/${BAMFILE} \
+  -b ${SOUTDocker}/alignments/${BAMFILE} \
   --min-coverage 10 \
   --min-mapping-quality 20 \
   --min-base-quality 20 \
@@ -606,7 +608,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFI
 
 ########################################################################################################
 # Platypus #
-#-----------------------------------------------------------------------------#
+
 elif [ "${VARCALLER}" == "platypus" ]
   then
 
@@ -618,14 +620,15 @@ elif [ "${VARCALLER}" == "platypus" ]
     logger_ngseasy " NGS_TYPE set to [${NGS_TYPE}] Targeted/WEX, so no duplicate filtering  "  ${LOGFILE}
 
     # for exome/whole genome data no duplicate filtering
-
+    # note plat used NR instead of DP
+    
     ${DOCKER_RUN} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    --name platypus_${SAMPLE_ID} \
+    --name platypus_${BAM_PREFIX} \
     -t compbio/ngseasy-platypus:${NGSEASYVERSION} /bin/bash -c \
     "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
-      --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
+      --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --assemble=1 \
@@ -633,6 +636,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       --minReads=10 \
       --minMapQual=20 \
       --minBaseQual=20 \
+      --maxSize 5000 \
       --hapScoreThreshold 10 \
       --scThreshold 0.99 \
       --filteredReadsFrac 0.9 \
@@ -663,7 +667,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c \
       "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
-      --bamFiles=${SOUTDocker}/alignments/${BAM_PREFIX}.recal.bam \
+      --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --assemble=1 \
@@ -671,6 +675,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       --minReads=10 \
       --minMapQual=20 \
       --minBaseQual=20 \
+      --maxSize 5000 \
       --hapScoreThreshold 10 \
       --scThreshold 0.99 \
       --filteredReadsFrac 0.9 \
@@ -718,7 +723,7 @@ elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
   -T UnifiedGenotyper \
   -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
   -nct ${NCPU} \
-  -I ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
+  -I ${SOUTDocker}/alignments/${BAMFILE} \
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
@@ -783,7 +788,7 @@ then
   -T HaplotypeCaller \
   -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
   -nct ${NCPU} \
-  -I ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
+  -I ${SOUTDocker}/alignments/${BAMFILE} \
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
@@ -1231,7 +1236,8 @@ fi
 #------------------------------------------------------------------------------------------#
 # END ALL
 #------------------------------------------------------------------------------------------#
-  logger_ngseasy " END Ensembl Variant Calling using Freebayes + Platypus "  ${LOGFILE}
+  logger_ngseasy " END Ensembl Variant Calling  "  ${LOGFILE}
+  sleep 1s
 
 ######################################################################################################## 
 ## permissions
