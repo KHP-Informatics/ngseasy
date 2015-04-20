@@ -1,0 +1,2 @@
+#!/bin/bash
+awk -F$'\t' -v OFS='\t' '{if ($0 !~ /^#/) gsub(/[KMRYSWBVHDX]/, "N", $4) } {print}'

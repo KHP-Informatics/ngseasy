@@ -25,7 +25,8 @@ RUN mkdir /usr/local/pipeline/bcbio  && \
   sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' ~/.bashrc && \
   cp -v bcbio.variation-0.2.3-standalone.jar /usr/local/bin/
 
-#-------------------------------PERMISSIONS--------------------------
+ADD fix_ambiguous /usr/local/bin/
+#-------------------------------PERMISSIONS-------------------------
 RUN chmod -R 777 /usr/local/pipeline
 RUN chown -R pipeman:ngsgroup /usr/local/pipeline
 
