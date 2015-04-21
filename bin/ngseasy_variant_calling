@@ -513,9 +513,9 @@ else
 fi
 
 ##################################################
-## callable regions
+## callable regions - mapped and has depth
 ##
-  logger_ngseasy "[${NGSEASY_STEP}]:Callable Regions" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Get Callable Regions" ${LOGFILE}
 
 if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]] && [[ ! -e  "${SOUT}/reports/${BAMFILE}.genomecov.bed"  ]]; then
   
@@ -553,6 +553,13 @@ fi
 # tmp: stop here until this works
 # exit 1
 
+# quick fix to get mapped regrions file for freebayes-parallel
+  logger_ngseasy "[${NGSEASY_STEP}]: START Variant Calling using freebayes-parallel " ${LOGFILE}
+  
+awk '{print $1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.mapped.regions
+awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ','  > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+# awk '{print \$1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | awk 'BEGIN{ORS=","}1' > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+
 ########################################################################################################
 ## fix_ambiguous
 ## Custom utils from bcbio and more This needs to be in Dockerfile
@@ -582,7 +589,7 @@ fi
 if [ "${VARCALLER}" == "freebayes" ]
   then
 
-  logger_ngseasy " START Variant Calling using freebayes-parallel " ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using freebayes-parallel " ${LOGFILE}
 
 # 60GB RAM and FAILS
 #  ${DOCKER_RUN} \
@@ -608,11 +615,6 @@ if [ "${VARCALLER}" == "freebayes" ]
 #  vcfuniqalleles | \
 #  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
 #  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
-
-# quick fix to get mapped regrions file for freebayes-parallel
-awk '{print $1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.mapped.regions
-awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ','  > ${SOUT}/reports/${BAMFILE}.platypus.intervals
-# awk '{print \$1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | awk 'BEGIN{ORS=","}1' > ${SOUT}/reports/${BAMFILE}.platypus.intervals
 
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -653,12 +655,12 @@ logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFI
 elif [ "${VARCALLER}" == "platypus" ]
   then
 
-  logger_ngseasy " START Variant Calling using Platypus "  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using Platypus "  ${LOGFILE}
 
   if [ "${NGS_TYPE}" == "TGS" ] || [ "${NGS_TYPE}" == "WEX" ]
     then
 
-    logger_ngseasy " NGS_TYPE set to [${NGS_TYPE}] Targeted/WEX, so no duplicate filtering  "  ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:NGS_TYPE set to [${NGS_TYPE}] Targeted/WEX, so no duplicate filtering  "  ${LOGFILE}
 
     # for exome/whole genome data no duplicate filtering
     # note plat used NR instead of DP
@@ -761,7 +763,7 @@ elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
 # requires /alignments/${BAM_PREFIX}.filtered.bam
 
   # UnifiedGenotyper EMIT_ALL_CONFIDENT_SITES
-  logger_ngseasy " START GATK UnifiedGenotyper " ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:START GATK UnifiedGenotyper " ${LOGFILE}
 
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -826,7 +828,7 @@ elif [ "${VARCALLER}" == "HaplotypeCaller" ]
 then
   ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
  
-  logger_ngseasy " START Variant Calling using HaplotypeCaller "  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller "  ${LOGFILE}
   
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -892,10 +894,10 @@ then
 elif [ "${VARCALLER}" == "ensemble" ]
 then
 
-  logger_ngseasy " START Ensembl Variant Calling using Freebayes + Platypus + UnifiedGenotyper + HaplotypeCaller "  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:START Ensembl Variant Calling using Freebayes + Platypus + UnifiedGenotyper + HaplotypeCaller "  ${LOGFILE}
   
 ## freebayes
-logger_ngseasy " START Variant Calling using Freebayes " ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using Freebayes " ${LOGFILE}
   
 VARCALLER="freebayes"
 
@@ -922,9 +924,9 @@ VARCALLER="freebayes"
   # copy vcf to cohort vcf directory
   cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
 
-  logger_ngseasy " copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
 
-  logger_ngseasy " END Variant Calling using Freebayes "  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFILE}
 
 ## platypus
 VARCALLER="platypus"
@@ -934,7 +936,7 @@ VARCALLER="platypus"
 if [ "${NGS_TYPE}" == "TGS" ] || [ "${NGS_TYPE}" == "WEX" ]
 then
   
-    logger_ngseasy " NGS_TYPE is Targeted/WEX so no duplicate filtering  "  ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:NGS_TYPE is Targeted/WEX so no duplicate filtering  "  ${LOGFILE}
     # for exome/whole genome data no duplicate filtering
   docker run \
   -P \
@@ -991,9 +993,9 @@ else
   # copy vcf to cohort vcf directory
   cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
 
-  logger_ngseasy " copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
 
-  logger_ngseasy " END Variant Calling using Platypus "  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Platypus "  ${LOGFILE}
 fi
 
 # REMOVED UG In favour of haplotype based callers ##################################################################
@@ -1060,7 +1062,7 @@ fi
   ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
  VARCALLER="HaplotypeCaller"
 
-  logger_ngseasy " START Variant Calling using HaplotypeCaller "  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller "  ${LOGFILE}
 
   docker run \
   -P \
