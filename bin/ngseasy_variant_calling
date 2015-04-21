@@ -999,65 +999,6 @@ else
 fi
 
 # REMOVED UG In favour of haplotype based callers ##################################################################
-## UnifiedGenotyper EMIT_ALL_CONFIDENT_SITES
-#VARCALLER="UnifiedGenotyper"
-#
-#  logger_ngseasy " START GATK UnifiedGenotyper " ${LOGFILE}
-#
-#  docker run \
-#  -P \
-#  --name UnifiedGenotyper_${SAMPLE_ID} \
-#  --volumes-from volumes_container \
-#  -t compbio/ngseasy-gatk:${VERSION} \
-#  java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar \
-#  -T UnifiedGenotyper \
-#  -R /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-#  -nct ${NCPU} \
-#  -I ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
-#  -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
-#  -stand_call_conf 30 \
-#  -stand_emit_conf 10 \
-#  --dbsnp ${KNOWN_SNPS_b138} \
-#  -dcov 250 \
-#  --unsafe ALL \
-#  --genotype_likelihoods_model BOTH \
-#  --genotyping_mode DISCOVERY \
-#  --output_mode ${GTMODEGATK} \
-#  --annotation AlleleBalance \
-#  --annotation BaseCounts \
-#  --annotation BaseQualityRankSumTest \
-#  --annotation ChromosomeCounts \
-#  --annotation ClippingRankSumTest \
-#  --annotation Coverage \
-#  --annotation FisherStrand \
-#  --annotation GCContent \
-#  --annotation HaplotypeScore \
-#  --annotation HomopolymerRun \
-#  --annotation InbreedingCoeff \
-#  --annotation LikelihoodRankSumTest \
-#  --annotation LowMQ \
-#  --annotation MappingQualityRankSumTest \
-#  --annotation MappingQualityZero \
-#  --annotation QualByDepth \
-#  --annotation RMSMappingQuality \
-#  --annotation ReadPosRankSumTest \
-#  --annotation SpanningDeletions \
-#  --annotation TandemRepeatAnnotator \
-#  --annotation VariantType;
-#
-#logs
-#  docker logs UnifiedGenotyper_${SAMPLE_ID} >> ${LOGFILE}.log
-#
-#  docker rm UnifiedGenotyper_${SAMPLE_ID}
-#
-#  # copy vcf to cohort vcf directory
-#  cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
-#
-#  logger_ngseasy " copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
-#
-#  logger_ngseasy " END Variant Calling using UnifiedGenotyper "  ${LOGFILE}
-#
-# REMOVED UG In favour of haplotype based callers ##################################################################
 
   ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
  VARCALLER="HaplotypeCaller"
