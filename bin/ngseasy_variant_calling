@@ -657,6 +657,11 @@ elif [ "${VARCALLER}" == "platypus" ]
     # for exome/whole genome data no duplicate filtering
     # note plat used NR instead of DP
     
+# https://github.com/chapmanb/bcbio-nextgen/blob/cb97e10d2ee50983713d65e77690067779f3e731/bcbio/variation/platypus.py#L31
+#    --hapScoreThreshold", "10", "--scThreshold", "0.99", "--filteredReadsFrac", "0.9",
+#                   "--rmsmqThreshold", "20", "--qdThreshold", "0", "--abThreshold", "0.0001",
+#                   "--minVarFreq", "0.0"]
+    
     ${DOCKER_RUN} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     --name platypus_${BAM_PREFIX} \
