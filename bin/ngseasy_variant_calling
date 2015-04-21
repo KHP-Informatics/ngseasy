@@ -610,6 +610,9 @@ if [ "${VARCALLER}" == "freebayes" ]
 
 # quick fix to get mapped regrions file for freebayes-parallel
 awk '{print \$1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.mapped.regions
+# awk '{print \$1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | awk 'BEGIN{ORS=","}1' > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+awk '{print \$1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ','  > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+
 
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -634,6 +637,8 @@ awk '{print \$1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOU
   bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
   tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
 
+# add vt decompose -s - | \
+
 #logs
 docker logs Freebayes_${BAM_PREFIX} >> ${LOGFILE}.log
 docker rm Freebayes_${BAM_PREFIX}
@@ -656,7 +661,7 @@ elif [ "${VARCALLER}" == "platypus" ]
 
     # for exome/whole genome data no duplicate filtering
     # note plat used NR instead of DP
-    
+
 # https://github.com/chapmanb/bcbio-nextgen/blob/cb97e10d2ee50983713d65e77690067779f3e731/bcbio/variation/platypus.py#L31
 #    --hapScoreThreshold", "10", "--scThreshold", "0.99", "--filteredReadsFrac", "0.9",
 #                   "--rmsmqThreshold", "20", "--qdThreshold", "0", "--abThreshold", "0.0001",
@@ -671,6 +676,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+      --regions=${SOUTDocker}/reports/${BAMFILE}.platypus.intervals \
       --assemble=1 \
       --filterDuplicates=0 \
       --minReads=10 \
@@ -710,6 +716,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+      --regions=${SOUTDocker}/reports/${BAMFILE}.platypus.intervals \
       --assemble=1 \
       --filterDuplicates=1 \
       --minReads=10 \
