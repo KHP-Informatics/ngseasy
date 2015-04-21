@@ -26,7 +26,7 @@ TARGET_BIN=/usr/local/bin
 SRC=./bin
 
 all:
-	scripts ngsprojectdir dockerimages genomes annotations contaminants resources testdata vep snpeff 
+	scripts ngsprojectdir dockerimages genomes annotations contaminants resources testdata
 
 indexgenomes: dockerimages
 	bwaindex bowtie2index stampyindex snapindex

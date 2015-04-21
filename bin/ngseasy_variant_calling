@@ -583,6 +583,7 @@ if [ "${VARCALLER}" == "freebayes" ]
   then
 
   logger_ngseasy " START Variant Calling using freebayes-parallel " ${LOGFILE}
+
 # 60GB RAM and FAILS
 #  ${DOCKER_RUN} \
 #  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -609,10 +610,9 @@ if [ "${VARCALLER}" == "freebayes" ]
 #  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
 
 # quick fix to get mapped regrions file for freebayes-parallel
-awk '{print \$1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.mapped.regions
+awk '{print $1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.mapped.regions
+awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ','  > ${SOUT}/reports/${BAMFILE}.platypus.intervals
 # awk '{print \$1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | awk 'BEGIN{ORS=","}1' > ${SOUT}/reports/${BAMFILE}.platypus.intervals
-awk '{print \$1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ','  > ${SOUT}/reports/${BAMFILE}.platypus.intervals
-
 
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -647,7 +647,8 @@ docker rm Freebayes_${BAM_PREFIX}
 logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFILE}
 
 ########################################################################################################
-# Platypus #
+# Platypus # still missing a lot - what was the publication about then
+
 
 elif [ "${VARCALLER}" == "platypus" ]
   then
