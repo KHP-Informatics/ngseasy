@@ -416,3 +416,7 @@ logger_ngseasy  "[ngseasy]:Calling ngseasy_variant_calling"  ${config_run_log}
 ## NGS Report: coming soon
 ###################################################################################
 
+# sex check with chanjo
+# alias full_clinical_freebayes NO GATK NO REAL NO RECAL OK FOR LOCKED UP SYSTEM BUT 
+# NOT FOR POP OR COMP BTW SITES
+
