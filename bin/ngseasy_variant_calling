@@ -554,10 +554,14 @@ fi
 # exit 1
 
 # quick fix to get mapped regrions file for freebayes-parallel
-  logger_ngseasy "[${NGSEASY_STEP}]: START Variant Calling using freebayes-parallel " ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:START Make regions files for var-callers" ${LOGFILE}
   
-awk '{print $1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.mapped.regions
-awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ','  > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+time awk '{print $1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.mapped.regions
+time awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ','  > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+
+  logger_ngseasy "[${NGSEASY_STEP}]:END Make regions files for varcallers" ${LOGFILE}
+
+# time bedtools genomecov -split -ibam ${SOUTDocker}/alignments/${BAMFILE} -g ${GENOMEFILE} -d | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${FAI} 1000 > ${REFFASTA}.1000.regions
 # awk '{print \$1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | awk 'BEGIN{ORS=","}1' > ${SOUT}/reports/${BAMFILE}.platypus.intervals
 
 ########################################################################################################
@@ -571,18 +575,6 @@ awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n
 
 ########################################################################################################
 ## Freebayes 
-#
-#time cat NA12878D_HiSeqX_R1.vcf | \
-#>   vcffilter -f 'QUAL > 5' -s | \
-#>   fix_ambiguous | \
-#>   vcfallelicprimitives --keep-geno | \
-#>   vcffixup - | \
-#>   vcfstreamsort | \
-#>   vt normalize -r ./ngs_projects/reference_genomes_b37/human_g1k_v37.fasta -q - 2> /dev/null | \
-#>   vcfuniqalleles > test.vcf
-#real  8m7.035s
-#user  34m54.756s
-#sys 1m44.810s
 
 # awk '{print $1":"$2".."$3}' BAM > test.regions this Fing works woop woop
 
@@ -825,7 +817,7 @@ elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
 #-----------------------------------------------------------------------------#
 
 elif [ "${VARCALLER}" == "HaplotypeCaller" ]
-then
+  then
   ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
  
   logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller "  ${LOGFILE}
