@@ -769,6 +769,7 @@ elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
+  --output_mode EMIT_VARIANTS_ONLY \
   --dbsnp ${KNOWN_SNPS_b138} \
   -dcov 250 \
   --unsafe ALL \
@@ -834,6 +835,7 @@ elif [ "${VARCALLER}" == "HaplotypeCaller" ]
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
+  --output_mode EMIT_VARIANTS_ONLY \
   --dbsnp ${KNOWN_SNPS_b138} \
   -dcov 250 \
   -minPruning 10 \
@@ -1034,6 +1036,8 @@ logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Platypus "  ${LOGFIL
 # REMOVED UG In favour of haplotype based callers ##################################################################
 
   ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
+  # '--output_mode' (-out_mode) is missing.  Valid options are (EMIT_VARIANTS_ONLY,EMIT_ALL_CONFIDENT_SITES,EMIT_ALL_SITES).
+
  VARCALLER="HaplotypeCaller"
 
 logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller "  ${LOGFILE}
@@ -1050,6 +1054,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller " 
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
+  --output_mode EMIT_VARIANTS_ONLY \
   --dbsnp ${KNOWN_SNPS_b138} \
   -dcov 250 \
   -minPruning 10 \
@@ -1091,8 +1096,8 @@ logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller " 
 
 
 #logs
-  docker logs HaplotypeCaller_${SAMPLE_ID} >> ${LOGFILE}.log
-  docker rm HaplotypeCaller_${SAMPLE_ID}
+  docker logs HaplotypeCaller_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm HaplotypeCaller_${BAM_PREFIX}
   logger_ngseasy " END Variant Calling using HaplotypeCaller "  ${LOGFILE}
 
 
@@ -1107,19 +1112,22 @@ logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller " 
 
 params_yaml="/home/pipeman/ngseasy_scripts/ensemble.calling.params.yaml"
 
-  docker run \
-  -P \
-  --name bcbio-variation_${SAMPLE_ID} \
-  --volumes-from volumes_container \
-  -t compbio/ngseasy-bcbio-variation:${VERSION} java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/bcbio/bcbio.variation-0.1.7-standalone.jar variant-ensemble \
+  ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name bcbio-variation_${BAM_PREFIX} \
+  -t compbio/ngseasy-bcbio-variation:${NGSEASYVERSION} java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/bcbio/bcbio.variation-0.1.7-standalone.jar variant-ensemble \
   ${params_yaml} \
   /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
   ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.ensemble.vcf \
   ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.freebayes.vcf \
-  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.platypus.vcf \
   ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.HaplotypeCaller.vcf;
 
-  logger_ngseasy " END bcbio-variation in Ensembl Variant Calling using Freebayes + Platypus + HaplotypeCaller "  ${LOGFILE}
+#logs
+  docker logs bcbio-variation_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm bcbio-variation_${BAM_PREFIX}
+  logger_ngseasy " END Variant Calling using HaplotypeCaller "  ${LOGFILE}
+
+  logger_ngseasy " END bcbio-variation in Ensembl Variant Calling using Freebayes + HaplotypeCaller "  ${LOGFILE}
 
 fi
 
