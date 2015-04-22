@@ -761,7 +761,7 @@ elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name UnifiedGenotyper_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
-  "time java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  "time java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
   -T UnifiedGenotyper \
   -R ${REFFASTA} \
   -nct ${NCPU} \
@@ -827,7 +827,7 @@ elif [ "${VARCALLER}" == "HaplotypeCaller" ]
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name HaplotypeCaller_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
-  "time java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  "time java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
   -T HaplotypeCaller \
   -R ${REFFASTA} \
   -nct ${NCPU} \
@@ -945,7 +945,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller " 
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name HaplotypeCaller_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
-  "time java -Xmx6g -Djava.io.tmpdir=${SOUT}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  "time java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
   -T HaplotypeCaller \
   -R ${REFFASTA} \
   -nct ${NCPU} \
