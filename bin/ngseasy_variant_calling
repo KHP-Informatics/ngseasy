@@ -617,7 +617,7 @@ if [ "${VARCALLER}" == "freebayes" ]
   -b ${SOUTDocker}/alignments/${BAMFILE} \
   --min-coverage 5 \
   --min-mapping-quality 20 \
-  --min-base-quality 20 \
+  --min-base-quality 10 \
   --min-repeat-entropy 1 \
   --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
   time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
@@ -673,14 +673,23 @@ elif [ "${VARCALLER}" == "platypus" ]
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --regions=${SOUTDocker}/reports/${BAMFILE}.platypus.intervals \
       --assemble=1 \
+      --assembleAll=1 \
+      --assemblyRegionSize=1500 \
       --filterDuplicates=0 \
-      --minReads=5 \
+      --minReads=4  \
+      --maxGOF=30 \
+      --bufferSize=50000 \
+      --maxReads=10000000 \
+      --minPosterior=5 \
       --minMapQual=20 \
-      --minBaseQual=20 \
-      --maxSize 5000 \
-      --hapScoreThreshold 10 \
+      --minBaseQual=10 \
+      --maxSize 10000 \
+      --maxVariants=8 \
+      --maxHaplotypes=50 \
+      --filterReadsWithDistantMates=1 \
+      --hapScoreThreshold 4 \
       --scThreshold 0.99 \
-      --filteredReadsFrac 0.9 \
+      --filteredReadsFrac 0.7 \
       --rmsmqThreshold 20 \
       --qdThreshold 0 \
       --abThreshold 0.0001 \
@@ -713,14 +722,23 @@ elif [ "${VARCALLER}" == "platypus" ]
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --regions=${SOUTDocker}/reports/${BAMFILE}.platypus.intervals \
       --assemble=1 \
+      --assembleAll=1 \
+      --assemblyRegionSize=1500 \
       --filterDuplicates=1 \
-      --minReads=5 \
+      --minReads=4  \
+      --maxGOF=30 \
+      --bufferSize=50000 \
+      --maxReads=10000000 \
+      --minPosterior=5 \
       --minMapQual=20 \
-      --minBaseQual=20 \
-      --maxSize 5000 \
-      --hapScoreThreshold 10 \
+      --minBaseQual=10 \
+      --maxSize 10000 \
+      --maxVariants=8 \
+      --maxHaplotypes=50 \
+      --filterReadsWithDistantMates=1 \
+      --hapScoreThreshold 4 \
       --scThreshold 0.99 \
-      --filteredReadsFrac 0.9 \
+      --filteredReadsFrac 0.7 \
       --rmsmqThreshold 20 \
       --qdThreshold 0 \
       --abThreshold 0.0001 \
