@@ -296,12 +296,7 @@ The  **Makefile** provides options to install to any user defined directory and 
 make INSTALLDIR="/media/scratch" VERSION="1.0" all
 ```
 
-The  **Makefile** also allows installation of selected components.
-
-```bash
-## EG. Installing to /media/scratch
-make INSTALLDIR="/media/scratch" VERSION="1.0" 
-```
+The  **Makefile** also allows installation of selected components (check out its insides!).
 
 
 ## Set up NGSeasy Project configuration file
