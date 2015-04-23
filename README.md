@@ -284,17 +284,6 @@ The  **Makefile** also allows installation of selected components.
 make INSTALLDIR="/media/scratch" VERSION="1.0" 
 ```
 
-## Script Updates
-
-```bash
-## Script Updates
-cd ngseasy
-git pull
-sudo make updatescripts
-```
-
-
-
 
 ## Set up NGSeasy Project configuration file
 

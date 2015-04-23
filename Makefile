@@ -77,59 +77,59 @@ indexgenomes: dockerimages
 baseimage:
 	docker pull compbio/ngseasy-base:$(VERSION)
 
-fastqc:
+fastqc: baseimage
 	docker pull compbio/ngseasy-fastqc:$(VERSION)
 
-trimmomatic:
+trimmomatic: baseimage
 	docker pull compbio/ngseasy-trimmomatic:$(VERSION)
 
-bwa:
+bwa: baseimage
 	docker pull compbio/ngseasy-bwa:$(VERSION)
 
-bowtie2:
+bowtie2: baseimage
 	docker pull compbio/ngseasy-bowtie2:$(VERSION)
 
-snap:
+snap: baseimage
 	docker pull compbio/ngseasy-snap:$(VERSION)
 	
-stampy:
+stampy: bwa baseimage
 	docker pull compbio/ngseasy-stampy:$(VERSION)
 	
-picardtools:
+picardtools: baseimage
 	docker pull compbio/ngseasy-picardtools:$(VERSION)
 
-freebayes:
+freebayes: baseimage
 	docker pull compbio/ngseasy-freebayes:$(VERSION)
 
-platypus:
+platypus: baseimage
 	docker pull compbio/ngseasy-platypus:$(VERSION)
 
-delly:
+delly: baseimage
 	docker pull compbio/ngseasy-delly:$(VERSION)
 
-lumpy:
+lumpy: baseimage
 	docker pull compbio/ngseasy-lumpy:$(VERSION)
 
 bcbiovar:
 	docker pull compbio/ngseasy-bcbiovar:$(VERSION)
 
-cnmops:
+cnmops: baseimage
 	docker pull compbio/ngseasy-cnmops:$(VERSION)
 
-mhmm:
+mhmm: baseimage
 	docker pull compbio/ngseasy-mhmm:$(VERSION)
 
-exomedepth:
+exomedepth: baseimage
 	docker pull compbio/ngseasy-exomedepth:$(VERSION)
 
-slope:
+slope: baseimage
 	docker pull compbio/ngseasy-slope:$(VERSION)
 
 # b37 Genomes idexed and resources	
 b37: 
 	cd $(INSTALLDIR)/ngs_projects && \
 	mkdir reference_genomes_b37 && \
-	cd reference_genomes_b37 && \
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b37 && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_omni2.5.b37.vcf && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_omni2.5.b37.vcf.idx && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_phase1.indels.b37.vcf && \
@@ -193,7 +193,7 @@ b37:
 hg19: 
 	cd $(INSTALLDIR)/ngs_projects && \
 	mkdir reference_genomes_hg19 && \
-	cd reference_genomes_hg19 && \
+	cd $(INSTALLDIR)/ngs_projects/reference_genomes_hg19 && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/1000G_omni2.5.hg19.sites.vcf && \
@@ -257,19 +257,6 @@ hg19:
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ucsc.hg19.stidx && \
 	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_hg19/
 
-## Make sep chroms
-chrb37:
-	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b37 && \
-	mkdir chroms && \
-	cd chroms && \
-	awk 'BEGIN { CHROM="" } { if ($$1~"^>") CHROM=substr($$1,2); print $$0 > CHROM".fasta" }' ${INSTALLDIR}/ngs_projects/reference_genomes_b37/human_g1k_v37.fasta
-
-chrhg19:
-	cd $(INSTALLDIR)/ngs_projects/reference_genomes_hg19 && \
-	mkdir chroms && \
-	cd chroms && \
-	awk 'BEGIN { CHROM="" } { if ($$1~"^>") CHROM=substr($$1,2); print $$0 > CHROM".fasta" }' ${INSTALLDIR}/ngs_projects/reference_genomes_hg19/ucsc.hg19.fasta
-
 ##  Test data and stick it in raw_fastq
 testdata: ngsprojectdir
 	cd $(INSTALLDIR)/ngs_projects/raw_fastq && \
@@ -280,7 +267,10 @@ testdata: ngsprojectdir
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.150x_2.fastq.gz && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.30x_1.fastq.gz && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.30x_2.fastq.gz && \
-	chmod -R 777 $(INSTALLDIR)/ngs_projects/raw_fastq/
+	chmod -R 777 $(INSTALLDIR)/ngs_projects/raw_fastq/ && \
+	cd $(INSTALLDIR)/ngs_projects/config_files && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/ngseasy_test.config.tsv && \
+	chmod -R 777 $(INSTALLDIR)/ngs_projects/config_files/ 
 
 ## Manual Builds
 gatk:
@@ -322,14 +312,25 @@ purgeall:
 	rm -f -v $(TARGET_BIN)/ensembl****yaml && \
 	docker kill $(shell docker ps -a | awk '(print $$1)') && \
 	docker rm -f $(shell docker ps -a | awk '(print $$1)') && \
-	docker rmi -f $(shell docker images -a |  grep ngseasy | awk '(print $$3)')
+	docker rmi -f $(shell docker images -a |  grep ngseasy | awk '(print $$3)') && \
 
 purgegenomes: 
 	rm -rfv $(INSTALLDIR)/ngs_projects/reference_genomes_b37 && \
 	rm -rfv $(INSTALLDIR)/ngs_projects/reference_genomes_hg19
-## to do: add options to download and build reference genome builds 
-## indexing of genome 
 
+############################################################################	
+## Make sep chroms
+#chrb37:
+#	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b37 && \
+#	mkdir chroms && \
+#	cd chroms && \
+#	awk 'BEGIN { CHROM="" } { if ($$1~"^>") CHROM=substr($$1,2); print $$0 > CHROM".fasta" }' ${INSTALLDIR}/ngs_projects/reference_genomes_b37/human_g1k_v37.fasta
+
+#chrhg19:
+#	cd $(INSTALLDIR)/ngs_projects/reference_genomes_hg19 && \
+#	mkdir chroms && \
+#	cd chroms && \
+#	awk 'BEGIN { CHROM="" } { if ($$1~"^>") CHROM=substr($$1,2); print $$0 > CHROM".fasta" }' ${INSTALLDIR}/ngs_projects/reference_genomes_hg19/ucsc.hg19.fasta
 
 
 
