@@ -1,4 +1,4 @@
-![NGSeasy_logo](https://github.com/KHP-Informatics/ngseasy/blob/sjn_dev/figs/NGSeasy_logo_0.0.1.png "NGSeasy_logo")
+![NGSeasy_logo](https://github.com/KHP-Informatics/ngseasy/blob/sjn_dev/figs/NGSeasy_logo_0.0.1.png)
 
 NGSeasy (beta)
 ===================
@@ -9,7 +9,7 @@ Publication: pending
 
 Authors: Stephen J Newhouse, Amos Folarin , Maximilian Kerz  
 Release Version: **1.0**  
-Realse: dirty_tango
+Release: dirty_tango
 
 ****************
 ### [A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box] 
@@ -109,7 +109,7 @@ alignment, cleaning (based on GATK best practises [http://www.broadinstitute.org
 variant discovery. Separate containers are provided for indepth variant annotation,
 structural variant calling, basic reporting and visualisations.  
 
-![ngsEASY](https://github.com/KHP-Informatics/ngs/blob/dev2/figs/ngsEASY_component_visualisation.png "Dockerized NGS Pipeline")
+![ngsEASY](https://github.com/KHP-Informatics/ngs/blob/dev2/figs/ngsEASY_component_visualisation.png)
 
 
 ****************
@@ -233,7 +233,7 @@ This image is used as the base of all our compbio/ngseasy-* tools.
 Dockerised NGSeasy
 ==========================
 
-![docker](https://github.com/KHP-Informatics/ngs/blob/master/figs/Docker_container_engine_logo.png "Docker")  
+![docker](https://github.com/KHP-Informatics/ngs/blob/master/figs/Docker_container_engine_logo.png)  
 
 The following section describes getting the Dockerised NGSeasy Pipeline(s) and Resources, project set up and running NGSeasy.
 
