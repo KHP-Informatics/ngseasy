@@ -1,5 +1,5 @@
 
-Quick Start
+Quick Start 
 
 sudo apt-get install x11-apps
 sudo apt-get install firefox
@@ -13,5 +13,10 @@ make dir
 make iamges
 make genome
 
+
+if on amazon
+ 
+aws s3 mb STUDENTNAME
+aws s3 cp 
 
 
