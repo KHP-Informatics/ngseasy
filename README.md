@@ -8,7 +8,8 @@ NGSeasy (beta)
 Publication: pending
 
 Authors: Stephen J Newhouse, Amos Folarin , Maximilian Kerz  
-Release Version: **1.0.0**  
+Release Version: **1.0**  
+Realse: dirty_tango
 
 ****************
 ### [A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box] 
@@ -27,13 +28,11 @@ ngseasy -c ${HOME}/ngs_projects/config_files/ngseasy_test.config.tsv -d ${HOME}/
 
 **Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
 
-- **NGSeasy-v1.0 Full Production release will be available Early 2015**  
-
-
-- **NGSeasy-v1.0.0b Full Production release contains most of the core fucntionality to go from raw fastq to raw vcf calls**
-- **NGSeasy updates every 12 months**
+- **NGSeasy-1.0 Full Production release will be available Early 2015**  
+- **NGSeasy-1.0 (dirty_tango) contains most of the core fucntionality to go from raw fastq to raw vcf calls**
+- **NGSeasy will update every 12 months**
 - **GUI in development**
-- **Contact us of Reference Genomes and resource files**  
+ 
 
 ****************
 
