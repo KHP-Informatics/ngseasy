@@ -16,6 +16,15 @@ Release Version: **1.0.0**
 
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**
 
+## For the impatient 
+```bash
+cd ${HOME}
+git clone https://github.com/KHP-Informatics/ngseasy.git
+cd ngseasy
+make all
+ngseasy -c ${HOME}/ngs_projects/config_files/ngseasy_test.config.tsv -d ${HOME}/ngs_projects  -p 1 -f 1
+```
+
 
 **Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
 
@@ -268,8 +277,7 @@ cd ngseasy
 sudo make all
 ```
 
-The default install dir is the users **HOME** directory (```${HOME}``` ie ```~/```).
-
+The default install dir is the users **${HOME}** directory. 
 The  **Makefile** provides options to install to any user defined directory and select NGSeasy version. eg :- 
 
 ```bash
@@ -329,16 +337,18 @@ NGSUSER|STRING|user email|stephen.j.newhouse@gmail.com
 
 
 
-
-
 ## Running NGSeasy
 
-When running a project or set of samples for the first time, users need to call the XXX and YYY options. 
+When running a project or set of samples for the first time, users need to set the ```-p``` and ```-f``` options to 1. 
 
 ```bash
 ## 
-ngseasy -c ngseasy_test.config.tsv -d /media/scratch/ngs_projects   
+ngseasy -c ngseasy_test.config.tsv -d /media/scratch/ngs_projects  -p 1 -f 1
 ```
+
+
+
+*******************************
 
 ## The NGSeasy project directory
 The user needs to make the relevent directory structures on their local machine before starting an NGS run. 
