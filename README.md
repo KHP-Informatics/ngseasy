@@ -19,12 +19,18 @@ Realse: dirty_tango
 
 ## For the impatient 
 ```bash
+## Get and install NGSeasy 
 cd ${HOME}
 git clone https://github.com/KHP-Informatics/ngseasy.git
 cd ngseasy
 make all
+
+## Run basic test 
 ngseasy -c ${HOME}/ngs_projects/config_files/ngseasy_test.config.tsv -d ${HOME}/ngs_projects -p 1 -f 1
 ```
+
+This runs the following basic pipeline : FastQC > Trimmomatic > BWA > Platyus on PE 30x Illumina data.
+
 
 **Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
 
