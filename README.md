@@ -111,6 +111,27 @@ structural variant calling, basic reporting and visualisations.
 
 ![ngsEASY](https://github.com/KHP-Informatics/ngs/blob/dev2/figs/ngsEASY_component_visualisation.png)
 
+## A Special note on the NGSeasy base image.
+
+We include the following - what we think of as - **_NGS Powertools_** in the **[compbio/ngseasy-base]()** image. 
+These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files in multiple ways.
+
+ 1.  samtools  
+ 2.  bcftools  
+ 3.  vcftools  
+ 4.  vcflib  
+ 5.  bamUtil  
+ 6.  bedtools2  
+ 7.  ogap  
+ 8.  samblaster  
+ 9.  sambamba  
+ 10. bamleftalign  
+ 11. seqtk  
+ 12. parallel  
+
+This image is used as the base of all our compbio/ngseasy-* tools.   
+
+**Why not a separate containers per application?** The more docker-esque approach, would be to have separate containers for each NGS tool. However, this belies the fact that many of these tools interact in a deep way. Therefore, we built  these into a single development environment for ngseasy, to allow pipes and streamlined system calls for manipulating the output of NGS pipelines (BED/SAM/BAM/VCF files). 
 
 ****************
 
@@ -181,8 +202,6 @@ The NGSeasy pipelines implement the following :-
 
 **Note** Some of the later functions i.e. variant annotation and qc reporting are still in dev.  
 
-****
-
 **We highly recommed read trimming prior to alignment.**
 We have noticed considerable speed-ups in alignmnet time and increased quality of SNP/INDEL calls using trimmed vs raw fastq.  
 
@@ -197,38 +216,14 @@ for base quality score recalibration.
     - **[freebayes](https://github.com/ekg/freebayes)**
     - **[platypus](http://www.well.ox.ac.uk/platypus)**
 
+**************
 
 ## Dockerised NGS Tools
 
 All NGSeasy Docker images can be pulled down from **[compbio Docker Hub](https://hub.docker.com/u/compbio/)** or using the Makefile.  
 We provide an Amazon EBS data volume with indexed genomes: XXXXXX  
 
-********
-
-## A Special note on the NGSeasy base image.
-
-We include the following - what we think of as - **_NGS Powertools_** in the **[compbio/ngseasy-base]()** image. 
-These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files in multiple ways.
-
- 1.  samtools  
- 2.  bcftools  
- 3.  vcftools  
- 4.  vcflib  
- 5.  bamUtil  
- 6.  bedtools2  
- 7.  ogap  
- 8.  samblaster  
- 9.  sambamba  
- 10. bamleftalign  
- 11. seqtk  
- 12. parallel  
-
-This image is used as the base of all our compbio/ngseasy-* tools.   
-
-**Why not a separate containers per application?** The more docker-esque approach, would be to have separate containers for each NGS tool. However, this belies the fact that many of these tools interact in a deep way. Therefore, we built  these into a single development environment for ngseasy, to allow pipes and streamlined system calls for manipulating the output of NGS pipelines (BED/SAM/BAM/VCF files). 
-
 ************
-
 
 Dockerised NGSeasy
 ==========================
