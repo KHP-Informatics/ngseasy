@@ -265,7 +265,7 @@ git clone https://github.com/KHP-Informatics/ngseasy.git
 
 ## move to ngseasy folder and run make all
 cd ngseasy
-make all
+sudo make all
 ```
 
 The default install dir is the users **HOME** directory (```${HOME}``` ie ```~/```).

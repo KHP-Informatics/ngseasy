@@ -6,7 +6,6 @@
 
 ## Edit this to reflect version if ya need
 VERSION=1.0
-GENOMEBUILD="b37"
 WHOAMI=$(shell whoami)
 
 ## This is where we will make ngs_projects and download metadata to etc etc
@@ -29,7 +28,7 @@ SRC=./bin
 all:
 	scripts ngsprojectdir dockerimages b37 hg19 testdata
 
-
+## install scripts to target bin
 scripts:
 	chmod 777 $(SRC)/*
 	cp -v $(SRC)/* $(TARGET_BIN)/
@@ -40,11 +39,11 @@ rmscripts:
 updatescripts:
 	git pull && rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy && chmod 777 $(SRC)/ && cp -v $(SRC)/* $(TARGET_BIN)/
 
+## Make Top level project directories
 ngsprojectdir: 
 	mkdir -v -p $(INSTALLDIR)/ngs_projects && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/raw_fastq && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/config_files && \
-	mkdir -v -p $(INSTALLDIR)/ngs_projects/annovardb && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/run_logs && \
 	mkdir -v -p $(HOME)/ngseasy_logs && \
 	mkdir -v -p $(HOME)/ngseasy_tmp
@@ -52,6 +51,7 @@ ngsprojectdir:
 purgengsprojectsdir: 
 	rm -rfv $(INSTALLDIR)/ngs_projects
 
+## Get all docker images 
 dockerimages:	
 	docker pull compbio/ngseasy-base:$(VERSION) && \
 	docker pull compbio/ngseasy-fastqc:$(VERSION) && \
@@ -257,6 +257,7 @@ hg19:
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ucsc.hg19.stidx && \
 	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_hg19/
 
+## Make sep chroms
 chrb37:
 	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b37 && \
 	mkdir chroms && \
@@ -269,17 +270,19 @@ chrhg19:
 	cd chroms && \
 	awk 'BEGIN { CHROM="" } { if ($$1~"^>") CHROM=substr($$1,2); print $$0 > CHROM".fasta" }' ${INSTALLDIR}/ngs_projects/reference_genomes_hg19/ucsc.hg19.fasta
 
+##  Test data and stick it in raw_fastq
 testdata: ngsprojectdir
-	cd $(INSTALLDIR)/ngs_projects && \
-	mkdir $(INSTALLDIR)/ngs_projects/fastq_test_data && \
-	cd $(INSTALLDIR)/ngs_projects/fastq_test_data && \
-	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878s.WEX_1.fq.gz && \
-	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878s.WEX_2.fq.gz && \
-	wget https://dnanexus-rnd.s3.amazonaws.com/NA12878-xten/reads/NA12878D_HiSeqX_R1.fastq.gz && \
-	wget https://dnanexus-rnd.s3.amazonaws.com/NA12878-xten/reads/NA12878D_HiSeqX_R1.fastq.gz && \
-	wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR292/SRR292250/SRR292250_1.fastq.gz && \
-	wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR292/SRR292250/SRR292250_2.fastq.gz
+	cd $(INSTALLDIR)/ngs_projects/raw_fastq && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/ && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878D_HiSeqX_R1.fastq.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878D_HiSeqX_R2.fastq.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.150x_1.fastq.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.150x_2.fastq.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.30x_1.fastq.gz && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.30x_2.fastq.gz && \
+	chmod -R 777 $(INSTALLDIR)/ngs_projects/raw_fastq/
 
+## Manual Builds
 gatk:
 	cd $(DIR)/containerized/ngs_docker_debian/ngs_variant_annotators/ngseasy_gatk && \
 	docker build --rm=true compbio/ngseasy-gatk:$(VERSION) .
@@ -309,6 +312,7 @@ annovardb:
 	 /bin/bash -c \
 	"/bin/bash /usr/local/pipeline/annovar/get_annovar_gene_databases.sh && /bin/bash /usr/local/pipeline/annovar/get_annovar_databases.sh"
 
+## Cleanups
 clean:
 	rm -f -v $(TARGET_BIN)/ngseas* && \
 	rm -f -v $(TARGET_BIN)/ensembl****yaml
@@ -320,9 +324,9 @@ purgeall:
 	docker rm -f $(shell docker ps -a | awk '(print $$1)') && \
 	docker rmi -f $(shell docker images -a |  grep ngseasy | awk '(print $$3)')
 
-
 purgegenomes: 
-	rm -rfv $(INSTALLDIR)/ngs_projects/reference_genomes_$(GENOMEBUILD)
+	rm -rfv $(INSTALLDIR)/ngs_projects/reference_genomes_b37 && \
+	rm -rfv $(INSTALLDIR)/ngs_projects/reference_genomes_hg19
 ## to do: add options to download and build reference genome builds 
 ## indexing of genome 
 
