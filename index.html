@@ -167,6 +167,43 @@ structural variant calling, basic reporting and visualisations.  </p>
 
 <p><img src="https://github.com/KHP-Informatics/ngs/blob/dev2/figs/ngsEASY_component_visualisation.png" alt="ngsEASY"></p>
 
+<h2>
+<a id="a-special-note-on-the-ngseasy-base-image" class="anchor" href="#a-special-note-on-the-ngseasy-base-image" aria-hidden="true"><span class="octicon octicon-link"></span></a>A Special note on the NGSeasy base image.</h2>
+
+<p>We include the following - what we think of as - <strong><em>NGS Powertools</em></strong> in the <strong><a href="">compbio/ngseasy-base</a></strong> image. 
+These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files in multiple ways.</p>
+
+<ol>
+<li> samtools<br>
+</li>
+<li> bcftools<br>
+</li>
+<li> vcftools<br>
+</li>
+<li> vcflib<br>
+</li>
+<li> bamUtil<br>
+</li>
+<li> bedtools2<br>
+</li>
+<li> ogap<br>
+</li>
+<li> samblaster<br>
+</li>
+<li> sambamba<br>
+</li>
+<li>bamleftalign<br>
+</li>
+<li>seqtk<br>
+</li>
+<li>parallel<br>
+</li>
+</ol>
+
+<p>This image is used as the base of all our compbio/ngseasy-* tools.   </p>
+
+<p><strong>Why not a separate containers per application?</strong> The more docker-esque approach, would be to have separate containers for each NGS tool. However, this belies the fact that many of these tools interact in a deep way. Therefore, we built  these into a single development environment for ngseasy, to allow pipes and streamlined system calls for manipulating the output of NGS pipelines (BED/SAM/BAM/VCF files). </p>
+
 <hr>
 
 <h1>
@@ -304,8 +341,6 @@ structural variant calling, basic reporting and visualisations.  </p>
 
 <p><strong>Note</strong> Some of the later functions i.e. variant annotation and qc reporting are still in dev.  </p>
 
-<hr>
-
 <p><strong>We highly recommed read trimming prior to alignment.</strong>
 We have noticed considerable speed-ups in alignmnet time and increased quality of SNP/INDEL calls using trimmed vs raw fastq.  </p>
 
@@ -328,50 +363,13 @@ for base quality score recalibration.</p>
 </li>
 </ul>
 
+<hr>
+
 <h2>
 <a id="dockerised-ngs-tools" class="anchor" href="#dockerised-ngs-tools" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dockerised NGS Tools</h2>
 
 <p>All NGSeasy Docker images can be pulled down from <strong><a href="https://hub.docker.com/u/compbio/">compbio Docker Hub</a></strong> or using the Makefile.<br>
 We provide an Amazon EBS data volume with indexed genomes: XXXXXX  </p>
-
-<hr>
-
-<h2>
-<a id="a-special-note-on-the-ngseasy-base-image" class="anchor" href="#a-special-note-on-the-ngseasy-base-image" aria-hidden="true"><span class="octicon octicon-link"></span></a>A Special note on the NGSeasy base image.</h2>
-
-<p>We include the following - what we think of as - <strong><em>NGS Powertools</em></strong> in the <strong><a href="">compbio/ngseasy-base</a></strong> image. 
-These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files in multiple ways.</p>
-
-<ol>
-<li> samtools<br>
-</li>
-<li> bcftools<br>
-</li>
-<li> vcftools<br>
-</li>
-<li> vcflib<br>
-</li>
-<li> bamUtil<br>
-</li>
-<li> bedtools2<br>
-</li>
-<li> ogap<br>
-</li>
-<li> samblaster<br>
-</li>
-<li> sambamba<br>
-</li>
-<li>bamleftalign<br>
-</li>
-<li>seqtk<br>
-</li>
-<li>parallel<br>
-</li>
-</ol>
-
-<p>This image is used as the base of all our compbio/ngseasy-* tools.   </p>
-
-<p><strong>Why not a separate containers per application?</strong> The more docker-esque approach, would be to have separate containers for each NGS tool. However, this belies the fact that many of these tools interact in a deep way. Therefore, we built  these into a single development environment for ngseasy, to allow pipes and streamlined system calls for manipulating the output of NGS pipelines (BED/SAM/BAM/VCF files). </p>
 
 <hr>
 
