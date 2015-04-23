@@ -31,6 +31,7 @@ ngseasy -c ${HOME}/ngs_projects/config_files/ngseasy_test.config.tsv -d ${HOME}/
 
 This runs the following basic pipeline : FastQC > Trimmomatic > BWA > Platyus on PE 30x Illumina data.
 
+****************
 
 **Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
 
@@ -42,7 +43,7 @@ This runs the following basic pipeline : FastQC > Trimmomatic > BWA > Platyus on
 
 ****************
 
->NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.
+[**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**][]
 
 ****************
 
