@@ -46,7 +46,7 @@ This runs the following basic pipeline : FastQC > Trimmomatic > BWA > Platyus on
 
 ****************
 
-[**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**][]
+[**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**](https://github.com/KHP-Informatics/ngseasy.git)
 
 ****************
 
