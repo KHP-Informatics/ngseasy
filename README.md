@@ -270,15 +270,31 @@ make all
 
 The default install dir is the users **HOME** directory (```${HOME}``` ie ```~/```).
 
-The  **Makefile** provides options to install to any user defined directory, select NGSeasy version and genome build. eg :- 
+The  **Makefile** provides options to install to any user defined directory and select NGSeasy version. eg :- 
 
 ```bash
 ## EG. Installing to /media/scratch
-make INSTALLDIR="/media/scratch" VERSION="1.0" GENOMEBUILD="b37" all
-
-## Install Genome build hg19
-make INSTALLDIR="/media/scratch" VERSION="1.0" GENOMEBUILD="hg19" all
+make INSTALLDIR="/media/scratch" VERSION="1.0" all
 ```
+
+The  **Makefile** also allows installation of selected components.
+
+```bash
+## EG. Installing to /media/scratch
+make INSTALLDIR="/media/scratch" VERSION="1.0" 
+```
+
+## Script Updates
+
+```bash
+## Script Updates
+cd ngseasy
+git pull
+sudo make updatescripts
+```
+
+
+
 
 ## Set up NGSeasy Project configuration file
 
