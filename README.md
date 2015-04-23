@@ -36,7 +36,9 @@ This runs the following basic pipeline :
 
 - FastQC > Trimmomatic > BWA > Platyus 
 
-On Whole Exome PE 30x Illumina data, aligning to b37 (in theory...give it a try)
+On Whole Exome PE 30x Illumina data, aligning to b37 (in theory...give it a try).
+
+Edit **NCPU** in  **[ngseasy_test.config.tsv]** to suit your system!
 
 ****************
 
