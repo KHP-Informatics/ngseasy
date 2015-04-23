@@ -22,9 +22,8 @@ cd ${HOME}
 git clone https://github.com/KHP-Informatics/ngseasy.git
 cd ngseasy
 make all
-ngseasy -c ${HOME}/ngs_projects/config_files/ngseasy_test.config.tsv -d ${HOME}/ngs_projects  -p 1 -f 1
+ngseasy -c ${HOME}/ngs_projects/config_files/ngseasy_test.config.tsv -d ${HOME}/ngs_projects -p 1 -f 1
 ```
-
 
 **Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
 
@@ -428,21 +427,17 @@ leagally have to approach the owners of the various components yourself!
 **Software composing the pipeline requiring registration:-**  
 
    * novoalign http://www.novocraft.com/  
-   * Stampy http://www.well.ox.ac.uk/project-stampy  
-   * Platypus http://www.well.ox.ac.uk/platypus  
    * GATK https://www.broadinstitute.org/gatk/  
    * ANNOVAR http://www.openbioinformatics.org/annovar/  
 
 **These tools require manual download and registration with the proivder. For non-academics/commercial groups, you will need to pay for some of these tools.**
 
-### Dockerised and Manual Builds ##
+## Manual Builds 
 
 | Tool | Build |
 |-------------|----------------------|
 |[novoalign](https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_novoalign) | manual build |
 |[annovar](https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_annovar) | manual build |
-|[stampy](https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_stampy) | manual build |
-|[platypus](https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/nsgeasy_platypus) | manual build |
 |[gatk](https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_gatk) | manual build |
 
 Once you have paid/registered and downloaded the tool, we provide scripts and guidance for building these tools on your system.  
@@ -452,38 +447,8 @@ Its as easy as:-
 docker build -t compbio/ngseasy-${TOOL} .
 ```
 
-******
 
-### 6.1 Building Stampy
-
-**resister at http://www.well.ox.ac.uk/project-stampy**  
-
-Download stampy to local directory and check version number. If this differs from the [Dockerfile](https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_stampy/Dockerfile) build file, 
-then edit the [Dockerfile](https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_stampy/Dockerfile) if needed. 
-You will be emailed a URL to download stampy. Insert this into the [Dockerfile](https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_stampy/Dockerfile)
-
-```bash
-# on our local system we cd to media
-cd /media
-
-# them move to ngs_projects toplevel directory
-cd ngs_projects
-
-# and then the ngseasy folder with all our ngs scripts
-# git  clone https://github.com/KHP-Informatics/ngs.git
-# if you havent alreay
-cd ngseasy
-
-# move to ngseasy_stampy folder
-cd ngs/ngs_docker_debian/ngseasy_stampy
-
-# build
-docker build -t compbio/ngseasy-stampy:v1.0 .
-```
-
-******
-
-### 6.3 Building NOVOALIGN
+## Building NOVOALIGN
 
 **Download Novoalign from  http://www.novocraft.com/** into the local build directory **ngs/ngs_docker_debian/ngseasy_novoalign**. 
 Edit the [Dockerfile](https://github.com/KHP-Informatics/ngs/blob/master/containerized/ngs_docker_debian/ngseasy_novoalign/Dockerfile) to relfect
@@ -529,7 +494,7 @@ docker build -t compbio/ngseasy-novoalign:v1.0 .
 
 ******
 
-### 6.4 Building GATK
+## Building GATK
 
 You need to register and accept the GATK license agreement at https://www.broadinstitute.org/gatk/.  
 
@@ -586,19 +551,12 @@ Docker build files ([Dockerfile](https://docs.docker.com/jsearch/?q=Dockerfile))
 
 **Large Variant Annotation Container Images**
 
-| Tool | Build |
-|-------------|----------------------|
-|[annovar](https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_annovar) | manual build |
-|[vep](https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_vep) | manual build |
-|[snpeff](https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_snpeff) | manual build |
-
-
 Its as easy as:-  
 ```{bash}
 docker build -t compbio/ngseasy-${TOOL} .
 ```
 ******** 
-### Build VEP
+## Build VEP
 ```bash
 
 cd /media/ngs_projects/nsgeasy/ngs/containerized/ngs_docker_debian/ngseasy_vep
@@ -606,7 +564,7 @@ cd /media/ngs_projects/nsgeasy/ngs/containerized/ngs_docker_debian/ngseasy_vep
 sudo docker build -t compbio/ngseasy-vep:${VERSION} .
 ```
 ******** 
-### Build Annovar
+## Build Annovar
 
 ```bash
 cd /media/ngs_projects/nsgeasy/ngs/containerized/ngs_docker_debian/ngseasy_annovar
@@ -614,34 +572,15 @@ cd /media/ngs_projects/nsgeasy/ngs/containerized/ngs_docker_debian/ngseasy_annov
 sudo docker build -t compbio/ngseasy-annovar:${VERSION} .
 ```
 ******** 
-### Build snpEff
+## Build snpEff
 ```bash
 cd /media/ngs_projects/nsgeasy/ngs/containerized/ngs_docker_debian/ngseasy_snpeff
 
 sudo docker build -t compbio/ngseasy-snpeff:${VERSION} .
 ```
 
-
-****************
-
-## Thresholds for Variant calling etc
-
-For Freebayes and Platypus tools:-  
-
-- We set min coverage to 10  
-- Min mappinng quality to 20  
-- Min base quality to 20
-
-For GATK HaplotypeCaller (and UnifiedGenotyper)
-
-```-stand_call_conf 30 -stand_emit_conf 10 -dcov 250 -minPruning 10```
-
-Note: ```minPruning 10``` was added as many runs of HaplotypeCaller failed when using non-bwa aligend and GATK best practices cleaned BAMs. This fix sorted all problems out, and you really dont want dodgy variant calls...do you? Same goes for thresholds hard coded for use with Freebayes and Platypus.  
-These setting all work well in our hands. Feel  free to edit the scripts to suit your needs.
-
-
 ********
-### Coming Soon
+## Coming Soon
 - New Aligners:- [SNAP](http://snap.cs.berkeley.edu/), GSNAP, mr- and mrs-Fast,gem
 - https://github.com/amplab/snap
 - [SLOPE (CNV fo targetted NSG)] ((http://www.biomedcentral.com/1471-2164/12/184)) 
@@ -653,42 +592,6 @@ These setting all work well in our hands. Feel  free to edit the scripts to suit
 - biobambam https://github.com/gt1/biobambam  
 - bamaddrg https://github.com/ekg/bamaddrg  
 - bamtools https://github.com/ekg/bamtools  
-
-****
-
-## Gottchas
-
-**bin/bash -c**
-
-- need to add ```/bin/bash -c ${COMMAND}``` when software require ```>``` redirect to some output
-
-example below for bwa:-  
-
-```bash
-  sudo docker run \
-  -P \
-  --name sam2bam_${SAMPLE_ID} \
-  --volumes-from volumes_container \
-  -t compbio/ngseasy-samtools:v0.9 /bin/bash -c \
-  "/usr/local/pipeline/samtools/samtools view -bhS ${SOUTDocker}/alignments/${BAM_PREFIX}.raw.bwa.sam > ${SOUTDocker}/alignments/${BAM_PREFIX}.raw.bwa.bam"
-  ```
-
-runnig this without ```/bin/bash -c``` breaks. The ```>``` is called outside of the container
-
-### The Annoying thing about GATK!
-This will break your runs if multiple calls try and access the file when the first call deletes it!  
-```
-WARN  11:05:27,577 RMDTrackBuilder - Index file /home/pipeman/gatk_resources/Mills_and_1000G_gold_standard.indels.b37.vcf.idx is out of date (index older than input file), deleting and updating the index file 
-INFO  11:05:31,699 RMDTrackBuilder - Writing Tribble index to disk for file /home/pipeman/gatk_resources/Mills_and_1000G_gold_standard.indels.b37.vcf.idx 
-```
-
-
-## CNV tools to think about
-EXCAVATOR: detecting copy number variants from whole-exome sequencing data @ http://genomebiology.com/2013/14/10/R120
-
->We developed a novel software tool, EXCAVATOR, for the detection of copy number variants (CNVs) from whole-exome sequencing data. EXCAVATOR combines a three-step normalization procedure with a novel heterogeneous hidden Markov model algorithm and a calling method that classifies genomic regions into five copy number states. We validate EXCAVATOR on three datasets and compare the results with three other methods. These analyses show that EXCAVATOR outperforms the other methods and is therefore a valuable tool for the investigation of CNVs in largescale projects, as well as in clinical research and diagnostics. EXCAVATOR is freely available at http://sourceforge.net/projects/excavatortool/ webcite.
-
-*****
 
 ## Useful Links 
 
