@@ -301,7 +301,7 @@ The  **Makefile** also allows installation of selected components (check out its
 
 Using Excel or something, make a **[config.file.tsv]**  file and save as [TAB] a Delimited file with ``.tsv`` extenstion. 
  
-See Example provided in [ngseasy_test.config.tsv](https://docs.google.com/spreadsheets/d/1VWqmMffkVDnvOtRJGlPqOYzXWnIN_IONXQHDAawaN5Q/edit#gid=1060971614). 
+See Example provided in [ngseasy_test.config.tsv](https://docs.google.com/spreadsheets/d/13DosazuGdeAojZQ6YySM420p76RGleCYjR7a_MvcP2U/edit?usp=sharing). 
 
 This sets up Information related to: Project Name, Sample Name, Library Type, Pipeline to call, NCPU.
 
