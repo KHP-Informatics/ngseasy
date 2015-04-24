@@ -193,8 +193,6 @@ hg19:
 	cd $(INSTALLDIR)/ngs_projects && \
 	mkdir reference_genomes_hg19 && \
 	cd $(INSTALLDIR)/ngs_projects/reference_genomes_hg19 && \
-	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ && \
-	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/1000G_omni2.5.hg19.sites.vcf && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/1000G_omni2.5.hg19.sites.vcf.idx && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/1000G_phase1.indels.hg19.sites.vcf && \
