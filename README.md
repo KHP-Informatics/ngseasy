@@ -34,7 +34,7 @@ ngseasy -c ${HOME}/ngs_projects/config_files/ngseasy_test.config.tsv -d ${HOME}/
 
 This runs the following basic pipeline :  
 
-- FastQC > Trimmomatic > BWA > Platyus 
+- FastQC > Trimmomatic > BWA > Platypus 
 
 On Whole Exome PE 30x Illumina data, aligning to b37 (in theory...give it a try).
 
