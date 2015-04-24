@@ -25,8 +25,7 @@ TARGET_BIN=/usr/local/bin
 SRC=./bin
 
 ## Basic install - no annotation data bases or manual build tools
-all:
-	scripts ngsprojectdir dockerimages b37 hg19 testdata
+all: scripts ngsprojectdir dockerimages b37 hg19 testdata
 
 ## install scripts to target bin
 scripts:

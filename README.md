@@ -22,7 +22,7 @@ Release: dirty_tango
 
 ## For the impatient 
 
-Intsall Docker. Full instructions at https://docs.docker.com/.
+Install Docker. Full instructions at https://docs.docker.com/.
 
 ```bash
 ## Get and install NGSeasy 
