@@ -127,7 +127,7 @@ slope: baseimage
 # b37 Genomes idexed and resources	
 b37: 
 	cd $(INSTALLDIR)/ngs_projects && \
-	mkdir reference_genomes_b37 && \
+	mkdir -p reference_genomes_b37 && \
 	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b37 && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_omni2.5.b37.vcf && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_omni2.5.b37.vcf.idx && \
@@ -191,7 +191,7 @@ b37:
 # hg19 Genomes idexed and resources	
 hg19: 
 	cd $(INSTALLDIR)/ngs_projects && \
-	mkdir reference_genomes_hg19 && \
+	mkdir -p reference_genomes_hg19 && \
 	cd $(INSTALLDIR)/ngs_projects/reference_genomes_hg19 && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/1000G_omni2.5.hg19.sites.vcf && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/1000G_omni2.5.hg19.sites.vcf.idx && \
