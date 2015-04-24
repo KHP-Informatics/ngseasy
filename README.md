@@ -21,6 +21,9 @@ Release: dirty_tango
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**
 
 ## For the impatient 
+
+Intsall Docker. Full instructions at https://docs.docker.com/.
+
 ```bash
 ## Get and install NGSeasy 
 cd ${HOME}
