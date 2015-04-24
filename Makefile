@@ -30,7 +30,7 @@ all:
 
 ## install scripts to target bin
 scripts:
-	chmod 777 $(SRC)/*
+	chmod 775 $(SRC)/*
 	cp -v $(SRC)/* $(TARGET_BIN)/
 
 rmscripts:
@@ -187,7 +187,7 @@ b37:
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/human_g1k_v37_1Kwindows.bed && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/nexterarapidcapture_exome_targetedregions_v1.2.bed && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/nexterarapidcapture_expandedexome_targetedregions.bed && \
-	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_b37/
+	chmod -R 775 $(INSTALLDIR)/ngs_projects/reference_genomes_b37/
 
 # hg19 Genomes idexed and resources	
 hg19: 
@@ -255,7 +255,7 @@ hg19:
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ucsc.hg19.rev.2.bt2 && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ucsc.hg19.sthash && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ucsc.hg19.stidx && \
-	chmod -R 777 $(INSTALLDIR)/ngs_projects/reference_genomes_hg19/
+	chmod -R 775 $(INSTALLDIR)/ngs_projects/reference_genomes_hg19/
 
 ##  Test data and stick it in raw_fastq
 testdata: ngsprojectdir
@@ -267,10 +267,10 @@ testdata: ngsprojectdir
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.150x_2.fastq.gz && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.30x_1.fastq.gz && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.30x_2.fastq.gz && \
-	chmod -R 777 $(INSTALLDIR)/ngs_projects/raw_fastq/ && \
+	chmod -R 775 $(INSTALLDIR)/ngs_projects/raw_fastq/ && \
 	cd $(INSTALLDIR)/ngs_projects/config_files && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/ngseasy_test.config.tsv && \
-	chmod -R 777 $(INSTALLDIR)/ngs_projects/config_files/ 
+	chmod -R 775 $(INSTALLDIR)/ngs_projects/config_files/ 
 
 ## Manual Builds
 gatk:
