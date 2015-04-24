@@ -51,6 +51,8 @@ Release: dirty_tango</p>
 <h2>
 <a id="for-the-impatient" class="anchor" href="#for-the-impatient" aria-hidden="true"><span class="octicon octicon-link"></span></a>For the impatient</h2>
 
+<p>Intsall Docker. Full instructions at <a href="https://docs.docker.com/">https://docs.docker.com/</a>.</p>
+
 <div class="highlight highlight-bash"><pre><span class="pl-c">## Get and install NGSeasy </span>
 <span class="pl-c1">cd</span> <span class="pl-smi">${HOME}</span>
 git clone https://github.com/KHP-Informatics/ngseasy.git
@@ -587,13 +589,13 @@ make INSTALLDIR=<span class="pl-s"><span class="pl-pds">"</span>/media/scratch<s
 <td>ALIGNER</td>
 <td>STRING</td>
 <td>Select Aligner</td>
-<td></td>
+<td>no-aln, bwa, stampy, snap, novoalign, bowtie2</td>
 </tr>
 <tr>
 <td>VARCALLER</td>
 <td>STRING</td>
 <td>Select Variant Caller</td>
-<td></td>
+<td>no-varcall, freebayes, platypus, UnifiedGenotyper, HaplotypeCaller, ensemble</td>
 </tr>
 <tr>
 <td>CNV</td>
