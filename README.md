@@ -324,8 +324,8 @@ FASTQC|STRING|Select fastqc|no-fastqc, qc-fastqc
 TRIM|STRING|Select trimming|no-trimm, atrimm, btrimm
 BSQR|STRING|Select BSQR| no-bsqr, bam-bsqr, gatk-bsqr
 REALN|STRING|Select Realignment| no-realn, bam-realn, gatk-realn
-ALIGNER|STRING|Select Aligner|
-VARCALLER|STRING|Select Variant Caller|
+ALIGNER|STRING|Select Aligner|no-aln, bwa, stampy, snap, novoalign, bowtie2
+VARCALLER|STRING|Select Variant Caller|no-varcall, freebayes, platypus, UnifiedGenotyper, HaplotypeCaller, ensemble
 CNV|STRING|Select CNV caller|no-sv,all-sv,lumpy,delly,slope,exomedepth,mhmm,cnvnator
 ANNOTATOR|STRING|Select variant annotator|no-anno,snpeff,annovar,vep
 CLEANUP|STRING|clean up temp files|TRUE, FALSE
