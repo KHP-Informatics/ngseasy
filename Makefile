@@ -230,7 +230,6 @@ hg19:
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/index_novo.sh && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/index_snap.sh && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/index_stampy.sh && \
-	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/nohup.out && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ucsc.hg19-bs.umfa && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ucsc.hg19.1.bt2 && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ucsc.hg19.2.bt2 && \
