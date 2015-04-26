@@ -103,15 +103,12 @@ On Whole Exome PE 30x Illumina data, aligning to b37 (in theory...give it a try)
 
 ### Some notes and pointers
 
-**Note:** Edit **NCPU** in  **[ngseasy_test.config.tsv]** to suit your system!
-
-**Note:** everytime the user has a new project and/or new samples
-the user must run ``ngseasy_initiate_project`` followd by ``ngseasy_initiate_fastq`` .
-
-**Note:** We expect the user to palce all raw fastq files in ``raw_fastq``. NGSeasy uses this
-as a stagging area for new project and sample data.
-
-**Note:** right now, always run ``ngseasy`` from the location/directory that contains the connfig.file
+- Edit **NCPU** in  **[ngseasy_test.config.tsv]** to suit your system!  
+- everytime the user has a new project and/or new samples
+the user must run ``ngseasy_initiate_project`` followd by ``ngseasy_initiate_fastq`` .  
+- We expect the user to palce all raw fastq files in ``raw_fastq``. NGSeasy uses this
+as a stagging area for new project and sample data.  
+- right now, always run ``ngseasy`` from the location/directory that contains the connfig.file  
 
 ****************
 
