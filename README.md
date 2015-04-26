@@ -22,7 +22,9 @@ Release: dirty_tango
 
 ## For the impatient 
 
-Install Docker. Full instructions at https://docs.docker.com/.
+**Install Docker**   
+
+Full instructions at https://docs.docker.com/.
 
 **Get and Install NGSeasy**
 
@@ -42,8 +44,16 @@ cd ngseasy
 
 # Default install dir is user's $HOME 
 # in this example user home is /home/ubuntu/
+# This gets all docker images
+# sets up top level dir structure
+# gets Indexed hg19 and b37 genomes 
+# gets GATK recources
+# Gets Exome and Whole genome test data 
 
 make all 
+
+# This can take a while, 1-2 hours, so go get a coffee 
+# just chill...
 ```
 
 **Running NGSeasy for the first time on the test data**  
