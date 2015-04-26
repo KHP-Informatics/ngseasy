@@ -25,14 +25,41 @@ Release: dirty_tango
 Install Docker. Full instructions at https://docs.docker.com/.
 
 ```bash
+
+#############################################
 ## Get and install NGSeasy 
+#
 cd ${HOME}
 git clone https://github.com/KHP-Informatics/ngseasy.git
 cd ngseasy
-make all
 
+#############################################
+## make all
+# Default install dir is user's $HOME 
+# in this example user home is /home/ubuntu/
+#
+make all 
+
+#############################################
+## Move to config file dir
+cd /home/ubuntu//ngs_projects/config_files/
+
+#############################################
+## Set up project and sample directories
+#
+ngseasy_initiate_project -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
+
+#############################################
+## Move project/sample fastq from raw_fastq
+# to project and sample directories
+# 
+ngseasy_initiate_fastq -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
+
+#############################################
 ## Run basic test 
-ngseasy -c ${HOME}/ngs_projects/config_files/ngseasy_test.config.tsv -d ${HOME}/ngs_projects -p 1 -f 1
+#
+ngseasy -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
+
 ```
 
 This runs the following basic pipeline :  
