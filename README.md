@@ -108,7 +108,7 @@ On Whole Exome PE 30x Illumina data, aligning to b37 (in theory...give it a try)
 the user must run ``ngseasy_initiate_project`` followd by ``ngseasy_initiate_fastq`` .  
 - We expect the user to palce all raw fastq files in ``raw_fastq``. NGSeasy uses this
 as a stagging area for new project and sample data.  
-- right now, always run ``ngseasy`` from the location/directory that contains the connfig.file  
+- right now, always run ``ngseasy`` from the location/directory that contains the config.file  
 
 ****************
 
