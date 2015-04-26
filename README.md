@@ -93,11 +93,15 @@ ngseasy -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects
 
 ```
 
+### What should happen...
+
 This runs the following basic pipeline :  
 
 - FastQC > Trimmomatic > BWA > Platypus 
 
 On Whole Exome PE 30x Illumina data, aligning to b37 (in theory...give it a try).
+
+### Some notes and pointers
 
 **Note:** Edit **NCPU** in  **[ngseasy_test.config.tsv]** to suit your system!
 
