@@ -24,40 +24,54 @@ Release: dirty_tango
 
 Install Docker. Full instructions at https://docs.docker.com/.
 
+**Get and Install NGSeasy**
+
 ```bash
 
 #############################################
-## Get and install NGSeasy 
-#
+## Get NGSeasy                             ##
+#############################################
+
 cd ${HOME}
 git clone https://github.com/KHP-Informatics/ngseasy.git
 cd ngseasy
 
 #############################################
-## make all
+## install NGSeasy                         ##
+#############################################
+
 # Default install dir is user's $HOME 
 # in this example user home is /home/ubuntu/
-#
-make all 
 
+make all 
+```
+
+**Running NGSeasy for the first time on the test data**  
+
+```bash
 #############################################
+## RUN NGSEASY                             ##
+#############################################
+
+##=========================================##
 ## Move to config file dir
+
 cd /home/ubuntu//ngs_projects/config_files/
 
-#############################################
+##=========================================##
 ## Set up project and sample directories
-#
+
 ngseasy_initiate_project -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
 
-#############################################
+##=========================================##
 ## Move project/sample fastq from raw_fastq
 # to project and sample directories
-# 
+ 
 ngseasy_initiate_fastq -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
 
-#############################################
+##=========================================##
 ## Run basic test 
-#
+
 ngseasy -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
 
 ```
