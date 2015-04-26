@@ -22,11 +22,11 @@ Release: dirty_tango
 
 ## For the impatient 
 
-**Install Docker**   
+### Install Docker
 
 Full instructions at https://docs.docker.com/.
 
-**Get and Install NGSeasy**
+### Get and Install NGSeasy
 
 ```bash
 
@@ -57,7 +57,7 @@ make all
 # still..just chill...
 ```
 
-**Running NGSeasy for the first time on the test data**  
+### Running NGSeasy for the first time on the test data 
 
 ```bash
 #############################################
