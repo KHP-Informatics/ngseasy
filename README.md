@@ -41,9 +41,7 @@ cd ngseasy
 #############################################
 ## install NGSeasy                         ##
 #############################################
-
-# Default install dir is user's $HOME 
-# in this example user home is /home/ubuntu/
+#
 # This gets all docker images
 # sets up top level dir structure
 # gets Indexed hg19 and b37 genomes 
@@ -54,6 +52,8 @@ make all
 
 # This can take a while, 1-2 hours, so go get a coffee 
 # just chill...
+# if your network is bad...then who knows how long...
+# still..just chill...
 ```
 
 **Running NGSeasy for the first time on the test data**  
@@ -62,6 +62,9 @@ make all
 #############################################
 ## RUN NGSEASY                             ##
 #############################################
+#
+# Default install dir is user's $HOME 
+# in this example user home is /home/ubuntu/
 
 ##=========================================##
 ## Move to config file dir
@@ -75,7 +78,7 @@ ngseasy_initiate_project -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects
 
 ##=========================================##
 ## Move project/sample fastq from raw_fastq
-# to project and sample directories
+## to project and sample directories
  
 ngseasy_initiate_fastq -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
 
