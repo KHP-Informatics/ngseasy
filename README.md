@@ -42,11 +42,12 @@ cd ngseasy
 ## install NGSeasy                         ##
 #############################################
 #
-# This gets all docker images
 # sets up top level dir structure
-# gets Indexed hg19 and b37 genomes 
-# gets GATK recources
-# Gets Exome and Whole genome test data 
+# installs scripts to /usr/local/bin/
+# gets all docker images
+# gets indexed hg19 and b37 genomes 
+# gets GATK recources for hg19 and b37 genomes
+# gets whole genome and exome test data 
 
 make all 
 
@@ -72,20 +73,23 @@ make all
 cd /home/ubuntu//ngs_projects/config_files/
 
 ##=========================================##
-## Set up project and sample directories
+## 1. Set up project and sample directories
 
 ngseasy_initiate_project -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
 
 ##=========================================##
-## Move project/sample fastq from raw_fastq
+## 2. Move project/sample fastq from raw_fastq
 ## to project and sample directories
  
 ngseasy_initiate_fastq -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
 
 ##=========================================##
-## Run basic test 
+## 3. Run basic test 
 
 ngseasy -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
+
+# Note: everytime the user has a new project and/or new samples
+# you must run ngseasy_initiate_project followd by ngseasy_initiate_fastq
 
 ```
 
@@ -96,6 +100,12 @@ This runs the following basic pipeline :
 On Whole Exome PE 30x Illumina data, aligning to b37 (in theory...give it a try).
 
 Edit **NCPU** in  **[ngseasy_test.config.tsv]** to suit your system!
+
+**Note:** everytime the user has a new project and/or new samples
+the user must run ``ngseasy_initiate_project`` followd by ``ngseasy_initiate_fastq`` .
+
+We expect the user to palce all raw fastq files in ``raw_fastq``. NGSeasy uses this
+as a stagging area for new project and sample data.
 
 ****************
 
