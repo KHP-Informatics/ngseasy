@@ -53,7 +53,7 @@ git clone https://github.com/KHP-Informatics/ngseasy.git
 
 cd ngseasy
 
-make INTSALLDIR="/home/ubuntu" all 
+sudo make INTSALLDIR="/home/ubuntu" all 
 
 # NOTE:-
 # if you run sudo make all - install path is /home/root
