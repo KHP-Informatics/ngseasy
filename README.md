@@ -48,6 +48,8 @@ git clone https://github.com/KHP-Informatics/ngseasy.git
 # gets indexed hg19 and b37 genomes 
 # gets GATK recources for hg19 and b37 genomes
 # gets whole genome and exome test data 
+# The default install dir is user's /home/${USER}
+# in this example user home is /home/ubuntu/
 
 cd ngseasy
 
@@ -65,9 +67,7 @@ make all
 #############################################
 ## RUN NGSEASY                             ##
 #############################################
-#
-# Default install dir is user's /home/${USER}
-# in this example user home is /home/ubuntu/
+
 
 #############################################
 ## 0. Move to config file dir

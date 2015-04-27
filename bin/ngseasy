@@ -111,17 +111,6 @@ do
    echo -e  "PROJECT DIR [-d] = ${project_directory}"
    ;;
 
- #  p)
- #  initiate_project=${OPTARG}
- #  echo -e "-p = ${make_dirs}"
- #  ;;
-   
- #  f)
- #  set_fastq=${OPTARG}
- #  echo -e "-f = ${set_fastq}"
- #  ;;
-   
-   
    esac
 done
 
@@ -199,32 +188,6 @@ if [[ ! -d "${project_directory}" ]]
 	  sleep 1s
 	  exit 1;
 fi
-
-###########################################################################################
-## initiate projects 0-0-1
-###########################################################################################
-
-#if [[ "${initiate_project}" -eq "1" ]]
-#then
-#    logger_ngseasy "[ngseasy]:Calling ngseasy_initiate_project"  ${config_run_log}
-#    /bin/bash ngseasy_initiate_project -c ${config_tsv} -d ${project_directory}
-#else
-#   logger_ngseasy  "[ngseasy]:Assuming ngseasy_initiate_project already run. Project and Sample directories exist" ${config_run_log}
-#fi
-###########################################################################################
-## initiate fastq files 0-0-2
-###########################################################################################
-# copy or move fastq files to project directories 
-#if [[ "${set_fastq}" -eq "1" ]]
-#then
-#    logger_ngseasy  "[ngseasy]:Calling ngseasy_initiate_fastq" ${config_run_log}
-#    logger_ngseasy  "[ngseasy]:[cmd]:ngseasy_initiate_fastq -c ${config_tsv} -d ${project_directory}" ${config_run_log}
-#    /bin/bash ngseasy_initiate_fastq -c ${config_tsv} -d ${project_directory}
-#else
-#    logger_ngseasy "[ngseasy]:Assuming ngseasy_initiate_fastq already run (or not)" ${config_run_log}
-#    logger_ngseasy "[ngseasy]:Assuming fastq files exist and that they are in the right directories....dont worry, ngseasy will check later and tell ya" ${config_run_log}
-#    logger_ngseasy "[ngseasy]:You cant run NGS without the raw fastq files..." ${config_run_log}
-#fi
 
 ###########################################################################################
 ## FastQC: will run as many jobs as allowed by nproc on system
