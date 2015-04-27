@@ -1023,21 +1023,21 @@ logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller " 
 ## https://github.com/chapmanb/bcbio.variation
 
 
-  logger_ngseasy " START bcbio-variation in Ensembl Variant Calling using Freebayes + Platypus + HaplotypeCaller "  ${LOGFILE}
+  logger_ngseasy " START bcbio-variation in Ensembl Variant Calling using Freebayes + HaplotypeCaller "  ${LOGFILE}
 
 #Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
-
-params_yaml="/home/pipeman/ngseasy_scripts/ensemble.calling.params.yaml"
 
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name bcbio-variation_${BAM_PREFIX} \
-  -t compbio/ngseasy-bcbio-variation:${NGSEASYVERSION} java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/bcbio/bcbio.variation-0.1.7-standalone.jar variant-ensemble \
-  ${params_yaml} \
-  /home/pipeman/reference_genomes_b37/human_g1k_v37.fasta \
-  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.ensemble.vcf \
-  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.freebayes.vcf \
-  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.HaplotypeCaller.vcf;
+  -t compbio/ngseasy-bcbio-variation:${NGSEASYVERSION} bcbio-variation-recall ensemble \
+  -c ${NCPU} \
+  -n 2 \
+  --nofiltered \
+  ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.ensemble.vcf \
+  ${REFFASTA} \
+  ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.freebayes.vcf \
+  ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.HaplotypeCaller.vcf;
 
 #logs
   docker logs bcbio-variation_${BAM_PREFIX} >> ${LOGFILE}.log
@@ -1047,6 +1047,7 @@ params_yaml="/home/pipeman/ngseasy_scripts/ensemble.calling.params.yaml"
   logger_ngseasy " END bcbio-variation in Ensembl Variant Calling using Freebayes + HaplotypeCaller "  ${LOGFILE}
 
 fi
+
 
 ######################################################################################################## 
 ## permissions
