@@ -15,17 +15,32 @@ MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 # Update
 RUN apt-get update -y && apt-get upgrade -y
 
-#-------------------------NGS-TOOL---------------------------------------
-RUN mkdir /usr/local/pipeline/bcbio  && \
-  cd /usr/local/pipeline/bcbio && \
-  wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.2.3/bcbio.variation-0.2.3-standalone.jar && \
-  chmod 777 bcbio.variation-0.2.3-standalone.jar && \
-  sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/bcbio/bcbio.variation-0.2.3-standalone.jar' /home/pipeman/.bashrc && \
-  sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' /home/pipeman/.bashrc && \
-  sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' ~/.bashrc && \
-  cp -v bcbio.variation-0.2.3-standalone.jar /usr/local/bin/
+#-------------------------bcbio.variation.recall---------------------------------------
+
+#RUN mkdir /usr/local/pipeline/bcbio  && \
+#  cd /usr/local/pipeline/bcbio && \
+#  wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.2.3/bcbio.variation-0.2.3-standalone.jar && \
+#  chmod 777 bcbio.variation-0.2.3-standalone.jar && \
+#  sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/bcbio/bcbio.variation-0.2.3-standalone.jar' /home/pipeman/.bashrc && \
+#  sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' /home/pipeman/.bashrc && \
+#  sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' ~/.bashrc && \
+#  cp -v bcbio.variation-0.2.3-standalone.jar /usr/local/bin/
+
+
+## get dev version of bcbio.variation.recall
+# April 2015 bcbio.variation.recall 0.1.2
+
+RUN cd /usr/local/pipeline/ && \
+	wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein && \
+	mv -v lein /usr/local/bin && \
+	chmod a+x /usr/local/bin/lein && \
+	git clone --recursive https://github.com/chapmanb/bcbio.variation.recall.git && \
+	cd bcbio.variation.recall && \
+	make all && \
+	cp -v bin/bcbio-variation-recall /usr/local/bin
 
 ADD fix_ambiguous /usr/local/bin/
+
 #-------------------------------PERMISSIONS-------------------------
 RUN chmod -R 777 /usr/local/pipeline
 RUN chown -R pipeman:ngsgroup /usr/local/pipeline
