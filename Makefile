@@ -284,7 +284,7 @@ testdata: ngsprojectdir
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.30x_2.fastq.gz && \
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/raw_fastq/ && \
 	cd $(INSTALLDIR)/ngs_projects/config_files && \
-	wget https://github.com/KHP-Informatics/ngseasy/blob/master/test/ngseasy_test.config.tsv && \
+	cp -v $(SRC)/test/ngseasy_test.config.tsv $(INSTALLDIR)/ngs_projects/config_files/ && \
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/config_files/ 
 
 ## Manual Builds
