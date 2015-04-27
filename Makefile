@@ -1,8 +1,15 @@
 ## ngseasy Makefile
 ## Version 1.0 
 ## Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
-
-## MEM Min 32GB
+################################################################
+## Usage
+################################################################
+#
+# make all
+#
+# make INTSALLDIR="/CUSTOM/PATH/" all
+#
+################################################################
 
 ## Edit this to reflect version if ya need
 VERSION=1.0
@@ -265,7 +272,7 @@ testdata: ngsprojectdir
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.30x_2.fastq.gz && \
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/raw_fastq/ && \
 	cd $(INSTALLDIR)/ngs_projects/config_files && \
-	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/ngseasy_test.config.tsv && \
+	wget https://github.com/KHP-Informatics/ngseasy/blob/master/test/ngseasy_test.config.tsv && \
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/config_files/ 
 
 ## Manual Builds
