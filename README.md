@@ -70,7 +70,7 @@ make all
 #############################################
 ## Move to config file dir
 
-cd /home/ubuntu//ngs_projects/config_files/
+cd /home/ubuntu/ngs_projects/config_files/
 
 #############################################
 ## 1. Set up project and sample directories
