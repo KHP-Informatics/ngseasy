@@ -89,9 +89,6 @@ dockerimages:
 	docker pull compbio/ngseasy-exomedepth:$(VERSION) && \
 	docker pull compbio/ngseasy-slope:$(VERSION)
 
-indexgenomes: dockerimages
-	bwaindex bowtie2index stampyindex snapindex
-
 baseimage:
 	docker pull compbio/ngseasy-base:$(VERSION)
 
@@ -311,7 +308,7 @@ annovar:
 	cd $(DIR)/containerized/ngs_docker_debian/ngs_variant_annotators/ngseasy_annovar && \
 	docker build --rm=true compbio/ngseasy-annovar:$(VERSION) .
 
-annovardb:	
+annovardb:
 	docker run \
 	--volume $(INSTALLDIR)/ngs_projects/annovardb/:/home/annovardb \
 	--name get_annovardb \
