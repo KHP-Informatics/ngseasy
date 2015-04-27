@@ -13,7 +13,7 @@ WHOAMI=$(shell whoami)
 # eg:
 # make INSTALLDIR="/medida/scratch" all
 #
-INSTALLDIR=$(HOME)
+INSTALLDIR=/home/$(USER)
 
 ## Current working dir
 DIR=$(shell pwd)

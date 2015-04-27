@@ -67,23 +67,23 @@ make all
 # Default install dir is user's $HOME 
 # in this example user home is /home/ubuntu/
 
-##=========================================##
+#############################################
 ## Move to config file dir
 
 cd /home/ubuntu//ngs_projects/config_files/
 
-##=========================================##
+#############################################
 ## 1. Set up project and sample directories
 
 ngseasy_initiate_project -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
 
-##=========================================##
+#############################################
 ## 2. Move project/sample fastq from raw_fastq
 ## to project and sample directories
  
 ngseasy_initiate_fastq -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
 
-##=========================================##
+#############################################
 ## 3. Run basic test 
 
 ngseasy -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
@@ -95,15 +95,14 @@ ngseasy -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects
 
 ### What should happen...
 
-This runs the following basic pipeline :  
+This runs the following basic pipeline on Whole Exome PE 30x Illumina data, aligning to b37 (in theory...give it a try).  
 
 - FastQC > Trimmomatic > BWA > Platypus 
-
-On Whole Exome PE 30x Illumina data, aligning to b37 (in theory...give it a try).
 
 ### Some notes and pointers
 
 - Edit **NCPU** in  **[ngseasy_test.config.tsv]** to suit your system!  
+- Edit **PROJECT_DIR** in  **[ngseasy_test.config.tsv]** to suit your install path!    
 - everytime the user has a new project and/or new samples
 the user must run ``ngseasy_initiate_project`` followd by ``ngseasy_initiate_fastq`` .  
 - We expect the user to palce all raw fastq files in ``raw_fastq``. NGSeasy uses this
