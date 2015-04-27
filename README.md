@@ -34,9 +34,9 @@ Full instructions at https://docs.docker.com/.
 ## Get NGSeasy                             ##
 #############################################
 
-cd ${HOME}
+cd /home/${USER}
+
 git clone https://github.com/KHP-Informatics/ngseasy.git
-cd ngseasy
 
 #############################################
 ## install NGSeasy                         ##
@@ -48,6 +48,8 @@ cd ngseasy
 # gets indexed hg19 and b37 genomes 
 # gets GATK recources for hg19 and b37 genomes
 # gets whole genome and exome test data 
+
+cd ngseasy
 
 make all 
 
@@ -64,11 +66,11 @@ make all
 ## RUN NGSEASY                             ##
 #############################################
 #
-# Default install dir is user's $HOME 
+# Default install dir is user's /home/${USER}
 # in this example user home is /home/ubuntu/
 
 #############################################
-## Move to config file dir
+## 0. Move to config file dir
 
 cd /home/ubuntu/ngs_projects/config_files/
 
