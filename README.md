@@ -63,6 +63,14 @@ sudo make INTSALLDIR="/home/ubuntu" all
 # still..just chill...
 ```
 
+Install time on Amazon EC2
+
+```
+real    94m54.237s
+user    12m26.960s
+sys 28m46.648s
+```
+
 ### Running NGSeasy for the first time on the test data 
 
 ```bash
@@ -372,10 +380,9 @@ The  **Makefile** also allows installation of selected components (check out its
 ## Set up NGSeasy Project configuration file
 
 Using Excel or something, make a **[config.file.tsv]**  file and save as [TAB] a Delimited file with ``.tsv`` extenstion. 
- 
-See Example provided in [ngseasy_test.config.tsv](https://docs.google.com/spreadsheets/d/13DosazuGdeAojZQ6YySM420p76RGleCYjR7a_MvcP2U/edit?usp=sharing). 
-
 This sets up Information related to: Project Name, Sample Name, Library Type, Pipeline to call, NCPU.
+
+We provide a template that can be used with NGSeasy, see [ngseasy_test.config.tsv](https://docs.google.com/spreadsheets/d/13DosazuGdeAojZQ6YySM420p76RGleCYjR7a_MvcP2U/edit?usp=sharing). 
 
 The **[config.file.tsv]** should contain the following 23 columns for each sample to be run through a pipeline:- 
 
