@@ -13,10 +13,12 @@
 #
 ################################################################
 
+################################################################
 ## Edit this to reflect version if ya need
 VERSION=1.0
 WHOAMI=$(shell whoami)
 
+################################################################
 ## This is where we will make ngs_projects and download metadata to etc etc
 ## Edit this if you want to install all somewhere else
 # eg:
@@ -24,14 +26,21 @@ WHOAMI=$(shell whoami)
 #
 INSTALLDIR=/home/$(USER)
 
+################################################################
 ## Current working dir
 DIR=$(shell pwd)
 
+################################################################
 ## Install bin path - edit at will
 TARGET_BIN=/usr/local/bin
 
+################################################################
 ## relative path to ngseasy scripts
 SRC=./bin
+
+################################################################
+# Intsalling all or parts...
+################################################################
 
 ## Basic install - no annotation data bases or manual build tools
 all: scripts ngsprojectdir dockerimages b37 hg19 testdata
@@ -71,6 +80,7 @@ dockerimages:
 	docker pull compbio/ngseasy-picardtools:$(VERSION) && \
 	docker pull compbio/ngseasy-freebayes:$(VERSION) && \
 	docker pull compbio/ngseasy-platypus:$(VERSION) && \
+	docker pull compbio/ngseasy-glia:$(VERSION) && \
 	docker pull compbio/ngseasy-delly:$(VERSION) && \
 	docker pull compbio/ngseasy-lumpy:$(VERSION) && \
 	docker pull compbio/ngseasy-bcbiovar:$(VERSION) && \
@@ -132,6 +142,9 @@ exomedepth: baseimage
 
 slope: baseimage
 	docker pull compbio/ngseasy-slope:$(VERSION)
+
+glia: baseimage
+	docker pull compbio/ngseasy-glia:$(VERSION)
 
 # b37 Genomes idexed and resources	
 b37: 
