@@ -53,9 +53,11 @@ git clone https://github.com/KHP-Informatics/ngseasy.git
 
 cd ngseasy
 
-make all 
+make INTSALLDIR="/home/ubuntu" all 
 
-# This can take a while, 1-2 hours, so go get a coffee 
+# NOTE:-
+# if you run sudo make all - install path is /home/root
+# Install can take a while, 1-2 hours, so go get a coffee 
 # just chill...
 # if your network is bad...then who knows how long...
 # still..just chill...
