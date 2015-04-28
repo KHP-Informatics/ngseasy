@@ -591,8 +591,8 @@ docker build -t compbio/ngseasy-${TOOL} .
 ## Building NOVOALIGN
 
 **Download Novoalign from  http://www.novocraft.com/** into the local build directory **ngseasy/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign*. 
-Edit the [Dockerfile](https://github.com/KHP-Informatics/ngs/blob/master/containerized/ngs_docker_debian/ngseasy_novoalign/Dockerfile) to relfect
-the correct version of novoalign.  
+Edit the [Dockerfile](https://github.com/KHP-Informatics/ngseasy/blob/master/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign/Dockerfile) 
+to relfect the correct version of novoalign.  
 
 To use all novoalign fucntionality, you will need to **pay for a license**.   
 
