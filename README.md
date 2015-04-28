@@ -15,8 +15,8 @@ NGSeasy (beta)
 
 **Authors:** Stephen J Newhouse, Amos Folarin , Maximilian Kerz  
 **Release Version:** **1.0**  
-**Release:** dirty_tango
-**Publication:** pending
+**Release:** dirty_tango  
+**Publication:** _pending_  
 
 ## Issues, Questions and Queries 
 **Please Direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues]**
