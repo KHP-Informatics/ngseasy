@@ -28,7 +28,9 @@ Full instructions at https://docs.docker.com/.
 
 Some fixes to make life easy...allows you to run ``docker`` without ``sudo``. 
 
-This may differ for your OS. Check with your sys admin or Google https://www.google.com.
+This may differ for your OS, and mostly applies to flavours of ``Linux``. Check with your sys admin or just Google https://www.google.com.
+
+MAC/Windows users using http://boot2docker.io/ should be fine. Read the docs or just Google https://www.google.com.
 
 **Create a docker group**
 
