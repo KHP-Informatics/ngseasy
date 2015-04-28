@@ -451,16 +451,9 @@ logger_ngseasy "[ngseasy_fastqc]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/pip
 	-d \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name fastqc_${BAM_PREFIX} \
-	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} /bin/bash -c \
-	"/usr/local/pipeline/FastQC/fastqc \
-	--threads 2 \
-	--extract \
-	--dir ${SOUTDocker}/tmp \
-	--outdir ${SOUTDocker}/fastq \
-	${SOUTDocker}/fastq/${FQ1} \
-	${SOUTDocker}/fastq/${FQ2}"
-	docker ps 
-	sleep 1s
+	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract \
+	--dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${FQ1} ${SOUTDocker}/fastq/${FQ2}
+
 ########################################################################################################
 ## QUIT IF no-fastqc option is selected
 #
@@ -471,11 +464,9 @@ else
 	sleep 1s
 	exit 1
 fi
-##
-done < ${RUNFILE}
-
-
 ########################################################################################################
-logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
-sleep 1s
+# permissions
+#
+chmod -R 777 ${SOUT}/*
+done < ${RUNFILE}
 ########################################################################################################
