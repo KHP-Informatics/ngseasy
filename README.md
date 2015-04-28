@@ -36,7 +36,7 @@ sudo addgroup docker
 
 **Add user to docker group**  
 
-Here user us ``ec2-user``
+Here user is ``ec2-user``
 
 ```bash
 sudo usermod -aG docker ec2-user
