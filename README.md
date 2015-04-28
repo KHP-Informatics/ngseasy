@@ -12,7 +12,8 @@ NGSeasy (beta)
 **Release:** dirty_tango  
 **Publication:** _pending_  
 
-_This is the latest dev project: undergoing massive re-dev , links may be broken...stay tuned and (email us)[https://github.com/KHP-Informatics/ngseasy/issues]. give us a few weeks._  
+_This is the latest dev project: undergoing massive re-dev , links may be broken...stay tuned and [email us](https://github.com/KHP-Informatics/ngseasy/issues)...give us a few weeks._   
+
 **Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
 
 - **NGSeasy-1.0 Full Production release will be available Early 2015**  
