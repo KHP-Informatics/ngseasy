@@ -5,18 +5,28 @@ NGSeasy (beta)
 ****************
 ## [A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box] 
 ****************
-
-** This is the latest dev project **  
-**note**: undergoing massive re-dev , many links broken...stay tuned and email us. give us a few weeks.  
-
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**  
-
-**Please read the docs...**   
 
 **Authors:** Stephen J Newhouse, Amos Folarin , Maximilian Kerz  
 **Release Version:** **1.0**  
 **Release:** dirty_tango  
 **Publication:** _pending_  
+
+** This is the latest dev project ** _undergoing massive re-dev , many links broken...stay tuned and email us. give us a few weeks._  
+**Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
+
+- **NGSeasy-1.0 Full Production release will be available Early 2015**  
+- **NGSeasy-1.0 (dirty_tango) contains most of the core fucntionality to go from raw fastq to raw vcf calls**
+- **NGSeasy will update every 12 months**
+- **GUI in development**
+ 
+
+****************
+
+[**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**](https://github.com/KHP-Informatics/ngseasy.git)
+
+****************
+
 
 ## Issues, Questions and Queries 
 **Please Direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues]**
@@ -180,19 +190,6 @@ as a stagging area for new project and sample data.
 
 ****************
 
-**Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
-
-- **NGSeasy-1.0 Full Production release will be available Early 2015**  
-- **NGSeasy-1.0 (dirty_tango) contains most of the core fucntionality to go from raw fastq to raw vcf calls**
-- **NGSeasy will update every 12 months**
-- **GUI in development**
- 
-
-****************
-
-[**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**](https://github.com/KHP-Informatics/ngseasy.git)
-
-****************
 
 NGSeasy (Easy Analysis of Next Generation Sequencing)
 =======================================================
