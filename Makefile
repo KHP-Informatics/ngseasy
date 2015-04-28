@@ -13,8 +13,6 @@
 #
 ################################################################
 
-SHELL = /bin/sh
-
 ################################################################
 ## Edit this to reflect version if ya need
 VERSION=1.0
@@ -50,8 +48,12 @@ all: ngsprojectdir dockerimages testdata b37 hg19
 
 ## install scripts to target bin eg sudo make install
 install:
-	chmod 775 $(SRC)/*
+	chmod 775 $(SRC)/* && \
 	cp -v $(SRC)/* $(TARGET_BIN)/
+
+## fix permissions. run - sudo make NGSUSER="ec2-user" fixuser
+fixuser: 
+	chown $(NGSUSER):$(NGSUSER) $(INSTALLDIR)
 
 uninstall:
 	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy 
