@@ -10,15 +10,13 @@ NGSeasy (beta)
 **note**: undergoing massive re-dev , many links broken...stay tuned and email us. give us a few weeks.  
 
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**  
-**Please read the docs**   
 
-[Funded by Biomedical Research Centre](http://core.brc.iop.kcl.ac.uk): http://core.brc.iop.kcl.ac.uk
+**Please read the docs...**   
 
-Publication: pending
-
-Authors: Stephen J Newhouse, Amos Folarin , Maximilian Kerz  
-Release Version: **1.0**  
-Release: dirty_tango
+**Authors:** Stephen J Newhouse, Amos Folarin , Maximilian Kerz  
+**Release Version:** **1.0**  
+**Release:** dirty_tango
+**Publication:** pending
 
 ## Issues, Questions and Queries 
 **Please Direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues]**
@@ -745,3 +743,6 @@ sudo docker build -t compbio/ngseasy-snpeff:${VERSION} .
 - http://genome.sph.umich.edu/wiki/BamUtil:_recab  
 - https://github.com/chapmanb/bcbio.variation  
 - http://plagnol-lab.blogspot.co.uk/2013/11/faq-and-clarifications-for-exomedepth-r.html
+
+*************************
+[Funded by Biomedical Research Centre](http://core.brc.iop.kcl.ac.uk): http://core.brc.iop.kcl.ac.uk
