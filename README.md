@@ -590,28 +590,17 @@ docker build -t compbio/ngseasy-${TOOL} .
 
 ## Building NOVOALIGN
 
-**Download Novoalign from  http://www.novocraft.com/** into the local build directory **ngs/ngs_docker_debian/ngseasy_novoalign**. 
+**Download Novoalign from  http://www.novocraft.com/** into the local build directory **ngseasy/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign*. 
 Edit the [Dockerfile](https://github.com/KHP-Informatics/ngs/blob/master/containerized/ngs_docker_debian/ngseasy_novoalign/Dockerfile) to relfect
 the correct version of novoalign.  
 
 To use all novoalign fucntionality, you will need to **pay for a license**.   
 
-Once you obtained your **novoalign.lic**, download this to the build directory **ngs/ngs_docker_debian/ngseasy_novoalign**, which now should contain your updated [Dockerfile](https://github.com/KHP-Informatics/ngs/blob/master/containerized/ngs_docker_debian/ngseasy_novoalign/Dockerfile).
+Once you obtained your **novoalign.lic**, download this to the build directory **ngseasy/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign*, which now should contain your updated [Dockerfile](https://github.com/KHP-Informatics/ngseasy/blob/master/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign/Dockerfile).
 
 ```bash
-# on our local system we cd to media
-cd /media
-
-# them move to ngs_projects toplevel directory
-cd ngs_projects
-
-# and then the ngseasy folder with all our ngs scripts
-# git  clone https://github.com/KHP-Informatics/ngs.git
-# if you havent alreay
-cd ngseasy
-
 # move to ngseasy_stampy folder
-cd ngs/ngs_docker_debian/ngseasy_novoalign
+cd ngseasy/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign
 ls 
 ```
 
@@ -638,25 +627,14 @@ docker build -t compbio/ngseasy-novoalign:v1.0 .
 
 You need to register and accept the GATK license agreement at https://www.broadinstitute.org/gatk/.  
 
-Once done, download GATK and place in the GTAK build directory **ngs/ngs_docker_debian/ngseasy_gatk**.  
+Once done, download GATK and place in the GTAK build directory **ngseasy/containerized/ngs_docker_debian/ngs_utils/ngseasy_gatk**.  
 
-Edit the [Dockerfile](https://github.com/KHP-Informatics/ngs/blob/master/containerized/ngs_docker_debian/ngseasy_gatk/Dockerfile) to relfect
+Edit the [Dockerfile](https://github.com/KHP-Informatics/ngseasy/blob/master/containerized/ngs_docker_debian/ngs_utils/ngseasy_gatk/Dockerfile) to relfect
 the correct version of GATK.  
 
 ```bash
-# on our local system we cd to media
-cd /media
-
-# them move to ngs_projects toplevel directory
-cd ngs_projects
-
-# and then the ngseasy folder with all our ngs scripts
-# git  clone https://github.com/KHP-Informatics/ngs.git
-# if you havent alreay
-cd ngseasy
-
-# move to ngseasy_stampy folder
-cd ngs/ngs_docker_debian/ngseasy_gatk
+# move to ngseasy_gatk folder
+cd ngseasy/containerized/ngs_docker_debian/ngs_utils/ngseasy_gatk
 ls 
 ```
 
