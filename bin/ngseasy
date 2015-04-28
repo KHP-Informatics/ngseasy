@@ -280,6 +280,7 @@ logger_ngseasy "[ngseasy]:Calling ngseasy_fastqc" ${config_run_log}
 ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
 
 logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs started [$ndockerjobs]" ${config_run_log}
+sleep 1s
 
 ## while jobs still running ie not equal to 0 then sleep for 10 seconds ####
 #
@@ -287,7 +288,9 @@ logger_ngseasy "[ngseasy]:Checking for the number of running Docker FastQC jobs 
 logger_ngseasy "[ngseasy]:When the number of running Docker FastQC jobs hits [0], the next batch will begin" ${config_run_log}
 
 logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]" ${config_run_log}
-while [ $ndockerjobs -gt 0 ]; do
+sleep 1s
+
+while [ "${ndockerjobs}" -gt 0 ]; do
 	sleep 60s;
 	ndockerjobs=`docker ps -a | grep fastqc | grep Up | wc -l`;
 	logger_ngseasy "[ngseasy]:Number of Docker FastQC jobs running [$ndockerjobs]" 
@@ -296,9 +299,9 @@ done
 
 ## remove docker Exited containers ####
 #
-ndockerjobs=`docker ps -a | grep fastqc | grep Exited | wc -l`;
+ndockerjobs_running=`docker ps -a | grep fastqc | grep Exited | wc -l`;
 
-if [ $ndockerjobs -gt 0 ]; then 
+if [ "${ndockerjobs_running}" -gt 0 ]; then 
 
   logger_ngseasy "[ngseasy]:cleaning up compbio/ngseasy-fastqc:${NGSEASYVERSION} container images" ${config_run_log}  
   logger_ngseasy "[ngseasy]:[cmd]:docker rm -f \$(docker ps -a | grep fastqc  | grep Exited | awk '{print \$1}')" ${config_run_log}
