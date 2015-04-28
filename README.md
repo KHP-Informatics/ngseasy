@@ -34,7 +34,8 @@ Some fixes to make life easy...
 sudo addgroup docker
 ```
 
-**Add user to docker group**
+**Add user to docker group**  
+
 Here user us ``ec2-user``
 
 ```bash
