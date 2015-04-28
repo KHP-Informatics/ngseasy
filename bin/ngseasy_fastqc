@@ -419,8 +419,9 @@ elif [[ -e "${SOUT}/fastq/${illprefix1}_fastqc.html" ]] && [[ -e "${SOUT}/fastq/
 
 elif [[ "$FASTQC" == "qc-fastqc" ]]; then
 
-	echo -e "\n----------------------------------\n"
+
 	logger_ngseasy "[ngseasy_fastqc]:START: FastQC on raw Fastq files" ${LOGFILE}
+	sleep 1s
 
 ########################################################################################################
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
@@ -444,15 +445,22 @@ BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TR
 ## call docker: run as -d in background (-d does not work with --rm=true). 
 ## This runs all containers in background..simultaneuously!
 #
-logger_ngseasy "[ngseasy_fastqc]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/pipeman/ngs_projects -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman --name fastqc_${BAM_PREFIX} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${F1} ${SOUTDocker}/fastq/${F2}" ${LOGFILE}
+logger_ngseasy "[ngseasy_fastqc]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/pipeman/ngs_projects -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman --name fastqc_${BAM_PREFIX} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${FQ1} ${SOUTDocker}/fastq/${FQ2}" ${LOGFILE}
 
 	${DOCKER_RUN} \
 	-d \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 	--name fastqc_${BAM_PREFIX} \
-	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} \
-	/usr/local/pipeline/FastQC/fastqc --threads 2 --extract --dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${FQ1} ${SOUTDocker}/fastq/${FQ2}
-
+	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} /bin/bash -c \
+	"/usr/local/pipeline/FastQC/fastqc \
+	--threads 2 \
+	--extract \
+	--dir ${SOUTDocker}/tmp \
+	--outdir ${SOUTDocker}/fastq \
+	${SOUTDocker}/fastq/${FQ1} \
+	${SOUTDocker}/fastq/${FQ2}"
+	docker ps 
+	sleep 1s
 ########################################################################################################
 ## QUIT IF no-fastqc option is selected
 #
@@ -468,6 +476,6 @@ done < ${RUNFILE}
 
 
 ########################################################################################################
-#logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
+logger_ngseasy "[ngseasy_fastqc]:END: FastQC on raw Fastq files "  ${LOGFILE}
 sleep 1s
 ########################################################################################################
