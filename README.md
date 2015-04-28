@@ -44,7 +44,7 @@ git clone https://github.com/KHP-Informatics/ngseasy.git
 #
 # default install directory is /home/${USER}
 # make sets up top level directory structure in /home/${USER} by default
-# in this example user home is /home/ubuntu/
+# in this example user home is /home/ec2-user
 # installs scripts to /usr/local/bin/
 # gets all docker images
 # gets indexed hg19 and b37 genomes 
@@ -53,7 +53,9 @@ git clone https://github.com/KHP-Informatics/ngseasy.git
 
 cd ngseasy
 
-sudo make INTSALLDIR="/home/ubuntu" all 
+make INTSALLDIR="/home/ec2-user" all
+
+sudo make install
 
 # NOTE:-
 # if you run sudo make all - install path is /home/root
@@ -81,23 +83,23 @@ sys 28m46.648s
 #############################################
 ## 0. Move to config file dir
 
-cd /home/ubuntu/ngs_projects/config_files/
+cd /home/ec2-user/ngs_projects/config_files/
 
 #############################################
 ## 1. Set up project and sample directories
 
-ngseasy_initiate_project -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
+ngseasy_initiate_project -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects 
 
 #############################################
 ## 2. Move project/sample fastq from raw_fastq
 ## to project and sample directories
  
-ngseasy_initiate_fastq -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
+ngseasy_initiate_fastq -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects 
 
 #############################################
 ## 3. Run basic test 
 
-ngseasy -c ngseasy_test.config.tsv -d /home/ubuntu/ngs_projects 
+ngseasy -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects 
 
 # Note: everytime the user has a new project and/or new samples
 # you must run ngseasy_initiate_project followd by ngseasy_initiate_fastq

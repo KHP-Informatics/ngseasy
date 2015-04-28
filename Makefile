@@ -13,10 +13,13 @@
 #
 ################################################################
 
+SHELL = /bin/sh
+
 ################################################################
 ## Edit this to reflect version if ya need
 VERSION=1.0
 WHOAMI=$(shell whoami)
+NGSUSER=$(WHOAMI)
 
 ################################################################
 ## This is where we will make ngs_projects and download metadata to etc etc
@@ -43,18 +46,21 @@ SRC=./bin
 ################################################################
 
 ## Basic install - no annotation data bases or manual build tools
-all: scripts ngsprojectdir dockerimages b37 hg19 testdata
+all: ngsprojectdir dockerimages testdata b37 hg19
 
-## install scripts to target bin
-scripts:
+## install scripts to target bin eg sudo make install
+install:
 	chmod 775 $(SRC)/*
 	cp -v $(SRC)/* $(TARGET_BIN)/
 
-rmscripts:
+uninstall:
 	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy 
 
 updatescripts:
-	git pull && rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy && chmod 777 $(SRC)/ && cp -v $(SRC)/* $(TARGET_BIN)/
+	git pull && rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy && chmod -R 775 $(SRC)/ && cp -v $(SRC)/* $(TARGET_BIN)/
+
+update:
+	git pull
 
 ## Make Top level project directories
 ngsprojectdir: 
