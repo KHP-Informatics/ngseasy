@@ -357,7 +357,7 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
 
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab b37 [${DBSNPb37}]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab b37 [${DBSNP_RECAB}]" ${LOGFILE}
 
   #known indels and SNPs
   KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.b37.vcf"
@@ -390,7 +390,7 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
 
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab hg19 [${DBSNPhg19}]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab hg19 [${DBSNP_RECAB}]" ${LOGFILE}
 
   #known indels and SNPs
   KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.gz"
@@ -661,6 +661,7 @@ elif [ "${VARCALLER}" == "platypus" ]
 #    --hapScoreThreshold", "10", "--scThreshold", "0.99", "--filteredReadsFrac", "0.9",
 #                   "--rmsmqThreshold", "20", "--qdThreshold", "0", "--abThreshold", "0.0001",
 #                   "--minVarFreq", "0.0"]
+#      --regions=${SOUTDocker}/reports/${BAMFILE}.platypus.intervals \
     
     ${DOCKER_RUN} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -671,7 +672,6 @@ elif [ "${VARCALLER}" == "platypus" ]
       --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
-      --regions=${SOUTDocker}/reports/${BAMFILE}.platypus.intervals \
       --assemble=1 \
       --assembleAll=1 \
       --assemblyRegionSize=1500 \
@@ -720,7 +720,6 @@ elif [ "${VARCALLER}" == "platypus" ]
       --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
-      --regions=${SOUTDocker}/reports/${BAMFILE}.platypus.intervals \
       --assemble=1 \
       --assembleAll=1 \
       --assemblyRegionSize=1500 \
