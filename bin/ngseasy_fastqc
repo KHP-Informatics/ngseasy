@@ -11,7 +11,35 @@ echo -e "# Version 1.0"
 echo -e "# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)"
 echo -e "#################################################################\n"
 #################################################################
-
+#################################################################
+# clear stuff up
+REFDIR=""
+GENOMEINDEX=""
+PROJECT_ID=""
+SAMPLE_ID=""
+FASTQ1=""
+FASTQ2=""
+PROJECT_DIR=""
+DNA_PREP_LIBRARY_ID=""
+NGS_PLATFORM=""
+NGS_TYPE=""
+BAIT=""
+CAPTURE=""
+GENOMEBUILD=""
+FASTQC=""
+TRIM=""
+BSQR=""
+REALN=""
+ALIGNER=""
+VARCALLER=""
+CNV=""
+ANNOTATOR=""
+CLEANUP=""
+NCPU=""
+NGSEASYVERSION=""
+NGSUSER=""
+RUNDATE=""
+NGSEASY_STEP=""
 ########################################################################################################
 ## test if docker is intsalled and exit if not
 command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
@@ -173,12 +201,10 @@ fi
 
 
 #head ${RUNFILE}
-########################################################################################################
 ## Read config and loop through all lines calling fastqc docker
 #
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
-
 PROJECT_ID=$f1
 SAMPLE_ID=$f2
 FASTQ1=$f3
@@ -203,7 +229,6 @@ NCPU=$f21
 NGSEASYVERSION=$f22
 NGSUSER=$f23
 DATE=`date +"%d%m%y"`
-
 ########################################################################################################
 ## LOGFILE 
 #
@@ -369,6 +394,10 @@ else
 	exit 1
 fi        
 
+	logger_ngseasy "[ngseasy_fastqc]: FQ1 [${FQ1}]" ${LOGFILE}
+	logger_ngseasy "[ngseasy_fastqc]: FQ2 [${FQ2}]" ${LOGFILE}
+	sleep 2s 
+	
 ########################################################################################################
 #---------------------------------------FASTQC---------------------------------------------------------#
 ########################################################################################################
