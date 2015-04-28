@@ -126,7 +126,7 @@ Install time on Amazon EC2
 ```
 real    94m54.237s
 user    12m26.960s
-sys 28m46.648s
+sys     28m46.648s
 ```
 
 ### Running NGSeasy for the first time on the test data 
