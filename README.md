@@ -26,6 +26,31 @@ Release: dirty_tango
 
 Full instructions at https://docs.docker.com/.
 
+Some fixes to make life easy...
+
+**Create a docker group**
+
+```bash
+sudo addgroup docker
+```
+
+**Add user to docker group**
+Here user us ``ec2-user``
+
+```bash
+sudo usermod -aG docker ec2-user
+```
+
+Log out and log back in.
+
+This ensures your user is running with the correct permissions.
+
+Verify your work by running ``docker`` without ``sudo``.
+
+```bash
+docker run hello-world
+```
+
 ### Get and Install NGSeasy
 
 ```bash
