@@ -15,6 +15,8 @@ Release: dirty_tango
 
 **Please Direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues]**
 
+**Please read the docs**  
+
 ****************
 ### [A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box] 
 ****************
