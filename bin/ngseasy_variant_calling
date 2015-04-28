@@ -735,7 +735,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       --maxVariants=8 \
       --maxHaplotypes=50 \
       --filterReadsWithDistantMates=1 \
-      --hapScoreThreshold 4 \
+      --hapScoreThreshold 10 \
       --scThreshold 0.99 \
       --filteredReadsFrac 0.7 \
       --rmsmqThreshold 20 \
