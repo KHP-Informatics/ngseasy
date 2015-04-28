@@ -44,11 +44,11 @@ SRC=./bin
 ################################################################
 
 ## Basic install - no annotation data bases or manual build tools
-@echo "Setting up NGSeasy project directory, pulling docker images and getting test data and hg19 and b37 genomes and indexes"
+#@echo "Setting up NGSeasy project directory, pulling docker images and getting test data and hg19 and b37 genomes and indexes"
 all: ngsprojectdir dockerimages testdata b37 hg19
 
 ## install scripts to target bin eg sudo make install
-@echo "Installing ngseasy scripts to system"
+#@echo "Installing ngseasy scripts to system"
 install:
 	chmod 775 $(SRC)/* && \
 	cp -v $(SRC)/* $(TARGET_BIN)/
@@ -67,7 +67,7 @@ update:
 	git pull
 
 ## Make Top level project directories
-@echo "Make Top level project directories"
+#@echo "Make Top level project directories"
 ngsprojectdir: 
 	mkdir -v -p $(INSTALLDIR)/ngs_projects && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/raw_fastq && \
@@ -80,7 +80,7 @@ purgengsprojectsdir:
 	rm -rfv $(INSTALLDIR)/ngs_projects
 
 ## Get all docker images 
-@echo "Get all NGSeasy docker images"
+#@echo "Get all NGSeasy docker images"
 dockerimages:	
 	docker pull compbio/ngseasy-base:$(VERSION) && \
 	docker pull compbio/ngseasy-fastqc:$(VERSION) && \
@@ -156,7 +156,7 @@ glia: baseimage
 	docker pull compbio/ngseasy-glia:$(VERSION)
 
 # b37 Genomes idexed and resources	
-@echo "Get b37 Genomes idexed and resources"
+#@echo "Get b37 Genomes idexed and resources"
 b37: 
 	cd $(INSTALLDIR)/ngs_projects && \
 	mkdir -p reference_genomes_b37 && \
@@ -221,7 +221,7 @@ b37:
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/reference_genomes_b37/
 
 # hg19 Genomes idexed and resources	
-@echo "Get hg19 Genomes idexed and resources"
+#@echo "Get hg19 Genomes idexed and resources"
 hg19: 
 	cd $(INSTALLDIR)/ngs_projects && \
 	mkdir -p reference_genomes_hg19 && \
@@ -287,7 +287,7 @@ hg19:
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/reference_genomes_hg19/
 
 ##  Test data and stick it in raw_fastq
-@echo "Get Test data and stick it in raw_fastq"
+#@echo "Get Test data and stick it in raw_fastq"
 testdata: ngsprojectdir
 	cd $(INSTALLDIR)/ngs_projects/raw_fastq && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/ && \
@@ -299,7 +299,7 @@ testdata: ngsprojectdir
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.30x_2.fastq.gz && \
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/raw_fastq/ && \
 	cd $(INSTALLDIR)/ngs_projects/config_files && \
-	cp -v $(SRC)/test/ngseasy_test.config.tsv $(INSTALLDIR)/ngs_projects/config_files/ && \
+	cp -v $(DIR)/test/ngseasy_test.config.tsv $(INSTALLDIR)/ngs_projects/config_files/ && \
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/config_files/ 
 
 ## Manual Builds
