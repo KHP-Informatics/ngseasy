@@ -21,7 +21,7 @@ RUN cd /usr/local/pipeline/ && \
 	export PATH=${PATH}:${HOME}/miniconda/bin
 
 RUN	/root/miniconda/bin/conda create -n chanjo2 python=2 cython numpy sqlalchemy pip && \
-	source activate chanjo2 && \
+	/root/miniconda/bin/source activate chanjo2 && \
 	/root/miniconda/bin/conda install -c https://conda.binstar.org/robinandeer pysam && \
 	pip install chanjo && \
 	pip install pymysql && \
