@@ -18,6 +18,7 @@ RUN cd /usr/local/pipeline/ && \
 	bash Miniconda-latest-Linux-x86_64.sh -b && \
 	sed -i '$aPATH=${PATH}:${HOME}/miniconda/bin' /home/pipeman/.bashrc && \
 	sed -i '$aPATH=${PATH}:${HOME}/miniconda/bin' ~/.bashrc && \
+	export PATH=${PATH}:${HOME}/miniconda/bin && \
 	conda create -n chanjo2 python=2 cython numpy sqlalchemy pip && \
 	source activate chanjo2 && \
 	conda install -c https://conda.binstar.org/robinandeer pysam && \
