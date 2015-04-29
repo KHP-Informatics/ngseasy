@@ -16,7 +16,6 @@ RUN apt-get update -y && apt-get upgrade -y
 RUN cd /usr/local/pipeline/ && \
 	wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh && \
 	bash Miniconda-latest-Linux-x86_64.sh -b && \
-	export PATH="${HOME}/miniconda/bin:${PATH}"  && \
 	sed -i '$aPATH=${PATH}:${HOME}/miniconda/bin /home/pipeman/.bashrc && \
 	sed -i '$aPATH=${PATH}:${HOME}/miniconda/bin' ~/.bashrc && \
 	conda create -n chanjo2 python=2 cython numpy sqlalchemy pip && \
