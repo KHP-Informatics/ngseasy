@@ -10,6 +10,7 @@ MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Update
 RUN apt-get update -y && apt-get upgrade -y
+RUN apt-get install libffi-dev libxml2-dev libxslt1-dev python-dev
 
 ## CHANJO #####################################################
 
@@ -21,7 +22,7 @@ RUN cd /usr/local/pipeline/ && \
 	export PATH=${PATH}:${HOME}/miniconda/bin
 
 RUN	/root/miniconda/bin/conda create -n chanjo2 python=2 cython numpy sqlalchemy pip
-RUN /bin/bash -c "source /root/miniconda/bin/activate/activate chanjo2"
+RUN /bin/bash -c "source /root/miniconda/bin/activate chanjo2"
 RUN /root/miniconda/bin/conda install -c https://conda.binstar.org/robinandeer pysam
 RUN pip install chanjo && \
 	pip install pymysql && \
