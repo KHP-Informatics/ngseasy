@@ -17,14 +17,15 @@ RUN apt-get update -y && apt-get upgrade -y
 
 #-------------------------bcbio.variation.recall---------------------------------------
 
-#RUN mkdir /usr/local/pipeline/bcbio  && \
-#  cd /usr/local/pipeline/bcbio && \
-#  wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.2.3/bcbio.variation-0.2.3-standalone.jar && \
-#  chmod 777 bcbio.variation-0.2.3-standalone.jar && \
-#  sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/bcbio/bcbio.variation-0.2.3-standalone.jar' /home/pipeman/.bashrc && \
-#  sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' /home/pipeman/.bashrc && \
-#  sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' ~/.bashrc && \
-#  cp -v bcbio.variation-0.2.3-standalone.jar /usr/local/bin/
+RUN mkdir /usr/local/pipeline/bcbio  && \
+  cd /usr/local/pipeline/bcbio && \
+  wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.2.4/bcbio.variation-0.2.4-standalone.jar && \
+  chmod 777 bcbio.variation-0.2.4-standalone.jar && \
+  sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/bcbio/bcbio.variation-0.2.4-standalone.jar' /home/pipeman/.bashrc && \
+  sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' /home/pipeman/.bashrc && \
+  sed -i '$aPATH=${PATH}:/usr/local/pipeline/bcbio/' ~/.bashrc && \
+  cp -v bcbio.variation-0.2.4-standalone.jar /usr/local/bin/ && \
+  ln -s /usr/local/bin/bcbio.variation-0.2.4-standalone.jar /usr/local/bin/bcbio.variation.standalone.jar
 
 
 ## get dev version of bcbio.variation.recall
