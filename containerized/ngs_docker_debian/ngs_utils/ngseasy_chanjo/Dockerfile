@@ -20,10 +20,10 @@ RUN cd /usr/local/pipeline/ && \
 	sed -i '$aPATH=${PATH}:${HOME}/miniconda/bin' ~/.bashrc && \
 	export PATH=${PATH}:${HOME}/miniconda/bin
 
-RUN	/root/miniconda/bin/conda create -n chanjo2 python=2 cython numpy sqlalchemy pip && \
-	/root/miniconda/bin/source activate chanjo2 && \
-	/root/miniconda/bin/conda install -c https://conda.binstar.org/robinandeer pysam && \
-	pip install chanjo && \
+RUN	/root/miniconda/bin/conda create -n chanjo2 python=2 cython numpy sqlalchemy pip
+RUN source activate chanjo2
+RUN /root/miniconda/bin/conda install -c https://conda.binstar.org/robinandeer pysam
+RUN pip install chanjo && \
 	pip install pymysql && \
 	pip install chanjo-report
 
