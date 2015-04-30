@@ -672,10 +672,10 @@ elif [ "${VARCALLER}" == "platypus" ]
       --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+      --filterDuplicates=0 \
       --assemble=1 \
       --assembleAll=1 \
       --assemblyRegionSize=1500 \
-      --filterDuplicates=0 \
       --minReads=4  \
       --maxGOF=30 \
       --bufferSize=50000 \
@@ -850,16 +850,17 @@ elif [ "${VARCALLER}" == "HaplotypeCaller" ]
   -nct ${NCPU} \
   -I ${SOUTDocker}/alignments/${BAMFILE} \
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+  --dbsnp ${KNOWN_SNPS_b138} \
+  --output_mode ${GTMODEGATK} \
+  --unsafe ALL \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
   --output_mode EMIT_VARIANTS_ONLY \
-  --dbsnp ${KNOWN_SNPS_b138} \
   -dcov 250 \
   -minPruning 10 \
   --unsafe ALL \
   -pairHMM VECTOR_LOGLESS_CACHING \
   --genotyping_mode DISCOVERY \
-  --output_mode ${GTMODEGATK} \
   --annotation AlleleBalance \
   --annotation BaseCounts \
   --annotation BaseQualityRankSumTest \
