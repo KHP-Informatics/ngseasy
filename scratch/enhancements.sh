@@ -39,6 +39,12 @@ PLATYPUS_OPTIONS=" --assemble=1 --assembleAll=1 \
 --abThreshold 0.0001 \
 --minVarFreq 0.0 "
 
+# https://github.com/chapmanb/bcbio-nextgen/blob/cb97e10d2ee50983713d65e77690067779f3e731/bcbio/variation/platypus.py#L31
+#    --hapScoreThreshold", "10", "--scThreshold", "0.99", "--filteredReadsFrac", "0.9",
+#                   "--rmsmqThreshold", "20", "--qdThreshold", "0", "--abThreshold", "0.0001",
+#                   "--minVarFreq", "0.0"]
+#      --regions=${SOUTDocker}/reports/${BAMFILE}.platypus.intervals \
+
 HAPLOTYPECALLER_OPTIONS=" -stand_call_conf 30 -stand_emit_conf 10 \
 --output_mode EMIT_VARIANTS_ONLY \
 -dcov 250 \

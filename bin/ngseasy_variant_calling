@@ -661,7 +661,7 @@ elif [ "${VARCALLER}" == "platypus" ]
 #    --hapScoreThreshold", "10", "--scThreshold", "0.99", "--filteredReadsFrac", "0.9",
 #                   "--rmsmqThreshold", "20", "--qdThreshold", "0", "--abThreshold", "0.0001",
 #                   "--minVarFreq", "0.0"]
-#      --regions=${SOUTDocker}/reports/${BAMFILE}.platypus.intervals \
+#      --regions=${SOUTDocker}/reports/${BAMFILE}.platypus.intervals
     
     ${DOCKER_RUN} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -672,6 +672,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+      --logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
       --filterDuplicates=0 \
       --assemble=1 \
       --assembleAll=1 \
@@ -720,10 +721,11 @@ elif [ "${VARCALLER}" == "platypus" ]
       --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+      --logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
+      --filterDuplicates=1 \
       --assemble=1 \
       --assembleAll=1 \
       --assemblyRegionSize=1500 \
-      --filterDuplicates=1 \
       --minReads=4  \
       --maxGOF=30 \
       --bufferSize=50000 \
