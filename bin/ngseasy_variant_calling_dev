@@ -31,7 +31,7 @@ PLATYPUS_OPTIONS=" --assemble=1 --assembleAll=1 \
 --filterReadsWithDistantMates=1 \
 --hapScoreThreshold 10 \
 --scThreshold 0.99 \
---filteredReadsFrac 0.7 \
+--filteredReadsFrac 0.9 \
 --rmsmqThreshold 20 \
 --qdThreshold 0 \
 --abThreshold 0.0001 \
@@ -610,9 +610,12 @@ fi
 # quick fix to get mapped regrions file for freebayes-parallel
   logger_ngseasy "[${NGSEASY_STEP}]:START Make regions files for var-callers" ${LOGFILE}
   
-time awk '{print $1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.mapped.regions
-time awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.platypus.intervals
-#time awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ','  > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+awk '{print $1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.mapped.regions
+awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+
+platypus.intervals=`awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ',' `
+## awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ',' > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+
   logger_ngseasy "[${NGSEASY_STEP}]:END Make regions files for varcallers" ${LOGFILE}
 
 # time bedtools genomecov -split -ibam ${SOUTDocker}/alignments/${BAMFILE} -g ${GENOMEFILE} -d | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${FAI} 1000 > ${REFFASTA}.1000.regions
@@ -681,12 +684,6 @@ elif [ "${VARCALLER}" == "platypus" ]
 
     # for exome/whole genome data no duplicate filtering
     # note plat used NR instead of DP
-
-# https://github.com/chapmanb/bcbio-nextgen/blob/cb97e10d2ee50983713d65e77690067779f3e731/bcbio/variation/platypus.py#L31
-#    --hapScoreThreshold", "10", "--scThreshold", "0.99", "--filteredReadsFrac", "0.9",
-#                   "--rmsmqThreshold", "20", "--qdThreshold", "0", "--abThreshold", "0.0001",
-#                   "--minVarFreq", "0.0"]
-#      --regions=${SOUTDocker}/reports/${BAMFILE}.platypus.intervals
     
     ${DOCKER_RUN} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -699,27 +696,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
       --filterDuplicates=0 \
-      --assemble=1 \
-      --assembleAll=1 \
-      --assemblyRegionSize=1500 \
-      --minReads=4  \
-      --maxGOF=30 \
-      --bufferSize=50000 \
-      --maxReads=10000000 \
-      --minPosterior=5 \
-      --minMapQual=20 \
-      --minBaseQual=10 \
-      --maxSize 10000 \
-      --maxVariants=8 \
-      --maxHaplotypes=50 \
-      --filterReadsWithDistantMates=1 \
-      --hapScoreThreshold 10 \
-      --scThreshold 0.99 \
-      --filteredReadsFrac 0.7 \
-      --rmsmqThreshold 20 \
-      --qdThreshold 0 \
-      --abThreshold 0.0001 \
-      --minVarFreq 0.0 && \
+      ${PLATYPUS_OPTIONS} && \
       time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
       vcffilter -f 'QUAL > 5' -s | \
       fix_ambiguous | \
@@ -748,27 +725,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
       --filterDuplicates=1 \
-      --assemble=1 \
-      --assembleAll=1 \
-      --assemblyRegionSize=1500 \
-      --minReads=4  \
-      --maxGOF=30 \
-      --bufferSize=50000 \
-      --maxReads=10000000 \
-      --minPosterior=5 \
-      --minMapQual=20 \
-      --minBaseQual=10 \
-      --maxSize 10000 \
-      --maxVariants=8 \
-      --maxHaplotypes=50 \
-      --filterReadsWithDistantMates=1 \
-      --hapScoreThreshold 10 \
-      --scThreshold 0.99 \
-      --filteredReadsFrac 0.7 \
-      --rmsmqThreshold 20 \
-      --qdThreshold 0 \
-      --abThreshold 0.0001 \
-      --minVarFreq 0.0 && \
+      ${PLATYPUS_OPTIONS} && \
       time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
       vcffilter -f 'QUAL > 5' -s | \
       fix_ambiguous | \
