@@ -1,0 +1,1047 @@
+#!/bin/bash
+
+################################################################
+# Program: ngseasy_variant_calling
+# Version 1.0 
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+#################################################################
+echo -e "\n################################################################"
+echo -e "# Program: ngseasy_variant_calling"
+echo -e "# Version 1.0"
+echo -e "# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)"
+echo -e "#################################################################\n"
+
+#################################################################
+## Tool Configurations
+## Variant Callers
+
+FREEBAYES_OPTIONS=" --min-coverage 4 --min-mapping-quality 20 --min-base-quality 10 --min-repeat-entropy 1 --genotype-qualities "
+
+PLATYPUS_OPTIONS=" --assemble=1 --assembleAll=1 \
+--assemblyRegionSize=1500 \
+--minReads=4 \
+--maxGOF=30 \
+--bufferSize=50000 \
+--maxReads=10000000 \
+--minPosterior=5 \
+--minMapQual=20 --minBaseQual=10 \
+--maxSize 10000 \
+--maxVariants=8 \
+--maxHaplotypes=50 \
+--filterReadsWithDistantMates=1 \
+--hapScoreThreshold 10 \
+--scThreshold 0.99 \
+--filteredReadsFrac 0.9 \
+--rmsmqThreshold 20 \
+--qdThreshold 0 \
+--abThreshold 0.0001 \
+--minVarFreq 0.0 "
+
+HAPLOTYPECALLER_OPTIONS=" -stand_call_conf 30 -stand_emit_conf 10 \
+--output_mode EMIT_VARIANTS_ONLY \
+-dcov 250 \
+-minPruning 10 \
+-pairHMM VECTOR_LOGLESS_CACHING \
+--genotyping_mode DISCOVERY \
+--annotation AlleleBalance \
+--annotation BaseCounts \
+--annotation BaseQualityRankSumTest \
+--annotation ChromosomeCounts \
+--annotation ClippingRankSumTest \
+--annotation Coverage \
+--annotation FisherStrand \
+--annotation GCContent \
+--annotation HaplotypeScore \
+--annotation HomopolymerRun \
+--annotation InbreedingCoeff \
+--annotation LikelihoodRankSumTest \
+--annotation LowMQ \
+--annotation MappingQualityRankSumTest \
+--annotation MappingQualityZero \
+--annotation QualByDepth \
+--annotation RMSMappingQuality \
+--annotation ReadPosRankSumTest \
+--annotation SpanningDeletions \
+--annotation TandemRepeatAnnotator \
+--annotation VariantType"
+
+#################################################################
+# reset shit
+PROJECT_ID=""
+SAMPLE_ID=""
+FASTQ1=""
+FASTQ2=""
+PROJECT_DIR=""
+DNA_PREP_LIBRARY_ID=""
+NGS_PLATFORM=""
+NGS_TYPE=""
+BAIT=""
+CAPTURE=""
+GENOMEBUILD=""
+FASTQC=""
+TRIM=""
+BSQR=""
+REALN=""
+ALIGNER=""
+VARCALLER=""
+CNV=""
+ANNOTATOR=""
+CLEANUP=""
+NCPU=""
+NGSEASYVERSION=""
+NGSUSER=""
+REFDIR=""
+GENOMEINDEX=""
+REFFASTA=""
+KNOWN_INDELS=""
+KNOWN_SNPS_1000G=""
+KNOWN_SNPS_OMNI=""
+KNOWN_SNPS_b138=""
+
+########################################################################################################
+## test if docker is intsalled and exit if not
+command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
+
+########################################################################################################
+## Set version and run date
+#
+NGSEASYVERSION="1.0"
+RUNDATE=`date +"%d%m%y"`
+NGSEASY_STEP="ngseasy_variant_calling"
+
+########################################################################################################
+## docker run command
+#
+DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+
+########################################################################################################
+## global logging fuction
+#
+function logger_ngseasy() {
+ message=${1}
+ mylogfile=${2}
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
+}
+
+
+########################################################################################################
+## global usage
+#
+function ngseasy_variant_calling_usage() {
+    echo "
+Program: ngseasy_variant_calling
+Version 1.0
+Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+
+usage:   ngseasy_variant_calling -c <config_file> -d <project_directory>
+
+options:  -c  STRING  configuration file
+          -d  STRING  project directory
+          -h  NULL    show this message
+
+ngseasy_variant_calling sets up the NGSeasy docker containers for your variant caller of choice.
+"
+}
+
+
+########################################################################################################
+## check and make ~/ngseasy_logs if needed
+#
+if [[ ! -e  ${HOME}/ngseasy_logs ]]
+then
+  mkdir ${HOME}/ngseasy_logs
+  global_run_logs="${HOME}/ngseasy_logs"
+fi
+
+########################################################################################################
+## Check options passed in.
+#
+if test -z "$2"
+then
+  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:No options found"
+  ngseasy_variant_calling_usage
+  exit 1
+fi
+
+########################################################################################################
+## get options for command line args
+  while  getopts "hc:d:" opt
+  do
+
+      case ${opt} in
+    h)
+    ngseasy_variant_calling_usage #print help
+    exit 0
+    ;;
+    
+    c)
+    config_tsv=${OPTARG}
+    ;;
+
+    d)
+    project_directory=${OPTARG}
+    ;; 
+      esac
+  done
+
+########################################################################################################  
+## check config file exists.
+#
+if [[ ! -e "${config_tsv}" ]] 
+then
+      logger_ngseasy "[${NGSEASY_STEP}]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
+      ngseasy_variant_calling_usage;
+      sleep 1s
+      exit 1;
+else
+      logger_ngseasy "[${NGSEASY_STEP}]:Configuration file found [${config_tsv}] "
+fi
+
+########################################################################################################
+## check project_directory exists.
+#
+if [[ ! -d "${project_directory}" ]]
+  then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR : project_directory [${project_directory}] does not exist "
+    ngseasy_variant_calling_usage;
+    sleep 1s
+    exit 1;
+else
+      logger_ngseasy "[${NGSEASY_STEP}]:Top Level Project Directory [${project_directory}] "
+fi
+
+########################################################################################################
+## check Num feilds in  ${config_tsv}
+#
+logger_ngseasy "[${NGSEASY_STEP}]:Reading [${config_tsv}] "
+logger_ngseasy "[${NGSEASY_STEP}]:Checking number of feilds in  [${config_tsv}] "
+
+numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
+
+if [[  "$numcols" -lt 23 ]] 
+then
+      logger_ngseasy "[${NGSEASY_STEP}]:ERROR: [${config_tsv}] format issue. Check your file! "
+      exit 1;
+  else 
+      logger_ngseasy "[${NGSEASY_STEP}]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "     
+fi
+
+########################################################################################################
+## Read config file 
+
+## check ${config_tsv}. is this a batch file or the orginal config file 
+#
+logger_ngseasy "[${NGSEASY_STEP}]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+
+hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
+
+if [[ "${config_tsv}" == *.batch.* ]]
+then
+  logger_ngseasy "[${NGSEASY_STEP}]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+elif [[ "$hasheader" -eq 1 ]]
+then
+  logger_ngseasy "[${NGSEASY_STEP}]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  sed 1d ${config_tsv} > ${config_tsv}.tmp
+  RUNFILE="${config_tsv}.tmp"
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+else
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[${NGSEASY_STEP}]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+fi
+
+########################################################################################################
+## Read config and loop through all lines calling variant calling with docker
+#
+
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
+do
+###################
+## reset options
+PROJECT_ID=""
+SAMPLE_ID=""
+FASTQ1=""
+FASTQ2=""
+PROJECT_DIR=""
+DNA_PREP_LIBRARY_ID=""
+NGS_PLATFORM=""
+NGS_TYPE=""
+BAIT=""
+CAPTURE=""
+GENOMEBUILD=""
+FASTQC=""
+TRIM=""
+BSQR=""
+REALN=""
+ALIGNER=""
+VARCALLER=""
+CNV=""
+ANNOTATOR=""
+CLEANUP=""
+NCPU=""
+NGSEASYVERSION=""
+NGSUSER=""
+REFDIR=""
+GENOMEINDEX=""
+REFFASTA=""
+KNOWN_INDELS=""
+KNOWN_SNPS_1000G=""
+KNOWN_SNPS_OMNI=""
+KNOWN_SNPS_b138=""
+###################
+## get options  
+PROJECT_ID=$f1;
+SAMPLE_ID=$f2;
+FASTQ1=$f3;
+FASTQ2=$f4;
+PROJECT_DIR=$f5;
+DNA_PREP_LIBRARY_ID=$f6;
+NGS_PLATFORM=$f7;
+NGS_TYPE=$f8;
+BAIT=$f9;
+CAPTURE=$f10;
+GENOMEBUILD=$f11;
+FASTQC=$f12;
+TRIM=$f13;
+BSQR=$f14;
+REALN=$f15;
+ALIGNER=$f16;
+VARCALLER=$f17;
+CNV=$f18;
+ANNOTATOR=$f19;
+CLEANUP=$f20;
+NCPU=$f21;
+NGSEASYVERSION=$f22;
+NGSUSER=$f23;
+DATE=`date +"%d%m%y"`
+
+########################################################################################################
+## LOGFILE 
+#
+
+## check and make log directory
+#
+if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
+then
+  mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
+fi
+
+## LOGFILE 
+#
+LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}"
+logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
+
+## check and make logfile
+#
+if [ ! -e "${LOGFILE}.log" ]
+then
+  touch ${LOGFILE}.log
+fi
+
+## read config_file
+#
+logger_ngseasy "[${NGSEASY_STEP}]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
+$VERSION\t$NGSUSER]"  ${LOGFILE}
+# copy config settings to dir
+echo -e "$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
+$VERSION\t$NGSUSER" >> ${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}/config_files/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}.config
+
+
+########################################################################################################
+## OUTPUT SAMPLE DIR 
+#
+SOUT="${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}"
+logger_ngseasy "[${NGSEASY_STEP}]:Sample Directory [${SOUT}] "
+
+########################################################################################################
+## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
+#
+DOCKERHOME="/home/pipeman/ngs_projects"
+logger_ngseasy "[${NGSEASY_STEP}]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
+
+########################################################################################################
+## Docker OUTPUT SAMPLE DIR 
+#
+SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
+
+logger_ngseasy "[${NGSEASY_STEP}]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
+
+########################################################################################################
+## check local dir exists
+#
+if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
+then
+  logger_ngseasy "[${NGSEASY_STEP}]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
+  exit 1
+else 
+  logger_ngseasy "[${NGSEASY_STEP}]: Setting OUTPUT directory to [${SOUT}]" ${LOGFILE}
+fi
+
+########################################################################################################
+## Select Genome Build and files
+#
+logger_ngseasy "[${NGSEASY_STEP}]:Checking selected Genome"  ${LOGFILE}
+sleep 1s
+
+if [[ "${GENOMEBUILD}" == "b37" ]]; then
+# reset options as getting bleed through
+  REFDIR=""
+  GENOMEINDEX=""
+  REFFASTA=""
+  KNOWN_INDELS=""
+  KNOWN_SNPS_1000G=""
+  KNOWN_SNPS_OMNI=""
+  KNOWN_SNPS_b138=""
+  DBSNP_RECAB=""
+  GENOMEFILE=""
+  FAI=""
+
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
+  GENOMEINDEX="${REFDIR}/human_g1k_v37"
+  REFFASTA="${REFDIR}/human_g1k_v37.fasta"
+  DBSNP_RECAB="${REFDIR}/dbsnp_138.b37.recab"
+  GENOMEFILE="${REFDIR}/b37.genome"
+  FAI="${REFDIR}/human_g1k_v37.fasta.fai"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab b37 [${DBSNP_RECAB}]" ${LOGFILE}
+
+  #known indels and SNPs
+  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.b37.vcf"
+  KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.b37.vcf"
+  KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.b37.vcf"
+  KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.b37.vcf"
+  
+  logger_ngseasy "[${NGSEASY_STEP}]:KNOWN_INDELS [${KNOWN_INDELS}]"  ${LOGFILE}
+
+## HG19
+elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
+
+  REFDIR=""
+  GENOMEINDEX=""
+  REFFASTA=""
+  KNOWN_INDELS=""
+  KNOWN_SNPS_1000G=""
+  KNOWN_SNPS_OMNI=""
+  KNOWN_SNPS_b138=""
+  DBSNP_RECAB=""
+  GENOMEFILE=""
+  FAI=""
+
+  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
+  GENOMEINDEX="${REFDIR}/ucsc.hg19"
+  REFFASTA="${REFDIR}/ucsc.hg19.fasta"
+  DBSNP_RECAB="${REFDIR}/dbsnp_138.hg19.recab"
+  GENOMEFILE="${REFDIR}/hg19.genome"
+  FAI="${REFDIR}/ucsc.hg19.fasta.fai"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab hg19 [${DBSNP_RECAB}]" ${LOGFILE}
+
+  #known indels and SNPs
+  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.gz"
+  KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.hg19.sites.vcf"
+  KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.hg19.sites.vcf"
+  KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.hg19.vcf"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:KNOWN_INDELS [${KNOWN_INDELS}]" ${LOGFILE}
+
+else
+  logger_ngseasy "[${NGSEASY_STEP}]:No genome selected. Exiting. Choose one of [b37] or [hg19]. [b38 coming soon]"  ${LOGFILE}
+  sleep 1s
+  exit 1
+fi
+
+########################################################################################################
+## BAM FILE NAME
+#
+# SAMPLE_ID.WEX.PE.ILLUMINA.atrim.bwa.b37.dupemk.bam [dupemk.${BSQR}.bam] [dupemk.${BSQR}.${REALN}.bam]
+#
+BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}"
+
+logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE}
+
+
+###################################################################################
+## BAM Files to use for variant calling
+#
+logger_ngseasy "[${NGSEASY_STEP}]:NGSeasy will look for and use the indel re-aligned and base quality score recalibrated data if available" ${LOGFILE}
+
+# no realn and no bsqr so use dupemk.bam
+if [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "no-bsqr" ]]; then
+
+  BAMFILE="${BAM_PREFIX}.dupemk.bam"
+ 
+  logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [no-realn] and BSQR set to [no-bsqr]" ${LOGFILE} 
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+# exit if no BAMFILE
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
+
+# no realn plus bam bsqr
+elif [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
+
+  BAMFILE="${BAM_PREFIX}.dupemk.no-realn.bam-bsqr.bam"
+  
+  logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [no-realn] and BSQR set to [bam-bsqr]" ${LOGFILE} 
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+  # exit if no BAMFILE
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
+
+# no realn plus gatk bsqr
+elif [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "gatk-bsqr" ]]; then
+
+  BAMFILE="${BAM_PREFIX}.dupemk.no-realn.gatk-bsqr.bam"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [no-realn] and BSQR set to [gatk-bsqr]" ${LOGFILE} 
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+    # exit if no BAMFILE
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+  
+  logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
+
+# bam-realn and bam-bsqr
+elif [[ "${REALN}" == "bam-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
+
+  BAMFILE="${BAM_PREFIX}.dupemk.bam-realn.bam-bsqr.bam"
+  
+  logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [bam-realn] and BSQR set to [bam-bsqr]" ${LOGFILE} 
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+  # exit if no BAMFILE
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+  
+  logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
+
+# gatk-realn and gatk-bsqr
+elif [[ "${REALN}" == "gatk-realn" ]] && [[ "${BSQR}" == "gatk-bsqr" ]]; then
+
+  BAMFILE="${BAM_PREFIX}.dupemk.gatk-realn.gatk-bsqr.bam"
+ 
+  logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [gatk-realn] and BSQR set to [bam-bsqr]" ${LOGFILE}  
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+   # exit if no BAMFILE
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+  
+  logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
+
+else
+  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find required BAM File for Variant Calling" ${LOGFILE}
+  sleep 1s
+  exit 1
+fi
+
+##################################################
+## callable regions - mapped and has depth
+##
+  logger_ngseasy "[${NGSEASY_STEP}]:Get Callable Regions" ${LOGFILE}
+
+if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]] && [[ ! -e  "${SOUT}/reports/${BAMFILE}.genomecov.bed"  ]]; then
+  
+  logger_ngseasy "[${NGSEASY_STEP}]:Generating Mapped Reads BED File and Callable Regions File" ${LOGFILE}
+
+  ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name callable_regions_${BAM_PREFIX} \
+  -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
+  "time sambamba view -t ${NCPU} -F \"mapping_quality>0 and paired and (not unmapped)\" -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
+  bedtools bamtobed | \
+  bedtools merge > ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed && \
+  time sambamba view -t ${NCPU} -F \"mapping_quality>0 and paired and (not unmapped)\" -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
+  bedtools genomecov -split -ibam stdin -bga -max 500 | awk '\$4>0' > ${SOUTDocker}/reports/${BAMFILE}.genomecov.bed"
+  sleep 1s
+  docker logs callable_regions_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm callable_regions_${BAM_PREFIX}
+
+# move on
+elif [[ -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]]  && [[ -e  "${SOUT}/reports/${BAMFILE}.genomecov.bed"  ]]; then
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Mapped Reads [${SOUT}/reports/${BAMFILE}.mapped.reads.bed]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Callable Regions [${SOUT}/reports/${BAMFILE}.genomecov.bed]" ${LOGFILE}
+
+# cant find shit
+else
+  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find Mapped Reads [${SOUT}/reports/${BAMFILE}.mapped.reads.bed] " ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find Callable Regions [${SOUT}/reports/${BAMFILE}.genomecov.bed]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Exiting" ${LOGFILE}
+  sleep 1s
+  exit 1
+
+fi
+
+# tmp: stop here until this works
+# exit 1
+
+# quick fix to get mapped regrions file for freebayes-parallel
+  logger_ngseasy "[${NGSEASY_STEP}]:START Make regions files for var-callers" ${LOGFILE}
+  
+awk '{print $1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.mapped.regions
+awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+
+platypus.intervals=`awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ',' `
+## awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ',' > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+
+  logger_ngseasy "[${NGSEASY_STEP}]:END Make regions files for varcallers" ${LOGFILE}
+
+# time bedtools genomecov -split -ibam ${SOUTDocker}/alignments/${BAMFILE} -g ${GENOMEFILE} -d | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${FAI} 1000 > ${REFFASTA}.1000.regions
+# awk '{print \$1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | awk 'BEGIN{ORS=","}1' > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+
+########################################################################################################
+## fix_ambiguous
+## Custom utils from bcbio and more This needs to be in Dockerfile
+## also need to add http://genome.sph.umich.edu/wiki/Vt to base image or all callers
+## Taken from https://github.com/chapmanb/bcbio-nextgen/blob/98c75603907cb22a3e4cd4fd78f7e995b80bddfd/bcbio/variation/vcfutils.py#L76
+#function fix_ambiguous() {
+#  awk -F$'\t' -v OFS='\t' '{if ($0 !~ /^#/) gsub(/[KMRYSWBVHDX]/, "N", $4) } {print}'
+#}
+
+########################################################################################################
+## Freebayes 
+
+# awk '{print $1":"$2".."$3}' BAM > test.regions this Fing works woop woop
+
+if [ "${VARCALLER}" == "freebayes" ]
+  then
+
+  logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using freebayes-parallel " ${LOGFILE}
+
+  ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name Freebayes_${BAM_PREFIX} \
+  -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
+  "time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${SOUTDocker}/reports/${BAMFILE}.mapped.regions ${NCPU} \
+  -f ${REFFASTA} \
+  -b ${SOUTDocker}/alignments/${BAMFILE} \
+  ${FREEBAYES_OPTIONS} > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
+  time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+  vcffilter -f 'QUAL > 5' -s | \
+  fix_ambiguous | \
+  vcfallelicprimitives --keep-geno | \
+  vcffixup - | \
+  vcfstreamsort | \
+  vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+  vcfuniqalleles | \
+  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
+
+# add vt decompose -s - | \
+
+#logs
+docker logs Freebayes_${BAM_PREFIX} >> ${LOGFILE}.log
+docker rm Freebayes_${BAM_PREFIX}
+
+# logs
+logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFILE}
+
+########################################################################################################
+# Platypus # still missing a lot - what was the publication about then
+
+
+elif [ "${VARCALLER}" == "platypus" ]
+  then
+
+  logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using Platypus "  ${LOGFILE}
+
+  if [ "${NGS_TYPE}" == "TGS" ] || [ "${NGS_TYPE}" == "WEX" ]
+    then
+
+    logger_ngseasy "[${NGSEASY_STEP}]:NGS_TYPE set to [${NGS_TYPE}] Targeted/WEX, so no duplicate filtering  "  ${LOGFILE}
+
+    # for exome/whole genome data no duplicate filtering
+    # note plat used NR instead of DP
+    
+    ${DOCKER_RUN} \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    --name platypus_${BAM_PREFIX} \
+    -t compbio/ngseasy-platypus:${NGSEASYVERSION} /bin/bash -c \
+    "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
+      --nCPU ${NCPU} \
+      --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
+      --refFile=${REFFASTA} \
+      --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+      --logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
+      --filterDuplicates=0 \
+      ${PLATYPUS_OPTIONS} && \
+      time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+      vcffilter -f 'QUAL > 5' -s | \
+      fix_ambiguous | \
+      vcfallelicprimitives --keep-geno | \
+      vcffixup - | \
+      vcfstreamsort | \
+      vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+      vcfuniqalleles | \
+      bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+      tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
+      sleep 1s
+      #logs
+      docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
+      docker rm platypus_${BAM_PREFIX}
+
+    else
+
+      ${DOCKER_RUN} \
+      -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+      --name platypus_${BAM_PREFIX} \
+      -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c \
+      "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
+      --nCPU ${NCPU} \
+      --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
+      --refFile=${REFFASTA} \
+      --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+      --logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
+      --filterDuplicates=1 \
+      ${PLATYPUS_OPTIONS} && \
+      time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+      vcffilter -f 'QUAL > 5' -s | \
+      fix_ambiguous | \
+      vcfallelicprimitives --keep-geno | \
+      vcffixup - | \
+      vcfstreamsort | \
+      vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+      vcfuniqalleles | \
+      bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+      tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
+      sleep 1s
+           
+#logs
+docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
+docker rm platypus_${BAM_PREFIX}
+
+#logs 
+logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Platypus "  ${LOGFILE}
+  
+  fi
+########################################################################################################
+# UnifiedGenotyper #
+#-----------------------------------------------------------------------------#
+
+elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
+  then
+
+# requires /alignments/${BAM_PREFIX}.filtered.bam
+
+  # UnifiedGenotyper EMIT_ALL_CONFIDENT_SITES
+  logger_ngseasy "[${NGSEASY_STEP}]:START GATK UnifiedGenotyper " ${LOGFILE}
+
+  ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name UnifiedGenotyper_${BAM_PREFIX} \
+  -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
+  "time java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  -T UnifiedGenotyper \
+  -R ${REFFASTA} \
+  -nct ${NCPU} \
+  -I ${SOUTDocker}/alignments/${BAMFILE} \
+  -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+  -stand_call_conf 30 \
+  -stand_emit_conf 10 \
+  --output_mode EMIT_VARIANTS_ONLY \
+  --dbsnp ${KNOWN_SNPS_b138} \
+  -dcov 250 \
+  --unsafe ALL \
+  --genotype_likelihoods_model BOTH \
+  --genotyping_mode DISCOVERY \
+  --output_mode ${GTMODEGATK} \
+  --annotation AlleleBalance \
+  --annotation BaseCounts \
+  --annotation BaseQualityRankSumTest \
+  --annotation ChromosomeCounts \
+  --annotation ClippingRankSumTest \
+  --annotation Coverage \
+  --annotation FisherStrand \
+  --annotation GCContent \
+  --annotation HaplotypeScore \
+  --annotation HomopolymerRun \
+  --annotation InbreedingCoeff \
+  --annotation LikelihoodRankSumTest \
+  --annotation LowMQ \
+  --annotation MappingQualityRankSumTest \
+  --annotation MappingQualityZero \
+  --annotation QualByDepth \
+  --annotation RMSMappingQuality \
+  --annotation ReadPosRankSumTest \
+  --annotation SpanningDeletions \
+  --annotation TandemRepeatAnnotator \
+  --annotation VariantType && \
+  time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+  vcffilter -f 'QUAL > 5' -s | \
+  fix_ambiguous | \
+  vcfallelicprimitives --keep-geno | \
+  vcffixup - | \
+  vcfstreamsort | \
+  vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+  vcfuniqalleles | \
+  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
+
+#logs
+  docker logs UnifiedGenotyper_${SAMPLE_ID} >> ${LOGFILE}.log
+  docker rm UnifiedGenotyper_${SAMPLE_ID}
+  logger_ngseasy " END Variant Calling using UnifiedGenotyper "  ${LOGFILE}
+
+########################################################################################################
+# HaplotypeCaller #
+#-----------------------------------------------------------------------------#
+
+elif [ "${VARCALLER}" == "HaplotypeCaller" ]
+  then
+  ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
+ 
+  logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller "  ${LOGFILE}
+  
+  ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name HaplotypeCaller_${BAM_PREFIX} \
+  -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
+  "time java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  -T HaplotypeCaller \
+  -R ${REFFASTA} \
+  -nct ${NCPU} \
+  -I ${SOUTDocker}/alignments/${BAMFILE} \
+  -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+  --dbsnp ${KNOWN_SNPS_b138} \
+  --output_mode ${GTMODEGATK} \
+  --unsafe ALL \
+  -stand_call_conf 30 \
+  -stand_emit_conf 10 \
+  --output_mode EMIT_VARIANTS_ONLY \
+  -dcov 250 \
+  -minPruning 10 \
+  --unsafe ALL \
+  -pairHMM VECTOR_LOGLESS_CACHING \
+  --genotyping_mode DISCOVERY \
+  --annotation AlleleBalance \
+  --annotation BaseCounts \
+  --annotation BaseQualityRankSumTest \
+  --annotation ChromosomeCounts \
+  --annotation ClippingRankSumTest \
+  --annotation Coverage \
+  --annotation FisherStrand \
+  --annotation GCContent \
+  --annotation HaplotypeScore \
+  --annotation HomopolymerRun \
+  --annotation InbreedingCoeff \
+  --annotation LikelihoodRankSumTest \
+  --annotation LowMQ \
+  --annotation MappingQualityRankSumTest \
+  --annotation MappingQualityZero \
+  --annotation QualByDepth \
+  --annotation RMSMappingQuality \
+  --annotation ReadPosRankSumTest \
+  --annotation SpanningDeletions \
+  --annotation TandemRepeatAnnotator \
+  --annotation VariantType && \
+  cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+  vcffilter -f 'QUAL > 5' -s | \
+  fix_ambiguous | \
+  vcfallelicprimitives --keep-geno | \
+  vcffixup - | \
+  vcfstreamsort | \
+  vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+  vcfuniqalleles | \
+  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
+
+
+#logs
+  docker logs HaplotypeCaller_${SAMPLE_ID} >> ${LOGFILE}.log
+  docker rm HaplotypeCaller_${SAMPLE_ID}
+  logger_ngseasy " END Variant Calling using HaplotypeCaller "  ${LOGFILE}
+
+########################################################################################################
+# Ensemble: Freebayes + HaplotypeCaller then CombineVariants   #
+########################################################################################################
+
+elif [ "${VARCALLER}" == "ensemble" ]
+then
+
+  logger_ngseasy "[${NGSEASY_STEP}]:START Ensembl Variant Calling using Freebayes + HaplotypeCaller "  ${LOGFILE}
+  
+## freebayes
+logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using Freebayes " ${LOGFILE}
+  
+VARCALLER="freebayes"
+
+  ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name Freebayes_${BAM_PREFIX} \
+  -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
+  "time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${SOUTDocker}/reports/${BAMFILE}.mapped.regions ${NCPU} \
+  -f ${REFFASTA} \
+  -b ${SOUTDocker}/alignments/${BAMFILE} \
+  --min-coverage 10 \
+  --min-mapping-quality 20 \
+  --min-base-quality 20 \
+  --min-repeat-entropy 1 \
+  --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
+  time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+  vcffilter -f 'QUAL > 5' -s | \
+  fix_ambiguous | \
+  vcfallelicprimitives --keep-geno | \
+  vcffixup - | \
+  vcfstreamsort | \
+  vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+  vcfuniqalleles | \
+  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
+
+
+#logs
+  docker logs Freebayes_${SAMPLE_ID} >> ${LOGFILE}.log#
+
+  docker rm Freebayes_${SAMPLE_ID}
+
+  # copy vcf to cohort vcf directory
+  cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
+
+  logger_ngseasy "[${NGSEASY_STEP}]:copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
+
+  logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFILE}
+
+# REMOVED Platypues untill sens issues sorted ##################################################################
+# REMOVED UG In favour of haplotype based callers ##################################################################
+
+  ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
+  # '--output_mode' (-out_mode) is missing.  Valid options are (EMIT_VARIANTS_ONLY,EMIT_ALL_CONFIDENT_SITES,EMIT_ALL_SITES).
+
+ VARCALLER="HaplotypeCaller"
+
+logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller "  ${LOGFILE}
+  
+  ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name HaplotypeCaller_${BAM_PREFIX} \
+  -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
+  "time java -Xmx6g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \
+  -T HaplotypeCaller \
+  -R ${REFFASTA} \
+  -nct ${NCPU} \
+  -I ${SOUTDocker}/alignments/${BAMFILE} \
+  -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+  -stand_call_conf 30 \
+  -stand_emit_conf 10 \
+  --output_mode EMIT_VARIANTS_ONLY \
+  --dbsnp ${KNOWN_SNPS_b138} \
+  -dcov 250 \
+  -minPruning 10 \
+  --unsafe ALL \
+  -pairHMM VECTOR_LOGLESS_CACHING \
+  --genotyping_mode DISCOVERY \
+  --output_mode ${GTMODEGATK} \
+  --annotation AlleleBalance \
+  --annotation BaseCounts \
+  --annotation BaseQualityRankSumTest \
+  --annotation ChromosomeCounts \
+  --annotation ClippingRankSumTest \
+  --annotation Coverage \
+  --annotation FisherStrand \
+  --annotation GCContent \
+  --annotation HaplotypeScore \
+  --annotation HomopolymerRun \
+  --annotation InbreedingCoeff \
+  --annotation LikelihoodRankSumTest \
+  --annotation LowMQ \
+  --annotation MappingQualityRankSumTest \
+  --annotation MappingQualityZero \
+  --annotation QualByDepth \
+  --annotation RMSMappingQuality \
+  --annotation ReadPosRankSumTest \
+  --annotation SpanningDeletions \
+  --annotation TandemRepeatAnnotator \
+  --annotation VariantType && \
+  cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+  vcffilter -f 'QUAL > 5' -s | \
+  fix_ambiguous | \
+  vcfallelicprimitives --keep-geno | \
+  vcffixup - | \
+  vcfstreamsort | \
+  vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+  vcfuniqalleles | \
+  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
+
+
+#logs
+  docker logs HaplotypeCaller_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm HaplotypeCaller_${BAM_PREFIX}
+  logger_ngseasy " END Variant Calling using HaplotypeCaller "  ${LOGFILE}
+
+
+##############################################################################################
+## bcbio.variation
+## https://github.com/chapmanb/bcbio.variation
+
+
+  logger_ngseasy " START bcbio-variation in Ensembl Variant Calling using Freebayes + HaplotypeCaller "  ${LOGFILE}
+
+#Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
+
+  ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name bcbio-variation_${BAM_PREFIX} \
+  -t compbio/ngseasy-bcbio-variation:${NGSEASYVERSION} bcbio-variation-recall ensemble \
+  -c ${NCPU} \
+  -n 2 \
+  --nofiltered \
+  ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.ensemble.vcf \
+  ${REFFASTA} \
+  ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.freebayes.vcf \
+  ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.HaplotypeCaller.vcf;
+
+#logs
+  docker logs bcbio-variation_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm bcbio-variation_${BAM_PREFIX}
+  logger_ngseasy " END Variant Calling using HaplotypeCaller "  ${LOGFILE}
+
+  logger_ngseasy " END bcbio-variation in Ensembl Variant Calling using Freebayes + HaplotypeCaller "  ${LOGFILE}
+
+fi
+
+
+######################################################################################################## 
+## permissions
+#
+chmod -R 777 ${SOUT}/*
+
+## END ##
+done < ${RUNFILE}
+########################################################################################################
+# END ALL
+
+  logger_ngseasy " END Ensembl Variant Calling  "  ${LOGFILE}
+  sleep 1s

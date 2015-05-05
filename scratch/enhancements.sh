@@ -15,6 +15,10 @@ NOVOALIGN_OPTIONS=" -F STDFQ --3Prime -g 40 -x 6 -i PE 500,100 "
 
 BOWTIE2_OPTIONS=" -I 50 -X 10000 "
 
+#################################################################
+## Tool Configurations
+
+
 ## Variant Callers
 
 FREEBAYES_OPTIONS=" --min-coverage 4 --min-mapping-quality 20 --min-base-quality 10 --min-repeat-entropy 1 --genotype-qualities "
@@ -38,12 +42,6 @@ PLATYPUS_OPTIONS=" --assemble=1 --assembleAll=1 \
 --qdThreshold 0 \
 --abThreshold 0.0001 \
 --minVarFreq 0.0 "
-
-# https://github.com/chapmanb/bcbio-nextgen/blob/cb97e10d2ee50983713d65e77690067779f3e731/bcbio/variation/platypus.py#L31
-#    --hapScoreThreshold", "10", "--scThreshold", "0.99", "--filteredReadsFrac", "0.9",
-#                   "--rmsmqThreshold", "20", "--qdThreshold", "0", "--abThreshold", "0.0001",
-#                   "--minVarFreq", "0.0"]
-#      --regions=${SOUTDocker}/reports/${BAMFILE}.platypus.intervals \
 
 HAPLOTYPECALLER_OPTIONS=" -stand_call_conf 30 -stand_emit_conf 10 \
 --output_mode EMIT_VARIANTS_ONLY \
