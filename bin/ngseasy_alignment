@@ -420,7 +420,16 @@ elif [[ "${ALIGNER}" == "bwa" ]]; then
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
-  rm -rf ${SOUTDocker}/tmp/*"
+  sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam | \
+  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam /dev/stdin && \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam && \
+  sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
+  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
+  rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam && \
+  rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
+  rm -rf ${SOUTDocker}/tmp/* && \
+  chmod -R 777 ${SOUTDocker}/alignments/*"
   wait
   sleep 1s
 
@@ -462,7 +471,16 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
-  rm -rf ${SOUTDocker}/tmp/*"
+  sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam | \
+  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam /dev/stdin && \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam && \
+  sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
+  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
+  rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam && \
+  rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
+  rm -rf ${SOUTDocker}/tmp/* && \
+  chmod -R 777 ${SOUTDocker}/alignments/*"
   wait
   sleep 1s
 
@@ -480,15 +498,6 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
 elif [[ "${ALIGNER}" == "stampy" ]]; then
 
   logger_ngseasy "[${NGSEASY_STEP}]:START Basic ${ALIGNER} Alignment" ${LOGFILE}
-
-if [[  -e "${SOUT}/alignments/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.bwa.${GENOMEBUILD}.dupemk.bam" ]]; then
-
-  BWABAM=${SOUTDocker}/alignments/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.bwa.${GENOMEBUILD}.dupemk.bam
-  logger_ngseasy "[${NGSEASY_STEP}]:BWA aligned data exits. Using [${BWABAM}] for mapping with stampy" ${LOGFILE} 
-
-else
-## align wih bwa
-  logger_ngseasy "[${NGSEASY_STEP}]:BWA aligned data does not exit" ${LOGFILE} 
   logger_ngseasy "[${NGSEASY_STEP}]:Aligning with BWA before running stampy" ${LOGFILE} 
 
   time ${DOCKER_RUN} \
@@ -505,14 +514,16 @@ else
   sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam /dev/stdin | \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam && \
-  rm -rf ${SOUTDocker}/tmp/*"
+  rm -rf ${SOUTDocker}/tmp/* && \
+  chmod -R 777 ${SOUTDocker}/alignments/*"
   wait
   sleep 1s
   docker logs alignment_${BAM_PREFIX}_bwatmp >> ${LOGFILE}.log
   docker rm -f alignment_${BAM_PREFIX}_bwatmp
+
 # set BWABAM
-  BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
-fi
+BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
+
 
 ## stampy on bwa aligned data
   logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}  
@@ -543,7 +554,16 @@ fi
       sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
       sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam /dev/stdin && \
       sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam && \
-      rm -rf ${SOUTDocker}/tmp/*"
+      sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam | \
+      sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam /dev/stdin && \
+      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam && \
+      sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
+      sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
+      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam && \
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
+      rm -rf ${SOUTDocker}/tmp/* && \
+      chmod -R 777 ${SOUTDocker}/alignments/*"
       wait
       sleep 1s
       docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
@@ -577,7 +597,8 @@ fi
       sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
       bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
       rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmpcleansam.bam && \
-      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam"
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam && \
+      chmod -R 777 ${SOUTDocker}/alignments/*"
       wait
       sleep 1s
 ## log docker run 
@@ -617,7 +638,15 @@ SLOW="--local --sensitive-local"
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
     sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
     bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
-    rm -rf ${SOUTDocker}/tmp/*"
+    sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam /dev/stdin && \
+    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam && \
+    sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
+    sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
+    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
+    rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam && \
+    rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
+    rm -rf ${SOUTDocker}/tmp/* && \
+    chmod -R 777 ${SOUTDocker}/alignments/*"
     wait
     sleep 1s
 ## log docker run 
@@ -664,7 +693,15 @@ logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
     sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
     bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
-    rm -rf ${SOUTDocker}/tmp/*"
+    sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam /dev/stdin && \
+    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam && \
+    sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
+    sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
+    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
+    rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam && \
+    rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
+    rm -rf ${SOUTDocker}/tmp/* && \
+    chmod -R 777 ${SOUTDocker}/alignments/*"
 wait
 sleep 1s
 ## log docker run 
@@ -685,7 +722,7 @@ fi
 ########################################################################################################
 # permissions
 #
-chmod -R 777 ${SOUT}/*
+#chmod -R 777 ${SOUT}/*
 
 done < ${RUNFILE}
 # THE END
