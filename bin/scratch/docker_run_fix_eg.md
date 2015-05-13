@@ -9,11 +9,20 @@ ${DOCKER_RUN} \
 -v ${NGSResources}:/home/pipeman/ngs_resources \
 ```
 
-```bash
 
+## Installing stuff
+
+testing on openstack  
+stepwise  
+
+```bash
 make INSTALLDIR="/media/Data" ngsprojectdir
+
 make INSTALLDIR="/media/Data" b37
+
 make INSTALLDIR="/media/Data" hg19
+
 make INSTALLDIR="/media/Data" dockerimages
+
 sudo make INSTALLDIR="/media/Data" install
 ```
