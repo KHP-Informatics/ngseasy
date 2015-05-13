@@ -56,25 +56,9 @@ usage:   ngseasy -c <config_file> -d <project_directory> -p 1 -f 1
 
 options:  -c  STRING	configuration file
           -d  STRING	project directory
-          -p  BOOLEAN	initiate project. Options: 1 or 0
-          -f  BOOLEAN	initiate fastq files. Option 1 or 0
           -h  NULL	show this message 
 "
 }
-
-###########################################################################################
-## check and make ~/ngseasy_logs if needed
-############################################################################################
-
-if [[ ! -e  ${HOME}/ngseasy_logs ]]
-then
-  mkdir ${HOME}/ngseasy_logs
-  logger_ngseasy "[ngseasy]:making ${HOME}/ngseasy_logs" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
-else
-  logger_ngseasy "[ngseasy]:${HOME}/ngseasy_logs exists" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
-fi
-
-## example config: https://docs.google.com/spreadsheets/d/1VWqmMffkVDnvOtRJGlPqOYzXWnIN_IONXQHDAawaN5Q/edit#gid=0
 
 ###########################################################################################
 ## default options
@@ -82,8 +66,6 @@ fi
 
 config_tsv=""
 project_directory=""
-initiate_project=0
-set_fastq=0
 
 ###########################################################################################
 ## get options for command line args
@@ -166,7 +148,7 @@ logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${config_run_log}
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
-if [[  "$numcols" -lt 22 ]] 
+if [[  "$numcols" -lt 23 ]] 
 then
     logger_ngseasy "[ngseasy]:ERROR:[${config_tsv}] format issue. Check your file! " ${config_run_log}
     sleep 1s
