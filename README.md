@@ -501,9 +501,13 @@ ngs_projects
 |  
 |__raw_fastq  
 |__config_files  
+```
+
+```bash
+ngs_resources  
+|  
 |__reference_genomes_b37  
-|__gatk_resources  
-|__ngseasy
+|__reference_genomes_hg19    
 ```
 
 Running the script `make XXXX` ensures that all relevant directories are set up, and also enforces a clean structure to the NGS project.  
@@ -520,9 +524,6 @@ ngs_projects
 |  
 |__raw_fastq  
 |__config_files  
-|__reference_genomes_b37  
-|__gatk_resources  
-|__ngseasy
 |
 |__ project_id  
 	|  
