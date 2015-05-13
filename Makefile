@@ -44,11 +44,13 @@ SRC=./bin
 ################################################################
 
 ## Basic install - no annotation data bases or manual build tools
-#@echo "Setting up NGSeasy project directory, pulling docker images and getting test data and hg19 and b37 genomes and indexes"
+@echo Setting up NGSeasy project directory and pulling docker images then getting test data and hg19 and b37 genomes and indexes
+
 all: ngsprojectdir dockerimages testdata b37 hg19
 
 ## install scripts to target bin eg sudo make install
-#@echo "Installing ngseasy scripts to system"
+@echo Installing ngseasy scripts to system
+
 install:
 	chmod 775 $(SRC)/* && \
 	cp -v $(SRC)/* $(TARGET_BIN)/
@@ -67,12 +69,14 @@ update:
 	git pull
 
 ## Make Top level project directories
-#@echo "Make Top level project directories"
+@echo Make Top level project directories
+
 ngsprojectdir: 
 	mkdir -v -p $(INSTALLDIR)/ngs_projects && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/raw_fastq && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/config_files && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/run_logs && \
+	mkdir -v -p $(INSTALLDIR)/ngs_resources && \
 	mkdir -v -p $(HOME)/ngseasy_logs && \
 	mkdir -v -p $(HOME)/ngseasy_tmp
 
@@ -80,7 +84,8 @@ purgengsprojectsdir:
 	rm -rfv $(INSTALLDIR)/ngs_projects
 
 ## Get all docker images 
-#@echo "Get all NGSeasy docker images"
+@echo Get all NGSeasy docker images
+
 dockerimages:	
 	docker pull compbio/ngseasy-base:$(VERSION) && \
 	docker pull compbio/ngseasy-fastqc:$(VERSION) && \
@@ -155,12 +160,13 @@ slope: baseimage
 glia: baseimage
 	docker pull compbio/ngseasy-glia:$(VERSION)
 
-# b37 Genomes idexed and resources	
-#@echo "Get b37 Genomes idexed and resources"
+# b37 Genomes indexed and resources	
+@echo Get b37 Genomes indexed and resources
+
 b37: 
-	cd $(INSTALLDIR)/ngs_projects && \
+	cd $(INSTALLDIR)/ngs_resources && \
 	mkdir -p reference_genomes_b37 && \
-	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b37 && \
+	cd $(INSTALLDIR)/ngs_resources/reference_genomes_b37 && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_omni2.5.b37.vcf && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_omni2.5.b37.vcf.idx && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_phase1.indels.b37.vcf && \
@@ -221,11 +227,12 @@ b37:
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/reference_genomes_b37/
 
 # hg19 Genomes idexed and resources	
-#@echo "Get hg19 Genomes idexed and resources"
+@echo Get hg19 Genomes indexed and resources
+
 hg19: 
-	cd $(INSTALLDIR)/ngs_projects && \
+	cd $(INSTALLDIR)/ngs_resources && \
 	mkdir -p reference_genomes_hg19 && \
-	cd $(INSTALLDIR)/ngs_projects/reference_genomes_hg19 && \
+	cd $(INSTALLDIR)/ngs_resources/reference_genomes_hg19 && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/1000G_omni2.5.hg19.sites.vcf && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/1000G_omni2.5.hg19.sites.vcf.idx && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/1000G_phase1.indels.hg19.sites.vcf && \
@@ -287,7 +294,8 @@ hg19:
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/reference_genomes_hg19/
 
 ##  Test data and stick it in raw_fastq
-#@echo "Get Test data and stick it in raw_fastq"
+@echo Get Test data and stick it in raw_fastq
+
 testdata: ngsprojectdir
 	cd $(INSTALLDIR)/ngs_projects/raw_fastq && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/ && \
@@ -345,8 +353,8 @@ purgeall:
 	docker rmi -f $(shell docker images -a |  grep ngseasy | awk '(print $$3)') && \
 
 purgegenomes: 
-	rm -rfv $(INSTALLDIR)/ngs_projects/reference_genomes_b37 && \
-	rm -rfv $(INSTALLDIR)/ngs_projects/reference_genomes_hg19
+	rm -rfv $(INSTALLDIR)/ngs_resources/reference_genomes_b37 && \
+	rm -rfv $(INSTALLDIR)/ngs_resources/reference_genomes_hg19
 
 ############################################################################	
 ## Make sep chroms

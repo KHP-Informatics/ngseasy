@@ -374,16 +374,8 @@ fi
 ########################################################################################################  
 # adapter_fa : check of this is in palce and exit if not
 #
-adapter_fa="/home/pipeman/ngs_projects/reference_genomes_b37/contaminant_list.fa"
-
-if [[ ! -e  "${PROJECT_DIR}/reference_genomes_b37/contaminant_list.fa" ]]
-then
-	logger_ngseasy "[ngseasy_trimmomatic]:ERROR: can not find contaminant_list.fa. Exiting" ${LOGFILE}
-	logger_ngseasy "[ngseasy_trimmomatic]:ERROR: please run [make contaminants]" ${LOGFILE}
-	sleep 1s; exit 1
-else
-	logger_ngseasy "[ngseasy_trimmomatic]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
-fi
+adapter_fa="/home/pipeman/ngs_resources/reference_genomes_b37/contaminant_list.fa"
+logger_ngseasy "[ngseasy_trimmomatic]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
 
 ########################################################################################################
 # Trimmomatic paired output
@@ -408,12 +400,12 @@ qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TR
 #
 
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
+  REFDIR="/home/pipeman/ngs_resources/reference_genomes_b37"
   GENOMEINDEX=${REFDIR}/human_g1k_v37
   logger_ngseasy "[ngseasy_trimmomatic]: Genome Build [${GENOMEBUILD}]"
 
 elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
+  REFDIR="/home/pipeman/ngs_resources/reference_genomes_hg19"
   GENOMEINDEX=${REFDIR}/ucsc.hg19
   logger_ngseasy "[ngseasy_trimmomatic]: Genome Build [${GENOMEBUILD}]"
 
@@ -454,6 +446,9 @@ elif [[ "$TRIM" == "atrim" ]]; then
 logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files" ${LOGFILE}
 logger_ngseasy "[ngseasy_trimmomatic]:TRIM set to [$TRIM] - adaptor trim. Adaptor and read quality trimming" ${LOGFILE}
 
+## get ngs_resource mapping
+myresources=`dirname ${PROJECT_DIR}`
+NGSResources="${myresources}/ngs_resources"
 
 ## run trimmomatic
 #
@@ -462,6 +457,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:
 	${DOCKER_RUN} \
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+	-v ${NGSResources}:/home/pipeman/ngs_resources \
 	--name trimmomatic_${BAM_PREFIX} \
 	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 	PE \
