@@ -69,9 +69,8 @@ update:
 	git pull
 
 ## Make Top level project directories
-@echo "Make Top level project directories"
-
 ngsprojectdir: 
+	@echo "Make Top level project directories"
 	mkdir -v -p $(INSTALLDIR)/ngs_projects && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/raw_fastq && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/config_files && \
@@ -161,9 +160,9 @@ glia: baseimage
 	docker pull compbio/ngseasy-glia:$(VERSION)
 
 # b37 Genomes indexed and resources	
-@echo "Get b37 Genomes indexed and resources"
 
-b37: 
+b37:	
+	@echo "Get b37 Genomes indexed and resources" 
 	cd $(INSTALLDIR)/ngs_resources && \
 	mkdir -p reference_genomes_b37 && \
 	cd $(INSTALLDIR)/ngs_resources/reference_genomes_b37 && \
@@ -227,9 +226,9 @@ b37:
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/reference_genomes_b37/
 
 # hg19 Genomes idexed and resources	
-@echo "Get hg19 Genomes indexed and resources"
 
-hg19: 
+hg19:	
+	@echo "Get hg19 Genomes indexed and resources" 
 	cd $(INSTALLDIR)/ngs_resources && \
 	mkdir -p reference_genomes_hg19 && \
 	cd $(INSTALLDIR)/ngs_resources/reference_genomes_hg19 && \
@@ -294,9 +293,10 @@ hg19:
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/reference_genomes_hg19/
 
 ##  Test data and stick it in raw_fastq
-@echo "Get Test data and stick it in raw_fastq"
+
 
 testdata: ngsprojectdir
+	@echo "Get Test data and stick it in raw_fastq"
 	cd $(INSTALLDIR)/ngs_projects/raw_fastq && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/ && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878D_HiSeqX_R1.fastq.gz && \
