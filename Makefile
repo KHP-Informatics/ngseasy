@@ -44,9 +44,9 @@ SRC=./bin
 ################################################################
 
 ## Basic install  no annotation data bases or manual build tools
-	@echo	"Setting up NGSeasy project directory and pulling docker images then getting test data and hg19 and b37 genomes and indexes"
-
 all:	ngsprojectdir dockerimages testdata b37 hg19
+@echo	"Setting up NGSeasy project directory and pulling docker images then getting test data and hg19 and b37 genomes and indexes"
+
 
 ## install scripts to target bin eg sudo make install
 @echo "Installing ngseasy scripts to system"
