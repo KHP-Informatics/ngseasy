@@ -67,13 +67,6 @@ ngseasy_initiate_fastq moves fastq files from raw_fastq stagging are to sample d
 "
 }
 
-## check and make ~/ngseasy_logs if needed
-#
-if [[ ! -e  ${HOME}/ngseasy_logs ]]
-then
-  mkdir ${HOME}/ngseasy_logs
-  global_run_logs="${HOME}/ngseasy_logs"
-fi
 
 ## Check options passed in.
 #
@@ -81,6 +74,7 @@ if test -z "$2"
 then
   logger_ngseasy "[ngseasy_initiate_fastq]:ERROR:No options found"
   ngseasy_initiate_fastq_usage
+  sleep 1s
   exit 1
 fi
 
@@ -104,29 +98,75 @@ fi
       esac
   done
 
+########################################################################################################  
 ## check config file exists.
+#
 if [ ! -e "${config_tsv}" ] 
 then
-	    logger_ngseasy "[ngseasy_initiate_fastq]:ERROR : [${config_tsv}] does not exist....exiting "
-	    ngseasy_initiate_fastq_usage;
-	    exit 1;
+      logger_ngseasy "[ngseasy_initiate_fastq]:ERROR : [${config_tsv}] does not exist....exiting "
+      ngseasy_trimmomatic_usage;
+      sleep 1s; 
+      exit 1;
 else
-	    ngseasy_initiate_fastq_usage "[ngseasy_initiate_fastq]:Configuration file found [${config_tsv}] "
+      logger_ngseasy "[ngseasy_initiate_fastq]:Configuration file found [${config_tsv}] "
 fi
 
-#check project_directory exists.
+########################################################################################################
+## check project_directory exists.
+#
 if [ ! -d "${project_directory}" ]
   then
-    logger_ngseasy "[ngseasy_initiate_fastq]:ERROR : project_directory [${project_directory}] does not exist "
-    ngseasy_initiate_fastq_usage;
+    logger_ngseasy "[ngseasy_initiate_fastq]:ERROR: project_directory [${project_directory}] does not exist "
+    ngseasy_trimmomatic_usage;
+    sleep 1s; 
     exit 1;
 else
-	    ngseasy_initiate_fastq_usage "[ngseasy_initiate_fastq]:Top Level Project Directory [${project_directory}] "
+      logger_ngseasy "[ngseasy_initiate_fastq]:Top Level Project Directory [${project_directory}] "
 fi
 
-## Read config file 
+########################################################################################################
+## check Num feilds in  ${config_tsv}
+#
 logger_ngseasy "[ngseasy_initiate_fastq]:Reading [${config_tsv}] "
-sed 1d ${config_tsv} > ${config_tsv}.tmp
+logger_ngseasy "[ngseasy_initiate_fastq]:Checking number of feilds in  [${config_tsv}] "
+
+numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
+
+if [[  "$numcols" -lt 23 ]] 
+then
+      logger_ngseasy "[ngseasy_initiate_fastq]:ERROR: [${config_tsv}] format issue. Check your file! "
+      sleep 1s; 
+      exit 1;
+  else 
+      logger_ngseasy "[ngseasy_initiate_fastq]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "     
+fi
+
+########################################################################################################
+## Read config file 
+
+## check ${config_tsv}. is this a batch file or the orginal config file 
+#
+logger_ngseasy "[ngseasy_initiate_fastq]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+
+hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
+
+if [[ "${config_tsv}" == *.batch.* ]]
+then
+  logger_ngseasy "[ngseasy_initiate_fastq}:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[ngseasy_initiate_fastq}:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+elif [[ "$hasheader" -eq 1 ]]
+then
+  logger_ngseasy "[ngseasy_initiate_fastq]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_initiate_fastq]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  sed 1d ${config_tsv} > ${config_tsv}.tmp
+  RUNFILE="${config_tsv}.tmp"
+  logger_ngseasy "[ngseasy_initiate_fastq]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+else
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[ngseasy_initiate_fastq]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_initiate_fastq]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+fi
   
 ########################################################################################################
 ## Read config and loop through all lines calling fastqc docker
@@ -162,10 +202,10 @@ DATE=`date +"%d%m%y"`
 ## LOGFILE 
 #
 LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_initiate_fastq"
-logger_ngseasy "[ngseasy_trimmomatic]:logging to [${LOGFILE}.log]"  ${LOGFILE}
+logger_ngseasy "[ngseasy_initiate_fastq]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## read config_file
-logger_ngseasy "[ngseasy_trimmomatic]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+logger_ngseasy "[ngseasy_initiate_fastq]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER]"  ${LOGFILE}
 
@@ -184,7 +224,7 @@ if [ ! -e "${LOGFILE}.log" ]
 then
   touch ${LOGFILE}.log
 fi
-  logger_ngseasy "[ngseasy_trimmomatic]:Logging to [${LOGFILE}.log] "
+  logger_ngseasy "[ngseasy_initiate_fastq]:Logging to [${LOGFILE}.log] "
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR 
@@ -215,7 +255,4 @@ fi
 #------permissions------------#
 chmod -R 776 ${SOUT}/*
 
-done < ${config_tsv}.tmp
-
-##
-rm ${config_tsv}.tmp
+done < ${RUNFILE}
