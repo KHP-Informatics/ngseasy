@@ -136,8 +136,8 @@ PROJECTDIRS=$f1
             mkdir -p ${PROJECTDIRS}/reports 
             logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/fastq" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}/config_files
-            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/run_logs" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
-            mkdir -p ${PROJECTDIRS}/run_logs            
+            #logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/run_logs" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
+            #mkdir -p ${PROJECTDIRS}/run_logs            
             
         else
             logger_ngseasy "[ngseasy_initiate_project]:${PROJECTDIRS}] Exist" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
