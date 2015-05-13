@@ -172,6 +172,20 @@ if [[ ! -d "${project_directory}" ]]
 fi
 
 ###########################################################################################
+## Set up Project Dir and Fastq Files
+###########################################################################################
+
+logger_ngseasy "[ngseasy]:Calling ngseasy_initiate_project" ${config_run_log}
+
+	/bin/bash  ngseasy_initiate_project -c ${config_tsv} -d ${project_directory}  2>&1 | tee -a  ${config_run_log}.log
+	wait
+
+logger_ngseasy "[ngseasy]:Calling ngseasy_initiate_fastq" ${config_run_log}
+
+	/bin/bash  ngseasy_initiate_fastq -c ${config_tsv} -d ${project_directory}  2>&1 | tee -a  ${config_run_log}.log
+	wait
+
+###########################################################################################
 ## FastQC: will run as many jobs as allowed by nproc on system
 ###########################################################################################
 
@@ -211,7 +225,8 @@ logger_ngseasy "[ngseasy]:Number of available cores [$numcores]" ${config_run_lo
 ## check if number of cpu less than 2 and exit if so ####
 #
 if [[ "$numcores" -lt 2 ]]; then
-	logger_ngseasy "[ngseasy]:Number of available cores less than 2. Exiting " ${config_run_log} 
+	logger_ngseasy "[ngseasy]:Number of available cores less than 2. Exiting " ${config_run_log}
+	sleep 1s
 	exit 1;
 fi
 

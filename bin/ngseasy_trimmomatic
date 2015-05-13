@@ -86,14 +86,6 @@ ngseasy_trimmomatic sets up the NGSeasy docker Trimmomatic container compbio/ngs
 "
 }
 
-########################################################################################################
-## check and make ~/ngseasy_logs if needed
-#
-if [[ ! -e  ${HOME}/ngseasy_logs ]]
-then
-  mkdir ${HOME}/ngseasy_logs
-  global_run_logs="${HOME}/ngseasy_logs"
-fi
 
 ########################################################################################################
 ## Check options passed in.
@@ -132,7 +124,8 @@ if [ ! -e "${config_tsv}" ]
 then
 	    logger_ngseasy "[ngseasy_trimmomatic]:ERROR : [${config_tsv}] does not exist....exiting "
 	    ngseasy_trimmomatic_usage;
-	    sleep 1s; exit 1;
+	    sleep 1s; 
+	    exit 1;
 else
 	    logger_ngseasy "[ngseasy_trimmomatic]:Configuration file found [${config_tsv}] "
 fi
@@ -144,7 +137,8 @@ if [ ! -d "${project_directory}" ]
   then
     logger_ngseasy "[ngseasy_trimmomatic]:ERROR: project_directory [${project_directory}] does not exist "
     ngseasy_trimmomatic_usage;
-    sleep 1s; exit 1;
+    sleep 1s; 
+    exit 1;
 else
 	    logger_ngseasy "[ngseasy_trimmomatic]:Top Level Project Directory [${project_directory}] "
 fi
@@ -160,7 +154,8 @@ numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 if [[  "$numcols" -lt 23 ]] 
 then
 	    logger_ngseasy "[ngseasy_trimmomatic]:ERROR: [${config_tsv}] format issue. Check your file! "
-	    sleep 1s; exit 1;
+	    sleep 1s; 
+	    exit 1;
 	else 
 	    logger_ngseasy "[ngseasy_trimmomatic]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "	    
 fi
@@ -191,9 +186,7 @@ else
   logger_ngseasy "[ngseasy_trimmomatic]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   logger_ngseasy "[ngseasy_trimmomatic]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
-#echo -e "\n----------------------------------\n"
-#head ${config_tsv}
-#echo -e "\n----------------------------------\n"
+
 ########################################################################################################
 ## Read config and loop through all lines calling fastqc docker
 #
@@ -394,25 +387,6 @@ logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 un
 
 qcSEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.unpaired.fastq.gz;
 qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.unpaired.fastq.gz;
-
-########################################################################################################
-## Select Genome Build
-#
-
-if [[ "${GENOMEBUILD}" == "b37" ]]; then
-  REFDIR="/home/pipeman/ngs_resources/reference_genomes_b37"
-  GENOMEINDEX=${REFDIR}/human_g1k_v37
-  logger_ngseasy "[ngseasy_trimmomatic]: Genome Build [${GENOMEBUILD}]"
-
-elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
-  REFDIR="/home/pipeman/ngs_resources/reference_genomes_hg19"
-  GENOMEINDEX=${REFDIR}/ucsc.hg19
-  logger_ngseasy "[ngseasy_trimmomatic]: Genome Build [${GENOMEBUILD}]"
-
-else
-  logger_ngseasy "No genome selected. Exiting. Choose one of [b37] or [ß]"
-  sleep 1s; exit 1
-fi
 
 ########################################################################################################
 ## BAM FILE NAME

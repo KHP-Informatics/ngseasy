@@ -6,6 +6,36 @@
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 #################################################################
 
+#################################################################
+# clear stuff up
+REFDIR=""
+GENOMEINDEX=""
+PROJECT_ID=""
+SAMPLE_ID=""
+FASTQ1=""
+FASTQ2=""
+PROJECT_DIR=""
+DNA_PREP_LIBRARY_ID=""
+NGS_PLATFORM=""
+NGS_TYPE=""
+BAIT=""
+CAPTURE=""
+GENOMEBUILD=""
+FASTQC=""
+TRIM=""
+BSQR=""
+REALN=""
+ALIGNER=""
+VARCALLER=""
+CNV=""
+ANNOTATOR=""
+CLEANUP=""
+NCPU=""
+NGSEASYVERSION=""
+NGSUSER=""
+RUNDATE=""
+NGSEASY_STEP=""
+
 ## Set version and run date
 #
 NGSEASYVERSION="1.0"
@@ -54,28 +84,6 @@ then
   exit 1
 fi
 
-#get options for command line args
-  while  getopts "hc:d:" opt
-  do
-
-      case ${opt} in
-	  h)
-	  usage #print help
-	  exit 0
-	  ;;
-	  
-	  c)
-	  config_tsv=${OPTARG}
-    echo "-c = " ${config_tsv}
-	  ;;
-	 
-	  d)
-	  project_directory=${OPTARG}
-	  echo "-d = " ${project_directory}
-    ;; 
-      esac
-  done
-
 ## get options for command line args
   while  getopts "hc:d:" opt
   do
@@ -120,86 +128,72 @@ fi
 logger_ngseasy "[ngseasy_initiate_fastq]:Reading [${config_tsv}] "
 sed 1d ${config_tsv} > ${config_tsv}.tmp
   
-while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21
+########################################################################################################
+## Read config and loop through all lines calling fastqc docker
+#
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
+PROJECT_ID=$f1
+SAMPLE_ID=$f2
+FASTQ1=$f3
+FASTQ2=$f4
+PROJECT_DIR=$f5
+DNA_PREP_LIBRARY_ID=$f6
+NGS_PLATFORM=$f7
+NGS_TYPE=$f8
+BAIT=$f9
+CAPTURE=$f10
+GENOMEBUILD=$f11
+FASTQC=$f12
+TRIM=$f13
+BSQR=$f14
+REALN=$f15
+ALIGNER=$f16
+VARCALLER=$f17
+CNV=$f18
+ANNOTATOR=$f19
+CLEANUP=$f20
+NCPU=$f21
+NGSEASYVERSION=$f22
+NGSUSER=$f23
+DATE=`date +"%d%m%y"`
 
-## set varibales  
-  DATE=`date +"%d%m%y"`
-  
-  PROJECT_ID=$f1
-  SAMPLE_ID=$f2
-  FASTQ1=$f3
-  FASTQ2=$f4
-  PROJECT_DIR=$f5 
-  DNA_PREP_LIBRARY_ID=$f6
-  NGS_PLATFORM=$f7
-  NGS_TYPE=$f8
-  BED_ANNO=$f9
-  PIPELINE=$f10
-  TRIM=$f11
-  GATK=$f12
-  BSQR=$f13
-  REALN=$f14
-  ALIGNER=$f15
-  VARCALLER=$f16
-  GTMODEGATK=$f17
-  CLEANUP=$f18
-  NCPU=$f19
-  VERSION=$f20
-  NGSUSER=$f21
+########################################################################################################
+## LOGFILE 
+#
+LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_initiate_fastq"
+logger_ngseasy "[ngseasy_trimmomatic]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## read config_file
-logger_ngseasy "[ngseasy_initiate_fastq]:
-  $DATE\t
-  $PROJECT_ID\t
-  $SAMPLE_ID\t
-  $FASTQ1\t
-  $FASTQ2\t
-  $PROJECT_DIR\t 
-  $DNA_PREP_LIBRARY_ID\t
-  $NGS_PLATFORM\t
-  $NGS_TYPE\t
-  $BED_ANNO\t
-  $PIPELINE\t
-  $TRIM\t
-  $GATK\t
-  $BSQR\t
-  $REALN\t
-  $ALIGNER\t
-  $VARCALLER\t
-  $GTMODEGATK\t
-  $CLEANUP\t
-  $NCPU\t
-  $VERSION\t
-  $NGSUSER\t"
+logger_ngseasy "[ngseasy_trimmomatic]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
+$VERSION\t$NGSUSER]"  ${LOGFILE}
 
-## Logfile 
-LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.initiate_fastq
+#######################################################################################################
+## check and make log directory
+#
+if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
+then
+  mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
+fi
 
+########################################################################################################
+## check and make logfile
+#
 if [ ! -e "${LOGFILE}.log" ]
 then
-    touch ${LOGFILE}.log
+  touch ${LOGFILE}.log
 fi
+  logger_ngseasy "[ngseasy_trimmomatic]:Logging to [${LOGFILE}.log] "
 
-logger_ngseasy "[ngseasy_initiate_fastq]:Logging to [${LOGFILE}.log] "
-
+########################################################################################################
 ## OUTPUT SAMPLE DIR 
+#
 SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
-logger_ngseasy "[ngseasy_initiate_fastq]:Sample Directory [${SOUT}] "
 
-
-## check local dir exists
-if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
-then
-  logger_ngseasy "[ngseasy_initiate_fastq]:ERROR:Cant Find Project directory ${SOUT}. This is then end. Please Stop and check everything is ok " ${LOGFILE}
-  exit 1
-
-else 
-  logger_ngseasy "[ngseasy_initiate_fastq]:Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
-fi
-
-
+########################################################################################################
 ## copy fastq files to sample directory
+#
 if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
   logger_ngseasy "[ngseasy_initiate_fastq]:Moving fastq files from ${PROJECT_DIR}/raw_fastq/ to ${SOUT}/fastq/ " ${LOGFILE}
@@ -210,11 +204,12 @@ then
     logger_ngseasy "[ngseasy_initiate_fastq]:CMD:mv -v ${PROJECT_DIR}/raw_fastq/${FASTQ1} ${SOUT}/fastq/${FASTQ1}" ${LOGFILE}
     logger_ngseasy "[ngseasy_initiate_fastq]:CMD:mv -v ${PROJECT_DIR}/raw_fastq/${FASTQ2} ${SOUT}/fastq/${FASTQ1}" ${LOGFILE}  
 
-    ln -s ${SOUT}/fastq/${FASTQ1} ${PROJECT_DIR}/raw_fastq/${FASTQ1}
-    ln -s ${SOUT}/fastq/${FASTQ2} ${PROJECT_DIR}/raw_fastq/${FASTQ2}
+    #ln -s ${SOUT}/fastq/${FASTQ1} ${PROJECT_DIR}/raw_fastq/${FASTQ1}
+    #ln -s ${SOUT}/fastq/${FASTQ2} ${PROJECT_DIR}/raw_fastq/${FASTQ2}
     
 else
-  logger_ngseasy "[ngseasy_initiate_fastq]:Fastq Files already exist in  ${SOUT}/fastq/ " ${LOGFILE}
+  logger_ngseasy "[ngseasy_initiate_fastq]:Fastq Files already exist in ${SOUT}/fastq/ " ${LOGFILE}
+  ls ${SOUT}/fastq/
 fi
 
 #------permissions------------#
