@@ -478,11 +478,9 @@ NGSUSER|STRING|user email|stephen.j.newhouse@gmail.com
 
 ## Running NGSeasy
 
-When running a project or set of samples for the first time, users need to set the ```-p``` and ```-f``` options to 1. 
-
 ```bash
 ## 
-ngseasy -c ngseasy_test.config.tsv -d /media/scratch/ngs_projects  -p 1 -f 1
+ngseasy -c ngseasy_test.config.tsv -d /media/scratch/ngs_projects 
 ```
 
 
@@ -511,7 +509,7 @@ ngs_projects
 Running the script `make XXXX` ensures that all relevant directories are set up, and also enforces a clean structure to the NGS project.  
 
 Within this we make a `raw_fastq` folder, where we temporarily store all the raw fastq files for each project. This folder acts as an initial stagging area for the raw fastq files. During the project set up, we copy/move project/sample related fastq files to their own specific directories.
-Fastq files must have suffix and be gzipped: **_1.fq.gz** or **_2.fq.gz**  
+Fastq files must have suffix and be gzipped: **\_1.fq.gz** or **\_2.fq.gz**  
 furture version will allow any format  
 
 Running `ngseasy` with the relevent configuration file, will set up the following directory structure for every project and sample within a project:-  
@@ -553,6 +551,16 @@ ngs_projects
 		|__reports  
 		|__config_files  
 ```
+
+## The raw_fastq Directory
+
+The ``raw_fastq`` Directory is a very special directory indeed. 
+This is where the user should copy and or move **ALL NEW RAW FASTQ** Files to. 
+This is to be used as an intial staging area for all fastq files. 
+NGSeasy expects all raw fastq data to be placed here for all new samples or runs.
+NGSeasy inspects this folder and looks for the fastq file names specified in your confifg file.
+If NGSeasy doen't find them, then it exits.
+We do this to force the user to get organised.
 
 ****************
 
