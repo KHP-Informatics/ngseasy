@@ -524,14 +524,12 @@ ngs_projects
 |  
 |__raw_fastq  
 |__config_files  
+|__run_logs
 |
 |__ project_id  
 	|  
 	|__run_logs  
 	|__config_files  
-	|__project_vcfs  
-	|__project_bams  
-	|__project_reports  
 	|
 	|__sample_id_1  
 	|	|  
