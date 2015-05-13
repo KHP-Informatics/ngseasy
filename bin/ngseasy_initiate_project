@@ -44,12 +44,7 @@ command -v docker >/dev/null 2>&1 || { echo -e "Docker (https://docs.docker.com/
 DOCKERVERSION=`docker version`
 echo -e "Docker Installed:\n\n${DOCKERVERSION}\n\n"
 
-## check and make ~/ngseasy_logs if needed
-if [[ ! -e  ${HOME}/ngseasy_logs ]]
-then
-  mkdir ${HOME}/ngseasy_logs
-  global_run_logs="${HOME}/ngseasy_logs"
-fi
+touch ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY.log
 
 ## Check options passed in.
 if test -z "$2"
@@ -122,20 +117,28 @@ PROJECTDIRS=$f1
         
             logger_ngseasy "[ngseasy_initiate_project]:${PROJECTDIRS} Does Not Exist" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             logger_ngseasy "[ngseasy_initiate_project]:Making Project Directories..." ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
+            
             logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}
+            
             logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/fastq" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}/fastq 
+            
             logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/tmp" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}/tmp 
+            
             logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/alignments" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}/alignments 
+            
             logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/vcf" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}/vcf 
+            
             logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/reports" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}/reports 
+            
             logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/fastq" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             mkdir -p ${PROJECTDIRS}/config_files
+            
             #logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECTDIRS}/run_logs" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
             #mkdir -p ${PROJECTDIRS}/run_logs            
             
@@ -147,3 +150,4 @@ done < ${HOME}/ngseasy_tmp/ProjectBySample_list
 ## remove lists
 #
     rm ${HOME}/ngseasy_tmp/ProjectBySample_list
+    rm ${HOME}/ngseasy_tmp/Project_list
