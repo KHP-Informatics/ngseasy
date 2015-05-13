@@ -16,7 +16,7 @@ _This is the latest dev project: undergoing massive re-dev , links may be broken
 
 **Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
 
-- **NGSeasy-1.0 Full Production release will be available Early 2015**  
+- **NGSeasy-1.0 Full Production release will be available Late 2015**  
 - **NGSeasy-1.0 (dirty_tango) contains most of the core fucntionality to go from raw fastq to raw vcf calls**
 - **NGSeasy will update every 12 months**
 - **GUI in development**
@@ -181,8 +181,8 @@ This runs the following basic pipeline on Whole Exome PE 30x Illumina data, alig
 
 ### Some notes and pointers
 
-- Edit **NCPU** in  **[ngseasy_test.config.tsv]** to suit your system!  
-- Edit **PROJECT_DIR** in  **[ngseasy_test.config.tsv]** to suit your install path!    
+- Edit **NCPU** in  **[ngseasy_test.config.tsv]** to suit your system  
+- Edit **PROJECT\_DIR** in  **[ngseasy_test.config.tsv]** to suit your install path    
 - everytime the user has a new project and/or new samples
 the user must run ``ngseasy_initiate_project`` followd by ``ngseasy_initiate_fastq`` .  
 - We expect the user to palce all raw fastq files in ``raw_fastq``. NGSeasy uses this
