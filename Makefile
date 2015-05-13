@@ -53,7 +53,7 @@ all:	ngsprojectdir dockerimages testdata b37 hg19
 install:
 	@echo "Installing ngseasy scripts to system"
 	chmod 775 $(SRC)/* && \
-	cp -v $(SRC)/* $(TARGET_BIN)/
+	cp -rv $(SRC)/* $(TARGET_BIN)/
 
 ## fix permissions. run - sudo make NGSUSER="ec2-user" fixuser
 fixuser: 
