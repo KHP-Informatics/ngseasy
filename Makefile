@@ -49,9 +49,9 @@ all:	ngsprojectdir dockerimages testdata b37 hg19
 
 
 ## install scripts to target bin eg sudo make install
-@echo "Installing ngseasy scripts to system"
 
 install:
+	@echo "Installing ngseasy scripts to system"
 	chmod 775 $(SRC)/* && \
 	cp -v $(SRC)/* $(TARGET_BIN)/
 
