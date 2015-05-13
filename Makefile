@@ -83,9 +83,9 @@ purgengsprojectsdir:
 	rm -rfv $(INSTALLDIR)/ngs_projects
 
 ## Get all docker images 
-@echo "Get all NGSeasy docker images"
 
 dockerimages:	
+	@echo "Get all NGSeasy docker images"
 	docker pull compbio/ngseasy-base:$(VERSION) && \
 	docker pull compbio/ngseasy-fastqc:$(VERSION) && \
 	docker pull compbio/ngseasy-trimmomatic:$(VERSION) && \
