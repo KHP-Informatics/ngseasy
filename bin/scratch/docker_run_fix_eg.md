@@ -7,7 +7,9 @@ NGSResources="${myresources}/ngs_resources"
 ${DOCKER_RUN} \
 -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
 -v ${NGSResources}:/home/pipeman/ngs_resources \
+```
 
+```bash
 
 make INSTALLDIR="/media/Data" ngsprojectdir
 make INSTALLDIR="/media/Data" b37
