@@ -1,3 +1,4 @@
+################################################################
 ## ngseasy Makefile
 ## Version 1.0 
 ## Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
@@ -5,11 +6,11 @@
 ## Usage
 ################################################################
 #
-#    make all
+#    make all && sudo make install
 #
 # ...or...
 #
-#    make INTSALLDIR="/CUSTOM/PATH/" all
+#    make INSTALLDIR="/CUSTOM/PATH" all && sudo make install
 #
 ################################################################
 
