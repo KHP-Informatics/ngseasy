@@ -134,10 +134,14 @@ config_run_log="${project_directory}/run_logs/ngseasy.${NGSEASYVERSION}.${config
 if [[ ! -e "${config_run_log}.log" ]]
 then
 	logger_ngseasy "[ngseasy]:Making log file [${config_run_log}.log]"
+
 	touch ${config_run_log}.log
+	
 	logger_ngseasy "[ngseasy]:Log file [${config_run_log}.log]"
+
 else
 	logger_ngseasy "[ngseasy]:Log file [${config_run_log}.log]"
+
 fi
 
 ############################################################################################
