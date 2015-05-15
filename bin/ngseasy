@@ -27,8 +27,8 @@ DOCKERVERSION=`docker version`
 DOCKERINFO=`docker info`
 
 echo -e "\n----------------------------------\nDocker Version\n----------------------------------\n${DOCKERVERSION}\n----------------------------------\n"Docker Info"\n----------------------------------\n${DOCKERINFO}\n----------------------------------\n"
-echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:START]":[${USER}]:[`uname -a`]"  >> ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY.log
-echo -e "\n----------------------------------\nDocker Version\n----------------------------------\n${DOCKERVERSION}\n----------------------------------\n"Docker Info"\n----------------------------------\n${DOCKERINFO}\n----------------------------------\n" >> ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY.log
+echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:START]":[${USER}]:[`uname -a`]" 
+echo -e "\n----------------------------------\nDocker Version\n----------------------------------\n${DOCKERVERSION}\n----------------------------------\n"Docker Info"\n----------------------------------\n${DOCKERINFO}\n----------------------------------\n"
 sleep 1s
 
 ###########################################################################################
