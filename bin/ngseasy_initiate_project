@@ -69,16 +69,16 @@ do
         ;;
         
         d)
-        host_vol_dir=${OPTARG}
+        project_directory=${OPTARG}
         ;;
 
     esac
 done
 
 #check exists.
-  if [ ! -e "${host_vol_dir}" ] 
+  if [ ! -e "${project_directory}" ] 
   then
-	  echo " ${host_vol_dir} does not exist "
+	  echo " ${project_directory} does not exist "
 	  usage;
 	  exit 1;
   fi
@@ -101,13 +101,13 @@ awk 'NR >1 {print $5"/"$1}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/Pr
 while read -f PROJECTNAME
 do
 
-    if [[ ! -d "${host_vol_dir}/${PROJECTNAME}" ]]; then
+    if [[ ! -d "${project_directory}/${PROJECTNAME}" ]]; then
 
-        mkdir -p ${host_vol_dir}/${PROJECTNAME}
-        logger_ngseasy "[ngseasy_initiate_project]: Making ${host_vol_dir}/${PROJECTNAME} project directory" 
+        mkdir -p ${project_directory}/${PROJECTNAME}
+        logger_ngseasy "[ngseasy_initiate_project]: Making ${project_directory}/${PROJECTNAME} project directory" 
 
     else 
-        logger_ngseasy "[ngseasy_initiate_project]:Project directory ${host_vol_dir}/${PROJECTNAME} Already Exists" 
+        logger_ngseasy "[ngseasy_initiate_project]:Project directory ${project_directory}/${PROJECTNAME} Already Exists" 
 
     fi    
 
