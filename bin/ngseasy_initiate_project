@@ -41,7 +41,7 @@ usage:   ngseasy_initiate_project -c <config_file> -d <project_directory>
 
 options: -h  show this message
 	 -c   Config pipeline file
-	 -d   Base directory for [ngs_projects](fastq_raw, reference_genomes_b37, gatk_resources, ngs_projects, ngseasy_scripts)
+	 -d   Base directory for [ngs_projects](fastq_raw, run_logs, config_files)
 "
 }
 
