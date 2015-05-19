@@ -44,7 +44,6 @@ command -v docker >/dev/null 2>&1 || { echo -e "Docker (https://docs.docker.com/
 DOCKERVERSION=`docker version`
 echo -e "Docker Installed:\n\n${DOCKERVERSION}\n\n"
 
-touch ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY.log
 
 ## Check options passed in.
 if test -z "$2"
@@ -80,6 +79,7 @@ done
   then
 	  echo " ${project_directory} does not exist "
 	  usage;
+      sleep 1s
 	  exit 1;
   fi
 
@@ -88,6 +88,7 @@ done
   then
 	  echo " ${config_tsv} does not exist "
 	  usage;
+      sleep 1s
 	  exit 1;
   fi
 
@@ -102,14 +103,14 @@ config_run_log="${project_directory}/run_logs/ngseasy.${NGSEASYVERSION}.${config
 
 if [[ ! -e "${config_run_log}.log" ]]
 then
-    logger_ngseasy "[ngseasy]:Making log file [${config_run_log}.log]"
+    logger_ngseasy "[ngseasy_initiate_project]:Making log file [${config_run_log}.log]"
 
     touch ${config_run_log}.log
     
-    logger_ngseasy "[ngseasy]:Log file [${config_run_log}.log]"
+    logger_ngseasy "[ngseasy_initiate_project]:Log file [${config_run_log}.log]"
 
 else
-    logger_ngseasy "[ngseasy]:Log file [${config_run_log}.log]"
+    logger_ngseasy "[ngseasy_initiate_project]:Log file [${config_run_log}.log]"
 
 fi
 
@@ -128,7 +129,7 @@ do
         mkdir -p ${project_directory}/${PROJECTNAME}
         chmod -R 776 ${project_directory}/${PROJECTNAME}
 
-        logger_ngseasy "[ngseasy_initiate_project]: Making [${project_directory}/${PROJECTNAME}] project directory" ${config_run_log}
+        logger_ngseasy "[ngseasy_initiate_project]:Making [${project_directory}/${PROJECTNAME}] project directory" ${config_run_log}
 
     else 
         logger_ngseasy "[ngseasy_initiate_project]:Project directory [${project_directory}/${PROJECTNAME}] Exists" ${config_run_log}

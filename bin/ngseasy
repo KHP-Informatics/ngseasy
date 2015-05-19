@@ -52,7 +52,7 @@ Program: ngseasy
 Version 1.0
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
-usage:   ngseasy -c <config_file> -d <project_directory> -p 1 -f 1
+usage:   ngseasy -c <config_file> -d <project_directory>
 
 options:  -c  STRING	configuration file
           -d  STRING	project directory
