@@ -126,7 +126,7 @@ do
     if [[ ! -d "${project_directory}/${PROJECTNAME}" ]]; then
 
         mkdir -p ${project_directory}/${PROJECTNAME}
-        chmod -R 775 ${project_directory}/${PROJECTNAME}
+        chmod -R 776 ${project_directory}/${PROJECTNAME}
 
         logger_ngseasy "[ngseasy_initiate_project]: Making [${project_directory}/${PROJECTNAME}] project directory" ${config_run_log}
 
@@ -154,7 +154,7 @@ do
 
 PROJECTDIRS=$f1
 
-    if [[ ! -d "$PROJECTDIRS" ]]
+    if [[ ! -d "${PROJECTDIRS}" ]]
         then
         
             logger_ngseasy "[ngseasy_initiate_project]:${PROJECTDIRS} Does Not Exist" ${config_run_log}
@@ -195,6 +195,9 @@ PROJECTDIRS=$f1
 
 done < ${HOME}/ngseasy_tmp/ProjectBySample_list
 wait
+
+## open it up to all 
+chmod -R 776 ${project_directory}/
 
 ## remove lists
 #
