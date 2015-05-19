@@ -11,6 +11,13 @@
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 
+###########################################################################################
+## default options
+###########################################################################################
+
+config_tsv=""
+project_directory=""
+
 ## global logging fuction
 #
 function logger_ngseasy() {
