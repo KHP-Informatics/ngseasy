@@ -209,6 +209,7 @@ logger_ngseasy "[ngseasy_initiate_fastq]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER]"  ${LOGFILE}
 
+
 #######################################################################################################
 ## check and make log directory
 #
