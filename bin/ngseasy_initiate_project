@@ -91,13 +91,32 @@ done
 	  exit 1;
   fi
   
-
+####################################################################################################################
 ## project list
 # config_tsv=config_file
 #
 logger_ngseasy "[ngseasy_initiate_project]:CMD: awk 'NR >1 {print $5"/"$1}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/Project_list" ${HOME}/ngseasy_logs/${USER}.${RUNDATE}.NGSEASY
 awk 'NR >1 {print $5"/"$1}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/Project_list
 
+while read -f PROJECTNAME
+do
+
+    if [[ ! -d "${host_vol_dir}/${PROJECTNAME}" ]]; then
+
+        mkdir -p ${host_vol_dir}/${PROJECTNAME}
+        logger_ngseasy "[ngseasy_initiate_project]: Making ${host_vol_dir}/${PROJECTNAME} project directory" 
+
+    else 
+        logger_ngseasy "[ngseasy_initiate_project]:Project directory ${host_vol_dir}/${PROJECTNAME} Already Exists" 
+
+    fi    
+
+done < ${HOME}/ngseasy_tmp/Project_list
+wait
+
+rm ${HOME}/ngseasy_tmp/Project_list
+
+####################################################################################################################
 ## sample lists
 # config_tsv=config_file
 #
