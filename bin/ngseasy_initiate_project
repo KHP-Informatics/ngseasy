@@ -11,6 +11,12 @@
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 
+## test if docker is intsalled and exit if not
+#
+command -v docker >/dev/null 2>&1 || { echo -e "Docker (https://docs.docker.com/installation) not installed.\nAborting." >&2; exit 1; }
+DOCKERVERSION=`docker version`
+echo -e "Docker Installed:\n\n${DOCKERVERSION}\n\n"
+
 ###########################################################################################
 ## default options
 ###########################################################################################
@@ -18,8 +24,10 @@ RUNDATE=`date +"%d%m%y"`
 config_tsv=""
 project_directory=""
 
+###########################################################################################
 ## global logging fuction
-#
+###########################################################################################
+
 function logger_ngseasy() {
  message=${1}
  mylogfile=${2}
@@ -27,8 +35,9 @@ function logger_ngseasy() {
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
 
+###########################################################################################
 ## global usage
-#
+###########################################################################################
 function ngseasy_initiate_project_usage() {
     echo "
 Program: ngseasy_initiate_project
@@ -45,22 +54,10 @@ options: -h  show this message
 "
 }
 
-## test if docker is intsalled and exit if not
-#
-command -v docker >/dev/null 2>&1 || { echo -e "Docker (https://docs.docker.com/installation) not installed.\nAborting." >&2; exit 1; }
-DOCKERVERSION=`docker version`
-echo -e "Docker Installed:\n\n${DOCKERVERSION}\n\n"
 
-
-## Check options passed in.
-if test -z "$2"
-then
-  logger_ngseasy "[ngseasy_initiate_project]:ERROR:No options found" ${HOME}/ngseasy_logs/${RUNDATE}.NGSEASY
-  ngseasy_initiate_project_usage
-  exit 1
-fi
-
-#get options for command line args
+###########################################################################################
+## get options for command line args
+###########################################################################################
 while  getopts "hc:d:" opt
 do
 
@@ -81,43 +78,111 @@ do
     esac
 done
 
-#check exists.
-  if [ ! -e "${project_directory}" ] 
-  then
-	  echo " ${project_directory} does not exist "
-	  usage;
-      sleep 1s
-	  exit 1;
-  fi
+###########################################################################################
+## Check options passed in.
+###########################################################################################
 
-#check exists.
-  if [ ! -e "${config_tsv}" ] 
+if test -z "$2"
+    then
+    usage_ngseasy
+    sleep 1s
+    exit 1
+fi
+
+###########################################################################################
+## check ${project_directory} exists.
+###########################################################################################
+logger_ngseasy "[ngseasy]:Check if project dir [${project_directory}] exists"
+
+if [[ ! -d "${project_directory}" ]]
   then
-	  echo " ${config_tsv} does not exist "
-	  usage;
-      sleep 1s
-	  exit 1;
-  fi
+      usage_ngseasy;
+      logger_ngseasy "[ngseasy]:ERROR:${project_directory} does not exist. Exiting."
+      sleep 2s
+      exit 1;
+fi
 
 ###########################################################################################
 ## Make log file ##
 ###########################################################################################
 
 ## strip path if user enters config with full path specified
-#
-configfile=`basename ${config_tsv}`
-config_run_log="${project_directory}/run_logs/ngseasy.${NGSEASYVERSION}.${configfile}.${RUNDATE}"
+configfile_name=`basename ${config_tsv}`
+
+# set logile name and make it if it does not exist
+config_run_log="${project_directory}/run_logs/ngseasy.${NGSEASYVERSION}.${configfile_name}.${RUNDATE}"
 
 if [[ ! -e "${config_run_log}.log" ]]
 then
-    logger_ngseasy "[ngseasy_initiate_project]:Making log file [${config_run_log}.log]"
+    logger_ngseasy "[ngseasy]:Making log file [${config_run_log}.log]"
 
     touch ${config_run_log}.log
     
-    logger_ngseasy "[ngseasy_initiate_project]:Log file [${config_run_log}.log]"
+    logger_ngseasy "[ngseasy]:Log file [${config_run_log}.log]"
 
 else
-    logger_ngseasy "[ngseasy_initiate_project]:Log file [${config_run_log}.log]"
+    logger_ngseasy "[ngseasy]:Log file [${config_run_log}.log]"
+
+fi
+
+###########################################################################################
+## check config_tsv exists.
+###########################################################################################
+
+# find out where we are running from 
+my_current_dirctory=`pwd`
+
+logger_ngseasy "[ngseasy]:Current working directory [${my_current_dirctory}]" ${config_run_log}
+logger_ngseasy "[ngseasy]:Config file set as [${config_tsv}]" ${config_run_log}
+sleep 1s
+
+## check if user has used full path to specify config_tsv
+# strip path if user enters config with full path specified
+# and the move to the dir containing the config_tsv
+#
+config_directory_path=`dirname ${config_tsv}`
+
+if [[ "${config_directory_path}" == "." ]]; then
+    working_dir="${my_current_dirctory}"
+    logger_ngseasy "[ngseasy]:Path to config file directory detected as [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[ngseasy]:Setting Path to config file" ${config_run_log}
+    logger_ngseasy "[ngseasy]:Config file location set to [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[ngseasy]:Moving to Config file location [${working_dir}] to make life easy" ${config_run_log}
+    
+    # move to location of config file
+    cd ${working_dir}
+    
+    # check if file exists
+    configfile_name=`basename ${config_tsv}`
+
+if [[ ! -e "./${configfile_name}" ]]; then 
+    logger_ngseasy "[ngseasy]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
+    sleep 1s
+    exit 1
+else
+    logger_ngseasy "[ngseasy]:Config file name [${configfile_name}] detected" ${config_run_log}
+fi
+    
+else
+    working_dir="${config_directory_path}"
+    logger_ngseasy "[ngseasy]:Path to config file directory detected as [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[ngseasy]:Setting Path to config file" ${config_run_log}
+    logger_ngseasy "[ngseasy]:Config file location set to [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[ngseasy]:Moving to Config file location [${working_dir}] to make life easy" ${config_run_log}
+    
+    # move to location of config file
+    cd ${working_dir}
+    
+    # check if file exists
+    configfile_name=`basename ${config_tsv}`
+    
+if [[ ! -e "./${configfile_name}" ]]; then 
+    logger_ngseasy "[ngseasy]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
+    sleep 1s
+    exit 1
+else
+    logger_ngseasy "[ngseasy]:Config file name [${configfile_name}] detected" ${config_run_log}
+fi
 
 fi
 
