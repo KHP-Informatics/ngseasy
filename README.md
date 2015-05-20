@@ -29,8 +29,15 @@ _This is the latest dev project: undergoing massive re-dev , links may be broken
 ****************
 
 
-## Issues, Questions and Queries 
+# Issues, Questions and Queries 
+
 **Please Direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues]**
+
+# WARNING!
+NGSeasy is noy numpty proof!  
+Please read the docs, stay calm, take your time and think about what you are doing...  
+and if [www.google.com] doesnt help, then please direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues]**.
+
 
 ## For the impatient 
 
