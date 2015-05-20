@@ -195,17 +195,6 @@ else
 fi
 
 
-# once in the directory set by user, check if file actually exists
-if [[ ! -e "${config_tsv}" ]]; then
-	usage_ngseasy;
-	logger_ngseasy "[ngseasy]:ERROR:config file [${config_tsv}] does not exist. Exiting"
-	sleep 1s
-	exit 1;
-else 
-	logger_ngseasy "[ngseasy]:config file [${config_tsv}] found"
-fi
-
-
 ############################################################################################
 ## check Num feilds in  ${config_tsv}
 ###########################################################################################
