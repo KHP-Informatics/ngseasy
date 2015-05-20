@@ -173,14 +173,14 @@ if [[ "${config_directory_path}" == "." ]]; then
 	
 	# check if file exists
 	configfile_name=`basename ${config_tsv}`
-	
-	if [[ ! -e "./${configfile_name}" ]]; then 
-		logger_ngseasy "[ngseasy]:ERROR:config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
-		sleep 1s
-		exit 1
-	else
-		logger_ngseasy "[ngseasy]:config file [${config_tsv}] found" ${config_run_log}
-	fi
+
+if [[ ! -e "./${configfile_name}" ]]; then 
+	logger_ngseasy "[ngseasy]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
+	sleep 1s
+	exit 1
+else
+	logger_ngseasy "[ngseasy]:Config file name [${configfile_name}] detected" ${config_run_log}
+fi
 	
 else
 	working_dir="${config_directory_path}"
@@ -195,13 +195,13 @@ else
 	# check if file exists
 	configfile_name=`basename ${config_tsv}`
 	
-	if [[ ! -e "./${configfile_name}" ]]; then 
-		logger_ngseasy "[ngseasy]:ERROR:config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
-		sleep 1s
-		exit 1
-	else
-		logger_ngseasy "[ngseasy]:config file [${config_tsv}] found" ${config_run_log}
-	fi
+if [[ ! -e "./${configfile_name}" ]]; then 
+	logger_ngseasy "[ngseasy]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
+	sleep 1s
+	exit 1
+else
+	logger_ngseasy "[ngseasy]:Config file name [${configfile_name}] detected" ${config_run_log}
+fi
 
 fi
 
