@@ -112,8 +112,9 @@ fi
 ###########################################################################################
 
 ## strip path if user enters config with full path specified
-#
 configfile_name=`basename ${config_tsv}`
+
+# set logile name and make it if it does not exist
 config_run_log="${project_directory}/run_logs/ngseasy.${NGSEASYVERSION}.${configfile_name}.${RUNDATE}"
 
 if [[ ! -e "${config_run_log}.log" ]]
@@ -138,21 +139,21 @@ logger_ngseasy "[ngseasy]:Check if project dir [${project_directory}] exists"
 if [[ ! -d "${project_directory}" ]]
   then
 	  usage_ngseasy;
-	  logger_ngseasy "[ngseasy]:ERROR:${project_directory} does not exist" ${config_run_log}
-	  sleep 1s
+	  logger_ngseasy "[ngseasy]:ERROR:${project_directory} does not exist. Exiting." ${config_run_log}
+	  sleep 2s
 	  exit 1;
 fi
 
 ###########################################################################################
-## check file and directory exist.
+## check file exist.
 ###########################################################################################
 
 # find out where we are running from 
 my_current_dirctory=`pwd`
 
-logger_ngseasy "[ngseasy]:Current working directory [${my_current_dirctory}]"
+logger_ngseasy "[ngseasy]:Current working directory [${my_current_dirctory}]" ${config_run_log}
 
-logger_ngseasy "[ngseasy]:Config file set as [${config_tsv}]"
+logger_ngseasy "[ngseasy]:Config file set as [${config_tsv}]" ${config_run_log}
 sleep 1s
 
 ## check if user has used full path to specify config_tsv
@@ -160,21 +161,21 @@ sleep 1s
 # and the move to the dir containing the config_tsv
 #
 config_directory_path=`dirname ${config_tsv}`
-logger_ngseasy "[ngseasy]:Config directory path [${config_directory_path}]"
+logger_ngseasy "[ngseasy]:Config directory path [${config_directory_path}]" ${config_run_log}
 
 if [[ "${config_directory_path}" == "." ]]; then
 
 	working_dir="${my_current_dirctory}"
 	cd ${working_dir}
 	configfile=`basename ${config_tsv}`
-	logger_ngseasy "[ngseasy]:Config file location [${working_dir}]"
-	logger_ngseasy "[ngseasy]:Moving to [${working_dir}]"
+	logger_ngseasy "[ngseasy]:Config file location [${working_dir}]" ${config_run_log}
+	logger_ngseasy "[ngseasy]:Moving to [${working_dir}]" ${config_run_log}
 else
 	working_dir="${config_directory_path}"
 	cd ${working_dir}
 	configfile=`basename ${config_tsv}`
-	logger_ngseasy "[ngseasy]:Config file located in [${working_dir}]"
-	logger_ngseasy "[ngseasy]:Moving to [${working_dir}]"
+	logger_ngseasy "[ngseasy]:Config file located in [${working_dir}]" ${config_run_log}
+	logger_ngseasy "[ngseasy]:Moving to [${working_dir}]" ${config_run_log}
 fi
 
 
