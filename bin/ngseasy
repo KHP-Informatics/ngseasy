@@ -214,7 +214,9 @@ logger_ngseasy "[ngseasy]:Reading [${config_tsv}] " ${config_run_log}
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
-if [[  "$numcols" -lt 23 ]] 
+logger_ngseasy "[ngseasy]:Number of fields detected [${numcols}] " ${config_run_log}
+
+if [[  "${numcols}" -lt 23 ]] 
 then
     logger_ngseasy "[ngseasy]:ERROR:[${config_tsv}] format issue. Check your file! " ${config_run_log}
     sleep 1s
