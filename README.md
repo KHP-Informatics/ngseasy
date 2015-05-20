@@ -160,23 +160,10 @@ sys     28m46.648s
 cd /home/ec2-user/ngs_projects/config_files/
 
 #############################################
-## 1. Set up project and sample directories
-
-ngseasy_initiate_project -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects 
-
-#############################################
-## 2. Move project/sample fastq from raw_fastq
-## to project and sample directories
- 
-ngseasy_initiate_fastq -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects 
-
-#############################################
-## 3. Run basic test 
+## 1. Run basic test 
 
 ngseasy -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects 
 
-# Note: everytime the user has a new project and/or new samples
-# you must run ngseasy_initiate_project followd by ngseasy_initiate_fastq
 
 ```
 
@@ -190,11 +177,10 @@ This runs the following basic pipeline on Whole Exome PE 30x Illumina data, alig
 
 - Edit **NCPU** in  **[ngseasy_test.config.tsv]** to suit your system  
 - Edit **PROJECT\_DIR** in  **[ngseasy_test.config.tsv]** to suit your install path    
-- everytime the user has a new project and/or new samples
-the user must run ``ngseasy_initiate_project`` followd by ``ngseasy_initiate_fastq`` .  
 - We expect the user to palce all raw fastq files in ``raw_fastq``. NGSeasy uses this
 as a stagging area for new project and sample data.  
 - right now, always run ``ngseasy`` from the location/directory that contains the config.file  
+- each component of ngseasy can be run as a standalone script  
 
 ****************
 
