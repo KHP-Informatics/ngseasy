@@ -34,10 +34,9 @@ _This is the latest dev project: undergoing massive re-dev , links may be broken
 **Please Direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues]**
 
 # WARNING!
-NGSeasy is not [numpty](http://www.urbandictionary.com/define.php?term=Numpty) proof!  
+NGSeasy is not [numpty](http://www.urbandictionary.com/define.php?term=Numpty) or bad data proof!  
   
-Please read the docs, stay calm, take your time and think about what you are doing...  
-and if [www.google.com] doesnt help, then please direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues]**.
+Please read the docs, stay calm, take your time and think about what you are doing...and if [www.google.com] doesnt help, then please direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues].
 
 
 ## For the impatient 
