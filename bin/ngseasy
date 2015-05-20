@@ -108,28 +108,13 @@ if test -z "$2"
 fi
 
 ###########################################################################################
-## check file and directory exist.
-###########################################################################################
-logger_ngseasy "[ngseasy]:Check if config file [${config_tsv}] exists"
-
-if [[ ! -e "${config_tsv}" ]] 
-then
-	  usage_ngseasy;
-	  logger_ngseasy "[ngseasy]:ERROR:config file [${config_tsv}] does not exist. Exiting"
-	  sleep 1s
-	  exit 1;
-else 
-	logger_ngseasy "[ngseasy]:config file [${config_tsv}] found"
-fi
-
-###########################################################################################
 ## Make log file ##
 ###########################################################################################
 
 ## strip path if user enters config with full path specified
 #
-configfile=`basename ${config_tsv}`
-config_run_log="${project_directory}/run_logs/ngseasy.${NGSEASYVERSION}.${configfile}.${RUNDATE}"
+configfile_name=`basename ${config_tsv}`
+config_run_log="${project_directory}/run_logs/ngseasy.${NGSEASYVERSION}.${configfile_name}.${RUNDATE}"
 
 if [[ ! -e "${config_run_log}.log" ]]
 then
@@ -143,6 +128,66 @@ else
 	logger_ngseasy "[ngseasy]:Log file [${config_run_log}.log]"
 
 fi
+
+
+###########################################################################################
+## check ${project_directory} exists.
+###########################################################################################
+logger_ngseasy "[ngseasy]:Check if project dir [${project_directory}] exists"
+
+if [[ ! -d "${project_directory}" ]]
+  then
+	  usage_ngseasy;
+	  logger_ngseasy "[ngseasy]:ERROR:${project_directory} does not exist" ${config_run_log}
+	  sleep 1s
+	  exit 1;
+fi
+
+###########################################################################################
+## check file and directory exist.
+###########################################################################################
+
+# find out where we are running from 
+my_current_dirctory=`pwd`
+
+logger_ngseasy "[ngseasy]:Current working directory [${my_current_dirctory}]"
+
+logger_ngseasy "[ngseasy]:Config file set as [${config_tsv}]"
+sleep 1s
+
+## check if user has used full path to specify config_tsv
+# strip path if user enters config with full path specified
+# and the move to the dir containing the config_tsv
+#
+config_directory_path=`dirname ${config_tsv}`
+logger_ngseasy "[ngseasy]:Config directory path [${config_directory_path}]"
+
+if [[ "${config_directory_path}" == "." ]]; then
+
+	working_dir="${my_current_dirctory}"
+	cd ${working_dir}
+	configfile=`basename ${config_tsv}`
+	logger_ngseasy "[ngseasy]:Config file location [${working_dir}]"
+	logger_ngseasy "[ngseasy]:Moving to [${working_dir}]"
+else
+	working_dir="${config_directory_path}"
+	cd ${working_dir}
+	configfile=`basename ${config_tsv}`
+	logger_ngseasy "[ngseasy]:Config file located in [${working_dir}]"
+	logger_ngseasy "[ngseasy]:Moving to [${working_dir}]"
+fi
+
+
+# once in the directory set by user, check if file actually exists
+if [[ ! -e "${config_tsv}" ]]; then
+	usage_ngseasy;
+	logger_ngseasy "[ngseasy]:ERROR:config file [${config_tsv}] does not exist. Exiting"
+	sleep 1s
+	exit 1;
+else 
+	logger_ngseasy "[ngseasy]:config file [${config_tsv}] found"
+fi
+
 
 ############################################################################################
 ## check Num feilds in  ${config_tsv}
@@ -162,18 +207,6 @@ else
 fi
 
 
-###########################################################################################
-## check ${project_directory} exists.
-###########################################################################################
-logger_ngseasy "[ngseasy]:Check if project dir [${project_directory}] exists"
-
-if [[ ! -d "${project_directory}" ]]
-  then
-	  usage_ngseasy;
-	  logger_ngseasy "[ngseasy]:ERROR:${project_directory} does not exist" ${config_run_log}
-	  sleep 1s
-	  exit 1;
-fi
 
 ###########################################################################################
 ## Set up Project Dir and Fastq Files
