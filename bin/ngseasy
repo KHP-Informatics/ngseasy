@@ -108,6 +108,19 @@ if test -z "$2"
 fi
 
 ###########################################################################################
+## check ${project_directory} exists.
+###########################################################################################
+logger_ngseasy "[ngseasy]:Check if project dir [${project_directory}] exists"
+
+if [[ ! -d "${project_directory}" ]]
+  then
+	  usage_ngseasy;
+	  logger_ngseasy "[ngseasy]:ERROR:${project_directory} does not exist. Exiting."
+	  sleep 2s
+	  exit 1;
+fi
+
+###########################################################################################
 ## Make log file ##
 ###########################################################################################
 
@@ -132,19 +145,6 @@ fi
 
 
 ###########################################################################################
-## check ${project_directory} exists.
-###########################################################################################
-logger_ngseasy "[ngseasy]:Check if project dir [${project_directory}] exists"
-
-if [[ ! -d "${project_directory}" ]]
-  then
-	  usage_ngseasy;
-	  logger_ngseasy "[ngseasy]:ERROR:${project_directory} does not exist. Exiting." ${config_run_log}
-	  sleep 2s
-	  exit 1;
-fi
-
-###########################################################################################
 ## check file exist.
 ###########################################################################################
 
@@ -152,7 +152,6 @@ fi
 my_current_dirctory=`pwd`
 
 logger_ngseasy "[ngseasy]:Current working directory [${my_current_dirctory}]" ${config_run_log}
-
 logger_ngseasy "[ngseasy]:Config file set as [${config_tsv}]" ${config_run_log}
 sleep 1s
 
