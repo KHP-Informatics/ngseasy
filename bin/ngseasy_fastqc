@@ -1,5 +1,6 @@
-#!/bin/bash
-
+#!/usr/bin/env bash -e
+set -o errexit
+set -o nounset
 ################################################################
 # Program: ngseasy_fastqc
 # Version 1.0 
@@ -147,7 +148,7 @@ fi
 
 ########################################################################################################
 ## check project_directory exists.
-#
+########################################################################################################
 if [[ ! -d "${project_directory}" ]]
   then
     logger_ngseasy "[${NGSEASY_STEP}]:ERROR : project_directory [${project_directory}] does not exist "

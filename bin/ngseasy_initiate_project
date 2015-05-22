@@ -1,5 +1,6 @@
-#!/bin/bash
-
+#!/usr/bin/env bash -e
+set -o errexit
+set -o nounset
 ################################################################
 # Program: ngseasy_initiate_project
 # Version 1.0 

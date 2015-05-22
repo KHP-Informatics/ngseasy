@@ -1,5 +1,6 @@
-#!/bin/bash
-
+#!/usr/bin/env bash -e
+set -o errexit
+set -o nounset
 ################################################################
 # Program: ngseasy_trimmomatic
 # Version 1.0 
@@ -141,7 +142,7 @@ fi
 
 ########################################################################################################  
 ## check config file exists.
-#
+########################################################################################################
 if [ ! -e "${config_tsv}" ] 
 then
 	    logger_ngseasy "[${NGSEASY_STEP}]:ERROR : [${config_tsv}] does not exist....exiting "
@@ -154,7 +155,7 @@ fi
 
 ########################################################################################################
 ## check Num feilds in  ${config_tsv}
-#
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:Reading [${config_tsv}] "
 logger_ngseasy "[${NGSEASY_STEP}]:Checking number of feilds in  [${config_tsv}] "
 
