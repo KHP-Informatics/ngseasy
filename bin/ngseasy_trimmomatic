@@ -64,7 +64,7 @@ NGSEASY_STEP="ngseasy_trimmomatic"
 
 echo -e "\n################################################################"
 echo -e "#"
-echo -e "# Program: ngseasy_trimmomatic"
+echo -e "# Program: ${NGSEASY_STEP}"
 echo -e "# Version 1.0 "
 echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
 echo -e "#"

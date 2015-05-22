@@ -34,7 +34,7 @@ NGSEASY_STEP="ngseasy_initiate_project"
 
 echo -e "\n\n###########################################################################################"
 echo -e "#"
-echo -e "# Program: ngseasy_initiate_project"
+echo -e "# Program: ${NGSEASY_STEP}"
 echo -e "# Version ${NGSEASYVERSION}"
 echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
 echo -e "#"

@@ -63,7 +63,7 @@ RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_fastqc"
 
 echo -e "\n################################################################"
-echo -e "# Program: ngseasy_fastqc"
+echo -e "# Program: ${NGSEASY_STEP}"
 echo -e "# Version 1.0"
 echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
 echo -e "#"
