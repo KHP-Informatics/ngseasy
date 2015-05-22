@@ -700,6 +700,7 @@ SLOW="--local --sensitive-local"
 # 
 # align wih snap sorts and dupe marks the file anyway: but we choose to run same tools samblaster
 # sambamba for consistency
+# snap becomes snap-aligner in 1.0beta.18
 #
 elif [[ "${ALIGNER}" == "snap" ]]; then
 
@@ -708,7 +709,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
     time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -t compbio/ngseasy-snap:${NGSEASYVERSION} /bin/bash -c "time /usr/local/pipeline/snap/snap paired \
+    -t compbio/ngseasy-snap:${NGSEASYVERSION} /bin/bash -c "time /usr/local/pipeline/snap/snap-aligner paired \
     ${REFDIR} \
     ${FQ1} ${FQ2} \
     -t ${NCPU} \
