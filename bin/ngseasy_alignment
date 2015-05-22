@@ -55,6 +55,7 @@ NGSEASYVERSION=""
 NGSUSER=""
 RUNDATE=""
 NGSEASY_STEP=""
+
 ########################################################################################################
 ## Set version and run date
 ########################################################################################################
@@ -76,14 +77,10 @@ echo -e "# see the GNU General Public License for details."
 echo -e "#"
 echo -e "###########################################################################################\n\n"
 
-
-
 ########################################################################################################
 ## test if docker is intsalled and exit if not
 ########################################################################################################
 command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
-
-
 
 ########################################################################################################
 ## test if images are intsalled and exit if not
@@ -93,7 +90,6 @@ docker images | grep ngseasy-stampy 2>&1 || { echo "compbio/ngseasy-stampy:${NGS
 docker images | grep ngseasy-picardtools 2>&1 || { echo "compbio/ngseasy-picardtools:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
 docker images | grep ngseasy-snap 2>&1 || { echo "compbio/ngseasy-snap:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
 docker images | grep ngseasy-bowtie2 2>&1 || { echo "compbio/ngseasy-bowtie2:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
-
 
 ########################################################################################################
 ## docker run command
