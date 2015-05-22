@@ -99,8 +99,6 @@ project_directory=""
 ## get options for command line args
 ###########################################################################################
 
-#while  getopts "hc:d:pf" opt
-
 while  getopts "hc:d:" opt
 do
 
@@ -136,19 +134,6 @@ if test -z "$2"
 fi
 
 ###########################################################################################
-## check ${project_directory} exists.
-###########################################################################################
-logger_ngseasy "[ngseasy]:Check if project dir [${project_directory}] exists"
-
-if [[ ! -d "${project_directory}" ]]
-  then
-	  usage_ngseasy;
-	  logger_ngseasy "[ngseasy]:ERROR:${project_directory} does not exist. Exiting."
-	  sleep 2s
-	  exit 1;
-fi
-
-###########################################################################################
 ## Make log file ##
 ###########################################################################################
 
@@ -169,6 +154,19 @@ then
 else
 	logger_ngseasy "[ngseasy]:Log file [${config_run_log}.log]"
 
+fi
+
+###########################################################################################
+## check ${project_directory} exists.
+###########################################################################################
+logger_ngseasy "[ngseasy]:Check if project dir [${project_directory}] exists"
+
+if [[ ! -d "${project_directory}" ]]
+  then
+	  usage_ngseasy;
+	  logger_ngseasy "[ngseasy]:ERROR:${project_directory} does not exist. Exiting."
+	  sleep 2s
+	  exit 1;
 fi
 
 

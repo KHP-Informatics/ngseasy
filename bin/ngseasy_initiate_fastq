@@ -4,11 +4,30 @@ set -o nounset
 ################################################################
 # Program: ngseasy_initiate_fastq
 # Version 1.0 
-# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
-#################################################################
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
+###########################################################################################
+#
+#    Copyright (C) 2015  Stephen Jeffrey Newhouse
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License along
+#    with this program; if not, write to the Free Software Foundation, Inc.,
+#    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+#
+###########################################################################################
 
-#################################################################
+###########################################################################################
 # clear stuff up
+###########################################################################################
 REFDIR=""
 GENOMEINDEX=""
 PROJECT_ID=""
@@ -44,6 +63,20 @@ NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_initiate_fastq"
 
+echo -e "\n\n###########################################################################################"
+echo -e "#"
+echo -e "# Program: ngseasy_initiate_fastq"
+echo -e "# Version ${NGSEASYVERSION}"
+echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
+echo -e "#"
+echo -e "# Copyright (C) 2015 Stephen Jeffrey Newhouse"
+echo -e "# NGSeasy (aka ngseasy) Version ${NGSEASYVERSION} comes with ABSOLUTELY NO WARRANTY;"
+echo -e "# for details see the GNU General Public License."
+echo -e "# This is free software, and you are welcome to redistribute it under certain conditions;"
+echo -e "# see the GNU General Public License for details."
+echo -e "#"
+echo -e "###########################################################################################\n\n"
+
 ###########################################################################################
 ## default options
 ###########################################################################################
@@ -73,6 +106,8 @@ Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 usage:   ngseasy_initiate_fastq -c <config_file> -d <project_directory>
 
 options: -h  show this message
+   -c   Config pipeline file
+   -d   Base directory for [ngs_projects](fastq_raw, run_logs, config_files)
 
 ngseasy_initiate_fastq moves fastq files from raw_fastq stagging are to sample directory
 "
@@ -107,21 +142,8 @@ ngseasy_initiate_fastq moves fastq files from raw_fastq stagging are to sample d
 if test -z "$2"
     then
     usage_ngseasy
-    sleep 1s
+    sleep 2s
     exit 1
-fi
-
-###########################################################################################
-## check ${project_directory} exists.
-###########################################################################################
-logger_ngseasy "[${NGSEASY_STEP}]:Check if project dir [${project_directory}] exists"
-
-if [[ ! -d "${project_directory}" ]]
-  then
-      usage_ngseasy;
-      logger_ngseasy "[${NGSEASY_STEP}]:ERROR:${project_directory} does not exist. Exiting."
-      sleep 2s
-      exit 1;
 fi
 
 ###########################################################################################
@@ -145,6 +167,20 @@ then
 else
     logger_ngseasy "[${NGSEASY_STEP}]:Log file [${config_run_log}.log]"
 
+fi
+
+
+###########################################################################################
+## check ${project_directory} exists.
+###########################################################################################
+logger_ngseasy "[${NGSEASY_STEP}]:Check if project dir [${project_directory}] exists" ${config_run_log}
+
+if [[ ! -d "${project_directory}" ]]
+  then
+      usage_ngseasy;
+      logger_ngseasy "[${NGSEASY_STEP}]:ERROR:${project_directory} does not exist. Exiting." ${config_run_log}
+      sleep 2s
+      exit 1;
 fi
 
 ###########################################################################################

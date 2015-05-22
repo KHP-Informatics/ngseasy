@@ -25,8 +25,9 @@ set -o nounset
 #
 ###########################################################################################
 
+###########################################################################################
 ## Set version and run date
-#
+###########################################################################################
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_initiate_project"
@@ -44,9 +45,9 @@ echo -e "# see the GNU General Public License for details."
 echo -e "#"
 echo -e "###########################################################################################\n\n"
 
-
+###########################################################################################
 ## test if docker is intsalled and exit if not
-#
+###########################################################################################
 command -v docker >/dev/null 2>&1 || { echo -e "Docker (https://docs.docker.com/installation) not installed.\nAborting." >&2; exit 1; }
 DOCKERVERSION=`docker version`
 echo -e "Docker Installed:\n\n${DOCKERVERSION}\n\n"
@@ -87,7 +88,6 @@ options: -h  show this message
 	 -d   Base directory for [ngs_projects](fastq_raw, run_logs, config_files)
 "
 }
-
 
 ###########################################################################################
 ## get options for command line args
