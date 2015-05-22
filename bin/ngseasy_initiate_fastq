@@ -208,22 +208,20 @@ fi
 
 fi
 
-
 ########################################################################################################
 ## check Num feilds in  ${config_tsv}
 ########################################################################################################
-logger_ngseasy "[ngseasy_initiate_fastq]:Reading [${config_tsv}] "
-logger_ngseasy "[ngseasy_initiate_fastq]:Checking number of feilds in  [${config_tsv}] "
+logger_ngseasy "[ngseasy_initiate_fastq]:Checking number of feilds in  [${config_tsv}] " ${config_run_log}
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
 if [[  "$numcols" -lt 23 ]] 
 then
-      logger_ngseasy "[ngseasy_initiate_fastq]:ERROR: [${config_tsv}] format issue. Check your file! "
+      logger_ngseasy "[ngseasy_initiate_fastq]:ERROR: [${config_tsv}] format issue. Check your file! " ${config_run_log}
       sleep 1s; 
       exit 1;
   else 
-      logger_ngseasy "[ngseasy_initiate_fastq]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "     
+      logger_ngseasy "[ngseasy_initiate_fastq]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... " ${config_run_log}    
 fi
 
 ########################################################################################################
@@ -231,31 +229,31 @@ fi
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
-logger_ngseasy "[ngseasy_initiate_fastq]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[ngseasy_initiate_fastq]:Checking [${config_tsv}] format" ${config_run_log}
 
 hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
 
 if [[ "${config_tsv}" == *.batch.* ]]
 then
-  logger_ngseasy "[ngseasy_initiate_fastq}:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_initiate_fastq}:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${config_run_log}
   RUNFILE="${config_tsv}"
-  logger_ngseasy "[ngseasy_initiate_fastq}:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_initiate_fastq}:Setting RUNFILE to [${RUNFILE}]" ${config_run_log}
 elif [[ "$hasheader" -eq 1 ]]
 then
-  logger_ngseasy "[ngseasy_initiate_fastq]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-  logger_ngseasy "[ngseasy_initiate_fastq]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_initiate_fastq]:[${config_tsv}] header present. Removing this" ${config_run_log}
+  logger_ngseasy "[ngseasy_initiate_fastq]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${config_run_log}
   sed 1d ${config_tsv} > ${config_tsv}.tmp
   RUNFILE="${config_tsv}.tmp"
-  logger_ngseasy "[ngseasy_initiate_fastq]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_initiate_fastq]:Setting RUNFILE to [${RUNFILE}]" ${config_run_log}
 else
   RUNFILE="${config_tsv}"
-  logger_ngseasy "[ngseasy_initiate_fastq]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-  logger_ngseasy "[ngseasy_initiate_fastq]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[ngseasy_initiate_fastq]:[${RUNFILE}] is seemingly perfect" ${config_run_log}
+  logger_ngseasy "[ngseasy_initiate_fastq]:Setting RUNFILE to [${RUNFILE}]" ${config_run_log}
 fi
   
 ########################################################################################################
 ## Read config and loop through all lines calling fastqc docker
-#
+########################################################################################################
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
 PROJECT_ID=$f1
