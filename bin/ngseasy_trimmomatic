@@ -4,19 +4,26 @@ set -o nounset
 ################################################################
 # Program: ngseasy_trimmomatic
 # Version 1.0 
-# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
-#################################################################
-
-echo -e "\n################################################################"
-echo -e "# Program: ngseasy_trimmomatic"
-echo -e "# Version 1.0 "
-echo -e "# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)"
-echo -e "#################################################################/n"
-
-########################################################################################################
-## test if docker is intsalled and exit if not
-########################################################################################################
-command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; sleep 1s; exit 1; }
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
+###########################################################################################
+#
+#    Copyright (C) 2015  Stephen Jeffrey Newhouse
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License along
+#    with this program; if not, write to the Free Software Foundation, Inc.,
+#    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+#
+###########################################################################################
 
 ########################################################################################################
 ## Set version and run date
@@ -24,6 +31,24 @@ command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not ins
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_trimmomatic"
+
+echo -e "\n################################################################"
+echo -e "# Program: ngseasy_trimmomatic"
+echo -e "# Version 1.0 "
+echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
+echo -e "#"
+echo -e "# Copyright (C) 2015  Stephen Jeffrey Newhouse"
+echo -e "# NGSeasy (aka ngseasy) Version ${NGSEASYVERSION} comes with ABSOLUTELY NO WARRANTY;"
+echo -e "# for details see the GNU General Public License."
+echo -e "# This is free software, and you are welcome to redistribute it under certain conditions;"
+echo -e "# see the GNU General Public License for details."
+echo -e "#"
+echo -e "###########################################################################################\n\n"
+
+########################################################################################################
+## test if docker is intsalled and exit if not
+########################################################################################################
+command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; sleep 1s; exit 1; }
 
 ########################################################################################################
 ## test if image is intsalled and exit if not
