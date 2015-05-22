@@ -114,12 +114,12 @@ fi
 ###########################################################################################
 ## check ${project_directory} exists.
 ###########################################################################################
-logger_ngseasy "[ngseasy_initiate_project]:Check if project dir [${project_directory}] exists"
+logger_ngseasy "[ngseasy_initiate_fastq]:Check if project dir [${project_directory}] exists"
 
 if [[ ! -d "${project_directory}" ]]
   then
       usage_ngseasy;
-      logger_ngseasy "[ngseasy_initiate_project]:ERROR:${project_directory} does not exist. Exiting."
+      logger_ngseasy "[ngseasy_initiate_fastq]:ERROR:${project_directory} does not exist. Exiting."
       sleep 2s
       exit 1;
 fi
@@ -136,14 +136,14 @@ config_run_log="${project_directory}/run_logs/ngseasy.${NGSEASYVERSION}.${config
 
 if [[ ! -e "${config_run_log}.log" ]]
 then
-    logger_ngseasy "[ngseasy_initiate_project]:Making log file [${config_run_log}.log]"
+    logger_ngseasy "[ngseasy_initiate_fastq]:Making log file [${config_run_log}.log]"
 
     touch ${config_run_log}.log
     
-    logger_ngseasy "[ngseasy_initiate_project]:Log file [${config_run_log}.log]"
+    logger_ngseasy "[ngseasy_initiate_fastq]:Log file [${config_run_log}.log]"
 
 else
-    logger_ngseasy "[ngseasy_initiate_project]:Log file [${config_run_log}.log]"
+    logger_ngseasy "[ngseasy_initiate_fastq]:Log file [${config_run_log}.log]"
 
 fi
 
@@ -154,8 +154,8 @@ fi
 # find out where we are running from 
 my_current_dirctory=`pwd`
 
-logger_ngseasy "[ngseasy_initiate_project]:Current working directory [${my_current_dirctory}]" ${config_run_log}
-logger_ngseasy "[ngseasy_initiate_project]:Config file set as [${config_tsv}]" ${config_run_log}
+logger_ngseasy "[ngseasy_initiate_fastq]:Current working directory [${my_current_dirctory}]" ${config_run_log}
+logger_ngseasy "[ngseasy_initiate_fastq]:Config file set as [${config_tsv}]" ${config_run_log}
 sleep 1s
 
 ## check if user has used full path to specify config_tsv
@@ -166,10 +166,10 @@ config_directory_path=`dirname ${config_tsv}`
 
 if [[ "${config_directory_path}" == "." ]]; then
     working_dir="${my_current_dirctory}"
-    logger_ngseasy "[ngseasy_initiate_project]:Path to config file directory detected as [${working_dir}]" ${config_run_log}
-    logger_ngseasy "[ngseasy_initiate_project]:Setting Path to config file" ${config_run_log}
-    logger_ngseasy "[ngseasy_initiate_project]:Config file location set to [${working_dir}]" ${config_run_log}
-    logger_ngseasy "[ngseasy_initiate_project]:Moving to Config file location [${working_dir}] to make life easy" ${config_run_log}
+    logger_ngseasy "[ngseasy_initiate_fastq]:Path to config file directory detected as [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[ngseasy_initiate_fastq]:Setting Path to config file" ${config_run_log}
+    logger_ngseasy "[ngseasy_initiate_fastq]:Config file location set to [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[ngseasy_initiate_fastq]:Moving to Config file location [${working_dir}] to make life easy" ${config_run_log}
     
     # move to location of config file
     cd ${working_dir}
@@ -178,19 +178,19 @@ if [[ "${config_directory_path}" == "." ]]; then
     configfile_name=`basename ${config_tsv}`
 
 if [[ ! -e "./${configfile_name}" ]]; then 
-    logger_ngseasy "[ngseasy_initiate_project]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
+    logger_ngseasy "[ngseasy_initiate_fastq]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
     sleep 1s
     exit 1
 else
-    logger_ngseasy "[ngseasy_initiate_project]:Config file name [${configfile_name}] detected" ${config_run_log}
+    logger_ngseasy "[ngseasy_initiate_fastq]:Config file name [${configfile_name}] detected" ${config_run_log}
 fi
     
 else
     working_dir="${config_directory_path}"
-    logger_ngseasy "[ngseasy_initiate_project]:Path to config file directory detected as [${working_dir}]" ${config_run_log}
-    logger_ngseasy "[ngseasy_initiate_project]:Setting Path to config file" ${config_run_log}
-    logger_ngseasy "[ngseasy_initiate_project]:Config file location set to [${working_dir}]" ${config_run_log}
-    logger_ngseasy "[ngseasy_initiate_project]:Moving to Config file location [${working_dir}] to make life easy" ${config_run_log}
+    logger_ngseasy "[ngseasy_initiate_fastq]:Path to config file directory detected as [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[ngseasy_initiate_fastq]:Setting Path to config file" ${config_run_log}
+    logger_ngseasy "[ngseasy_initiate_fastq]:Config file location set to [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[ngseasy_initiate_fastq]:Moving to Config file location [${working_dir}] to make life easy" ${config_run_log}
     
     # move to location of config file
     cd ${working_dir}
@@ -199,16 +199,14 @@ else
     configfile_name=`basename ${config_tsv}`
     
 if [[ ! -e "./${configfile_name}" ]]; then 
-    logger_ngseasy "[ngseasy_initiate_project]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
+    logger_ngseasy "[ngseasy_initiate_fastq]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
     sleep 1s
     exit 1
 else
-    logger_ngseasy "[ngseasy_initiate_project]:Config file name [${configfile_name}] detected" ${config_run_log}
+    logger_ngseasy "[ngseasy_initiate_fastq]:Config file name [${configfile_name}] detected" ${config_run_log}
 fi
 
 fi
-
-
 
 
 ########################################################################################################
