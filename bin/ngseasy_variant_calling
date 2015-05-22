@@ -1,18 +1,34 @@
-#!/bin/bash
-
-################################################################
+#!/usr/bin/env bash
+set -o errexit
+set -o nounset
+########################################################################################################
 # Program: ngseasy_variant_calling
 # Version 1.0 
-# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
-#################################################################
-echo -e "\n################################################################"
-echo -e "# Program: ngseasy_variant_calling"
-echo -e "# Version 1.0"
-echo -e "# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)"
-echo -e "#################################################################\n"
+# Version 1.0 
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
+########################################################################################################
+#
+#    Copyright (C) 2015  Stephen Jeffrey Newhouse
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License along
+#    with this program; if not, write to the Free Software Foundation, Inc.,
+#    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+#
+########################################################################################################
 
-#################################################################
+########################################################################################################
 # reset shit
+########################################################################################################
 PROJECT_ID=""
 SAMPLE_ID=""
 FASTQ1=""
@@ -45,24 +61,47 @@ KNOWN_SNPS_OMNI=""
 KNOWN_SNPS_b138=""
 
 ########################################################################################################
-## test if docker is intsalled and exit if not
-command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
-
-########################################################################################################
 ## Set version and run date
-#
+########################################################################################################
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_variant_calling"
 
+echo -e "\n################################################################"
+echo -e "#"
+echo -e "# Program: ${NGSEASY_STEP}"
+echo -e "# Version ${NGSEASYVERSION}"
+echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
+echo -e "#"
+echo -e "# Copyright (C) 2015  Stephen Jeffrey Newhouse"
+echo -e "# NGSeasy (aka ngseasy) Version ${NGSEASYVERSION} comes with ABSOLUTELY NO WARRANTY;"
+echo -e "# for details see the GNU General Public License."
+echo -e "# This is free software, and you are welcome to redistribute it under certain conditions;"
+echo -e "# see the GNU General Public License for details."
+echo -e "#"
+echo -e "###########################################################################################\n\n"
+
+########################################################################################################
+## test if docker is intsalled and exit if not
+########################################################################################################
+command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
+
+########################################################################################################
+## test if images are intsalled and exit if not
+########################################################################################################
+docker images | grep ngseasy-freebayes 2>&1 || { echo "compbio/ngseasy-freebayes:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+docker images | grep ngseasy-platypus 2>&1 || { echo "compbio/ngseasy-platypus:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+docker images | grep ngseasy-base 2>&1 || { echo "compbio/ngseasy-base:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+#docker images | grep ngseasy-bcbio-variation 2>&1 || { echo "compbio/ngseasy-bcbio-variation:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+
 ########################################################################################################
 ## docker run command
-#
+########################################################################################################
 DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
 
 ########################################################################################################
 ## global logging fuction
-#
+########################################################################################################
 function logger_ngseasy() {
  message=${1}
  mylogfile=${2}
@@ -70,10 +109,9 @@ function logger_ngseasy() {
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
 
-
 ########################################################################################################
 ## global usage
-#
+########################################################################################################
 function ngseasy_variant_calling_usage() {
     echo "
 Program: ngseasy_variant_calling
@@ -90,19 +128,9 @@ ngseasy_variant_calling sets up the NGSeasy docker containers for your variant c
 "
 }
 
-
-########################################################################################################
-## check and make ~/ngseasy_logs if needed
-#
-if [[ ! -e  ${HOME}/ngseasy_logs ]]
-then
-  mkdir ${HOME}/ngseasy_logs
-  global_run_logs="${HOME}/ngseasy_logs"
-fi
-
 ########################################################################################################
 ## Check options passed in.
-#
+########################################################################################################
 if test -z "$2"
 then
   logger_ngseasy "[${NGSEASY_STEP}]:ERROR:No options found"
