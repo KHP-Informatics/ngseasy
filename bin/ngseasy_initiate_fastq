@@ -50,9 +50,9 @@ NGSEASY_STEP="ngseasy_initiate_fastq"
 config_tsv=""
 project_directory=""
 
-
+###########################################################################################
 ## global logging fuction
-#
+###########################################################################################
 function logger_ngseasy() {
  message=${1}
  mylogfile=${2}
@@ -60,11 +60,9 @@ function logger_ngseasy() {
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
 
-
 ###########################################################################################
-## global logging fuction
+## Usage fuction
 ###########################################################################################
-
 function ngseasy_initiate_fastq_usage() {
     echo "
 Program: ngseasy_initiate_fastq
@@ -78,7 +76,6 @@ options: -h  show this message
 ngseasy_initiate_fastq moves fastq files from raw_fastq stagging are to sample directory
 "
 }
-
 
 ###########################################################################################
 ## get options for command line args

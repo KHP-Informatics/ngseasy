@@ -14,11 +14,12 @@ echo -e "#################################################################/n"
 
 ########################################################################################################
 ## test if docker is intsalled and exit if not
+########################################################################################################
 command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; sleep 1s; exit 1; }
 
 ########################################################################################################
 ## Set version and run date
-#
+########################################################################################################
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_trimmomatic"
@@ -28,8 +29,9 @@ NGSEASY_STEP="ngseasy_trimmomatic"
 ########################################################################################################
 docker images | grep ngseasy-trimmomatic 2>&1 || { echo "compbio/ngseasy-trimmomatic:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
 
-#################################################################
+########################################################################################################
 # clear stuff up
+########################################################################################################
 REFDIR=""
 GENOMEINDEX=""
 PROJECT_ID=""
@@ -60,12 +62,12 @@ NGSEASY_STEP=""
 
 ########################################################################################################
 ## docker run command
-#
+########################################################################################################
 DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
 
 ########################################################################################################
 ## global logging fuction
-#
+########################################################################################################
 function logger_ngseasy() {
  message=${1}
  mylogfile=${2}
@@ -75,7 +77,7 @@ function logger_ngseasy() {
 
 ########################################################################################################
 ## global usage
-#
+########################################################################################################
 function ngseasy_trimmomatic_usage() {
     echo "
 Program: ngseasy_trimmomatic
@@ -94,17 +96,8 @@ ngseasy_trimmomatic sets up the NGSeasy docker Trimmomatic container compbio/ngs
 
 
 ########################################################################################################
-## Check options passed in.
-#
-if test -z "$2"
-then
-  logger_ngseasy "[ngseasy_trimmomatic]:ERROR:No options found. Exiting"
-  ngseasy_trimmomatic_usage
-  sleep 1s; exit 1
-fi
-
-########################################################################################################
 ## get options for command line args
+########################################################################################################
   while  getopts "hc:d:" opt
   do
       case ${opt} in
@@ -123,47 +116,57 @@ fi
       esac
   done
 
+########################################################################################################
+## Check options passed in.
+########################################################################################################
+if test -z "$2"
+then
+  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:No options found. Exiting"
+  ngseasy_trimmomatic_usage
+  sleep 1s; exit 1
+fi
+
+########################################################################################################
+## check project_directory exists.
+########################################################################################################
+if [ ! -d "${project_directory}" ]
+  then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR: project_directory [${project_directory}] does not exist "
+    ngseasy_trimmomatic_usage;
+    sleep 1s; 
+    exit 1;
+else
+	    logger_ngseasy "[${NGSEASY_STEP}]:Top Level Project Directory [${project_directory}] "
+fi
+
 ########################################################################################################  
 ## check config file exists.
 #
 if [ ! -e "${config_tsv}" ] 
 then
-	    logger_ngseasy "[ngseasy_trimmomatic]:ERROR : [${config_tsv}] does not exist....exiting "
+	    logger_ngseasy "[${NGSEASY_STEP}]:ERROR : [${config_tsv}] does not exist....exiting "
 	    ngseasy_trimmomatic_usage;
 	    sleep 1s; 
 	    exit 1;
 else
-	    logger_ngseasy "[ngseasy_trimmomatic]:Configuration file found [${config_tsv}] "
-fi
-
-########################################################################################################
-## check project_directory exists.
-#
-if [ ! -d "${project_directory}" ]
-  then
-    logger_ngseasy "[ngseasy_trimmomatic]:ERROR: project_directory [${project_directory}] does not exist "
-    ngseasy_trimmomatic_usage;
-    sleep 1s; 
-    exit 1;
-else
-	    logger_ngseasy "[ngseasy_trimmomatic]:Top Level Project Directory [${project_directory}] "
+	    logger_ngseasy "[${NGSEASY_STEP}]:Configuration file found [${config_tsv}] "
 fi
 
 ########################################################################################################
 ## check Num feilds in  ${config_tsv}
 #
-logger_ngseasy "[ngseasy_trimmomatic]:Reading [${config_tsv}] "
-logger_ngseasy "[ngseasy_trimmomatic]:Checking number of feilds in  [${config_tsv}] "
+logger_ngseasy "[${NGSEASY_STEP}]:Reading [${config_tsv}] "
+logger_ngseasy "[${NGSEASY_STEP}]:Checking number of feilds in  [${config_tsv}] "
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
 if [[  "$numcols" -lt 23 ]] 
 then
-	    logger_ngseasy "[ngseasy_trimmomatic]:ERROR: [${config_tsv}] format issue. Check your file! "
+	    logger_ngseasy "[${NGSEASY_STEP}]:ERROR: [${config_tsv}] format issue. Check your file! "
 	    sleep 1s; 
 	    exit 1;
 	else 
-	    logger_ngseasy "[ngseasy_trimmomatic]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "	    
+	    logger_ngseasy "[${NGSEASY_STEP}]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "	    
 fi
 
 ########################################################################################################
@@ -171,7 +174,7 @@ fi
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
-logger_ngseasy "[ngseasy_trimmomatic]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+logger_ngseasy "[${NGSEASY_STEP}]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
 hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
 
@@ -182,15 +185,15 @@ then
   logger_ngseasy "[ngseasy_trimmomatic}:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 elif [[ "$hasheader" -eq 1 ]]
 then
-  logger_ngseasy "[ngseasy_trimmomatic]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-  logger_ngseasy "[ngseasy_trimmomatic]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
   sed 1d ${config_tsv} > ${config_tsv}.tmp
   RUNFILE="${config_tsv}.tmp"
-  logger_ngseasy "[ngseasy_trimmomatic]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 else
   RUNFILE="${config_tsv}"
-  logger_ngseasy "[ngseasy_trimmomatic]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
-  logger_ngseasy "[ngseasy_trimmomatic]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 fi
 
 ########################################################################################################
@@ -227,10 +230,10 @@ DATE=`date +"%d%m%y"`
 ## LOGFILE 
 #
 LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_trimmomatic"
-logger_ngseasy "[ngseasy_trimmomatic]:logging to [${LOGFILE}.log]"  ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## read config_file
-logger_ngseasy "[ngseasy_trimmomatic]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+logger_ngseasy "[${NGSEASY_STEP}]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER]"  ${LOGFILE}
 
@@ -259,23 +262,23 @@ if [ ! -e "${LOGFILE}.log" ]
 then
 	touch ${LOGFILE}.log
 fi
-	logger_ngseasy "[ngseasy_trimmomatic]:Logging to [${LOGFILE}.log] "
+	logger_ngseasy "[${NGSEASY_STEP}]:Logging to [${LOGFILE}.log] "
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR 
 #
 SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
-logger_ngseasy "[ngseasy_trimmomatic]:Sample Directory [${SOUT}] "
+logger_ngseasy "[${NGSEASY_STEP}]:Sample Directory [${SOUT}] "
 
 ########################################################################################################
 ## check local dir exists
 #
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
-	logger_ngseasy "[ngseasy_trimmomatic]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
+	logger_ngseasy "[${NGSEASY_STEP}]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
 	sleep 1s; exit 1
 else 
-	logger_ngseasy "[ngseasy_trimmomatic]: Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
+	logger_ngseasy "[${NGSEASY_STEP}]: Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
 fi
 
 ########################################################################################################
@@ -283,8 +286,8 @@ fi
 #
 if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
-	logger_ngseasy "[ngseasy_trimmomatic]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in [${SOUT}/fastq/] " ${LOGFILE}
-	logger_ngseasy "[ngseasy_trimmomatic]: Please run ngseasy_initiate_fastq or copy files to [${SOUT}/fastq/] " ${LOGFILE}
+	logger_ngseasy "[${NGSEASY_STEP}]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in [${SOUT}/fastq/] " ${LOGFILE}
+	logger_ngseasy "[${NGSEASY_STEP}]: Please run ngseasy_initiate_fastq or copy files to [${SOUT}/fastq/] " ${LOGFILE}
 	sleep 1s; exit 1
 fi
 
@@ -297,7 +300,7 @@ fi
 # Illumina FASTQ files use the following naming scheme:
 # <sample name>_<barcode sequence>_L<lane (0-padded to 3 digits)>_R<read number>_<set number (0-padded to 3 digits>.fastq.gz
 
-logger_ngseasy "[ngseasy_trimmomatic]: Checking Fastq file naming conventions" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]: Checking Fastq file naming conventions" ${LOGFILE}
 
 if [[ "${FASTQ1}" == *_1.fastq.gz ]] 
 then
@@ -350,7 +353,7 @@ then
 elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9].fastq.gz ]] 
 then
 
-	logger_ngseasy "[ngseasy_trimmomatic]:Illumina fastq naming scheme"
+	logger_ngseasy "[${NGSEASY_STEP}]:Illumina fastq naming scheme"
 
 	FQ1=${FASTQ1}
 	FQ2=${FASTQ2}
@@ -358,15 +361,15 @@ then
 elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9][0-9].fastq.gz ]] 
 then
 
-	logger_ngseasy "[ngseasy_trimmomatic]:Illumina fastq naming scheme"
+	logger_ngseasy "[${NGSEASY_STEP}]:Illumina fastq naming scheme"
 
 	FQ1=${FASTQ1}
 	FQ2=${FASTQ2}
 
 else
 
-	logger_ngseasy "[ngseasy_trimmomatic]: Fastq naming format not recognised for files [$FASTQ1] [$FASTQ2]" ${LOGFILE} 
-	logger_ngseasy "[ngseasy_trimmomatic]: This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
+	logger_ngseasy "[${NGSEASY_STEP}]: Fastq naming format not recognised for files [$FASTQ1] [$FASTQ2]" ${LOGFILE} 
+	logger_ngseasy "[${NGSEASY_STEP}]: This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE} 
 	sleep 1s; exit 1
 fi        
 
@@ -374,13 +377,13 @@ fi
 # adapter_fa : check of this is in palce and exit if not
 #
 adapter_fa="/home/pipeman/ngs_resources/reference_genomes_b37/contaminant_list.fa"
-logger_ngseasy "[ngseasy_trimmomatic]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
 
 ########################################################################################################
 # Trimmomatic paired output
 #
-logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 filtered [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz]" ${LOGFILE}
-logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 filtered [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:setting trimmomatic output names for R1 filtered [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:setting trimmomatic output names for R2 filtered [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz]" ${LOGFILE}
 
 qcPEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz;
 qcPEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz;
@@ -388,8 +391,8 @@ qcPEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TR
 ########################################################################################################
 # Trimmomatic unpaired ouput
 #
-logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R1 unpaired [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.unpaired.fastq.gz]" ${LOGFILE}
-logger_ngseasy "[ngseasy_trimmomatic]:setting trimmomatic output names for R2 unpaired [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.unpaired.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:setting trimmomatic output names for R1 unpaired [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.unpaired.fastq.gz]" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:setting trimmomatic output names for R2 unpaired [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.unpaired.fastq.gz]" ${LOGFILE}
 
 qcSEFQ1=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.unpaired.fastq.gz;
 qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.unpaired.fastq.gz;
@@ -401,30 +404,30 @@ qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TR
 #
 BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}
 
-logger_ngseasy "[ngseasy_trimmomatic]:BAM Prefix [${BAM_PREFIX}]" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:BAM Prefix [${BAM_PREFIX}]" ${LOGFILE}
 
 ########################################################################################################
 #---------------------------------------Trimmomatic----------------------------------------------------#
 ########################################################################################################
 
-logger_ngseasy "[ngseasy_trimmomatic]:START Trimmomatic+FastQC filtered Fastq files" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:START Trimmomatic+FastQC filtered Fastq files" ${LOGFILE}
 
 ## check if qc'd data alread exists 
 #
-logger_ngseasy "[ngseasy_trimmomatic]:checking if trimmed data exists" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:checking if trimmed data exists" ${LOGFILE}
 
 if [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz" ]
 then
-	logger_ngseasy "[ngseasy_trimmomatic]:PE Trimmed Data already exists...skipping [ngseasy_trimmomatic]" ${LOGFILE}
+	logger_ngseasy "[${NGSEASY_STEP}]:PE Trimmed Data already exists...skipping [${NGSEASY_STEP}]" ${LOGFILE}
 
 elif [[ "$TRIM" == "atrim" ]]; then
-	logger_ngseasy "[ngseasy_trimmomatic]:Trimmomatic not run yet" ${LOGFILE}
+	logger_ngseasy "[${NGSEASY_STEP}]:Trimmomatic not run yet" ${LOGFILE}
 
 ########################################################################################################
 ## run compbio/ngseasy-trimmomatic
 # 
-logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files" ${LOGFILE}
-logger_ngseasy "[ngseasy_trimmomatic]:TRIM set to [$TRIM] - adaptor trim. Adaptor and read quality trimming" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:START qc of raw fastq files" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:TRIM set to [$TRIM] - adaptor trim. Adaptor and read quality trimming" ${LOGFILE}
 
 ## get ngs_resource mapping
 myresources=`dirname ${PROJECT_DIR}`
@@ -432,7 +435,7 @@ NGSResources="${myresources}/ngs_resources"
 
 ## run trimmomatic
 #
-logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 AVGQUAL:2 MINLEN:75 " ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 AVGQUAL:2 MINLEN:75 " ${LOGFILE}
 
 	${DOCKER_RUN} \
 	--rm=true \
@@ -453,7 +456,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:
 	AVGQUAL:2 \
 	MINLEN:75
 
-logger_ngseasy "[ngseasy_trimmomatic]:FastQC post Trimmomatic" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:FastQC post Trimmomatic" ${LOGFILE}
     
 ##  compbio/ngseasy-fastqc
 #
@@ -478,8 +481,8 @@ logger_ngseasy "[ngseasy_trimmomatic]:FastQC post Trimmomatic" ${LOGFILE}
 #
 elif [[ "$TRIM" == "btrim" ]]; then
 
-logger_ngseasy "[ngseasy_trimmomatic]:START qc of raw fastq files" ${LOGFILE}
-logger_ngseasy "[ngseasy_trimmomatic]:TRIM set to [$TRIM] - basic trim. Just read quality trimming. No adaptor trimming" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:START qc of raw fastq files" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:TRIM set to [$TRIM] - basic trim. Just read quality trimming. No adaptor trimming" ${LOGFILE}
 
 #if [[ ! -s ${SOUT}/fastq/${FQ1}.art_filt.gz  ]] && [[ ! -s ${SOUT}/fastq/${FQ2}.art_filt.gz ]]; then 
 ## make parallel cmd
@@ -491,7 +494,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:TRIM set to [$TRIM] - basic trim. Just rea
 #
 ## run fastx_artifacts_filter
 #
-#logger_ngseasy "[ngseasy_trimmomatic]:[cmd]: fastx_artifacts_filter. Removing Homopolymer reads" ${LOGFILE}
+#logger_ngseasy "[${NGSEASY_STEP}]:[cmd]: fastx_artifacts_filter. Removing Homopolymer reads" ${LOGFILE}
 #
 #	${DOCKER_RUN} \
 #	--rm=true \
@@ -520,7 +523,7 @@ logger_ngseasy "[ngseasy_trimmomatic]:TRIM set to [$TRIM] - basic trim. Just rea
 	AVGQUAL:2 \
 	MINLEN:75
 
-logger_ngseasy "[ngseasy_trimmomatic]:START FastQC post Trimmomatic" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:START FastQC post Trimmomatic" ${LOGFILE}
     
 ##  compbio/ngseasy-fastqc
 #
@@ -540,9 +543,9 @@ logger_ngseasy "[ngseasy_trimmomatic]:START FastQC post Trimmomatic" ${LOGFILE}
 	${qcSEFQ2}
 
 elif [[ "${TRIM}" == "notrim" ]]; then
-	logger_ngseasy "[ngseasy_trimmomatic]:Skipping quality control of raw fastq reads. NOT RECOMMENDED" ${LOGFILE}
+	logger_ngseasy "[${NGSEASY_STEP}]:Skipping quality control of raw fastq reads. NOT RECOMMENDED" ${LOGFILE}
 else 
-	logger_ngseasy "[ngseasy_trimmomatic]:ERROR Do not recognise TRIM option. Should be one of [atrim] [btrim] or [no-trim]" ${LOGFILE}
+	logger_ngseasy "[${NGSEASY_STEP}]:ERROR Do not recognise TRIM option. Should be one of [atrim] [btrim] or [no-trim]" ${LOGFILE}
 	sleep 1s; exit 1
 fi
   
