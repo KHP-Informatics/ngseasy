@@ -50,6 +50,7 @@ echo -e "#######################################################################
 ###########################################################################################
 
 command -v docker >/dev/null 2>&1 || { echo -e "\n\nDocker not installed.\n\nAborting....." >&2; exit 1; }
+echo -e "Docker Installed ok"
 echo -e "Checking Docker Version and Info\n"
 DOCKERVERSION=`docker version`
 DOCKERINFO=`docker info`

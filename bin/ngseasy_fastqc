@@ -26,27 +26,6 @@ set -o nounset
 ###########################################################################################
 
 ########################################################################################################
-## Set version and run date
-########################################################################################################
-NGSEASYVERSION="1.0"
-RUNDATE=`date +"%d%m%y"`
-NGSEASY_STEP="ngseasy_fastqc"
-
-echo -e "\n################################################################"
-echo -e "# Program: ngseasy_fastqc"
-echo -e "# Version 1.0"
-echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
-echo -e "#"
-echo -e "# Copyright (C) 2015  Stephen Jeffrey Newhouse"
-echo -e "# NGSeasy (aka ngseasy) Version ${NGSEASYVERSION} comes with ABSOLUTELY NO WARRANTY;"
-echo -e "# for details see the GNU General Public License."
-echo -e "# This is free software, and you are welcome to redistribute it under certain conditions;"
-echo -e "# see the GNU General Public License for details."
-echo -e "#"
-echo -e "###########################################################################################\n\n"
-
-
-########################################################################################################
 # clear stuff up
 ########################################################################################################
 REFDIR=""
@@ -76,6 +55,25 @@ NGSEASYVERSION=""
 NGSUSER=""
 RUNDATE=""
 NGSEASY_STEP=""
+########################################################################################################
+## Set version and run date
+########################################################################################################
+NGSEASYVERSION="1.0"
+RUNDATE=`date +"%d%m%y"`
+NGSEASY_STEP="ngseasy_fastqc"
+
+echo -e "\n################################################################"
+echo -e "# Program: ngseasy_fastqc"
+echo -e "# Version 1.0"
+echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
+echo -e "#"
+echo -e "# Copyright (C) 2015  Stephen Jeffrey Newhouse"
+echo -e "# NGSeasy (aka ngseasy) Version ${NGSEASYVERSION} comes with ABSOLUTELY NO WARRANTY;"
+echo -e "# for details see the GNU General Public License."
+echo -e "# This is free software, and you are welcome to redistribute it under certain conditions;"
+echo -e "# see the GNU General Public License for details."
+echo -e "#"
+echo -e "###########################################################################################\n\n"
 
 ########################################################################################################
 ## test if docker is intsalled and exit if not

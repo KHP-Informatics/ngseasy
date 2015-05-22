@@ -24,6 +24,36 @@ set -o nounset
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #
 ###########################################################################################
+########################################################################################################
+# clear stuff up
+########################################################################################################
+REFDIR=""
+GENOMEINDEX=""
+PROJECT_ID=""
+SAMPLE_ID=""
+FASTQ1=""
+FASTQ2=""
+PROJECT_DIR=""
+DNA_PREP_LIBRARY_ID=""
+NGS_PLATFORM=""
+NGS_TYPE=""
+BAIT=""
+CAPTURE=""
+GENOMEBUILD=""
+FASTQC=""
+TRIM=""
+BSQR=""
+REALN=""
+ALIGNER=""
+VARCALLER=""
+CNV=""
+ANNOTATOR=""
+CLEANUP=""
+NCPU=""
+NGSEASYVERSION=""
+NGSUSER=""
+RUNDATE=""
+NGSEASY_STEP=""
 
 ########################################################################################################
 ## Set version and run date
@@ -55,37 +85,6 @@ command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not ins
 ## test if image is intsalled and exit if not
 ########################################################################################################
 docker images | grep ngseasy-trimmomatic 2>&1 || { echo "compbio/ngseasy-trimmomatic:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
-
-########################################################################################################
-# clear stuff up
-########################################################################################################
-REFDIR=""
-GENOMEINDEX=""
-PROJECT_ID=""
-SAMPLE_ID=""
-FASTQ1=""
-FASTQ2=""
-PROJECT_DIR=""
-DNA_PREP_LIBRARY_ID=""
-NGS_PLATFORM=""
-NGS_TYPE=""
-BAIT=""
-CAPTURE=""
-GENOMEBUILD=""
-FASTQC=""
-TRIM=""
-BSQR=""
-REALN=""
-ALIGNER=""
-VARCALLER=""
-CNV=""
-ANNOTATOR=""
-CLEANUP=""
-NCPU=""
-NGSEASYVERSION=""
-NGSUSER=""
-RUNDATE=""
-NGSEASY_STEP=""
 
 ########################################################################################################
 ## docker run command
