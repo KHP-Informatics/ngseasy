@@ -10,6 +10,7 @@
 #
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
+NGSEASY_STEP="ngseasy_initiate_project"
 
 echo -e "\n\n###########################################################################################"
 echo -e "# Program: ngseasy_initiate_project"
@@ -99,12 +100,12 @@ fi
 ###########################################################################################
 ## check ${project_directory} exists.
 ###########################################################################################
-logger_ngseasy "[ngseasy_initiate_project]:Check if project dir [${project_directory}] exists"
+logger_ngseasy "[${NGSEASY_STEP}]:Check if project dir [${project_directory}] exists"
 
 if [[ ! -d "${project_directory}" ]]
   then
       usage_ngseasy;
-      logger_ngseasy "[ngseasy_initiate_project]:ERROR:${project_directory} does not exist. Exiting."
+      logger_ngseasy "[${NGSEASY_STEP}]:ERROR:${project_directory} does not exist. Exiting."
       sleep 2s
       exit 1;
 fi
@@ -121,14 +122,14 @@ config_run_log="${project_directory}/run_logs/ngseasy.${NGSEASYVERSION}.${config
 
 if [[ ! -e "${config_run_log}.log" ]]
 then
-    logger_ngseasy "[ngseasy_initiate_project]:Making log file [${config_run_log}.log]"
+    logger_ngseasy "[${NGSEASY_STEP}]:Making log file [${config_run_log}.log]"
 
     touch ${config_run_log}.log
     
-    logger_ngseasy "[ngseasy_initiate_project]:Log file [${config_run_log}.log]"
+    logger_ngseasy "[${NGSEASY_STEP}]:Log file [${config_run_log}.log]"
 
 else
-    logger_ngseasy "[ngseasy_initiate_project]:Log file [${config_run_log}.log]"
+    logger_ngseasy "[${NGSEASY_STEP}]:Log file [${config_run_log}.log]"
 
 fi
 
@@ -139,8 +140,8 @@ fi
 # find out where we are running from 
 my_current_dirctory=`pwd`
 
-logger_ngseasy "[ngseasy_initiate_project]:Current working directory [${my_current_dirctory}]" ${config_run_log}
-logger_ngseasy "[ngseasy_initiate_project]:Config file set as [${config_tsv}]" ${config_run_log}
+logger_ngseasy "[${NGSEASY_STEP}]:Current working directory [${my_current_dirctory}]" ${config_run_log}
+logger_ngseasy "[${NGSEASY_STEP}]:Config file set as [${config_tsv}]" ${config_run_log}
 sleep 1s
 
 ## check if user has used full path to specify config_tsv
@@ -151,10 +152,10 @@ config_directory_path=`dirname ${config_tsv}`
 
 if [[ "${config_directory_path}" == "." ]]; then
     working_dir="${my_current_dirctory}"
-    logger_ngseasy "[ngseasy_initiate_project]:Path to config file directory detected as [${working_dir}]" ${config_run_log}
-    logger_ngseasy "[ngseasy_initiate_project]:Setting Path to config file" ${config_run_log}
-    logger_ngseasy "[ngseasy_initiate_project]:Config file location set to [${working_dir}]" ${config_run_log}
-    logger_ngseasy "[ngseasy_initiate_project]:Moving to Config file location [${working_dir}] to make life easy" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Path to config file directory detected as [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Setting Path to config file" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Config file location set to [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Moving to Config file location [${working_dir}] to make life easy" ${config_run_log}
     
     # move to location of config file
     cd ${working_dir}
@@ -163,19 +164,19 @@ if [[ "${config_directory_path}" == "." ]]; then
     configfile_name=`basename ${config_tsv}`
 
 if [[ ! -e "./${configfile_name}" ]]; then 
-    logger_ngseasy "[ngseasy_initiate_project]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
     sleep 1s
     exit 1
 else
-    logger_ngseasy "[ngseasy_initiate_project]:Config file name [${configfile_name}] detected" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Config file name [${configfile_name}] detected" ${config_run_log}
 fi
     
 else
     working_dir="${config_directory_path}"
-    logger_ngseasy "[ngseasy_initiate_project]:Path to config file directory detected as [${working_dir}]" ${config_run_log}
-    logger_ngseasy "[ngseasy_initiate_project]:Setting Path to config file" ${config_run_log}
-    logger_ngseasy "[ngseasy_initiate_project]:Config file location set to [${working_dir}]" ${config_run_log}
-    logger_ngseasy "[ngseasy_initiate_project]:Moving to Config file location [${working_dir}] to make life easy" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Path to config file directory detected as [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Setting Path to config file" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Config file location set to [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Moving to Config file location [${working_dir}] to make life easy" ${config_run_log}
     
     # move to location of config file
     cd ${working_dir}
@@ -184,11 +185,11 @@ else
     configfile_name=`basename ${config_tsv}`
     
 if [[ ! -e "./${configfile_name}" ]]; then 
-    logger_ngseasy "[ngseasy_initiate_project]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
     sleep 1s
     exit 1
 else
-    logger_ngseasy "[ngseasy_initiate_project]:Config file name [${configfile_name}] detected" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Config file name [${configfile_name}] detected" ${config_run_log}
 fi
 
 fi
@@ -197,7 +198,7 @@ fi
 ## project list
 # config_tsv=config_file
 #
-logger_ngseasy "[ngseasy_initiate_project]:CMD: awk 'NR >1 {print $5"/"$1}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/Project_list" ${config_run_log}
+logger_ngseasy "[${NGSEASY_STEP}]:CMD: awk 'NR >1 {print $5"/"$1}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/Project_list" ${config_run_log}
 awk 'NR >1 {print $5"/"$1}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/Project_list_${NGSEASYVERSION}.${configfile_name}.${RUNDATE}
 
 while read -f PROJECTNAME
@@ -208,10 +209,10 @@ do
         mkdir -p ${project_directory}/${PROJECTNAME}
         chmod -R 776 ${project_directory}/${PROJECTNAME}
 
-        logger_ngseasy "[ngseasy_initiate_project]:Making [${project_directory}/${PROJECTNAME}] project directory" ${config_run_log}
+        logger_ngseasy "[${NGSEASY_STEP}]:Making [${project_directory}/${PROJECTNAME}] project directory" ${config_run_log}
 
     else 
-        logger_ngseasy "[ngseasy_initiate_project]:Project directory [${project_directory}/${PROJECTNAME}] Exists" ${config_run_log}
+        logger_ngseasy "[${NGSEASY_STEP}]:Project directory [${project_directory}/${PROJECTNAME}] Exists" ${config_run_log}
 
     fi    
 
@@ -223,7 +224,7 @@ wait
 ## sample lists
 ## PROJECT_DIR/PROJECT_ID/SAMPLE_ID
 #
-logger_ngseasy "[ngseasy_initiate_project]:CMD: awk 'NR >1 {print $5"/"$1"/"$2}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/ProjectBySample_list" ${config_run_log}
+logger_ngseasy "[${NGSEASY_STEP}]:CMD: awk 'NR >1 {print $5"/"$1"/"$2}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/ProjectBySample_list" ${config_run_log}
 
 awk 'NR >1 {print $5"/"$1"/"$2}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/ProjectBySample_list_${NGSEASYVERSION}.${configfile_name}.${RUNDATE}
   
@@ -237,40 +238,40 @@ PROJECT_SAMPLE_DIRS=$f1
     if [[ ! -d "${PROJECT_SAMPLE_DIRS}" ]]
         then
         
-            logger_ngseasy "[ngseasy_initiate_project]:${PROJECT_SAMPLE_DIRS} Does Not Exist" ${config_run_log}
-            logger_ngseasy "[ngseasy_initiate_project]:Making Project Directories..." ${config_run_log}
+            logger_ngseasy "[${NGSEASY_STEP}]:${PROJECT_SAMPLE_DIRS} Does Not Exist" ${config_run_log}
+            logger_ngseasy "[${NGSEASY_STEP}]:Making Project Directories..." ${config_run_log}
             
-            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}" ${config_run_log}
+            logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}" ${config_run_log}
             mkdir -p ${PROJECT_SAMPLE_DIRS}
             
-            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/fastq" ${config_run_log}
+            logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/fastq" ${config_run_log}
             
             mkdir -p ${PROJECT_SAMPLE_DIRS}/fastq 
             
-            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/tmp" ${config_run_log}
+            logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/tmp" ${config_run_log}
             
             mkdir -p ${PROJECT_SAMPLE_DIRS}/tmp 
             
-            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/alignments" ${config_run_log}
+            logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/alignments" ${config_run_log}
             
             mkdir -p ${PROJECT_SAMPLE_DIRS}/alignments 
             
-            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/vcf" ${config_run_log}
+            logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/vcf" ${config_run_log}
             
             mkdir -p ${PROJECT_SAMPLE_DIRS}/vcf 
             
-            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/reports" ${config_run_log}
+            logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/reports" ${config_run_log}
             
             mkdir -p ${PROJECT_SAMPLE_DIRS}/reports 
             
-            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/fastq" ${config_run_log}
+            logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/fastq" ${config_run_log}
             mkdir -p ${PROJECT_SAMPLE_DIRS}/config_files
             
-            logger_ngseasy "[ngseasy_initiate_project]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/run_logs" ${config_run_log}
+            logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/run_logs" ${config_run_log}
             mkdir -p ${PROJECT_SAMPLE_DIRS}/run_logs            
             
         else
-            logger_ngseasy "[ngseasy_initiate_project]:${PROJECT_SAMPLE_DIRS}] Exist" ${config_run_log}
+            logger_ngseasy "[${NGSEASY_STEP}]:${PROJECT_SAMPLE_DIRS}] Exist" ${config_run_log}
     fi
 
 done < ${HOME}/ngseasy_tmp/ProjectBySample_list_${NGSEASYVERSION}.${configfile_name}.${RUNDATE}
