@@ -56,7 +56,10 @@ NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_fastqc"
 
-compbio/ngseasy-fastqc
+########################################################################################################
+## test if image is intsalled and exit if not
+########################################################################################################
+docker images | grep ngseasy-fastqc 2>&1 || { echo "compbio/ngseasy-fastqc:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
 
 ########################################################################################################
 ## docker run command

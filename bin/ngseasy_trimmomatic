@@ -21,6 +21,12 @@ command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not ins
 #
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
+NGSEASY_STEP="ngseasy_trimmomatic"
+
+########################################################################################################
+## test if image is intsalled and exit if not
+########################################################################################################
+docker images | grep ngseasy-trimmomatic 2>&1 || { echo "compbio/ngseasy-trimmomatic:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
 
 #################################################################
 # clear stuff up
