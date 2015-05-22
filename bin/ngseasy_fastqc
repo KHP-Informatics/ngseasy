@@ -55,6 +55,7 @@ NGSEASYVERSION=""
 NGSUSER=""
 RUNDATE=""
 NGSEASY_STEP=""
+
 ########################################################################################################
 ## Set version and run date
 ########################################################################################################
@@ -64,7 +65,7 @@ NGSEASY_STEP="ngseasy_fastqc"
 
 echo -e "\n################################################################"
 echo -e "# Program: ${NGSEASY_STEP}"
-echo -e "# Version 1.0"
+echo -e "# Version ${NGSEASYVERSION}"
 echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
 echo -e "#"
 echo -e "# Copyright (C) 2015  Stephen Jeffrey Newhouse"
