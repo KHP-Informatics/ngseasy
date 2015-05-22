@@ -41,7 +41,7 @@ NGSEASY_STEP=""
 ###########################################################################################
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
-NGSEASY_STEP="ngseasy_alignment"
+NGSEASY_STEP="ngseasy_initiate_fastq"
 
 ###########################################################################################
 ## default options
