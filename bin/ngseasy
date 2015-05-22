@@ -4,7 +4,25 @@ set -o nounset
 ###########################################################################################
 # Program: ngseasy
 # Version 1.0 
-# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
+###########################################################################################
+#
+#    Copyright (C) 2015  Stephen Jeffrey Newhouse
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License along
+#    with this program; if not, write to the Free Software Foundation, Inc.,
+#    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+#
 ###########################################################################################
 
 ###########################################################################################
@@ -14,9 +32,17 @@ NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 
 echo -e "\n\n###########################################################################################"
+echo -e "#"
 echo -e "# Program: ngseasy"
 echo -e "# Version ${NGSEASYVERSION}"
-echo -e "# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)"
+echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
+echo -e "#"
+echo -e "# Copyright (C) 2015  Stephen Jeffrey Newhouse"
+echo -e "# NGSeasy (aka ngseasy) Version ${NGSEASYVERSION} comes with ABSOLUTELY NO WARRANTY;"
+echo -e "# for details see the GNU General Public License."
+echo -e "# This is free software, and you are welcome to redistribute it under certain conditions;"
+echo -e "# see the GNU General Public License for details."
+echo -e "#"
 echo -e "###########################################################################################\n\n"
 
 ###########################################################################################
