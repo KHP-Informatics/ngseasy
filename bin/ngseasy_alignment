@@ -53,6 +53,16 @@ RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_alignment"
 
 ########################################################################################################
+## test if images are intsalled and exit if not
+########################################################################################################
+docker images | grep ngseasy-bwa 2>&1 || { echo "compbio/ngseasy-bwa:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+docker images | grep ngseasy-stampy 2>&1 || { echo "compbio/ngseasy-stampy:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+docker images | grep ngseasy-picardtools 2>&1 || { echo "compbio/ngseasy-picardtools:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+docker images | grep ngseasy-snap 2>&1 || { echo "compbio/ngseasy-snap:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+docker images | grep ngseasy-bowtie2 2>&1 || { echo "compbio/ngseasy-bowtie2:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+
+
+########################################################################################################
 ## docker run command
 #
 DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
