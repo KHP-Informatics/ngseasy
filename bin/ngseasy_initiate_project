@@ -11,6 +11,13 @@
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 
+echo -e "\n\n###########################################################################################"
+echo -e "# Program: ngseasy_initiate_project"
+echo -e "# Version ${NGSEASYVERSION}"
+echo -e "# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)"
+echo -e "###########################################################################################\n\n"
+
+
 ## test if docker is intsalled and exit if not
 #
 command -v docker >/dev/null 2>&1 || { echo -e "Docker (https://docs.docker.com/installation) not installed.\nAborting." >&2; exit 1; }
