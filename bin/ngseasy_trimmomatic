@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -o errexit
 set -o nounset
-################################################################
+########################################################################################################
 # Program: ngseasy_trimmomatic
 # Version 1.0 
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
-###########################################################################################
+########################################################################################################
 #
 #    Copyright (C) 2015  Stephen Jeffrey Newhouse
 #
@@ -23,7 +23,8 @@ set -o nounset
 #    with this program; if not, write to the Free Software Foundation, Inc.,
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #
-###########################################################################################
+########################################################################################################
+
 ########################################################################################################
 # clear stuff up
 ########################################################################################################
@@ -62,7 +63,7 @@ NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_trimmomatic"
 
-echo -e "\n################################################################"
+echo -e "\n########################################################################################################"
 echo -e "#"
 echo -e "# Program: ${NGSEASY_STEP}"
 echo -e "# Version ${NGSEASYVERSION}"
@@ -74,7 +75,7 @@ echo -e "# for details see the GNU General Public License."
 echo -e "# This is free software, and you are welcome to redistribute it under certain conditions;"
 echo -e "# see the GNU General Public License for details."
 echo -e "#"
-echo -e "###########################################################################################\n\n"
+echo -e "########################################################################################################\n\n"
 
 ########################################################################################################
 ## test if docker is intsalled and exit if not
@@ -197,6 +198,7 @@ fi
 
 ########################################################################################################
 ## Read config file 
+########################################################################################################
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
@@ -224,7 +226,7 @@ fi
 
 ########################################################################################################
 ## Read config and loop through all lines calling ngseasy_trimmomatic docker
-#
+########################################################################################################
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
 PROJECT_ID=$f1
@@ -254,7 +256,7 @@ DATE=`date +"%d%m%y"`
 
 ########################################################################################################
 ## LOGFILE 
-#
+########################################################################################################
 LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_trimmomatic"
 logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
@@ -265,17 +267,17 @@ $VERSION\t$NGSUSER]"  ${LOGFILE}
 
 ########################################################################################################
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
-#
+########################################################################################################
 DOCKERHOME="/home/pipeman/ngs_projects"
 
 ########################################################################################################
 ## Docker OUTPUT SAMPLE DIR 
-#
+########################################################################################################
 SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
 ########################################################################################################
 ## check and make log directory
-#
+########################################################################################################
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
 then
 	mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
@@ -283,7 +285,7 @@ fi
 
 ########################################################################################################
 ## check and make logfile
-#
+########################################################################################################
 if [ ! -e "${LOGFILE}.log" ]
 then
 	touch ${LOGFILE}.log
@@ -292,13 +294,13 @@ fi
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR 
-#
+########################################################################################################
 SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
 logger_ngseasy "[${NGSEASY_STEP}]:Sample Directory [${SOUT}] "
 
 ########################################################################################################
 ## check local dir exists
-#
+#########################################################################################################
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
 	logger_ngseasy "[${NGSEASY_STEP}]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
@@ -309,7 +311,7 @@ fi
 
 ########################################################################################################
 ## check for fastq files exist
-#
+########################################################################################################
 if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
 	logger_ngseasy "[${NGSEASY_STEP}]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in [${SOUT}/fastq/] " ${LOGFILE}
@@ -319,12 +321,15 @@ fi
 
 ########################################################################################################
 ## set new names for copied fastq files
+########################################################################################################
 #
 # test for fomrat of suffix ie is it fastq or fq
 # or _R1.fastq _R1.fq
 # ILLUMINA : NA10831_ATCACG_L002_R1_001.fastq.gz
 # Illumina FASTQ files use the following naming scheme:
 # <sample name>_<barcode sequence>_L<lane (0-padded to 3 digits)>_R<read number>_<set number (0-padded to 3 digits>.fastq.gz
+#
+########################################################################################################
 
 logger_ngseasy "[${NGSEASY_STEP}]: Checking Fastq file naming conventions" ${LOGFILE}
 
@@ -401,13 +406,13 @@ fi
 
 ########################################################################################################  
 # adapter_fa : check of this is in palce and exit if not
-#
+########################################################################################################
 adapter_fa="/home/pipeman/ngs_resources/reference_genomes_b37/contaminant_list.fa"
 logger_ngseasy "[${NGSEASY_STEP}]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
 
 ########################################################################################################
 # Trimmomatic paired output
-#
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:setting trimmomatic output names for R1 filtered [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz]" ${LOGFILE}
 logger_ngseasy "[${NGSEASY_STEP}]:setting trimmomatic output names for R2 filtered [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz]" ${LOGFILE}
 
@@ -416,7 +421,7 @@ qcPEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TR
 
 ########################################################################################################
 # Trimmomatic unpaired ouput
-#
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:setting trimmomatic output names for R1 unpaired [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.unpaired.fastq.gz]" ${LOGFILE}
 logger_ngseasy "[${NGSEASY_STEP}]:setting trimmomatic output names for R2 unpaired [${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.unpaired.fastq.gz]" ${LOGFILE}
 
@@ -425,9 +430,10 @@ qcSEFQ2=${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TR
 
 ########################################################################################################
 ## BAM FILE NAME
-#
+########################################################################################################
+
 # SAMPLE_ID.WEX.PE.ILLUMINA.atrim.bwa.b37.dupemk.bam
-#
+
 BAM_PREFIX=${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}
 
 logger_ngseasy "[${NGSEASY_STEP}]:BAM Prefix [${BAM_PREFIX}]" ${LOGFILE}
