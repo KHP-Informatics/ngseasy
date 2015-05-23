@@ -193,7 +193,7 @@ fi
 
 ########################################################################################################
 ## check Num feilds in  ${config_tsv}
-#
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:Reading [${config_tsv}] "
 logger_ngseasy "[${NGSEASY_STEP}]:Checking number of feilds in  [${config_tsv}] "
 
@@ -210,6 +210,7 @@ fi
 
 ########################################################################################################
 ## Read config file 
+########################################################################################################
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
@@ -237,7 +238,7 @@ fi
 
 ########################################################################################################
 ## Read config and loop through all lines calling aln docker
-#
+########################################################################################################
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
 PROJECT_ID=$f1;
@@ -267,7 +268,7 @@ DATE=`date +"%d%m%y"`
 
 ########################################################################################################
 ## LOGFILE 
-#
+########################################################################################################
 
 ## check and make log directory
 #
@@ -288,8 +289,9 @@ then
   touch ${LOGFILE}.log
 fi
 
+########################################################################################################
 ## read config_file
-#
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER]"  ${LOGFILE}
@@ -301,19 +303,19 @@ $VERSION\t$NGSUSER" >> ${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}/config_files/${
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR 
-#
+########################################################################################################
 SOUT="${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}"
 logger_ngseasy "[${NGSEASY_STEP}]:Sample Directory [${SOUT}] "
 
 ########################################################################################################
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
-#
+########################################################################################################
 DOCKERHOME="/home/pipeman/ngs_projects"
 logger_ngseasy "[${NGSEASY_STEP}]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
 
 ########################################################################################################
 ## Docker OUTPUT SAMPLE DIR 
-#
+########################################################################################################
 SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
 logger_ngseasy "[${NGSEASY_STEP}]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
@@ -321,7 +323,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:Docker Output directory [${SOUTDocker}]" ${LOG
 
 ########################################################################################################
 ## check local dir exists
-#
+########################################################################################################
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
 	logger_ngseasy "[${NGSEASY_STEP}]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
@@ -332,7 +334,7 @@ fi
 
 ########################################################################################################
 ## check for fastq files exist
-#
+########################################################################################################
 if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
 	logger_ngseasy "[${NGSEASY_STEP}]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
@@ -341,7 +343,7 @@ fi
 
 ########################################################################################################
 ## Select Genome Build
-#
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:Checking genome selected]"  ${LOGFILE}
 
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
@@ -370,7 +372,7 @@ fi
 
 ########################################################################################################
 ## check if Trimmed data alread exists and use it
-#
+########################################################################################################
 if [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz" ]
 then
 	logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Trimmed FastQC Data does not exsts. Exiting" ${LOGFILE}
@@ -382,22 +384,22 @@ else
 	
 	logger_ngseasy "[${NGSEASY_STEP}]:Setting FQ1:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz] " ${LOGFILE}
 
-##############
+########################################################################################################
 ## FQ1
-#
+########################################################################################################
 	FQ1="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz"
 	
 	logger_ngseasy "[${NGSEASY_STEP}]:Setting FQ2:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz] " ${LOGFILE}
 
-##############
+########################################################################################################
 ## FQ2
-#
+########################################################################################################
 	FQ2="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz"
 fi
 
 ########################################################################################################
 ## BAM FILE NAME
-#
+########################################################################################################
 # SAMPLE_ID.WEX.PE.ILLUMINA.atrim.bwa.b37.dupemk.bam [dupemk.${BSQR}.bam] [dupemk.${BSQR}.${REALN}.bam]
 #
 BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}"
@@ -406,7 +408,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGF
 
 ########################################################################################################
 # PLATFORM UNIT
-#
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:Getting PLATFORM UNIT" ${LOGFILE}
 logger_ngseasy "[${NGSEASY_STEP}]:[cmd]:platform_unit=\`zcat ${SOUT}/fastq/${FASTQ1} | head -1 | sed 's/:/\t/' - | cut -f 1 | sed 's/@//g' - \` " ${LOGFILE}
 
@@ -420,8 +422,9 @@ logger_ngseasy "[${NGSEASY_STEP}]:PLATFORM UNIT:[${platform_unit}]" ${LOGFILE}
 #---------------------------------------ALIGNMENT------------------------------------------------------#
 ########################################################################################################
 
+########################################################################################################
 ## check if alignmet already run and stop BAM and bed must exits and bam must be bigger than orginal fastq file
-#
+########################################################################################################
 
 if [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam" ]]  && [[ -s "${SOUT}/reports/${BAM_PREFIX}.dupemk.bed" ]]; then
 
@@ -429,14 +432,15 @@ if [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam" ]]  && [[ -s "${SOUT}/rep
   logger_ngseasy "[${NGSEASY_STEP}]:Skipping Alignment" ${LOGFILE}
   sleep 1s
 
+########################################################################################################
 ## move on
-#
+########################################################################################################
 elif [[ "${ALIGNER}" == "no-align" ]]; then
   logger_ngseasy "[${NGSEASY_STEP}]:Skipping Alignment. ALIGNER option [${ALIGNER}] " ${LOGFILE} 
 
 ########################################################################################################
 ## BWA 
-#
+########################################################################################################
 elif [[ "${ALIGNER}" == "bwa" ]]; then
     logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}  
 # align wih bwa
@@ -480,7 +484,7 @@ logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}
 
 ########################################################################################################
 ## novoalign 
-#
+########################################################################################################
 elif [[ "${ALIGNER}" == "novoalign" ]]; then
 
   logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}
@@ -533,7 +537,7 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
 
 ########################################################################################################
 ## stampy : bwa the stampy 
-#
+########################################################################################################
 elif [[ "${ALIGNER}" == "stampy" ]]; then
 
   logger_ngseasy "[${NGSEASY_STEP}]:START Basic ${ALIGNER} Alignment" ${LOGFILE}
@@ -648,7 +652,7 @@ BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
 
 ########################################################################################################
 # Bowtie2
-# 
+########################################################################################################
 elif [[ "${ALIGNER}" == "bowtie2" ]]; then
 
 # will provide options for tweaking all option in the future
@@ -696,7 +700,7 @@ SLOW="--local --sensitive-local"
 
 ########################################################################################################
 # SNAP
-# 
+########################################################################################################
 # align wih snap sorts and dupe marks the file anyway: but we choose to run same tools samblaster
 # sambamba for consistency
 # snap becomes snap-aligner in 1.0beta.18
