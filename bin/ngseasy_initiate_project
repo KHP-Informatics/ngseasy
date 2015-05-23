@@ -266,36 +266,49 @@ PROJECT_SAMPLE_DIRS=$f1
     if [[ ! -d "${PROJECT_SAMPLE_DIRS}" ]]
         then
         
-            logger_ngseasy "[${NGSEASY_STEP}]:${PROJECT_SAMPLE_DIRS} Does Not Exist" ${config_run_log}
+        logger_ngseasy "[${NGSEASY_STEP}]:${PROJECT_SAMPLE_DIRS} Does Not Exist" ${config_run_log}
+        
+        # start making project and sample dirs
             logger_ngseasy "[${NGSEASY_STEP}]:Making Project Directories..." ${config_run_log}
-            
+        
+        # make sample dir    
             logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}" ${config_run_log}
+            
             mkdir -p ${PROJECT_SAMPLE_DIRS}
             
+        # make sample fastq dir    
             logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/fastq" ${config_run_log}
             
             mkdir -p ${PROJECT_SAMPLE_DIRS}/fastq 
             
+        # make sample tmp dir
             logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/tmp" ${config_run_log}
             
             mkdir -p ${PROJECT_SAMPLE_DIRS}/tmp 
             
+        # make sample alignments dir    
             logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/alignments" ${config_run_log}
             
             mkdir -p ${PROJECT_SAMPLE_DIRS}/alignments 
-            
+        
+        # make sample vcf dir    
             logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/vcf" ${config_run_log}
             
             mkdir -p ${PROJECT_SAMPLE_DIRS}/vcf 
             
+        # make sample reports dir
             logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/reports" ${config_run_log}
             
             mkdir -p ${PROJECT_SAMPLE_DIRS}/reports 
             
+        # make sample config_files dir
             logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/fastq" ${config_run_log}
+            
             mkdir -p ${PROJECT_SAMPLE_DIRS}/config_files
             
+        # make sample run_logs dir
             logger_ngseasy "[${NGSEASY_STEP}]:CMD: mkdir -p ${PROJECT_SAMPLE_DIRS}/run_logs" ${config_run_log}
+            
             mkdir -p ${PROJECT_SAMPLE_DIRS}/run_logs            
             
         else
