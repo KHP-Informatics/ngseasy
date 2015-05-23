@@ -247,9 +247,8 @@ do
 done < ${HOME}/ngseasy_tmp/Project_list_${NGSEASYVERSION}.${configfile_name}.${RUNDATE}
 wait
 
-
-####################################################################################################################
-## sample lists
+###########################################################################################
+## sample list
 ###########################################################################################
 ## PROJECT_DIR/PROJECT_ID/SAMPLE_ID
 #
@@ -306,13 +305,16 @@ PROJECT_SAMPLE_DIRS=$f1
 done < ${HOME}/ngseasy_tmp/ProjectBySample_list_${NGSEASYVERSION}.${configfile_name}.${RUNDATE}
 wait
 
+###########################################################################################
 ## open it up to all 
+###########################################################################################
 chmod -R 775 ${project_directory}/
 
+###########################################################################################
 ## remove lists
-#
-    rm ${HOME}/ngseasy_tmp/ProjectBySample_list_${NGSEASYVERSION}.${configfile_name}.${RUNDATE}
-    rm ${HOME}/ngseasy_tmp/Project_list_${NGSEASYVERSION}.${configfile_name}.${RUNDATE}
+###########################################################################################
+rm ${HOME}/ngseasy_tmp/ProjectBySample_list_${NGSEASYVERSION}.${configfile_name}.${RUNDATE}
+rm ${HOME}/ngseasy_tmp/Project_list_${NGSEASYVERSION}.${configfile_name}.${RUNDATE}
 
 
 
