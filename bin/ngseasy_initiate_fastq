@@ -261,6 +261,7 @@ fi
 
 ########################################################################################################
 ## Read config file 
+########################################################################################################
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
@@ -287,7 +288,7 @@ else
 fi
   
 ########################################################################################################
-## Read config and loop through all lines calling fastqc docker
+## Read config and loop through all lines calling mv *fastq to sample/fastq dir
 ########################################################################################################
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
@@ -318,8 +319,8 @@ DATE=`date +"%d%m%y"`
 
 ########################################################################################################
 ## LOGFILE 
-#
-LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_initiate_fastq"
+########################################################################################################
+LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}"
 logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## read config_file
@@ -330,7 +331,7 @@ $VERSION\t$NGSUSER]"  ${LOGFILE}
 
 #######################################################################################################
 ## check and make log directory
-#
+########################################################################################################
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
 then
   mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
@@ -338,7 +339,7 @@ fi
 
 ########################################################################################################
 ## check and make logfile
-#
+########################################################################################################
 if [ ! -e "${LOGFILE}.log" ]
 then
   touch ${LOGFILE}.log
@@ -347,12 +348,12 @@ fi
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR 
-#
+########################################################################################################
 SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
 
 ########################################################################################################
 ## copy fastq files to sample directory
-#
+########################################################################################################
 if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
   logger_ngseasy "[${NGSEASY_STEP}]:Moving fastq files from ${PROJECT_DIR}/raw_fastq/ to ${SOUT}/fastq/ " ${LOGFILE}
