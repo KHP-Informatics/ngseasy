@@ -1,18 +1,92 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
+set -o errexit
+set -o nounset
 ################################################################
 # Program: ngseasy_initiate_fastq
 # Version 1.0 
-# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
-#################################################################
-
-## Set version and run date
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
+###########################################################################################
 #
+#    Copyright (C) 2015  Stephen Jeffrey Newhouse
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License along
+#    with this program; if not, write to the Free Software Foundation, Inc.,
+#    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+#
+###########################################################################################
+
+###########################################################################################
+# clear stuff up
+###########################################################################################
+REFDIR=""
+GENOMEINDEX=""
+PROJECT_ID=""
+SAMPLE_ID=""
+FASTQ1=""
+FASTQ2=""
+PROJECT_DIR=""
+DNA_PREP_LIBRARY_ID=""
+NGS_PLATFORM=""
+NGS_TYPE=""
+BAIT=""
+CAPTURE=""
+GENOMEBUILD=""
+FASTQC=""
+TRIM=""
+BSQR=""
+REALN=""
+ALIGNER=""
+VARCALLER=""
+CNV=""
+ANNOTATOR=""
+CLEANUP=""
+NCPU=""
+NGSEASYVERSION=""
+NGSUSER=""
+RUNDATE=""
+NGSEASY_STEP=""
+
+###########################################################################################
+## Set version and run date
+###########################################################################################
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
+NGSEASY_STEP="ngseasy_initiate_fastq"
 
+echo -e "\n\n###########################################################################################"
+echo -e "#"
+echo -e "# Program: ${NGSEASY_STEP}"
+echo -e "# Version ${NGSEASYVERSION}"
+echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
+echo -e "#"
+echo -e "# Copyright (C) 2015 Stephen Jeffrey Newhouse and Amos Folarin"
+echo -e "# NGSeasy (aka ngseasy) Version ${NGSEASYVERSION} comes with ABSOLUTELY NO WARRANTY;"
+echo -e "# for details see the GNU General Public License."
+echo -e "# This is free software, and you are welcome to redistribute it under certain conditions;"
+echo -e "# see the GNU General Public License for details."
+echo -e "#"
+echo -e "###########################################################################################\n\n"
+
+###########################################################################################
+## default options
+###########################################################################################
+
+config_tsv=""
+project_directory=""
+
+###########################################################################################
 ## global logging fuction
-#
+###########################################################################################
 function logger_ngseasy() {
  message=${1}
  mylogfile=${2}
@@ -20,9 +94,9 @@ function logger_ngseasy() {
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
 
-
-## global usage
-#
+###########################################################################################
+## Usage fuction
+###########################################################################################
 function ngseasy_initiate_fastq_usage() {
     echo "
 Program: ngseasy_initiate_fastq
@@ -32,51 +106,16 @@ Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 usage:   ngseasy_initiate_fastq -c <config_file> -d <project_directory>
 
 options: -h  show this message
+   -c   Config pipeline file
+   -d   Base directory for [ngs_projects](fastq_raw, run_logs, config_files)
 
 ngseasy_initiate_fastq moves fastq files from raw_fastq stagging are to sample directory
 "
 }
 
-## check and make ~/ngseasy_logs if needed
-#
-if [[ ! -e  ${HOME}/ngseasy_logs ]]
-then
-  mkdir ${HOME}/ngseasy_logs
-  global_run_logs="${HOME}/ngseasy_logs"
-fi
-
-## Check options passed in.
-#
-if test -z "$2"
-then
-  logger_ngseasy "[ngseasy_initiate_fastq]:ERROR:No options found"
-  ngseasy_initiate_fastq_usage
-  exit 1
-fi
-
-#get options for command line args
-  while  getopts "hc:d:" opt
-  do
-
-      case ${opt} in
-	  h)
-	  usage #print help
-	  exit 0
-	  ;;
-	  
-	  c)
-	  config_tsv=${OPTARG}
-    echo "-c = " ${config_tsv}
-	  ;;
-	 
-	  d)
-	  project_directory=${OPTARG}
-	  echo "-d = " ${project_directory}
-    ;; 
-      esac
-  done
-
+###########################################################################################
 ## get options for command line args
+###########################################################################################
   while  getopts "hc:d:" opt
   do
 
@@ -96,131 +135,251 @@ fi
       esac
   done
 
-## check config file exists.
-if [ ! -e "${config_tsv}" ] 
+###########################################################################################
+## Check options passed in.
+###########################################################################################
+
+if test -z "$2"
+    then
+    usage_ngseasy
+    sleep 2s
+    exit 1
+fi
+
+###########################################################################################
+## Make log file ##
+###########################################################################################
+
+## strip path if user enters config with full path specified
+configfile_name=`basename ${config_tsv}`
+
+# set logile name and make it if it does not exist
+config_run_log="${project_directory}/run_logs/ngseasy.${NGSEASYVERSION}.${configfile_name}.${RUNDATE}"
+
+if [[ ! -e "${config_run_log}.log" ]]
 then
-	    logger_ngseasy "[ngseasy_initiate_fastq]:ERROR : [${config_tsv}] does not exist....exiting "
-	    ngseasy_initiate_fastq_usage;
-	    exit 1;
+    logger_ngseasy "[${NGSEASY_STEP}]:Making log file [${config_run_log}.log]"
+
+    touch ${config_run_log}.log
+    
+    logger_ngseasy "[${NGSEASY_STEP}]:Log file [${config_run_log}.log]"
+
 else
-	    ngseasy_initiate_fastq_usage "[ngseasy_initiate_fastq]:Configuration file found [${config_tsv}] "
+    logger_ngseasy "[${NGSEASY_STEP}]:Log file [${config_run_log}.log]"
+
 fi
 
-#check project_directory exists.
-if [ ! -d "${project_directory}" ]
+###########################################################################################
+## check ${project_directory} exists.
+###########################################################################################
+logger_ngseasy "[${NGSEASY_STEP}]:Check if project dir [${project_directory}] exists" ${config_run_log}
+
+if [[ ! -d "${project_directory}" ]]
   then
-    logger_ngseasy "[ngseasy_initiate_fastq]:ERROR : project_directory [${project_directory}] does not exist "
-    ngseasy_initiate_fastq_usage;
-    exit 1;
-else
-	    ngseasy_initiate_fastq_usage "[ngseasy_initiate_fastq]:Top Level Project Directory [${project_directory}] "
+      usage_ngseasy;
+      logger_ngseasy "[${NGSEASY_STEP}]:ERROR:${project_directory} does not exist. Exiting." ${config_run_log}
+      sleep 2s
+      exit 1;
 fi
 
-## Read config file 
-logger_ngseasy "[ngseasy_initiate_fastq]:Reading [${config_tsv}] "
-sed 1d ${config_tsv} > ${config_tsv}.tmp
-  
-while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21
-do
+###########################################################################################
+## check config_tsv exists.
+###########################################################################################
 
-## set varibales  
-  DATE=`date +"%d%m%y"`
+# find out where we are running from 
+my_current_dirctory=`pwd`
+
+logger_ngseasy "[${NGSEASY_STEP}]:Current working directory [${my_current_dirctory}]" ${config_run_log}
+logger_ngseasy "[${NGSEASY_STEP}]:Config file set as [${config_tsv}]" ${config_run_log}
+sleep 1s
+
+## check if user has used full path to specify config_tsv
+# strip path if user enters config with full path specified
+# and the move to the dir containing the config_tsv
+#
+config_directory_path=`dirname ${config_tsv}`
+
+if [[ "${config_directory_path}" == "." ]]; then
+    working_dir="${my_current_dirctory}"
+    logger_ngseasy "[${NGSEASY_STEP}]:Path to config file directory detected as [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Setting Path to config file" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Config file location set to [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Moving to Config file location [${working_dir}] to make life easy" ${config_run_log}
+    
+    # move to location of config file
+    cd ${working_dir}
+    
+    # check if file exists
+    configfile_name=`basename ${config_tsv}`
+
+if [[ ! -e "./${configfile_name}" ]]; then 
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
+    sleep 1s
+    exit 1
+else
+    logger_ngseasy "[${NGSEASY_STEP}]:Config file name [${configfile_name}] detected" ${config_run_log}
+fi
+    
+else
+    working_dir="${config_directory_path}"
+    logger_ngseasy "[${NGSEASY_STEP}]:Path to config file directory detected as [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Setting Path to config file" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Config file location set to [${working_dir}]" ${config_run_log}
+    logger_ngseasy "[${NGSEASY_STEP}]:Moving to Config file location [${working_dir}] to make life easy" ${config_run_log}
+    
+    # move to location of config file
+    cd ${working_dir}
+    
+    # check if file exists
+    configfile_name=`basename ${config_tsv}`
+    
+if [[ ! -e "./${configfile_name}" ]]; then 
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Config file [${config_tsv}] does not exist. Exiting" ${config_run_log}
+    sleep 1s
+    exit 1
+else
+    logger_ngseasy "[${NGSEASY_STEP}]:Config file name [${configfile_name}] detected" ${config_run_log}
+fi
+
+fi
+
+########################################################################################################
+## check Num feilds in  ${config_tsv}
+########################################################################################################
+logger_ngseasy "[${NGSEASY_STEP}]:Checking number of feilds in  [${config_tsv}] " ${config_run_log}
+
+numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
+
+if [[  "$numcols" -lt 23 ]] 
+then
+      logger_ngseasy "[${NGSEASY_STEP}]:ERROR: [${config_tsv}] format issue. Check your file! " ${config_run_log}
+      sleep 1s; 
+      exit 1;
+  else 
+      logger_ngseasy "[${NGSEASY_STEP}]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... " ${config_run_log}    
+fi
+
+########################################################################################################
+## Read config file 
+########################################################################################################
+
+## check ${config_tsv}. is this a batch file or the orginal config file 
+#
+logger_ngseasy "[${NGSEASY_STEP}]:Checking [${config_tsv}] format" ${config_run_log}
+
+hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
+
+if [[ "${config_tsv}" == *.batch.* ]]
+then
+  logger_ngseasy "[ngseasy_initiate_fastq}:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${config_run_log}
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[ngseasy_initiate_fastq}:Setting RUNFILE to [${RUNFILE}]" ${config_run_log}
+elif [[ "$hasheader" -eq 1 ]]
+then
+  logger_ngseasy "[${NGSEASY_STEP}]:[${config_tsv}] header present. Removing this" ${config_run_log}
+  logger_ngseasy "[${NGSEASY_STEP}]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${config_run_log}
+  sed 1d ${config_tsv} > ${config_tsv}.tmp
+  RUNFILE="${config_tsv}.tmp"
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting RUNFILE to [${RUNFILE}]" ${config_run_log}
+else
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[${NGSEASY_STEP}]:[${RUNFILE}] is seemingly perfect" ${config_run_log}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting RUNFILE to [${RUNFILE}]" ${config_run_log}
+fi
   
-  PROJECT_ID=$f1
-  SAMPLE_ID=$f2
-  FASTQ1=$f3
-  FASTQ2=$f4
-  PROJECT_DIR=$f5 
-  DNA_PREP_LIBRARY_ID=$f6
-  NGS_PLATFORM=$f7
-  NGS_TYPE=$f8
-  BED_ANNO=$f9
-  PIPELINE=$f10
-  TRIM=$f11
-  GATK=$f12
-  BSQR=$f13
-  REALN=$f14
-  ALIGNER=$f15
-  VARCALLER=$f16
-  GTMODEGATK=$f17
-  CLEANUP=$f18
-  NCPU=$f19
-  VERSION=$f20
-  NGSUSER=$f21
+########################################################################################################
+## Read config and loop through all lines calling mv *fastq to sample/fastq dir
+########################################################################################################
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
+do
+PROJECT_ID=$f1
+SAMPLE_ID=$f2
+FASTQ1=$f3
+FASTQ2=$f4
+PROJECT_DIR=$f5
+DNA_PREP_LIBRARY_ID=$f6
+NGS_PLATFORM=$f7
+NGS_TYPE=$f8
+BAIT=$f9
+CAPTURE=$f10
+GENOMEBUILD=$f11
+FASTQC=$f12
+TRIM=$f13
+BSQR=$f14
+REALN=$f15
+ALIGNER=$f16
+VARCALLER=$f17
+CNV=$f18
+ANNOTATOR=$f19
+CLEANUP=$f20
+NCPU=$f21
+NGSEASYVERSION=$f22
+NGSUSER=$f23
+DATE=`date +"%d%m%y"`
+
+########################################################################################################
+## LOGFILE 
+########################################################################################################
+LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}"
+logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## read config_file
-logger_ngseasy "[ngseasy_initiate_fastq]:
-  $DATE\t
-  $PROJECT_ID\t
-  $SAMPLE_ID\t
-  $FASTQ1\t
-  $FASTQ2\t
-  $PROJECT_DIR\t 
-  $DNA_PREP_LIBRARY_ID\t
-  $NGS_PLATFORM\t
-  $NGS_TYPE\t
-  $BED_ANNO\t
-  $PIPELINE\t
-  $TRIM\t
-  $GATK\t
-  $BSQR\t
-  $REALN\t
-  $ALIGNER\t
-  $VARCALLER\t
-  $GTMODEGATK\t
-  $CLEANUP\t
-  $NCPU\t
-  $VERSION\t
-  $NGSUSER\t"
+logger_ngseasy "[${NGSEASY_STEP}]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
+$VERSION\t$NGSUSER]"  ${LOGFILE}
 
-## Logfile 
-LOGFILE=${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${DATE}.initiate_fastq
 
+#######################################################################################################
+## check and make log directory
+########################################################################################################
+if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
+then
+  mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
+fi
+
+########################################################################################################
+## check and make logfile
+########################################################################################################
 if [ ! -e "${LOGFILE}.log" ]
 then
-    touch ${LOGFILE}.log
+  touch ${LOGFILE}.log
 fi
+  logger_ngseasy "[${NGSEASY_STEP}]:Logging to [${LOGFILE}.log] "
 
-logger_ngseasy "[ngseasy_initiate_fastq]:Logging to [${LOGFILE}.log] "
-
+########################################################################################################
 ## OUTPUT SAMPLE DIR 
+########################################################################################################
 SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
-logger_ngseasy "[ngseasy_initiate_fastq]:Sample Directory [${SOUT}] "
 
-
-## check local dir exists
-if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
-then
-  logger_ngseasy "[ngseasy_initiate_fastq]:ERROR:Cant Find Project directory ${SOUT}. This is then end. Please Stop and check everything is ok " ${LOGFILE}
-  exit 1
-
-else 
-  logger_ngseasy "[ngseasy_initiate_fastq]:Setting OUTPUT directory [${SOUT}]" ${LOGFILE}
-fi
-
-
+########################################################################################################
 ## copy fastq files to sample directory
+########################################################################################################
 if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
-  logger_ngseasy "[ngseasy_initiate_fastq]:Moving fastq files from ${PROJECT_DIR}/raw_fastq/ to ${SOUT}/fastq/ " ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Moving fastq files from ${PROJECT_DIR}/raw_fastq/ to ${SOUT}/fastq/ " ${LOGFILE}
     
     mv -v ${PROJECT_DIR}/raw_fastq/${FASTQ1} ${SOUT}/fastq/${FASTQ1}
     mv -v ${PROJECT_DIR}/raw_fastq/${FASTQ2} ${SOUT}/fastq/${FASTQ2}
 
-    logger_ngseasy "[ngseasy_initiate_fastq]:CMD:mv -v ${PROJECT_DIR}/raw_fastq/${FASTQ1} ${SOUT}/fastq/${FASTQ1}" ${LOGFILE}
-    logger_ngseasy "[ngseasy_initiate_fastq]:CMD:mv -v ${PROJECT_DIR}/raw_fastq/${FASTQ2} ${SOUT}/fastq/${FASTQ1}" ${LOGFILE}  
+    logger_ngseasy "[${NGSEASY_STEP}]:CMD:mv -v ${PROJECT_DIR}/raw_fastq/${FASTQ1} ${SOUT}/fastq/${FASTQ1}" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:CMD:mv -v ${PROJECT_DIR}/raw_fastq/${FASTQ2} ${SOUT}/fastq/${FASTQ1}" ${LOGFILE}  
 
-    ln -s ${SOUT}/fastq/${FASTQ1} ${PROJECT_DIR}/raw_fastq/${FASTQ1}
-    ln -s ${SOUT}/fastq/${FASTQ2} ${PROJECT_DIR}/raw_fastq/${FASTQ2}
+    #ln -s ${SOUT}/fastq/${FASTQ1} ${PROJECT_DIR}/raw_fastq/${FASTQ1}
+    #ln -s ${SOUT}/fastq/${FASTQ2} ${PROJECT_DIR}/raw_fastq/${FASTQ2}
     
 else
-  logger_ngseasy "[ngseasy_initiate_fastq]:Fastq Files already exist in  ${SOUT}/fastq/ " ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Fastq Files already exist in ${SOUT}/fastq/ " ${LOGFILE}
+  ls ${SOUT}/fastq/
 fi
 
-#------permissions------------#
+###########################################################################################
+## permissions
+###########################################################################################
 chmod -R 776 ${SOUT}/*
 
-done < ${config_tsv}.tmp
+###########################################################################################
+## THE END
+###########################################################################################
+done < ${RUNFILE}
 
-##
-rm ${config_tsv}.tmp
+

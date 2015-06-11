@@ -16,7 +16,7 @@ _This is the latest dev project: undergoing massive re-dev , links may be broken
 
 **Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
 
-- **NGSeasy-1.0 Full Production release will be available Early 2015**  
+- **NGSeasy-1.0 Full Production release will be available Late 2015**  
 - **NGSeasy-1.0 (dirty_tango) contains most of the core fucntionality to go from raw fastq to raw vcf calls**
 - **NGSeasy will update every 12 months**
 - **GUI in development**
@@ -29,8 +29,15 @@ _This is the latest dev project: undergoing massive re-dev , links may be broken
 ****************
 
 
-## Issues, Questions and Queries 
+# Issues, Questions and Queries 
+
 **Please Direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues]**
+
+# WARNING!
+NGSeasy is not [numpty](http://www.urbandictionary.com/define.php?term=Numpty) or bad data proof!  
+  
+Please read the docs, stay calm, take your time and think about what you are doing...and if [www.google.com] doesnt help, then please direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues].
+
 
 ## For the impatient 
 
@@ -153,23 +160,10 @@ sys     28m46.648s
 cd /home/ec2-user/ngs_projects/config_files/
 
 #############################################
-## 1. Set up project and sample directories
-
-ngseasy_initiate_project -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects 
-
-#############################################
-## 2. Move project/sample fastq from raw_fastq
-## to project and sample directories
- 
-ngseasy_initiate_fastq -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects 
-
-#############################################
-## 3. Run basic test 
+## 1. Run basic test 
 
 ngseasy -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects 
 
-# Note: everytime the user has a new project and/or new samples
-# you must run ngseasy_initiate_project followd by ngseasy_initiate_fastq
 
 ```
 
@@ -181,13 +175,12 @@ This runs the following basic pipeline on Whole Exome PE 30x Illumina data, alig
 
 ### Some notes and pointers
 
-- Edit **NCPU** in  **[ngseasy_test.config.tsv]** to suit your system!  
-- Edit **PROJECT_DIR** in  **[ngseasy_test.config.tsv]** to suit your install path!    
-- everytime the user has a new project and/or new samples
-the user must run ``ngseasy_initiate_project`` followd by ``ngseasy_initiate_fastq`` .  
+- Edit **NCPU** in  **[ngseasy_test.config.tsv]** to suit your system  
+- Edit **PROJECT\_DIR** in  **[ngseasy_test.config.tsv]** to suit your install path    
 - We expect the user to palce all raw fastq files in ``raw_fastq``. NGSeasy uses this
 as a stagging area for new project and sample data.  
 - right now, always run ``ngseasy`` from the location/directory that contains the config.file  
+- each component of ngseasy can be run as a standalone script  
 
 ****************
 
@@ -478,11 +471,9 @@ NGSUSER|STRING|user email|stephen.j.newhouse@gmail.com
 
 ## Running NGSeasy
 
-When running a project or set of samples for the first time, users need to set the ```-p``` and ```-f``` options to 1. 
-
 ```bash
 ## 
-ngseasy -c ngseasy_test.config.tsv -d /media/scratch/ngs_projects  -p 1 -f 1
+ngseasy -c ngseasy_test.config.tsv -d /media/scratch/ngs_projects 
 ```
 
 
@@ -503,15 +494,19 @@ ngs_projects
 |  
 |__raw_fastq  
 |__config_files  
+```
+
+```bash
+ngs_resources  
+|  
 |__reference_genomes_b37  
-|__gatk_resources  
-|__ngseasy
+|__reference_genomes_hg19    
 ```
 
 Running the script `make XXXX` ensures that all relevant directories are set up, and also enforces a clean structure to the NGS project.  
 
 Within this we make a `raw_fastq` folder, where we temporarily store all the raw fastq files for each project. This folder acts as an initial stagging area for the raw fastq files. During the project set up, we copy/move project/sample related fastq files to their own specific directories.
-Fastq files must have suffix and be gzipped: **_1.fq.gz** or **_2.fq.gz**  
+Fastq files must have suffix and be gzipped: **\_1.fq.gz** or **\_2.fq.gz**  
 furture version will allow any format  
 
 Running `ngseasy` with the relevent configuration file, will set up the following directory structure for every project and sample within a project:-  
@@ -522,17 +517,12 @@ ngs_projects
 |  
 |__raw_fastq  
 |__config_files  
-|__reference_genomes_b37  
-|__gatk_resources  
-|__ngseasy
+|__run_logs
 |
 |__ project_id  
 	|  
 	|__run_logs  
 	|__config_files  
-	|__project_vcfs  
-	|__project_bams  
-	|__project_reports  
 	|
 	|__sample_id_1  
 	|	|  
@@ -553,6 +543,16 @@ ngs_projects
 		|__reports  
 		|__config_files  
 ```
+
+## The raw_fastq Directory
+
+The ``raw_fastq`` Directory is a very special directory indeed. 
+This is where the user should copy and or move **ALL NEW RAW FASTQ** Files to. 
+This is to be used as an intial staging area for all fastq files. 
+NGSeasy expects all raw fastq data to be placed here for all new samples or runs.
+NGSeasy inspects this folder and looks for the fastq file names specified in your confifg file.
+If NGSeasy doen't find them, then it exits.
+We do this to force the user to get organised.
 
 ****************
 

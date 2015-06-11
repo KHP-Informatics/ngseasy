@@ -16,7 +16,8 @@ DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman
 ########################################################################################################
 ## PLATYPUS_OPTIONS
 #
-PLATYPUS_OPTIONS=" --assemble=1 --assembleAll=1 \
+PLATYPUS_OPTIONS=" --assemble=1 \
+--assembleAll=1 \
 --assemblyRegionSize=1500 \
 --minReads=4 \
 --maxGOF=30 \
@@ -31,7 +32,7 @@ PLATYPUS_OPTIONS=" --assemble=1 --assembleAll=1 \
 --filterReadsWithDistantMates=1 \
 --hapScoreThreshold 10 \
 --scThreshold 0.99 \
---filteredReadsFrac 0.9 \
+--filteredReadsFrac 0.99 \
 --rmsmqThreshold 20 \
 --qdThreshold 0 \
 --abThreshold 0.0001 \

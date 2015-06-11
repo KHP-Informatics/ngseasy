@@ -1,18 +1,33 @@
-#!/bin/bash
-
-################################################################
+#!/usr/bin/env bash
+set -o errexit
+set -o nounset
+########################################################################################################
 # Program: ngseasy_alignment
 # Version 1.0 
-# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
-#################################################################
-echo -e "\n################################################################"
-echo -e "# Program: ngseasy_alignment"
-echo -e "# Version 1.0"
-echo -e "# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)"
-echo -e "#################################################################\n"
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
+###########################################################################################
+#
+#    Copyright (C) 2015  Stephen Jeffrey Newhouse
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License along
+#    with this program; if not, write to the Free Software Foundation, Inc.,
+#    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+#
+########################################################################################################
 
-#################################################################
+########################################################################################################
 # clear stuff up
+########################################################################################################
 REFDIR=""
 GENOMEINDEX=""
 PROJECT_ID=""
@@ -42,24 +57,49 @@ RUNDATE=""
 NGSEASY_STEP=""
 
 ########################################################################################################
-## test if docker is intsalled and exit if not
-command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
-
-########################################################################################################
 ## Set version and run date
-#
+########################################################################################################
 NGSEASYVERSION="1.0"
 RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_alignment"
 
+echo -e "\n########################################################################################################"
+echo -e "#"
+echo -e "# Program: ${NGSEASY_STEP}"
+echo -e "# Version ${NGSEASYVERSION}"
+echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
+echo -e "#"
+echo -e "# Copyright (C) 2015  Stephen Jeffrey Newhouse and Amos Folarin"
+echo -e "# NGSeasy (aka ngseasy) Version ${NGSEASYVERSION} comes with ABSOLUTELY NO WARRANTY;"
+echo -e "# for details see the GNU General Public License."
+echo -e "# This is free software, and you are welcome to redistribute it under certain conditions;"
+echo -e "# see the GNU General Public License for details."
+echo -e "#"
+echo -e "########################################################################################################\n\n"
+
+
+########################################################################################################
+## test if docker is intsalled and exit if not
+########################################################################################################
+command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
+
+########################################################################################################
+## test if images are intsalled and exit if not
+########################################################################################################
+docker images | grep ngseasy-bwa 2>&1 || { echo "compbio/ngseasy-bwa:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+docker images | grep ngseasy-stampy 2>&1 || { echo "compbio/ngseasy-stampy:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+docker images | grep ngseasy-picardtools 2>&1 || { echo "compbio/ngseasy-picardtools:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+docker images | grep ngseasy-snap 2>&1 || { echo "compbio/ngseasy-snap:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+docker images | grep ngseasy-bowtie2 2>&1 || { echo "compbio/ngseasy-bowtie2:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+
 ########################################################################################################
 ## docker run command
-#
+########################################################################################################
 DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
 
 ########################################################################################################
 ## global logging fuction
-#
+########################################################################################################
 function logger_ngseasy() {
  message=${1}
  mylogfile=${2}
@@ -69,7 +109,7 @@ function logger_ngseasy() {
 
 ########################################################################################################
 ## global usage
-#
+########################################################################################################
 function ngseasy_alignment_usage() {
     echo "
 Program: ngseasy_alignment
@@ -88,18 +128,16 @@ This is is optomised for Illumina PE data
 "
 }
 
-########################################################################################################
-## check and make ~/ngseasy_logs if needed
-#
-if [[ ! -e  ${HOME}/ngseasy_logs ]]
-then
-  mkdir ${HOME}/ngseasy_logs
-  global_run_logs="${HOME}/ngseasy_logs"
-fi
+###########################################################################################
+## default options
+###########################################################################################
+
+config_tsv=""
+project_directory=""
 
 ########################################################################################################
 ## Check options passed in.
-#
+########################################################################################################
 if test -z "$2"
 then
   logger_ngseasy "[${NGSEASY_STEP}]:ERROR:No options found"
@@ -109,6 +147,7 @@ fi
 
 ########################################################################################################
 ## get options for command line args
+########################################################################################################
   while  getopts "hc:d:" opt
   do
 
@@ -130,7 +169,7 @@ fi
 
 ########################################################################################################  
 ## check config file exists.
-#
+########################################################################################################
 if [[ ! -e "${config_tsv}" ]] 
 then
 	    logger_ngseasy "[${NGSEASY_STEP}]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
@@ -142,7 +181,7 @@ fi
 
 ########################################################################################################
 ## check project_directory exists.
-#
+########################################################################################################
 if [[ ! -d "${project_directory}" ]]
   then
     logger_ngseasy "[${NGSEASY_STEP}]:ERROR : project_directory [${project_directory}] does not exist "
@@ -154,7 +193,7 @@ fi
 
 ########################################################################################################
 ## check Num feilds in  ${config_tsv}
-#
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:Reading [${config_tsv}] "
 logger_ngseasy "[${NGSEASY_STEP}]:Checking number of feilds in  [${config_tsv}] "
 
@@ -171,6 +210,7 @@ fi
 
 ########################################################################################################
 ## Read config file 
+########################################################################################################
 
 ## check ${config_tsv}. is this a batch file or the orginal config file 
 #
@@ -198,7 +238,7 @@ fi
 
 ########################################################################################################
 ## Read config and loop through all lines calling aln docker
-#
+########################################################################################################
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
 PROJECT_ID=$f1;
@@ -228,7 +268,7 @@ DATE=`date +"%d%m%y"`
 
 ########################################################################################################
 ## LOGFILE 
-#
+########################################################################################################
 
 ## check and make log directory
 #
@@ -249,8 +289,9 @@ then
   touch ${LOGFILE}.log
 fi
 
+########################################################################################################
 ## read config_file
-#
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER]"  ${LOGFILE}
@@ -262,19 +303,19 @@ $VERSION\t$NGSUSER" >> ${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}/config_files/${
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR 
-#
+########################################################################################################
 SOUT="${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}"
 logger_ngseasy "[${NGSEASY_STEP}]:Sample Directory [${SOUT}] "
 
 ########################################################################################################
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
-#
+########################################################################################################
 DOCKERHOME="/home/pipeman/ngs_projects"
 logger_ngseasy "[${NGSEASY_STEP}]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
 
 ########################################################################################################
 ## Docker OUTPUT SAMPLE DIR 
-#
+########################################################################################################
 SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
 logger_ngseasy "[${NGSEASY_STEP}]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
@@ -282,7 +323,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:Docker Output directory [${SOUTDocker}]" ${LOG
 
 ########################################################################################################
 ## check local dir exists
-#
+########################################################################################################
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
 	logger_ngseasy "[${NGSEASY_STEP}]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
@@ -293,7 +334,7 @@ fi
 
 ########################################################################################################
 ## check for fastq files exist
-#
+########################################################################################################
 if [ ! -s "${SOUT}/fastq/${FASTQ1}" ] && [ ! -s "${SOUT}/fastq/${FASTQ2}" ]
 then
 	logger_ngseasy "[${NGSEASY_STEP}]: Can't Find fastq files [${SOUT}/fastq/${FASTQ1}] and [${SOUT}/fastq/${FASTQ2}] in ${SOUT}/fastq/ " ${LOGFILE}
@@ -302,7 +343,7 @@ fi
 
 ########################################################################################################
 ## Select Genome Build
-#
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:Checking genome selected]"  ${LOGFILE}
 
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
@@ -331,7 +372,7 @@ fi
 
 ########################################################################################################
 ## check if Trimmed data alread exists and use it
-#
+########################################################################################################
 if [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz" ]
 then
 	logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Trimmed FastQC Data does not exsts. Exiting" ${LOGFILE}
@@ -343,22 +384,22 @@ else
 	
 	logger_ngseasy "[${NGSEASY_STEP}]:Setting FQ1:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz] " ${LOGFILE}
 
-##############
+########################################################################################################
 ## FQ1
-#
+########################################################################################################
 	FQ1="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz"
 	
 	logger_ngseasy "[${NGSEASY_STEP}]:Setting FQ2:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz] " ${LOGFILE}
 
-##############
+########################################################################################################
 ## FQ2
-#
+########################################################################################################
 	FQ2="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz"
 fi
 
 ########################################################################################################
 ## BAM FILE NAME
-#
+########################################################################################################
 # SAMPLE_ID.WEX.PE.ILLUMINA.atrim.bwa.b37.dupemk.bam [dupemk.${BSQR}.bam] [dupemk.${BSQR}.${REALN}.bam]
 #
 BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}"
@@ -367,7 +408,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGF
 
 ########################################################################################################
 # PLATFORM UNIT
-#
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:Getting PLATFORM UNIT" ${LOGFILE}
 logger_ngseasy "[${NGSEASY_STEP}]:[cmd]:platform_unit=\`zcat ${SOUT}/fastq/${FASTQ1} | head -1 | sed 's/:/\t/' - | cut -f 1 | sed 's/@//g' - \` " ${LOGFILE}
 
@@ -381,8 +422,9 @@ logger_ngseasy "[${NGSEASY_STEP}]:PLATFORM UNIT:[${platform_unit}]" ${LOGFILE}
 #---------------------------------------ALIGNMENT------------------------------------------------------#
 ########################################################################################################
 
+########################################################################################################
 ## check if alignmet already run and stop BAM and bed must exits and bam must be bigger than orginal fastq file
-#
+########################################################################################################
 
 if [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam" ]]  && [[ -s "${SOUT}/reports/${BAM_PREFIX}.dupemk.bed" ]]; then
 
@@ -390,14 +432,15 @@ if [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam" ]]  && [[ -s "${SOUT}/rep
   logger_ngseasy "[${NGSEASY_STEP}]:Skipping Alignment" ${LOGFILE}
   sleep 1s
 
+########################################################################################################
 ## move on
-#
+########################################################################################################
 elif [[ "${ALIGNER}" == "no-align" ]]; then
   logger_ngseasy "[${NGSEASY_STEP}]:Skipping Alignment. ALIGNER option [${ALIGNER}] " ${LOGFILE} 
 
 ########################################################################################################
 ## BWA 
-#
+########################################################################################################
 elif [[ "${ALIGNER}" == "bwa" ]]; then
     logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}  
 # align wih bwa
@@ -420,7 +463,16 @@ elif [[ "${ALIGNER}" == "bwa" ]]; then
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
-  rm -rf ${SOUTDocker}/tmp/*"
+  sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam | \
+  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam /dev/stdin && \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam && \
+  sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
+  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
+  rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam && \
+  rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
+  rm -rf ${SOUTDocker}/tmp/* && \
+  chmod -R 777 ${SOUTDocker}/alignments/*"
   wait
   sleep 1s
 
@@ -432,7 +484,7 @@ logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}
 
 ########################################################################################################
 ## novoalign 
-#
+########################################################################################################
 elif [[ "${ALIGNER}" == "novoalign" ]]; then
 
   logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}
@@ -462,7 +514,16 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
-  rm -rf ${SOUTDocker}/tmp/*"
+  sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam | \
+  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam /dev/stdin && \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam && \
+  sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
+  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
+  rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam && \
+  rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
+  rm -rf ${SOUTDocker}/tmp/* && \
+  chmod -R 777 ${SOUTDocker}/alignments/*"
   wait
   sleep 1s
 
@@ -476,19 +537,10 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
 
 ########################################################################################################
 ## stampy : bwa the stampy 
-#
+########################################################################################################
 elif [[ "${ALIGNER}" == "stampy" ]]; then
 
   logger_ngseasy "[${NGSEASY_STEP}]:START Basic ${ALIGNER} Alignment" ${LOGFILE}
-
-if [[  -e "${SOUT}/alignments/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.bwa.${GENOMEBUILD}.dupemk.bam" ]]; then
-
-  BWABAM=${SOUTDocker}/alignments/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.bwa.${GENOMEBUILD}.dupemk.bam
-  logger_ngseasy "[${NGSEASY_STEP}]:BWA aligned data exits. Using [${BWABAM}] for mapping with stampy" ${LOGFILE} 
-
-else
-## align wih bwa
-  logger_ngseasy "[${NGSEASY_STEP}]:BWA aligned data does not exit" ${LOGFILE} 
   logger_ngseasy "[${NGSEASY_STEP}]:Aligning with BWA before running stampy" ${LOGFILE} 
 
   time ${DOCKER_RUN} \
@@ -505,14 +557,16 @@ else
   sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam /dev/stdin | \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam && \
-  rm -rf ${SOUTDocker}/tmp/*"
+  rm -rf ${SOUTDocker}/tmp/* && \
+  chmod -R 777 ${SOUTDocker}/alignments/*"
   wait
   sleep 1s
   docker logs alignment_${BAM_PREFIX}_bwatmp >> ${LOGFILE}.log
   docker rm -f alignment_${BAM_PREFIX}_bwatmp
+
 # set BWABAM
-  BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
-fi
+BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
+
 
 ## stampy on bwa aligned data
   logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}  
@@ -543,7 +597,16 @@ fi
       sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
       sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam /dev/stdin && \
       sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam && \
-      rm -rf ${SOUTDocker}/tmp/*"
+      sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam | \
+      sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam /dev/stdin && \
+      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam && \
+      sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
+      sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
+      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam && \
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
+      rm -rf ${SOUTDocker}/tmp/* && \
+      chmod -R 777 ${SOUTDocker}/alignments/*"
       wait
       sleep 1s
       docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
@@ -577,7 +640,8 @@ fi
       sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
       bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
       rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmpcleansam.bam && \
-      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam"
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam && \
+      chmod -R 777 ${SOUTDocker}/alignments/*"
       wait
       sleep 1s
 ## log docker run 
@@ -588,7 +652,7 @@ fi
 
 ########################################################################################################
 # Bowtie2
-# 
+########################################################################################################
 elif [[ "${ALIGNER}" == "bowtie2" ]]; then
 
 # will provide options for tweaking all option in the future
@@ -617,7 +681,15 @@ SLOW="--local --sensitive-local"
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
     sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
     bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
-    rm -rf ${SOUTDocker}/tmp/*"
+    sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam /dev/stdin && \
+    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam && \
+    sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
+    sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
+    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
+    rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam && \
+    rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
+    rm -rf ${SOUTDocker}/tmp/* && \
+    chmod -R 777 ${SOUTDocker}/alignments/*"
     wait
     sleep 1s
 ## log docker run 
@@ -628,9 +700,10 @@ SLOW="--local --sensitive-local"
 
 ########################################################################################################
 # SNAP
-# 
+########################################################################################################
 # align wih snap sorts and dupe marks the file anyway: but we choose to run same tools samblaster
 # sambamba for consistency
+# snap becomes snap-aligner in 1.0beta.18
 #
 elif [[ "${ALIGNER}" == "snap" ]]; then
 
@@ -639,7 +712,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
     time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-    -t compbio/ngseasy-snap:${NGSEASYVERSION} /bin/bash -c "time /usr/local/pipeline/snap/snap paired \
+    -t compbio/ngseasy-snap:${NGSEASYVERSION} /bin/bash -c "time /usr/local/pipeline/snap/snap-aligner paired \
     ${REFDIR} \
     ${FQ1} ${FQ2} \
     -t ${NCPU} \
@@ -664,7 +737,15 @@ logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
     sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
     bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
-    rm -rf ${SOUTDocker}/tmp/*"
+    sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam /dev/stdin && \
+    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam && \
+    sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
+    sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
+    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
+    rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam && \
+    rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
+    rm -rf ${SOUTDocker}/tmp/* && \
+    chmod -R 777 ${SOUTDocker}/alignments/*"
 wait
 sleep 1s
 ## log docker run 
@@ -682,10 +763,13 @@ else
   exit 1
 fi
 
-########################################################################################################
-# permissions
-#
-chmod -R 777 ${SOUT}/*
+###########################################################################################
+## permissions
+###########################################################################################
+chmod -R 776 ${SOUT}/*
 
+###########################################################################################
+## THE END
+###########################################################################################
 done < ${RUNFILE}
-# THE END
+logger_ngseasy " END:Alignment" ${LOGFILE}
