@@ -12,7 +12,7 @@ ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 # Remain current
-RUN apt-get update &&  apt-get upgrade -y && apt-get dist-upgrade -y && apt-get install -y ldc
+RUN apt-get update &&  apt-get upgrade -y && apt-get dist-upgrade -y && apt-get install -y ldc asciidoc
 
 #--------------STANDARD NGS TOOLS----------------------------------------------------------------------------------------------#
 # Tools used for processing SAM/BAM/BED/VCF files
@@ -96,6 +96,8 @@ RUN cd /usr/local/pipeline/ && \
     chmod -R 777 ./* && \
     cp bin/bamleftalign /usr/local/bin/ && \
     rm -frv /usr/local/pipeline/freebayes
+
+
 
 # vcftools and vcflib and bedtools2 and vt
 RUN cd /usr/local/pipeline/ && \

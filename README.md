@@ -38,6 +38,14 @@ NGSeasy is not [numpty](http://www.urbandictionary.com/define.php?term=Numpty) o
   
 Please read the docs, stay calm, take your time and think about what you are doing...and if [www.google.com] doesnt help, then please direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues].
 
+## Security...
+
+This post reviews the various security implications of using Docker to run applications within containers, and how to address them: 
+[How Secure are Containers?](https://blog.docker.com/2013/08/containers-docker-how-secure-are-they/#more-697)
+
+> Docker containers are, by default, quite secure; especially if you take care of running your processes inside the containers as non-privileged users (i.e. non root).
+
+**Note: NGSeasy is run as the non-root user `pipeman`**
 
 ## For the impatient 
 
