@@ -12,7 +12,7 @@ ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 # Remain current
-RUN apt-get update &&  apt-get upgrade -y && apt-get dist-upgrade -y && apt-get install -y ldc
+RUN apt-get update &&  apt-get upgrade -y && apt-get dist-upgrade -y && apt-get install -y ldc asciidoc
 
 #--------------STANDARD NGS TOOLS----------------------------------------------------------------------------------------------#
 # Tools used for processing SAM/BAM/BED/VCF files
@@ -100,8 +100,6 @@ RUN cd /usr/local/pipeline/ && \
 
 
 # vcftools and vcflib and bedtools2 and vt
-RUN apt-get install -y asciidoc 
-
 RUN cd /usr/local/pipeline/ && \
     wget -O /tmp/vcftools_0.1.12b.tar.gz http://sourceforge.net/projects/vcftools/files/vcftools_0.1.12b.tar.gz && \
     tar xzvf /tmp/vcftools_0.1.12b.tar.gz -C /usr/local/pipeline/  && \
