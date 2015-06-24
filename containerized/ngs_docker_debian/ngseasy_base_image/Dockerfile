@@ -97,7 +97,11 @@ RUN cd /usr/local/pipeline/ && \
     cp bin/bamleftalign /usr/local/bin/ && \
     rm -frv /usr/local/pipeline/freebayes
 
+
+
 # vcftools and vcflib and bedtools2 and vt
+RUN apt-get install -y asciidoc 
+
 RUN cd /usr/local/pipeline/ && \
     wget -O /tmp/vcftools_0.1.12b.tar.gz http://sourceforge.net/projects/vcftools/files/vcftools_0.1.12b.tar.gz && \
     tar xzvf /tmp/vcftools_0.1.12b.tar.gz -C /usr/local/pipeline/  && \
