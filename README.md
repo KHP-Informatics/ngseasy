@@ -158,11 +158,9 @@ sys     28m46.648s
 
 ### Running NGSeasy for the first time on the test data 
 
-```bash
-#############################################
-## RUN NGSEASY                             ##
-#############################################
+**Important!** NGSeasy is controlled from a single `config` file. See [ngseasy_test.config.tsv](link) for a basic template. It is important that the user sets this up properly before running NGSeasy.
 
+```bash
 #############################################
 ## 0. Move to config file dir
 
@@ -172,8 +170,6 @@ cd /home/ec2-user/ngs_projects/config_files/
 ## 1. Run basic test 
 
 ngseasy -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects 
-
-
 ```
 
 ### What should happen...
