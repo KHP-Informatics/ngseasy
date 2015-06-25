@@ -8,7 +8,7 @@ NGSeasy (beta)
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**  
 
 **Authors:** Stephen J Newhouse, Amos Folarin , Maximilian Kerz  
-**Release Version:** **1.0**  
+**Release Version:** **1.0-r001**  
 **Release:** dirty_tango  
 **Publication:** _pending_  
 
@@ -38,14 +38,15 @@ NGSeasy is not [numpty](http://www.urbandictionary.com/define.php?term=Numpty) o
   
 Please read the docs, stay calm, take your time and think about what you are doing...and if [www.google.com] doesnt help, then please direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues].
 
-## Security...
+## Docker Security...
 
 This post reviews the various security implications of using Docker to run applications within containers, and how to address them: 
 [How Secure are Containers?](https://blog.docker.com/2013/08/containers-docker-how-secure-are-they/#more-697)
 
 > Docker containers are, by default, quite secure; especially if you take care of running your processes inside the containers as non-privileged users (i.e. non root).
 
-**Note: NGSeasy is run as the non-root user `pipeman`**
+### NGSeasy Security
+**All NGSeasy applications are run as the non-root user `pipeman` within each container**
 
 ## For the impatient 
 
