@@ -2,12 +2,12 @@
 
 ################################################################
 # Program: ngseasy_realn
-# Version 1.0 
+# Version 1.0-r001 
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 #################################################################
 echo -e "\n################################################################"
 echo -e "# Program: ngseasy_realn"
-echo -e "# Version 1.0"
+echo -e "# Version 1.0-r001"
 echo -e "# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)"
 echo -e "#################################################################\n"
 
@@ -49,7 +49,7 @@ command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not ins
 ########################################################################################################
 ## Set version and run date
 #
-NGSEASYVERSION="1.0"
+NGSEASYVERSION="1.0-r001"
 RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_realn"
 
@@ -74,7 +74,7 @@ function logger_ngseasy() {
 function ngseasy_realn_usage() {
     echo "
 Program: ngseasy_realn
-Version 1.0
+Version 1.0-r001
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
 usage:   ngseasy_realn -c <config_file> -d <project_directory>
