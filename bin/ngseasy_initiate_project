@@ -3,7 +3,7 @@ set -o errexit
 set -o nounset
 ################################################################
 # Program: ngseasy_initiate_project
-# Version 1.0 
+# Version 1.0-r001 
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
 ###########################################################################################
 #
@@ -28,7 +28,7 @@ set -o nounset
 ###########################################################################################
 ## Set version and run date
 ###########################################################################################
-NGSEASYVERSION="1.0"
+NGSEASYVERSION="1.0-r001"
 RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_initiate_project"
 
@@ -77,7 +77,7 @@ function logger_ngseasy() {
 function ngseasy_initiate_project_usage() {
     echo "
 Program: ngseasy_initiate_project
-Version 1.0
+Version 1.0-r001
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
 ngseasy_initiate_project sets up the project file directories. You only need to run this once per project

@@ -1,5 +1,5 @@
 # Base image
-FROM compbio/ngseasy-base:1.0
+FROM compbio/ngseasy-base:1.0-r001
 
 # Maintainer 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
@@ -13,13 +13,13 @@ RUN apt-get update && apt-get upgrade -y
     
 # + stampy (registration required, get compressed file and put in context dir for the build)
 	
-RUN wget -O /tmp/stampy-latest.tgz  http://www.well.ox.ac.uk/~gerton/software/Stampy/stampy-latest.tgz \
+RUN wget -O /tmp/stampy-latest.tgz http://www.well.ox.ac.uk/bioinformatics/Software/Stampy-latest.tgz \
     && tar xvf /tmp/stampy-latest.tgz -C /usr/local/pipeline/ \
-    && sed -i 's/-Wl//' /usr/local/pipeline/stampy-1.0.23/makefile \
-    && chmod -R 755 /usr/local/pipeline/stampy-1.0.23 \
-    && cd /usr/local/pipeline/stampy-1.0.23 && make \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.23' /home/pipeman/.bashrc \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.23' ~/.bashrc
+    && sed -i 's/-Wl//' /usr/local/pipeline/stampy-1.0.27/makefile \
+    && chmod -R 755 /usr/local/pipeline/stampy-1.0.27 \
+    && cd /usr/local/pipeline/stampy-1.0.27 && make \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.27' /home/pipeman/.bashrc \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.27' ~/.bashrc
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 766 /usr/local/pipeline/***

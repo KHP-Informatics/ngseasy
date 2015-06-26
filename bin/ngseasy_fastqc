@@ -3,7 +3,7 @@ set -o errexit
 set -o nounset
 ################################################################
 # Program: ngseasy_fastqc
-# Version 1.0 
+# Version 1.0-r001 
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
 ###########################################################################################
 #
@@ -59,7 +59,7 @@ NGSEASY_STEP=""
 ########################################################################################################
 ## Set version and run date
 ########################################################################################################
-NGSEASYVERSION="1.0"
+NGSEASYVERSION="1.0-r001"
 RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_fastqc"
 
@@ -107,7 +107,7 @@ function logger_ngseasy() {
 function ngseasy_fastqc_usage() {
     echo "
 Program: ngseasy_fastqc
-Version 1.0
+Version 1.0-r001
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
 usage:   ngseasy_fastqc -c <config_file> -d <project_directory>
