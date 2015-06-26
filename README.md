@@ -390,6 +390,25 @@ We provide an Amazon EBS data volume with indexed genomes: XXXXXX
 | compbio/ngseasy-platypus | 1.0-r001 | platypus (0.8.1) | Variant Caller | [link](https://github.com/andyrimmer/Platypus) |
 | compbio/ngseasy-freebayes | 1.0-r001 | freebayes (v0.9.21-19-gc003c1e) | Variant Caller | [link](https://github.com/ekg/freebayes) |
 
+## Running an NGSeasy Tool Interactively
+
+Run as non-root user `pipeman`.
+
+`-v /media/Data:/home/pipeman` : Mounts local directory `/media/Data` to container directory `/home/pipeman`
+
+```bash
+TOOL="bwa"
+
+docker run \
+-P \
+-w /home/pipeman \
+-e HOME=/home/pipeman \
+-e USER=pipeman \
+--user pipeman \
+-v /media/Data:/home/pipeman \
+-it compbio/ngseasy-${TOOL}:1.0 /bin/bash
+```
+
 ************
 
 Dockerised NGSeasy
