@@ -360,6 +360,36 @@ for base quality score recalibration.
 All NGSeasy Docker images can be pulled down from **[compbio Docker Hub](https://hub.docker.com/u/compbio/)** or using the Makefile.  
 We provide an Amazon EBS data volume with indexed genomes: XXXXXX  
 
+
+## Table 1. NGSeasy Tools
+
+| Docker Image | Version | NGS Tool (version) | Short Description | URL |
+|--------------|---------|--------------------|-------------------|-----|
+| compbio/ngseasy-base | 1.0-r001 | VCFtools (v0.1.12b) | manipulate vcf | [link](http://vcftools.sourceforge.net/) |
+| - | - | vt (latest) |  manipulate vcf | [link](http://genome.sph.umich.edu/wiki/Vt) |
+| - | - | bcftools (1.2-5-g7fa0d25) |  manipulate vcf | [link](https://github.com/samtools/bcftools) |
+| - | - | vcflib (v1.0.0) |  manipulate vcf | [link](https://github.com/ekg/vcflib) |
+| - | - | samtools (1.2-17-ge91985a) |  manipulate sam/bam | [link](https://github.com/samtools/) |
+| - | - | samblaster (0.1.21) |  manipulate sam/bam | [link](https://github.com/GregoryFaust/samblaster) |
+| - | - | sambamba (v0.5.1)|  manipulate sam/bam | [link](https://github.com/lomereiter/sambamba) |
+| - | - | bamUtil (1.0.13)|  manipulate sam/bam | [link](https://github.com/statgen/bamUtil) |
+| - | - | bedtools (v2.23.0-10-g447cb97)|  manipulate bed files| [link](https://github.com/arq5x/bedtools2) |
+| - | - | seqtk (1.0-r77-dirty)|  manipulate fastq| [link](https://github.com/lh3/seqtk) |
+| - | - | vawk (0.0.2)|  manipulate vcf| [link](https://github.com/cc2qe/vawk) |
+| - | - | bioawk (latest)|  manipulate sam/bam/vcf | [link](https://github.com/lh3/bioawk) |
+| compbio/ngseasy-fastqc | 1.0-r001 | fastqc (v0.11.2) | FASTQ Quality Control Plots| [link](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) |
+| compbio/ngseasy-trimmomatic | 1.0-r001 | trimmomatic (0.32) | FASTQ Quality Trimming | [link](http://www.usadellab.org/cms/index.php?page=trimmomatic) |
+| compbio/ngseasy-bwa | 1.0-r001 | bwa ( 0.7.12-r1039) | Aligner | [link](http://bio-bwa.sourceforge.net/) |
+| compbio/ngseasy-stampy | 1.0-r001 | stampy (stampy-1.0.27) | Aligner | [link](http://www.well.ox.ac.uk/project-stampy) |
+| compbio/ngseasy-snap | 1.0-r001 | snap-aligner (1.0beta.18) | Aligner | [link](http://snap.cs.berkeley.edu/) |
+| compbio/ngseasy-bowtie2 | 1.0-r001 | bowtie2 (2.2.4) | Aligner | [link](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) |
+| compbio/ngseasy-novoalign | 1.0-r001 | novoalign (3.02.13) | Aligner | [link](http://www.novocraft.com/products/novoalign/) |
+| compbio/ngseasy-gatk | 1.0-r001 | gatk (3.4-0) | NGS PowerTools | [link](https://www.broadinstitute.org/gatk/) |
+| compbio/ngseasy-picardtools | 1.0-r001 | picardtools (1.128) | NGS PowerTools | [link](http://broadinstitute.github.io/picard/) |
+| compbio/ngseasy-glia | 1.0-r001| glia (latest) | NGS local realignment | [link](https://github.com/ekg/glia) |
+| compbio/ngseasy-platypus | 1.0-r001 | platypus (0.8.1) | Variant Caller | [link](https://github.com/andyrimmer/Platypus) |
+| compbio/ngseasy-freebayes | 1.0-r001 | freebayes (v0.9.21-19-gc003c1e) | Variant Caller | [link](https://github.com/ekg/freebayes) |
+
 ************
 
 Dockerised NGSeasy
