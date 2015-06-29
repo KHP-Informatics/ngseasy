@@ -3,7 +3,7 @@
 #------------------------------------------------#
 
 # Base image
-FROM compbio/ngseasy-base:1.0
+FROM compbio/ngseasy-base:1.0-r001
 
 # Maintainer 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
@@ -27,18 +27,18 @@ RUN mkdir /usr/local/pipeline/bcbio  && \
   cp -v bcbio.variation-0.2.4-standalone.jar /usr/local/bin/ && \
   ln -s /usr/local/bin/bcbio.variation-0.2.4-standalone.jar /usr/local/bin/bcbio.variation.standalone.jar
 
-
 ## get dev version of bcbio.variation.recall
 # April 2015 bcbio.variation.recall 0.1.2
 
 RUN cd /usr/local/pipeline/ && \
 	wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein && \
 	mv -v lein /usr/local/bin && \
-	chmod a+x /usr/local/bin/lein && \
-	git clone --recursive https://github.com/chapmanb/bcbio.variation.recall.git && \
-	cd bcbio.variation.recall && \
-	make all && \
-	cp -v bin/bcbio-variation-recall /usr/local/bin
+	chmod a+x /usr/local/bin/lein 
+#&& \
+#	git clone --recursive https://github.com/chapmanb/bcbio.variation.recall.git && \
+#	cd bcbio.variation.recall && \
+#	make all && \
+#	cp -v bin/bcbio-variation-recall /usr/local/bin
 
 ADD fix_ambiguous /usr/local/bin/
 
