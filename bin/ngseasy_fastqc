@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -o errexit
-set -o nounset
+
 ################################################################
 # Program: ngseasy_fastqc
 # Version 1.0-r001
