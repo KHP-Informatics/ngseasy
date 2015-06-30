@@ -2,6 +2,9 @@
 
 NGSeasy (beta)
 ===================
+
+### NGSeasy is under heavy re-dev, some things may be broken - bear with us please
+
 ****************
 ## [A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box]
 ****************
@@ -17,7 +20,7 @@ _This is the latest dev project: undergoing massive re-dev , links may be broken
 **Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
 
 - **NGSeasy-1.0 Full Production release will be available Late 2015**  
-- **NGSeasy-1.0 (dirty_tango) contains most of the core fucntionality to go from raw fastq to raw vcf calls**
+- **NGSeasy-1.0-r001 (dirty_tango) contains most of the core functionality to go from raw fastq to raw vcf calls**
 - **NGSeasy will update every 12 months**
 - **GUI in development**
 
