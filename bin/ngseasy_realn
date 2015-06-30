@@ -285,40 +285,42 @@ then
 fi
 logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
-
-
+########################################################################################################
 ## read config_file
-#
+#########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER]"  ${LOGFILE}
+
+########################################################################################################
 # copy config settings to dir
+########################################################################################################
 echo -e "$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER" >> ${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}/config_files/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}.config
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR
-#
+########################################################################################################
 SOUT="${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}"
 logger_ngseasy "[${NGSEASY_STEP}]:Sample Directory [${SOUT}] "
 
 ########################################################################################################
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
-#
+########################################################################################################
 DOCKERHOME="/home/pipeman/ngs_projects"
 logger_ngseasy "[${NGSEASY_STEP}]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
 
 ########################################################################################################
 ## Docker OUTPUT SAMPLE DIR
-#
+########################################################################################################
 SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
 logger_ngseasy "[${NGSEASY_STEP}]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
 
 ########################################################################################################
 ## check local dir exists
-#
+########################################################################################################
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
   logger_ngseasy "[${NGSEASY_STEP}]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
@@ -329,7 +331,7 @@ fi
 
 ########################################################################################################
 ## Select Genome Build and files
-#
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:Checking genome selected"  ${LOGFILE}
 
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
