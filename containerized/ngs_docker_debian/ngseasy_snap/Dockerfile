@@ -1,5 +1,5 @@
 # Base image
-FROM compbio/ngseasy-base:1.0
+FROM compbio/ngseasy-base:1.0-r001
 
 # Maintainer 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
@@ -17,7 +17,7 @@ RUN cd /usr/local/pipeline && \
 	chmod -R 777 snap && \	
 	cd snap && \
 	make && \
-	cp snap /usr/local/bin 
+	cp -v snap* /usr/local/bin 
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
