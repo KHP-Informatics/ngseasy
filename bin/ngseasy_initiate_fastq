@@ -106,8 +106,8 @@ Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 usage:   ngseasy_initiate_fastq -c <config_file> -d <project_directory>
 
 options: -h  show this message
-   -c   Config pipeline file
-   -d   Base directory for [ngs_projects](fastq_raw, run_logs, config_files)
+         -c   Config pipeline file
+         -d   Base directory for [ngs_projects](fastq_raw, run_logs, config_files)
 
 ngseasy_initiate_fastq moves fastq files from raw_fastq stagging are to sample directory
 "
