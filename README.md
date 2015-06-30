@@ -10,7 +10,7 @@ NGSeasy (beta)
 ****************
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**  
 
-**Authors:** Stephen J Newhouse, Amos Folarin , Maximilian Kerz  
+**Authors:** Stephen J Newhouse and Amos Folarin
 **Release Version:** **1.0-r001**  
 **Release:** dirty_tango  
 **Publication:** _pending_  
