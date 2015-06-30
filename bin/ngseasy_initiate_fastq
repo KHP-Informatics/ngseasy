@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -o errexit
-set -o nounset
+
 ################################################################
 # Program: ngseasy_initiate_fastq
 # Version 1.0-r001
@@ -24,13 +24,6 @@ set -o nounset
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #
 ###########################################################################################
-
-###########################################################################################
-## test if docker is intsalled and exit if not
-###########################################################################################
-command -v docker >/dev/null 2>&1 || { echo -e "Docker (https://docs.docker.com/installation) not installed.\nAborting." >&2; exit 1; }
-DOCKERVERSION=`docker version`
-echo -e "Docker Installed:\n\n${DOCKERVERSION}\n\n"
 
 ###########################################################################################
 # clear stuff up
