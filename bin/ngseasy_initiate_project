@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -o errexit
-
 ################################################################
 # Program: ngseasy_initiate_project
 # Version 1.0-r001

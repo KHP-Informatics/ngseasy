@@ -121,19 +121,6 @@ ngseasy_fastqc sets up the NGSeasy docker fastqc container compbio/ngseasy-fastq
 This is is optomised for PE data, and calls 2 threads as default to process the 2 PE .fastq file simultaneously.
 "
 }
-
-###########################################################################################
-## Check options passed in.
-###########################################################################################
-
-if [[ -z "$config_tsv" ]]; then
-    echo -e "ERROR: No options were passed. Exiting"
-    sleep 1s
-	ngseasy_fastqc_usage
-	sleep 1s
-	exit 1
-fi
-
 ########################################################################################################
 ## get options for command line args
 ########################################################################################################
@@ -155,7 +142,17 @@ fi
 	  ;;
       esac
   done
+###########################################################################################
+## Check options passed in.
+###########################################################################################
 
+if [[ -z "$config_tsv" ]]; then
+    echo -e "ERROR: No options were passed. Exiting"
+    sleep 1s
+    ngseasy_fastqc_usage
+    sleep 1s
+    exit 1
+fi
 ########################################################################################################
 ## check config file exists.
 ########################################################################################################
