@@ -127,7 +127,7 @@ done
 ###########################################################################################
 
 if [[ -z "$config_tsv" ]]; then
-    echo -e "ERROR: No options were passed. Exiting"
+    echo -e "\nERROR: No options were passed. Exiting"
     sleep 1s
 	usage_ngseasy
 	sleep 1s
