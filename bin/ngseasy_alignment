@@ -84,15 +84,6 @@ echo -e "#######################################################################
 command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
 
 ########################################################################################################
-## test if images are intsalled and exit if not
-########################################################################################################
-docker images | grep ngseasy-bwa 2>&1 || { echo "compbio/ngseasy-bwa:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
-docker images | grep ngseasy-stampy 2>&1 || { echo "compbio/ngseasy-stampy:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
-docker images | grep ngseasy-picardtools 2>&1 || { echo "compbio/ngseasy-picardtools:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
-docker images | grep ngseasy-snap 2>&1 || { echo "compbio/ngseasy-snap:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
-docker images | grep ngseasy-bowtie2 2>&1 || { echo "compbio/ngseasy-bowtie2:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
-
-########################################################################################################
 ## docker run command
 ########################################################################################################
 DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
@@ -445,6 +436,7 @@ elif [[ "${ALIGNER}" == "no-align" ]]; then
 ## BWA
 ########################################################################################################
 elif [[ "${ALIGNER}" == "bwa" ]]; then
+    docker images | grep ngseasy-bwa 2>&1 || { echo "compbio/ngseasy-bwa:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
     logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}
 # align wih bwa
   time ${DOCKER_RUN} \
@@ -489,8 +481,8 @@ logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}
 ## novoalign
 ########################################################################################################
 elif [[ "${ALIGNER}" == "novoalign" ]]; then
-
-  logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}
+    docker images | grep ngseasy-novoalign 2>&1 || { echo "compbio/ngseasy-novoalign:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+    logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}
 
   time ${DOCKER_RUN} \
   --name alignment_${BAM_PREFIX} \
@@ -542,9 +534,10 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
 ## stampy : bwa the stampy
 ########################################################################################################
 elif [[ "${ALIGNER}" == "stampy" ]]; then
-
-  logger_ngseasy "[${NGSEASY_STEP}]:START Basic ${ALIGNER} Alignment" ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]:Aligning with BWA before running stampy" ${LOGFILE}
+    docker images | grep ngseasy-stampy 2>&1 || { echo "compbio/ngseasy-stampy:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+    docker images | grep ngseasy-bwa 2>&1 || { echo "compbio/ngseasy-bwa:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+    logger_ngseasy "[${NGSEASY_STEP}]:START Basic ${ALIGNER} Alignment" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Aligning with BWA before running stampy" ${LOGFILE}
 
   time ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -657,7 +650,7 @@ BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
 # Bowtie2
 ########################################################################################################
 elif [[ "${ALIGNER}" == "bowtie2" ]]; then
-
+    docker images | grep ngseasy-bowtie2 2>&1 || { echo "compbio/ngseasy-bowtie2:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
 # will provide options for tweaking all option in the future
 FAST="--end-to-end --sensitive"
 SLOW="--local --sensitive-local"
@@ -709,7 +702,7 @@ SLOW="--local --sensitive-local"
 # snap becomes snap-aligner in 1.0beta.18
 #
 elif [[ "${ALIGNER}" == "snap" ]]; then
-
+    docker images | grep ngseasy-snap 2>&1 || { echo "compbio/ngseasy-snap:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
 logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
 
     time ${DOCKER_RUN} \
