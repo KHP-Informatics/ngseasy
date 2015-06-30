@@ -15,7 +15,7 @@ ensemble:
     type: svm
 # Optional names to label the input variant calls
 # If not supplied, default to numbers matched with the VCF inputs (v0, v1)
-names: ['freebayes','platypus','gatk_hc']
+names: ['freebayes','platypus','HaplotypeCaller']
 # Perform prep and pre-cleaning steps. Set to false if inputs are pre-sorted
 # and filtered to save analysis time.
 prep-inputs: true
