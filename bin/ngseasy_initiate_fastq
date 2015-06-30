@@ -322,6 +322,17 @@ DATE=`date +"%d%m%y"`
 ## LOGFILE
 ########################################################################################################
 LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}"
+
+########################################################################################################
+## check and make logfile
+########################################################################################################
+if [ ! -e "${LOGFILE}.log" ]
+then
+  touch ${LOGFILE}.log
+fi
+
+logger_ngseasy "[${NGSEASY_STEP}]:Logging to [${LOGFILE}.log] "
+
 logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## read config_file
@@ -335,17 +346,9 @@ $VERSION\t$NGSUSER]"  ${LOGFILE}
 ########################################################################################################
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
 then
-  mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
+  mkdir -p ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
 fi
 
-########################################################################################################
-## check and make logfile
-########################################################################################################
-if [ ! -e "${LOGFILE}.log" ]
-then
-  touch ${LOGFILE}.log
-fi
-  logger_ngseasy "[${NGSEASY_STEP}]:Logging to [${LOGFILE}.log] "
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR
