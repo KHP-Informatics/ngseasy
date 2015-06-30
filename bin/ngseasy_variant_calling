@@ -92,7 +92,7 @@ command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not ins
 docker images | grep ngseasy-freebayes 2>&1 || { echo "compbio/ngseasy-freebayes:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
 docker images | grep ngseasy-platypus 2>&1 || { echo "compbio/ngseasy-platypus:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
 docker images | grep ngseasy-base 2>&1 || { echo "compbio/ngseasy-base:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
-#docker images | grep ngseasy-bcbio-variation 2>&1 || { echo "compbio/ngseasy-bcbio-variation:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+docker images | grep ngseasy-bcbiovar 2>&1 || { echo "compbio/ngseasy-bcbio-variation:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
 
 ########################################################################################################
 ## docker run command
