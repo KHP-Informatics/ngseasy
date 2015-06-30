@@ -2,7 +2,7 @@
 
 ################################################################
 # Program: ngseasy_bsqr
-# Version 1.0-r001 
+# Version 1.0-r001
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 #################################################################
 echo -e "\n################################################################"
@@ -116,21 +116,21 @@ fi
     ngseasy_bsqr_usage #print help
     exit 0
     ;;
-    
+
     c)
     config_tsv=${OPTARG}
     ;;
 
     d)
     project_directory=${OPTARG}
-    ;; 
+    ;;
       esac
   done
 
-########################################################################################################  
+########################################################################################################
 ## check config file exists.
 #
-if [[ ! -e "${config_tsv}" ]] 
+if [[ ! -e "${config_tsv}" ]]
 then
       logger_ngseasy "[${NGSEASY_STEP}]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
       ngseasy_bsqr_usage;
@@ -159,19 +159,19 @@ logger_ngseasy "[${NGSEASY_STEP}]:Checking number of feilds in  [${config_tsv}] 
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
-if [[  "$numcols" -lt 23 ]] 
+if [[  "$numcols" -lt 23 ]]
 then
       logger_ngseasy "[${NGSEASY_STEP}]:ERROR: [${config_tsv}] format issue. Check your file! "
       exit 1;
-  else 
-      logger_ngseasy "[${NGSEASY_STEP}]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "     
+  else
+      logger_ngseasy "[${NGSEASY_STEP}]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "
 fi
 
 
 ########################################################################################################
-## Read config file 
+## Read config file
 
-## check ${config_tsv}. is this a batch file or the orginal config file 
+## check ${config_tsv}. is this a batch file or the orginal config file
 #
 logger_ngseasy "[${NGSEASY_STEP}]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
@@ -234,7 +234,7 @@ KNOWN_SNPS_1000G=""
 KNOWN_SNPS_OMNI=""
 KNOWN_SNPS_b138=""
 ###################
-## get options  
+## get options
 PROJECT_ID=$f1;
 SAMPLE_ID=$f2;
 FASTQ1=$f3;
@@ -248,8 +248,8 @@ CAPTURE=$f10;
 GENOMEBUILD=$f11;
 FASTQC=$f12;
 TRIM=$f13;
-BSQR=$f14;
-REALN=$f15;
+REALN=$f14;
+BSQR=$f15;
 ALIGNER=$f16;
 VARCALLER=$f17;
 CNV=$f18;
@@ -261,7 +261,7 @@ NGSUSER=$f23;
 DATE=`date +"%d%m%y"`
 
 ########################################################################################################
-## LOGFILE 
+## LOGFILE
 #
 
 ## check and make log directory
@@ -271,7 +271,7 @@ then
   mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
 fi
 
-## LOGFILE 
+## LOGFILE
 #
 LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}"
 logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
@@ -295,7 +295,7 @@ $VERSION\t$NGSUSER" >> ${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}/config_files/${
 
 
 ########################################################################################################
-## OUTPUT SAMPLE DIR 
+## OUTPUT SAMPLE DIR
 #
 SOUT="${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}"
 logger_ngseasy "[${NGSEASY_STEP}]:Sample Directory [${SOUT}] "
@@ -307,7 +307,7 @@ DOCKERHOME="/home/pipeman/ngs_projects"
 logger_ngseasy "[${NGSEASY_STEP}]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
 
 ########################################################################################################
-## Docker OUTPUT SAMPLE DIR 
+## Docker OUTPUT SAMPLE DIR
 #
 SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
@@ -320,7 +320,7 @@ if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
   logger_ngseasy "[${NGSEASY_STEP}]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
   exit 1
-else 
+else
   logger_ngseasy "[${NGSEASY_STEP}]: Setting OUTPUT directory to [${SOUT}]" ${LOGFILE}
 fi
 
@@ -354,7 +354,7 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
   KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.b37.vcf"
   KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.b37.vcf"
   KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.b37.vcf"
-  
+
   logger_ngseasy "[${NGSEASY_STEP}]:KNOWN_INDELS [${KNOWN_INDELS}]"  ${LOGFILE}
 
 ## HG19
@@ -405,7 +405,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGF
 #
 
 if [[ "${BSQR}" == "no-bsqr" ]]; then
-  
+
   # Skip if set to skip
   logger_ngseasy "[${NGSEASY_STEP}]:Skipping Base quality score recalibration. BSQR set to [${BSQR}] " ${LOGFILE}
   sleep 1s
@@ -428,12 +428,12 @@ elif [[ "${BSQR}" == "bam-bsqr" ]]; then
 # names
     logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM INPUT [${BAMIN}] " ${LOGFILE}
     logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM OUTPUT [${BAMOUT}] " ${LOGFILE}
-# use dupemk if files dont 
+# use dupemk if files dont
   elif [[ -e "${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam" ]]; then
 
     logger_ngseasy "[${NGSEASY_STEP}]:Can not find [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-realn.bam] " ${LOGFILE}
     logger_ngseasy "[${NGSEASY_STEP}]:Using [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam]" ${LOGFILE}
-    
+
     BAMIN="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam"
     BAMOUT="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam-bsqr.bam"
     BAMOUTi="${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam-bsqr.bam"
@@ -473,17 +473,17 @@ if [[ ! -e "${BAMOUTi}" ]]; then
   rm -rf ${SOUTDocker}/tmp/*"
   wait
   sleep 1s
-## log docker run 
+## log docker run
 #
  docker logs bam_recab_${BAM_PREFIX} >> ${LOGFILE}.log
- docker rm -f bam_recab_${BAM_PREFIX}  
+ docker rm -f bam_recab_${BAM_PREFIX}
 else
    logger_ngseasy "[${NGSEASY_STEP}]:Already run bam recab..Skipping" ${LOGFILE}
    sleep 1s
 fi
 
 ########################################################################################################
-## GATK 
+## GATK
 elif [[ "${BSQR}" == "gatk-bsqr" ]]; then
 
     logger_ngseasy "[${NGSEASY_STEP}]:START Base quality score recalibration using GATK" ${LOGFILE}
@@ -504,7 +504,7 @@ elif [[ "${BSQR}" == "gatk-bsqr" ]]; then
 
     logger_ngseasy "[${NGSEASY_STEP}]:Can not find [${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-realn.bam] " ${LOGFILE}
     logger_ngseasy "[${NGSEASY_STEP}]:Using [${SOUT}/alignments/${BAM_PREFIX}.dupemk.bam]" ${LOGFILE}
-    
+
     BAMIN="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam"
     BAMOUT="${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.gatk-bsqr.bam"
     BAMOUTi="${SOUT}/alignments/${BAM_PREFIX}.dupemk.gatk-bsqr.bam"
@@ -561,10 +561,10 @@ if [[ ! -e "${BAMOUTi}" ]]; then
   rm -fr ${SOUTDocker}/tmp/*"
   wait
   sleep 1s
-## log docker run 
+## log docker run
 #
  docker logs gatk_recab_${BAM_PREFIX} >> ${LOGFILE}.log
- docker rm -f gatk_recab_${BAM_PREFIX} 
+ docker rm -f gatk_recab_${BAM_PREFIX}
 
 else
    logger_ngseasy "[${NGSEASY_STEP}]:Already run GATK BSQR..Skipping" ${LOGFILE}
@@ -578,7 +578,7 @@ else
   exit 1
 fi
 
-######################################################################################################## 
+########################################################################################################
 ## permissions
 #
 chmod -R 777 ${SOUT}/*

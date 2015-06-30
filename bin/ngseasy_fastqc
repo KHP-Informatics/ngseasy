@@ -3,7 +3,7 @@ set -o errexit
 set -o nounset
 ################################################################
 # Program: ngseasy_fastqc
-# Version 1.0-r001 
+# Version 1.0-r001
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
 ###########################################################################################
 #
@@ -122,14 +122,16 @@ This is is optomised for PE data, and calls 2 threads as default to process the 
 "
 }
 
-########################################################################################################
+###########################################################################################
 ## Check options passed in.
-########################################################################################################
-if test -z "$2"
-then
-  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:No options found"
-  ngseasy_fastqc_usage
-  exit 1
+###########################################################################################
+
+if [[ -z "$config_tsv" ]]; then
+    echo -e "ERROR: No options were passed. Exiting"
+    sleep 1s
+	ngseasy_fastqc_usage
+	sleep 1s
+	exit 1
 fi
 
 ########################################################################################################
@@ -143,21 +145,21 @@ fi
 	  ngseasy_fastqc_usage #print help
 	  exit 0
 	  ;;
-	  
+
 	  c)
 	  config_tsv=${OPTARG}
 	  ;;
 
 	  d)
 	  project_directory=${OPTARG}
-	  ;; 
+	  ;;
       esac
   done
 
-########################################################################################################  
+########################################################################################################
 ## check config file exists.
 ########################################################################################################
-if [[ ! -e "${config_tsv}" ]] 
+if [[ ! -e "${config_tsv}" ]]
 then
 	    logger_ngseasy "[${NGSEASY_STEP}]:ERROR : [${config_tsv}] does not exist....exiting "
 	    ngseasy_fastqc_usage;
@@ -190,19 +192,19 @@ logger_ngseasy "[${NGSEASY_STEP}]:Checking number of feilds in  [${config_tsv}] 
 
 numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
 
-if [[  "$numcols" -lt 23 ]] 
+if [[  "$numcols" -lt 23 ]]
 then
 	    logger_ngseasy "[${NGSEASY_STEP}]:ERROR: [${config_tsv}] format issue. Check your file! "
 	    exit 1;
-	else 
-	    logger_ngseasy "[${NGSEASY_STEP}]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "	    
+	else
+	    logger_ngseasy "[${NGSEASY_STEP}]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "
 fi
 
 
 ###########################################################################################
-## Read config file 
+## Read config file
 ###########################################################################################
-## check ${config_tsv}. is this a batch file or the orginal config file 
+## check ${config_tsv}. is this a batch file or the orginal config file
 #
 logger_ngseasy "[${NGSEASY_STEP}]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
 
@@ -244,8 +246,8 @@ CAPTURE=$f10
 GENOMEBUILD=$f11
 FASTQC=$f12
 TRIM=$f13
-BSQR=$f14
-REALN=$f15
+REALN=$f14
+BSQR=$f15
 ALIGNER=$f16
 VARCALLER=$f17
 CNV=$f18
@@ -257,7 +259,7 @@ NGSUSER=$f23
 DATE=`date +"%d%m%y"`
 
 ###########################################################################################
-## LOGFILE 
+## LOGFILE
 ###########################################################################################
 LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_fastqc"
 logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
@@ -305,7 +307,7 @@ fi
 
 
 ###########################################################################################
-## OUTPUT SAMPLE DIR 
+## OUTPUT SAMPLE DIR
 ############################################################################################
 SOUT=${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}
 
@@ -318,7 +320,7 @@ if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
 	logger_ngseasy "[${NGSEASY_STEP}]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
 	exit 1
-else 
+else
 	logger_ngseasy "[${NGSEASY_STEP}]: Setting OUTPUT directory to [${SOUT}]" ${LOGFILE}
 fi
 
@@ -343,7 +345,7 @@ fi
 
 logger_ngseasy "[${NGSEASY_STEP}]: Checking Fastq file naming conventions" ${LOGFILE}
 
-if [[ "${FASTQ1}" == *_1.fastq.gz ]] 
+if [[ "${FASTQ1}" == *_1.fastq.gz ]]
 then
 
 	rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _1.fastq.gz`
@@ -355,7 +357,7 @@ then
 	FQ1=${rawFASTQ1}_${fq1_suffix}
 	FQ2=${rawFASTQ2}_${fq2_suffix}
 
-elif [[ "${FASTQ1}" == *_R1.fastq.gz ]] 
+elif [[ "${FASTQ1}" == *_R1.fastq.gz ]]
 then
 
 	rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _R1.fastq.gz`
@@ -367,70 +369,70 @@ then
 	FQ1=${rawFASTQ1}_${fq1_suffix}
 	FQ2=${rawFASTQ2}_${fq2_suffix}
 
-elif [[ "${FASTQ1}" == *_1.fq.gz ]] 
+elif [[ "${FASTQ1}" == *_1.fq.gz ]]
 then
 
 	rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _1.fq.gz`
 	rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _2.fq.gz`
 
 	fq1_suffix="1.fq.gz"
-	fq2_suffix="2.fq.gz"  
+	fq2_suffix="2.fq.gz"
 
 	FQ1=${rawFASTQ1}_${fq1_suffix}
 	FQ2=${rawFASTQ2}_${fq2_suffix}
 
-elif [[ "${FASTQ1}" == *_R1.fq.gz ]] 
+elif [[ "${FASTQ1}" == *_R1.fq.gz ]]
 then
 
 	rawFASTQ1=`basename ${SOUT}/fastq/${FASTQ1} _R1.fq.gz`
 	rawFASTQ2=`basename ${SOUT}/fastq/${FASTQ2} _R2.fq.gz`
 
 	fq1_suffix="R1.fq.gz"
-	fq2_suffix="R2.fq.gz"  
+	fq2_suffix="R2.fq.gz"
 
 	FQ1=${rawFASTQ1}_${fq1_suffix}
 	FQ2=${rawFASTQ2}_${fq2_suffix}
 
-elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9].fastq.gz ]] 
+elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9].fastq.gz ]]
 then
 
 	logger_ngseasy "[${NGSEASY_STEP}]:Illumina fastq naming scheme"
-	
+
 	illprefix1=`basename ${SOUT}/fastq/${FASTQ1} .fastq.gz`
 	illprefix2=`basename ${SOUT}/fastq/${FASTQ2} .fastq.gz`
-	
+
 	FQ1=${FASTQ1}
 	FQ2=${FASTQ2}
 
-elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9][0-9].fastq.gz ]] 
+elif [[ "${FASTQ1}" == *_L*_R1_[0-9][0-9][0-9][0-9].fastq.gz ]]
 then
 
 	logger_ngseasy "[${NGSEASY_STEP}]:Illumina fastq naming scheme"
-	
+
 	illprefix1=`basename ${SOUT}/fastq/${FASTQ1} .fastq.gz`
 	illprefix2=`basename ${SOUT}/fastq/${FASTQ2} .fastq.gz`
-	
+
 	FQ1=${FASTQ1}
 	FQ2=${FASTQ2}
 
 else
 
-	logger_ngseasy "[${NGSEASY_STEP}]: Fastq naming format not recognised for files [$FASTQ1] [$FASTQ2]" ${LOGFILE} 
+	logger_ngseasy "[${NGSEASY_STEP}]: Fastq naming format not recognised for files [$FASTQ1] [$FASTQ2]" ${LOGFILE}
 	logger_ngseasy "[${NGSEASY_STEP}]: This should be one of [_1.fastq.gz] [_1.fq.gz] [_R1.fastq.gz] [_R1.fq.gz]" ${LOGFILE}
 	logger_ngseasy "[${NGSEASY_STEP}]: or one of Illuminas stoopid names eg [_R1_001.fastq.gz]" ${LOGFILE}
 	exit 1
-fi        
+fi
 
 	logger_ngseasy "[${NGSEASY_STEP}]: FQ1 [${FQ1}]" ${LOGFILE}
 	logger_ngseasy "[${NGSEASY_STEP}]: FQ2 [${FQ2}]" ${LOGFILE}
-	sleep 2s 
-	
+	sleep 2s
+
 ###########################################################################################
 ## FASTQC
 ###########################################################################################
 
 ###########################################################################################
-## check if qc'd data alread exists 
+## check if qc'd data alread exists
 ###########################################################################################
 fqout1="${SOUT}/fastq/${rawFASTQ1}_1_fastqc.html"
 fqout2="${SOUT}/fastq/${rawFASTQ2}_2_fastqc.html"
@@ -456,7 +458,7 @@ elif [[ "$FASTQC" == "qc-fastqc" ]]; then
 DOCKERHOME="/home/pipeman/ngs_projects"
 
 ########################################################################################################
-## Docker OUTPUT SAMPLE DIR 
+## Docker OUTPUT SAMPLE DIR
 ###########################################################################################
 SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
 
@@ -470,7 +472,7 @@ BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TR
 ###########################################################################################
 ## Docker run compbio/ngseasy-fastqc
 ###########################################################################################
-## call docker: run as -d in background (-d does not work with --rm=true). 
+## call docker: run as -d in background (-d does not work with --rm=true).
 ## This runs all containers in background..simultaneuously!
 #
 logger_ngseasy "[${NGSEASY_STEP}]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/pipeman/ngs_projects -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman --name fastqc_${BAM_PREFIX} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${FQ1} ${SOUTDocker}/fastq/${FQ2}" ${LOGFILE}
