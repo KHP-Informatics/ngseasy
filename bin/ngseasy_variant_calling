@@ -305,17 +305,19 @@ then
   mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
 fi
 
+########################################################################################################
 ## LOGFILE
-#
+########################################################################################################
 LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}"
-logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
+########################################################################################################
 ## check and make logfile
-#
+########################################################################################################
 if [ ! -e "${LOGFILE}.log" ]
 then
   touch ${LOGFILE}.log
 fi
+logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## read config_file
 #

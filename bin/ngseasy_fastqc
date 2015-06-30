@@ -259,6 +259,15 @@ DATE=`date +"%d%m%y"`
 ## LOGFILE
 ###########################################################################################
 LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.ngseasy_fastqc"
+
+########################################################################################################
+## check and make logfile
+########################################################################################################
+if [ ! -e "${LOGFILE}.log" ]
+then
+  touch ${LOGFILE}.log
+fi
+
 logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
 ## read config_file
@@ -272,14 +281,6 @@ $VERSION\t$NGSUSER]"  ${LOGFILE}
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
 then
 	mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
-fi
-
-###########################################################################################
-## check and make logfile
-###########################################################################################
-if [ ! -e "${LOGFILE}.log" ]
-then
-	touch ${LOGFILE}.log
 fi
 
 ###########################################################################################
