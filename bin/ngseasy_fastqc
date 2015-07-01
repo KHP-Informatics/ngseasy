@@ -63,7 +63,7 @@ NGSEASYVERSION="1.0-r001"
 RUNDATE=`date +"%d%m%y"`
 NGSEASY_STEP="ngseasy_fastqc"
 
-echo -e "\n################################################################"
+echo -e "\n###########################################################################################"
 echo -e "# Program: ${NGSEASY_STEP}"
 echo -e "# Version ${NGSEASYVERSION}"
 echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
