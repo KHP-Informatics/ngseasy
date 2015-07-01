@@ -1,6 +1,6 @@
 ################################################################
 ## ngseasy Makefile
-## Version 1.0 
+## Version 1.0
 ## Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 ################################################################
 ## Usage
@@ -55,11 +55,11 @@ install:
 	cp -rv $(SRC)/* $(TARGET_BIN)/
 
 ## fix permissions. run - sudo make NGSUSER="ec2-user" fixuser
-fixuser: 
+fixuser:
 	chown $(NGSUSER):$(NGSUSER) $(INSTALLDIR)
 
 uninstall:
-	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy 
+	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy
 
 updatescripts:
 	git pull && rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy && chmod -R 775 $(SRC)/ && cp -v $(SRC)/ngseasy* $(TARGET_BIN)/
@@ -68,22 +68,22 @@ update:
 	git pull
 
 ## Make Top level project directories
-ngsprojectdir: 
+ngsprojectdir:
 	@echo "Make Top level project directories"
 	mkdir -v -p $(INSTALLDIR)/ngs_projects && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/raw_fastq && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/config_files && \
 	mkdir -v -p $(INSTALLDIR)/ngs_projects/run_logs && \
-	mkdir -v -p $(INSTALLDIR)/ngs_resources && \
+	mkdir -v -p $(INSTALLDIR)/ngs_projects/ngseasy_resources && \
 	mkdir -v -p $(HOME)/ngseasy_logs && \
 	mkdir -v -p $(HOME)/ngseasy_tmp
 
-purgengsprojectsdir: 
+purgengsprojectsdir:
 	rm -rfv $(INSTALLDIR)/ngs_projects
 
-## Get all docker images 
+## Get all docker images
 
-dockerimages:	
+dockerimages:
 	@echo "Get all NGSeasy docker images"
 	docker pull compbio/ngseasy-base:$(VERSION) && \
 	docker pull compbio/ngseasy-fastqc:$(VERSION) && \
@@ -121,10 +121,10 @@ bowtie2: baseimage
 
 snap: baseimage
 	docker pull compbio/ngseasy-snap:$(VERSION)
-	
+
 stampy: bwa baseimage
 	docker pull compbio/ngseasy-stampy:$(VERSION)
-	
+
 picardtools: baseimage
 	docker pull compbio/ngseasy-picardtools:$(VERSION)
 
@@ -158,11 +158,11 @@ slope: baseimage
 glia: baseimage
 	docker pull compbio/ngseasy-glia:$(VERSION)
 
-# b37 Genomes indexed and resources	
+# b37 Genomes indexed and resources
 
-b37:	
-	@echo "Get b37 Genomes indexed and resources" 
-	cd $(INSTALLDIR)/ngs_resources && \
+b37:
+	@echo "Get b37 Genomes indexed and resources"
+	cd $(INSTALLDIR)/ngs_projects/ngs_resources && \
 	mkdir -p reference_genomes_b37 && \
 	cd $(INSTALLDIR)/ngs_resources/reference_genomes_b37 && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_omni2.5.b37.vcf && \
@@ -224,10 +224,10 @@ b37:
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/nexterarapidcapture_expandedexome_targetedregions.bed && \
 	chmod -R 775 $(INSTALLDIR)/ngs_resources/reference_genomes_b37/
 
-# hg19 Genomes idexed and resources	
+# hg19 Genomes idexed and resources
 
-hg19:	
-	@echo "Get hg19 Genomes indexed and resources" 
+hg19:
+	@echo "Get hg19 Genomes indexed and resources"
 	cd $(INSTALLDIR)/ngs_resources && \
 	mkdir -p reference_genomes_hg19 && \
 	cd $(INSTALLDIR)/ngs_resources/reference_genomes_hg19 && \
@@ -307,7 +307,7 @@ testdata: ngsprojectdir
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/raw_fastq/ && \
 	cd $(INSTALLDIR)/ngs_projects/config_files && \
 	cp -v $(DIR)/test/ngseasy_test.config.tsv $(INSTALLDIR)/ngs_projects/config_files/ && \
-	chmod -R 775 $(INSTALLDIR)/ngs_projects/config_files/ 
+	chmod -R 775 $(INSTALLDIR)/ngs_projects/config_files/
 
 ## Manual Builds
 gatk:
@@ -351,11 +351,11 @@ purgeall:
 	docker rm -f $(shell docker ps -a | awk '(print $$1)') && \
 	docker rmi -f $(shell docker images -a |  grep ngseasy | awk '(print $$3)') && \
 
-purgegenomes: 
+purgegenomes:
 	rm -rfv $(INSTALLDIR)/ngs_resources/reference_genomes_b37 && \
 	rm -rfv $(INSTALLDIR)/ngs_resources/reference_genomes_hg19
 
-############################################################################	
+############################################################################
 ## Make sep chroms
 #chrb37:
 #	cd $(INSTALLDIR)/ngs_projects/reference_genomes_b37 && \
@@ -368,13 +368,3 @@ purgegenomes:
 #	mkdir chroms && \
 #	cd chroms && \
 #	awk 'BEGIN { CHROM="" } { if ($$1~"^>") CHROM=substr($$1,2); print $$0 > CHROM".fasta" }' ${INSTALLDIR}/ngs_projects/reference_genomes_hg19/ucsc.hg19.fasta
-
-
-
-
-
-
-
-
-
-
