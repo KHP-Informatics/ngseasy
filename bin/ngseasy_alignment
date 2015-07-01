@@ -344,7 +344,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:Checking genome selected]"  ${LOGFILE}
 
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
 
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
+  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEINDEX}]"  ${LOGFILE}
@@ -353,7 +353,7 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
 
 elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
 
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
+  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEINDEX}]"  ${LOGFILE}
