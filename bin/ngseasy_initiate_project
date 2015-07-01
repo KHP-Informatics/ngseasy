@@ -245,7 +245,7 @@ wait
 ###########################################################################################
 ## PROJECT_DIR/PROJECT_ID/SAMPLE_ID
 #
-logger_ngseasy "[${NGSEASY_STEP}]:CMD: awk 'NR >1 {print $5"/"$1"/"$2}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/ProjectBySample_list" ${config_run_log}
+logger_ngseasy "[${NGSEASY_STEP}]:making [${HOME}/ngseasy_tmp/ProjectBySample_list]" ${config_run_log}
 
 awk 'NR >1 {print $5"/"$1"/"$2}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/ProjectBySample_list_${NGSEASYVERSION}.${configfile_name}.${RUNDATE}
 
@@ -321,3 +321,4 @@ chmod -R 775 ${project_directory}/
 ###########################################################################################
 rm ${HOME}/ngseasy_tmp/ProjectBySample_list_${NGSEASYVERSION}.${configfile_name}.${RUNDATE}
 rm ${HOME}/ngseasy_tmp/Project_list_${NGSEASYVERSION}.${configfile_name}.${RUNDATE}
+sleep 1s
