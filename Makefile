@@ -16,7 +16,7 @@
 
 ################################################################
 ## Edit this to reflect version if ya need
-VERSION=1.0
+VERSION=1.0-r001
 WHOAMI=$(shell whoami)
 NGSUSER=$(WHOAMI)
 
