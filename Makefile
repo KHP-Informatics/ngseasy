@@ -62,7 +62,7 @@ uninstall:
 	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy 
 
 updatescripts:
-	git pull && rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy && chmod -R 775 $(SRC)/ && cp -v $(SRC)/* $(TARGET_BIN)/
+	git pull && rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy && chmod -R 775 $(SRC)/ && cp -v $(SRC)/ngseasy* $(TARGET_BIN)/
 
 update:
 	git pull
