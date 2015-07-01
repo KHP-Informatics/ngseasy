@@ -3,7 +3,7 @@
 NGSeasy (beta)
 ===================
 
-### NGSeasy is under heavy re-dev, some things may be broken - bear with us please
+### NGSeasy is under heavy re-dev, many things may be broken - bear with us please (come back next week)
 
 ****************
 ## [A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box]
