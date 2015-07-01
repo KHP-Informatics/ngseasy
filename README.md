@@ -24,6 +24,21 @@ _This is the latest dev project: undergoing massive re-dev , links may be broken
 - **NGSeasy will update every 12 months**
 - **GUI in development**
 
+## Author Contact Details
+
+Please contact us for help/guidance on using the beta release.
+
+- Amos Folarin <amosfolarin@gmail.com>  [@amosfolarin](https://twitter.com/amosfolarin?lang=en)
+<a href="http://www.linkedin.com/pub/amos-folarin/34/b06/978">
+<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Amos's profile on LinkedIn">
+</a>
+
+- Stephen J Newhouse <stephen.j.newhouse@gmail.com> [@s_j_newhouse](https://twitter.com/s_j_newhouse?lang=en)  
+<a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">
+<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
+</a>
+
+**Lets us know if you want other tools added to NGSeasy**
 
 ****************
 
@@ -220,24 +235,6 @@ We have adapted the current best practices from the Genome Analysis Toolkit (GAT
 
 As the containers themselves can be run as executables with pre-specified cpu and RAM resources, the orchestration of the pipeline can be placed under the control of conventional load balancers if this mode is required.  
 
-****
-### Author Contact Details
-
-Please contact us for help/guidance on using the beta release.
-
-- Amos Folarin <amosfolarin@gmail.com>  [@amosfolarin](https://twitter.com/amosfolarin?lang=en)
-<a href="http://www.linkedin.com/pub/amos-folarin/34/b06/978">
-<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Amos's profile on LinkedIn">
-</a>
-
-- Stephen J Newhouse <stephen.j.newhouse@gmail.com> [@s_j_newhouse](https://twitter.com/s_j_newhouse?lang=en)  
-<a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">
-<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
-</a>
-
-**Lets us know if you want other tools added to NGSeasy**
-
-*Institution: NIHR Maudsley Biomedical Research Centre For Mental Health and Dementia Unit (Denmark Hill), at The Institute of Psychiatry, Psychology & Neuroscience (IoPPN), Kings College London*
 
 ****************
 
