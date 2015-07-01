@@ -348,7 +348,7 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
   KNOWN_SNPS_OMNI=""
   KNOWN_SNPS_b138=""
 
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_b37"
+  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
   REFFASTA="${REFDIR}/human_g1k_v37.fasta"
   DBSNPb37="${REFDIR}/dbsnp_138.b37.recab"
@@ -375,7 +375,7 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   KNOWN_SNPS_OMNI=""
   KNOWN_SNPS_b138=""
 
-  REFDIR="/home/pipeman/ngs_projects/reference_genomes_hg19"
+  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
   REFFASTA="${REFDIR}/ucsc.hg19.fasta"
   DBSNPhg19="${REFDIR}/dbsnp_138.hg19.recab"
