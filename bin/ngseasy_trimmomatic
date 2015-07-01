@@ -409,7 +409,7 @@ fi
 ########################################################################################################
 # adapter_fa : check of this is in palce and exit if not
 ########################################################################################################
-adapter_fa="/home/pipeman/ngs_resources/reference_genomes_b37/contaminant_list.fa"
+adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37/contaminant_list.fa"
 logger_ngseasy "[${NGSEASY_STEP}]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
 
 ########################################################################################################
