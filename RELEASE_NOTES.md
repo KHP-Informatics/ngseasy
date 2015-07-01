@@ -8,4 +8,11 @@
 - no snp annotations (coming soon)
 - no report generation (coming soon)
 
+### Tested
+
+#### 100bp PE WEX Illumina
+
+- fastq > trimm > bwa > platypus  
+- fastq > trimm > bwa > freebayes  
+
 ## 1.X-rXXX Coming soon
