@@ -162,9 +162,9 @@ glia: baseimage
 
 b37:
 	@echo "Get b37 Genomes indexed and resources"
-	cd $(INSTALLDIR)/ngs_projects/ngs_resources && \
+	cd $(INSTALLDIR)/ngs_projects/ngseasy_resources && \
 	mkdir -p reference_genomes_b37 && \
-	cd $(INSTALLDIR)/ngs_resources/reference_genomes_b37 && \
+	cd $(INSTALLDIR)/ngs_projects/ngseasy_resources/reference_genomes_b37 && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_omni2.5.b37.vcf && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_omni2.5.b37.vcf.idx && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_phase1.indels.b37.vcf && \
@@ -222,15 +222,15 @@ b37:
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/human_g1k_v37_1Kwindows.bed && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/nexterarapidcapture_exome_targetedregions_v1.2.bed && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/nexterarapidcapture_expandedexome_targetedregions.bed && \
-	chmod -R 775 $(INSTALLDIR)/ngs_resources/reference_genomes_b37/
+	chmod -R 775 $(INSTALLDIR)/ngs_projects/ngseasy_resources/reference_genomes_b37/
 
 # hg19 Genomes idexed and resources
 
 hg19:
 	@echo "Get hg19 Genomes indexed and resources"
-	cd $(INSTALLDIR)/ngs_resources && \
+	cd $(INSTALLDIR)/ngs_projects/ngseasy_resources && \
 	mkdir -p reference_genomes_hg19 && \
-	cd $(INSTALLDIR)/ngs_resources/reference_genomes_hg19 && \
+	cd $(INSTALLDIR)/ngs_projects/ngseasy_resources/reference_genomes_hg19 && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/1000G_omni2.5.hg19.sites.vcf && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/1000G_omni2.5.hg19.sites.vcf.idx && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/1000G_phase1.indels.hg19.sites.vcf && \
@@ -289,7 +289,7 @@ hg19:
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ucsc.hg19.rev.2.bt2 && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ucsc.hg19.sthash && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ucsc.hg19.stidx && \
-	chmod -R 775 $(INSTALLDIR)/ngs_resources/reference_genomes_hg19/
+	chmod -R 775 $(INSTALLDIR)/ngs_projects/ngseasy_resources/reference_genomes_hg19/
 
 ##  Test data and stick it in raw_fastq
 
