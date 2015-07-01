@@ -12,7 +12,7 @@
 
 #### 100bp PE WEX Illumina
 
-- fastq > trimm > bwa > platypus  
+- fastq > trimm > bwa > platypus (GCAT Report)[http://www.bioplanet.com/gcat/reports/5293-eueftgkyzr/variant-calls/illumina-100bp-pe-exome-30x/ngseasy-bwamem-trimm-platypus/compare-2318-2299/group-gq] 
 - fastq > trimm > bwa > freebayes  
 
 ## 1.X-rXXX Coming soon
