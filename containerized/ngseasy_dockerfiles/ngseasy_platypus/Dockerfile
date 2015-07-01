@@ -34,7 +34,8 @@ RUN cd /usr/local/pipeline && \
        chmod -R 777 Platypus && \
        cd Platypus && \
        make && \
-       cp -vrf ./* /usr/local/bin
+       chmod -R 777 ./* && \
+       cp -vrf ./bin/* /usr/local/bin
 
 ADD fix_ambiguous /usr/local/bin/
 
