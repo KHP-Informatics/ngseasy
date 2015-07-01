@@ -291,6 +291,8 @@ fi
 ########################################################################################################
 ## Read config and loop through all lines calling mv *fastq to sample/fastq dir
 ########################################################################################################
+logger_ngseasy "[${NGSEASY_STEP}]:Reading RUNFILE [${RUNFILE}]" ${config_run_log}
+
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
 PROJECT_ID=$f1
@@ -318,6 +320,14 @@ NGSEASYVERSION=$f22
 NGSUSER=$f23
 DATE=`date +"%d%m%y"`
 
+#######################################################################################################
+## check and make log directory
+########################################################################################################
+if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
+then
+  mkdir -p ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
+fi
+
 ########################################################################################################
 ## LOGFILE
 ########################################################################################################
@@ -339,15 +349,6 @@ logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 logger_ngseasy "[${NGSEASY_STEP}]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER]"  ${LOGFILE}
-
-
-#######################################################################################################
-## check and make log directory
-########################################################################################################
-if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
-then
-  mkdir -p ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
-fi
 
 
 ########################################################################################################

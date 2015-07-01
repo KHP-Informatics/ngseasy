@@ -88,25 +88,6 @@ ngseasy_bsqr sets up the NGSeasy docker containers for Base quality score recali
 }
 
 ########################################################################################################
-## check and make ~/ngseasy_logs if needed
-#
-if [[ ! -e  ${HOME}/ngseasy_logs ]]
-then
-  mkdir ${HOME}/ngseasy_logs
-  global_run_logs="${HOME}/ngseasy_logs"
-fi
-
-########################################################################################################
-## Check options passed in.
-#
-if test -z "$2"
-then
-  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:No options found"
-  ngseasy_bsqr_usage
-  exit 1
-fi
-
-########################################################################################################
 ## get options for command line args
   while  getopts "hc:d:" opt
   do
@@ -197,7 +178,7 @@ fi
 
 ########################################################################################################
 ## Read config and loop through all lines calling bsqrß docker
-#
+logger_ngseasy "[${NGSEASY_STEP}]:Reading RUNFILE [${RUNFILE}]" ${config_run_log}
 
 while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
 do
@@ -261,9 +242,6 @@ NGSUSER=$f23;
 DATE=`date +"%d%m%y"`
 
 ########################################################################################################
-## LOGFILE
-#
-
 ## check and make log directory
 #
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
