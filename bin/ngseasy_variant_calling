@@ -1091,19 +1091,11 @@ logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller " 
 
 fi
 
-
-###########################################################################################
-## permissions
-###########################################################################################
 chmod -R 776 ${SOUT}/*
-
-###########################################################################################
-## THE END
-###########################################################################################
 done < ${RUNFILE}
 logger_ngseasy " END:Variant Calling" ${LOGFILE}
 
-
+## Old crap
 # 60GB RAM and FAILS
 #  ${DOCKER_RUN} \
 #  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
