@@ -655,12 +655,10 @@ elif [ "${VARCALLER}" == "freebayes-default" ]
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     --name Freebayes_${BAM_PREFIX} \
     -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-    "time /usr/local/pipeline/freebayes/bin/freebayes \
+    "time \
+    /usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${REFFASTA} 100000) ${NCPU} \
     -f ${REFFASTA} \
     -b ${SOUTDocker}/alignments/${BAMFILE} \
-    --min-coverage 4 \
-    --min-mapping-quality 20 \
-    --min-base-quality 10 \
     --min-repeat-entropy 1 \
     --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
     time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
@@ -805,6 +803,87 @@ docker rm platypus_${BAM_PREFIX}
 logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Platypus "  ${LOGFILE}
 
   fi
+
+######## platypus-default
+elif [ "${VARCALLER}" == "platypus-default" ]
+  then
+
+  logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using Platypus default "  ${LOGFILE}
+
+  if [ "${NGS_TYPE}" == "TGS" ] || [ "${NGS_TYPE}" == "WEX" ]
+    then
+
+    logger_ngseasy "[${NGSEASY_STEP}]:NGS_TYPE set to [${NGS_TYPE}] Targeted/WEX, so no duplicate filtering  "  ${LOGFILE}
+
+    # for exome/whole genome data no duplicate filtering
+    # note plat used NR instead of DP
+
+# https://github.com/chapmanb/bcbio-nextgen/blob/cb97e10d2ee50983713d65e77690067779f3e731/bcbio/variation/platypus.py#L31
+#    --hapScoreThreshold", "10", "--scThreshold", "0.99", "--filteredReadsFrac", "0.9",
+#                   "--rmsmqThreshold", "20", "--qdThreshold", "0", "--abThreshold", "0.0001",
+#                   "--minVarFreq", "0.0"]
+#      --regions=${SOUTDocker}/reports/${BAMFILE}.platypus.intervals
+
+    ${DOCKER_RUN} \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    --name platypus_${BAM_PREFIX} \
+    -t compbio/ngseasy-platypus:${NGSEASYVERSION} /bin/bash -c \
+    "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
+      --nCPU ${NCPU} \
+      --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
+      --refFile=${REFFASTA} \
+      --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+      --logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
+      --filterDuplicates=0 && \
+      time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+      vcffilter -f 'QUAL > 5' -s | \
+      fix_ambiguous | \
+      vcfallelicprimitives --keep-geno | \
+      vcffixup - | \
+      vcfstreamsort | \
+      vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+      vcfuniqalleles | \
+      bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+      tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
+      sleep 1s
+      #logs
+      docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
+      docker rm platypus_${BAM_PREFIX}
+
+    else
+
+      ${DOCKER_RUN} \
+      -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+      --name platypus_${BAM_PREFIX} \
+      -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c \
+      "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
+      --nCPU ${NCPU} \
+      --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
+      --refFile=${REFFASTA} \
+      --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+      --logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
+      --filterDuplicates=1 && \
+      time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+      vcffilter -f 'QUAL > 5' -s | \
+      fix_ambiguous | \
+      vcfallelicprimitives --keep-geno | \
+      vcffixup - | \
+      vcfstreamsort | \
+      vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+      vcfuniqalleles | \
+      bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+      tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz"
+      sleep 1s
+
+#logs
+docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
+docker rm platypus_${BAM_PREFIX}
+
+#logs
+logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Platypus default"  ${LOGFILE}
+
+  fi
+
 ########################################################################################################
 # UnifiedGenotyper #
 #-----------------------------------------------------------------------------#
