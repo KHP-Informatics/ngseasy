@@ -377,8 +377,11 @@ if [[ ${TRIM} == "no-trim" ]]; then
     logger_ngseasy "[${NGSEASY_STEP}]:Setting FQ2:[${SOUTDocker}/fastq/${FASTQ2}] " ${LOGFILE}
 fi
 
-if [[ ${TRIM} == "atrim" ]] || [[ ${TRIM} == "btrim" ]]; then
-    elif [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz" ]
+if [[ ${TRIM} == "atrim" ]] || [[ ${TRIM} == "btrim" ]]
+    then
+    logger_ngseasy "[${NGSEASY_STEP}]:TRIM set to [${TRIM}" ${LOGFILE}
+
+    if [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz" ]
         then
         logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Trimmed FastQC Data does not exsts. Exiting" ${LOGFILE}
         logger_ngseasy "[${NGSEASY_STEP}]:Please run ngseasy_trimmomatic -c ${config_tsv} -d ${PROJECT_DIR}" ${LOGFILE}
@@ -390,6 +393,7 @@ if [[ ${TRIM} == "atrim" ]] || [[ ${TRIM} == "btrim" ]]; then
     	FQ2="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz"
         logger_ngseasy "[${NGSEASY_STEP}]:Setting FQ1:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz] " ${LOGFILE}
     	logger_ngseasy "[${NGSEASY_STEP}]:Setting FQ2:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz] " ${LOGFILE}
+    fi
 fi
 
 ########################################################################################################
