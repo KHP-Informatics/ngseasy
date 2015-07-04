@@ -347,8 +347,8 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
   REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEINDEX}]"  ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${REFDIR}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build index [${GENOMEINDEX}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build dir [${REFDIR}]"  ${LOGFILE}
   sleep 1s
 
 elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
@@ -356,8 +356,8 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEINDEX}]"  ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${REFDIR}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build index [${GENOMEINDEX}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build dir [${REFDIR}]"  ${LOGFILE}
   sleep 1s
 
 else
@@ -369,28 +369,27 @@ fi
 ########################################################################################################
 ## check if Trimmed data alread exists and use it
 ########################################################################################################
-if [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz" ]
-then
-	logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Trimmed FastQC Data does not exsts. Exiting" ${LOGFILE}
-  logger_ngseasy "[${NGSEASY_STEP}]:Please run ngseasy_trimmomatic -c ${config_tsv} -d ${PROJECT_DIR}" ${LOGFILE}
-  sleep 1s
-	exit 1
-else
-	logger_ngseasy "[${NGSEASY_STEP}]:Trimmed FastQC Data exsts" ${LOGFILE}
+if [[ ${TRIM} == "no-trim" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:Using raw FastQC. [TRIM] set to [no-trimm]" ${LOGFILE}
+    FQ1="${SOUTDocker}/fastq/${FASTQ1}"
+    FQ2="${SOUTDocker}/fastq/${FASTQ2}"
+    logger_ngseasy "[${NGSEASY_STEP}]:Setting FQ1:[${SOUTDocker}/fastq/${FASTQ1}] " ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Setting FQ2:[${SOUTDocker}/fastq/${FASTQ2}] " ${LOGFILE}
+fi
 
-	logger_ngseasy "[${NGSEASY_STEP}]:Setting FQ1:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz] " ${LOGFILE}
-
-########################################################################################################
-## FQ1
-########################################################################################################
-	FQ1="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz"
-
-	logger_ngseasy "[${NGSEASY_STEP}]:Setting FQ2:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz] " ${LOGFILE}
-
-########################################################################################################
-## FQ2
-########################################################################################################
-	FQ2="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz"
+if [[ ${TRIM} == "atrim" ]] || [[ ${TRIM} == "btrim" ]]; then
+    elif [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz" ] && [ ! -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz" ]
+        then
+        logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Trimmed FastQC Data does not exsts. Exiting" ${LOGFILE}
+        logger_ngseasy "[${NGSEASY_STEP}]:Please run ngseasy_trimmomatic -c ${config_tsv} -d ${PROJECT_DIR}" ${LOGFILE}
+        sleep 1s
+        exit 1
+    else
+        logger_ngseasy "[${NGSEASY_STEP}]:Trimmed FastQC Data exsts" ${LOGFILE}
+    	FQ1="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz"
+    	FQ2="${SOUTDocker}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz"
+        logger_ngseasy "[${NGSEASY_STEP}]:Setting FQ1:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1.filtered.fastq.gz] " ${LOGFILE}
+    	logger_ngseasy "[${NGSEASY_STEP}]:Setting FQ2:[${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_2.filtered.fastq.gz] " ${LOGFILE}
 fi
 
 ########################################################################################################
