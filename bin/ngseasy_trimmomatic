@@ -576,7 +576,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:START FastQC post Trimmomatic" ${LOGFILE}
 	${qcSEFQ1} \
 	${qcSEFQ2}
 
-elif [[ "${TRIM}" == "notrim" ]]; then
+elif [[ "${TRIM}" == "no-trim" ]]; then
 	logger_ngseasy "[${NGSEASY_STEP}]:Skipping quality control of raw fastq reads. NOT RECOMMENDED" ${LOGFILE}
 else
 	logger_ngseasy "[${NGSEASY_STEP}]:ERROR Do not recognise TRIM option. Should be one of [atrim] [btrim] or [no-trim]" ${LOGFILE}
