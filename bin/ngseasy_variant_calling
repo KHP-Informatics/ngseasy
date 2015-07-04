@@ -1025,64 +1025,110 @@ elif [ "${VARCALLER}" == "HaplotypeCaller" ]
   logger_ngseasy " END Variant Calling using HaplotypeCaller "  ${LOGFILE}
 
 ########################################################################################################
-# Ensemble: Freebayes + HaplotypeCaller then CombineVariants   #
+# Ensemble: Freebayes + Platypus then CombineVariants   #
 ########################################################################################################
 
 elif [ "${VARCALLER}" == "ensemble" ]
 then
 
-  logger_ngseasy "[${NGSEASY_STEP}]:START Ensembl Variant Calling using Freebayes + HaplotypeCaller "  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:START Ensembl Variant Calling using Freebayes + Platypus "  ${LOGFILE}
 
 ## freebayes
 logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using Freebayes " ${LOGFILE}
 
-VARCALLER="freebayes"
+########################################################################################################
+VARCALLER="freebayes-parallel"
+########################################################################################################
 
-  ${DOCKER_RUN} \
-  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-  --name Freebayes_${BAM_PREFIX} \
-  -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-  "time /usr/local/pipeline/freebayes/scripts/freebayes-parallel ${SOUTDocker}/reports/${BAMFILE}.mapped.regions ${NCPU} \
-  -f ${REFFASTA} \
-  -b ${SOUTDocker}/alignments/${BAMFILE} \
-  --min-coverage 10 \
-  --min-mapping-quality 20 \
-  --min-base-quality 20 \
-  --min-repeat-entropy 1 \
-  --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
-  time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
-  vcffilter -f 'QUAL > 5' -s | \
-  fix_ambiguous | \
-  vcfallelicprimitives --keep-geno | \
-  vcffixup - | \
-  vcfstreamsort | \
-  vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
-  vcfuniqalleles | \
-  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-  bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
-
+${DOCKER_RUN} \
+-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+--name Freebayes_${BAM_PREFIX} \
+-t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
+"time \
+/usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${REFFASTA} 100000) ${NCPU} \
+-f ${REFFASTA} \
+-b ${SOUTDocker}/alignments/${BAMFILE} \
+--min-coverage 2 \
+--min-mapping-quality 10 \
+--min-base-quality 10 \
+--min-repeat-entropy 1 \
+--genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
+time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+vcffilter -f 'QUAL > 5' -s | \
+fix_ambiguous | \
+vcfallelicprimitives --keep-geno | \
+vcffixup - | \
+vcfstreamsort | \
+vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+vcfuniqalleles | \
+bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
 
 #logs
-  docker logs Freebayes_${SAMPLE_ID} >> ${LOGFILE}.log#
+docker logs Freebayes_${SAMPLE_ID} >> ${LOGFILE}.log#
+docker rm Freebayes_${SAMPLE_ID}
+logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFILE}
 
-  docker rm Freebayes_${SAMPLE_ID}
+########################################################################################################
+ VARCALLER="platypus"
+########################################################################################################
+${DOCKER_RUN} \
+-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+--name platypus_${BAM_PREFIX} \
+-t compbio/ngseasy-platypus:${VERSION} /bin/bash -c \
+"time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
+--nCPU ${NCPU} \
+--bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
+--refFile=${REFFASTA} \
+--output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
+--logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
+--filterDuplicates=1 \
+--assemble=1 \
+--assembleAll=1 \
+--assemblyRegionSize=1500 \
+--minReads=2  \
+--maxGOF=30 \
+--bufferSize=50000 \
+--maxReads=10000000 \
+--minPosterior=5 \
+--minMapQual=10 \
+--minBaseQual=10 \
+--maxSize 10000 \
+--maxVariants=8 \
+--mergeClusteredVariants=1 \
+--maxHaplotypes=50 \
+--filterReadsWithDistantMates=1 \
+--hapScoreThreshold 10 \
+--scThreshold 0.99 \
+--filteredReadsFrac 0.7 \
+--rmsmqThreshold 20 \
+--qdThreshold 0 \
+--abThreshold 0.0001 \
+--minVarFreq 0.0 && \
+time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+vcffilter -f 'QUAL > 5' -s | \
+fix_ambiguous | \
+vcfallelicprimitives --keep-geno | \
+vcffixup - | \
+vcfstreamsort | \
+vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+vcfuniqalleles | \
+bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
+sleep 1s
+#logs
+docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
+docker rm platypus_${BAM_PREFIX}
+#logs
+logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Platypus "  ${LOGFILE}
 
-  # copy vcf to cohort vcf directory
-  cp ${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf ${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/;
-
-  logger_ngseasy "[${NGSEASY_STEP}]:copying [${SOUT}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf] to [${PROJECT_DIR}/${PROJECT_ID}/cohort_vcfs/] "  ${LOGFILE}
-
-  logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFILE}
-
-# REMOVED Platypues untill sens issues sorted ##################################################################
-# REMOVED UG In favour of haplotype based callers ##################################################################
-
+########################################################################################################
+ VARCALLER="HaplotypeCaller"
+########################################################################################################
   ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
   # '--output_mode' (-out_mode) is missing.  Valid options are (EMIT_VARIANTS_ONLY,EMIT_ALL_CONFIDENT_SITES,EMIT_ALL_SITES).
-
- VARCALLER="HaplotypeCaller"
-
 logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller "  ${LOGFILE}
 
   ${DOCKER_RUN} \
