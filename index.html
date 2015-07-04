@@ -24,6 +24,9 @@
 <h1>
 <a id="ngseasy-beta" class="anchor" href="#ngseasy-beta" aria-hidden="true"><span class="octicon octicon-link"></span></a>NGSeasy (beta)</h1>
 
+<h3>
+<a id="ngseasy-is-under-heavy-re-dev-many-things-may-be-broken---bear-with-us-please-come-back-next-week" class="anchor" href="#ngseasy-is-under-heavy-re-dev-many-things-may-be-broken---bear-with-us-please-come-back-next-week" aria-hidden="true"><span class="octicon octicon-link"></span></a>NGSeasy is under heavy re-dev, many things may be broken - bear with us please (come back next week)</h3>
+
 <hr>
 
 <h2>
@@ -33,23 +36,41 @@
 
 <p><strong>With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon</strong>  </p>
 
-<p><strong>Authors:</strong> Stephen J Newhouse, Amos Folarin , Maximilian Kerz<br>
-<strong>Release Version:</strong> <strong>1.0</strong><br>
+<p><strong>Authors:</strong> Stephen J Newhouse and Amos Folarin
+<strong>Release Version:</strong> <strong>1.0-r001</strong><br>
 <strong>Release:</strong> dirty_tango<br>
 <strong>Publication:</strong> <em>pending</em>  </p>
 
-<p><em>This is the latest dev project: undergoing massive re-dev , links may be broken...stay tuned and <a href="https://github.com/KHP-Informatics/ngseasy/issues">email us</a>...give us a few weeks.</em>   </p>
+<p><em>This is the latest dev project: undergoing massive re-dev , links may be broken...stay tuned and <a href="https://github.com/KHP-Informatics/ngseasy/issues">email us</a>...give us a few weeks.</em></p>
 
 <p><strong>Note:</strong> NGSeasy is under <strong>heavy development</strong> and the code and docs evolve quickly.  </p>
 
 <ul>
 <li>
-<strong>NGSeasy-1.0 Full Production release will be available Early 2015</strong><br>
+<strong>NGSeasy-1.0 Full Production release will be available Late 2015</strong><br>
 </li>
-<li><strong>NGSeasy-1.0 (dirty_tango) contains most of the core fucntionality to go from raw fastq to raw vcf calls</strong></li>
+<li><strong>NGSeasy-1.0-r001 (dirty_tango) contains most of the core functionality to go from raw fastq to raw vcf calls</strong></li>
 <li><strong>NGSeasy will update every 12 months</strong></li>
 <li><strong>GUI in development</strong></li>
 </ul>
+
+<h2>
+<a id="author-contact-details" class="anchor" href="#author-contact-details" aria-hidden="true"><span class="octicon octicon-link"></span></a>Author Contact Details</h2>
+
+<p>Please contact us for help/guidance on using the beta release.</p>
+
+<ul>
+<li><p>Amos Folarin <a href="mailto:amosfolarin@gmail.com">amosfolarin@gmail.com</a>  <a href="https://twitter.com/amosfolarin?lang=en">@amosfolarin</a>
+<a href="http://www.linkedin.com/pub/amos-folarin/34/b06/978">
+<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Amos's profile on LinkedIn">
+</a></p></li>
+<li><p>Stephen J Newhouse <a href="mailto:stephen.j.newhouse@gmail.com">stephen.j.newhouse@gmail.com</a> <a href="https://twitter.com/s_j_newhouse?lang=en">@s_j_newhouse</a><br>
+<a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">
+<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
+</a></p></li>
+</ul>
+
+<p><strong>Lets us know if you want other tools added to NGSeasy</strong></p>
 
 <hr>
 
@@ -57,10 +78,32 @@
 
 <hr>
 
-<h2>
-<a id="issues-questions-and-queries" class="anchor" href="#issues-questions-and-queries" aria-hidden="true"><span class="octicon octicon-link"></span></a>Issues, Questions and Queries</h2>
+<h1>
+<a id="issues-questions-and-queries" class="anchor" href="#issues-questions-and-queries" aria-hidden="true"><span class="octicon octicon-link"></span></a>Issues, Questions and Queries</h1>
 
 <p><strong>Please Direct all queries to [<a href="https://github.com/KHP-Informatics/ngseasy/issues">https://github.com/KHP-Informatics/ngseasy/issues</a>]</strong></p>
+
+<h1>
+<a id="warning" class="anchor" href="#warning" aria-hidden="true"><span class="octicon octicon-link"></span></a>WARNING!</h1>
+
+<p>NGSeasy is not <a href="http://www.urbandictionary.com/define.php?term=Numpty">numpty</a> or bad data proof!  </p>
+
+<p>Please read the docs, stay calm, take your time and think about what you are doing...and if [<a href="http://www.google.com">www.google.com</a>] doesnt help, then please direct all queries to [<a href="https://github.com/KHP-Informatics/ngseasy/issues">https://github.com/KHP-Informatics/ngseasy/issues</a>].</p>
+
+<h2>
+<a id="docker-security" class="anchor" href="#docker-security" aria-hidden="true"><span class="octicon octicon-link"></span></a>Docker Security...</h2>
+
+<p>This post reviews the various security implications of using Docker to run applications within containers, and how to address them:
+<a href="https://blog.docker.com/2013/08/containers-docker-how-secure-are-they/#more-697">How Secure are Containers?</a></p>
+
+<blockquote>
+<p>Docker containers are, by default, quite secure; especially if you take care of running your processes inside the containers as non-privileged users (i.e. non root).</p>
+</blockquote>
+
+<h3>
+<a id="ngseasy-security" class="anchor" href="#ngseasy-security" aria-hidden="true"><span class="octicon octicon-link"></span></a>NGSeasy Security</h3>
+
+<p><strong>All NGSeasy applications are run as the non-root user <code>pipeman</code> within each container</strong></p>
 
 <h2>
 <a id="for-the-impatient" class="anchor" href="#for-the-impatient" aria-hidden="true"><span class="octicon octicon-link"></span></a>For the impatient</h2>
@@ -70,7 +113,7 @@
 
 <p>Full instructions at <a href="https://docs.docker.com/">https://docs.docker.com/</a>.</p>
 
-<p>Some fixes to make life easy...allows you to run <code>docker</code> without <code>sudo</code>. </p>
+<p>Some fixes to make life easy...allows you to run <code>docker</code> without <code>sudo</code>.</p>
 
 <p>This may differ for your OS, and mostly applies to flavours of <code>Linux</code>. Check with your sys admin or just Google <a href="https://www.google.com">https://www.google.com</a>.</p>
 
@@ -141,9 +184,9 @@ git clone https://github.com/KHP-Informatics/ngseasy.git
 <span class="pl-c"># in this example user home is /home/ec2-user</span>
 <span class="pl-c"># installs scripts to /usr/local/bin/</span>
 <span class="pl-c"># gets all docker images</span>
-<span class="pl-c"># gets indexed hg19 and b37 genomes </span>
+<span class="pl-c"># gets indexed hg19 and b37 genomes</span>
 <span class="pl-c"># gets GATK recources for hg19 and b37 genomes</span>
-<span class="pl-c"># gets whole genome and exome test data </span>
+<span class="pl-c"># gets whole genome and exome test data</span>
 
 <span class="pl-c1">cd</span> ngseasy
 
@@ -153,7 +196,7 @@ sudo make install
 
 <span class="pl-c"># NOTE:-</span>
 <span class="pl-c"># if you run sudo make all - install path is /home/root</span>
-<span class="pl-c"># Install can take a while, 1-2 hours, so go get a coffee </span>
+<span class="pl-c"># Install can take a while, 1-2 hours, so go get a coffee</span>
 <span class="pl-c"># just chill...</span>
 <span class="pl-c"># if your network is bad...then who knows how long...</span>
 <span class="pl-c"># still..just chill...</span></pre></div>
@@ -168,34 +211,17 @@ sys     28m46.648s
 <h3>
 <a id="running-ngseasy-for-the-first-time-on-the-test-data" class="anchor" href="#running-ngseasy-for-the-first-time-on-the-test-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running NGSeasy for the first time on the test data</h3>
 
-<div class="highlight highlight-bash"><pre><span class="pl-c">#############################################</span>
-<span class="pl-c">## RUN NGSEASY                             ##</span>
-<span class="pl-c">#############################################</span>
+<p><strong>Important!</strong> NGSeasy is controlled from a single <code>config</code> file. See <a href="link">ngseasy_test.config.tsv</a> for a basic template. It is important that the user sets this up properly before running NGSeasy.</p>
 
-<span class="pl-c">#############################################</span>
+<div class="highlight highlight-bash"><pre><span class="pl-c">#############################################</span>
 <span class="pl-c">## 0. Move to config file dir</span>
 
 <span class="pl-c1">cd</span> /home/ec2-user/ngs_projects/config_files/
 
 <span class="pl-c">#############################################</span>
-<span class="pl-c">## 1. Set up project and sample directories</span>
+<span class="pl-c">## 1. Run basic test</span>
 
-ngseasy_initiate_project -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects 
-
-<span class="pl-c">#############################################</span>
-<span class="pl-c">## 2. Move project/sample fastq from raw_fastq</span>
-<span class="pl-c">## to project and sample directories</span>
-
-ngseasy_initiate_fastq -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects 
-
-<span class="pl-c">#############################################</span>
-<span class="pl-c">## 3. Run basic test </span>
-
-ngseasy -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects 
-
-<span class="pl-c"># Note: everytime the user has a new project and/or new samples</span>
-<span class="pl-c"># you must run ngseasy_initiate_project followd by ngseasy_initiate_fastq</span>
-</pre></div>
+ngseasy -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects</pre></div>
 
 <h3>
 <a id="what-should-happen" class="anchor" href="#what-should-happen" aria-hidden="true"><span class="octicon octicon-link"></span></a>What should happen...</h3>
@@ -203,24 +229,22 @@ ngseasy -c ngseasy_test.config.tsv -d /home/ec2-user/ngs_projects
 <p>This runs the following basic pipeline on Whole Exome PE 30x Illumina data, aligning to b37 (in theory...give it a try).  </p>
 
 <ul>
-<li>FastQC &gt; Trimmomatic &gt; BWA &gt; Platypus </li>
+<li>FastQC &gt; Trimmomatic &gt; BWA &gt; Platypus</li>
 </ul>
 
 <h3>
 <a id="some-notes-and-pointers" class="anchor" href="#some-notes-and-pointers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Some notes and pointers</h3>
 
 <ul>
-<li>Edit <strong>NCPU</strong> in  <strong>[ngseasy_test.config.tsv]</strong> to suit your system!<br>
+<li>Edit <strong>NCPU</strong> in  <strong>[ngseasy_test.config.tsv]</strong> to suit your system<br>
 </li>
-<li>Edit <strong>PROJECT_DIR</strong> in  <strong>[ngseasy_test.config.tsv]</strong> to suit your install path!<br>
-</li>
-<li>everytime the user has a new project and/or new samples
-the user must run <code>ngseasy_initiate_project</code> followd by <code>ngseasy_initiate_fastq</code> .<br>
-</li>
+<li>Edit <strong>PROJECT_DIR</strong> in  <strong>[ngseasy_test.config.tsv]</strong> to suit your install path</li>
 <li>We expect the user to palce all raw fastq files in <code>raw_fastq</code>. NGSeasy uses this
 as a stagging area for new project and sample data.<br>
 </li>
 <li>right now, always run <code>ngseasy</code> from the location/directory that contains the config.file<br>
+</li>
+<li>each component of ngseasy can be run as a standalone script<br>
 </li>
 </ul>
 
@@ -271,32 +295,10 @@ as a stagging area for new project and sample data.<br>
 
 <hr>
 
-<h3>
-<a id="author-contact-details" class="anchor" href="#author-contact-details" aria-hidden="true"><span class="octicon octicon-link"></span></a>Author Contact Details</h3>
-
-<p>Please contact us for help/guidance on using the beta release. </p>
-
-<ul>
-<li><p>Amos Folarin <a href="mailto:amosfolarin@gmail.com">amosfolarin@gmail.com</a>  <a href="https://twitter.com/amosfolarin?lang=en">@amosfolarin</a><br>
-<a href="http://www.linkedin.com/pub/amos-folarin/34/b06/978">
-<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Amos's profile on LinkedIn">
-</a></p></li>
-<li><p>Stephen J Newhouse <a href="mailto:stephen.j.newhouse@gmail.com">stephen.j.newhouse@gmail.com</a> <a href="https://twitter.com/s_j_newhouse?lang=en">@s_j_newhouse</a><br>
-<a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">
-<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
-</a></p></li>
-</ul>
-
-<p><strong>Lets us know if you want other tools added to NGSeasy</strong></p>
-
-<p><em>Institution: NIHR Maudsley Biomedical Research Centre For Mental Health and Dementia Unit (Denmark Hill), at The Institute of Psychiatry, Psychology &amp; Neuroscience (IoPPN), Kings College London</em> </p>
-
-<hr>
-
 <h1>
 <a id="overview-of-the-ngseasy-pipeline-components" class="anchor" href="#overview-of-the-ngseasy-pipeline-components" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview of the NGSeasy Pipeline Components</h1>
 
-<p>The basic pipeline contains all the basic tools needed for manipulation and 
+<p>The basic pipeline contains all the basic tools needed for manipulation and
 quality control of raw fastq files (ILLUMINA focused), SAM/BAM manipulation,
 alignment, cleaning (based on GATK best practises [<a href="http://www.broadinstitute.org/gatk/guide/best-practices">http://www.broadinstitute.org/gatk/guide/best-practices</a>]) and first pass
 variant discovery. Separate containers are provided for indepth variant annotation,
@@ -307,7 +309,7 @@ structural variant calling, basic reporting and visualisations.  </p>
 <h2>
 <a id="a-special-note-on-the-ngseasy-base-image" class="anchor" href="#a-special-note-on-the-ngseasy-base-image" aria-hidden="true"><span class="octicon octicon-link"></span></a>A Special note on the NGSeasy base image.</h2>
 
-<p>We include the following - what we think of as - <strong><em>NGS Powertools</em></strong> in the <strong><a href="">compbio/ngseasy-base</a></strong> image. 
+<p>We include the following - what we think of as - <strong><em>NGS Powertools</em></strong> in the <strong><a href="">compbio/ngseasy-base</a></strong> image.
 These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files in multiple ways.</p>
 
 <ol>
@@ -337,30 +339,28 @@ These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files 
 </li>
 </ol>
 
-<p>This image is used as the base of all our compbio/ngseasy-* tools.   </p>
+<p>This image is used as the base of all our compbio/ngseasy-* tools.</p>
 
-<p><strong>Why not a separate containers per application?</strong> The more docker-esque approach, would be to have separate containers for each NGS tool. However, this belies the fact that many of these tools interact in a deep way. Therefore, we built  these into a single development environment for ngseasy, to allow pipes and streamlined system calls for manipulating the output of NGS pipelines (BED/SAM/BAM/VCF files). </p>
+<p><strong>Why not a separate containers per application?</strong> The more docker-esque approach, would be to have separate containers for each NGS tool. However, this belies the fact that many of these tools interact in a deep way. Therefore, we built  these into a single development environment for ngseasy, to allow pipes and streamlined system calls for manipulating the output of NGS pipelines (BED/SAM/BAM/VCF files).</p>
 
 <hr>
 
 <h1>
 <a id="the-full-ngseasy-pipeline" class="anchor" href="#the-full-ngseasy-pipeline" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Full NGSeasy pipeline</h1>
 
-<p>The NGSeasy pipelines implement the following :-   </p>
+<p>The NGSeasy pipelines implement the following :-</p>
 
 <ul>
 <li><p><strong>Quality control of raw fastq</strong> files using <strong><a href="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/">FASTQC</a></strong>  </p></li>
-<li><p><strong>Read trimming</strong> using <strong><a href="http://www.usadellab.org/cms/?page=trimmomatic">TRIMMOMATIC</a></strong>.   </p></li>
+<li><p><strong>Read trimming</strong> using <strong><a href="http://www.usadellab.org/cms/?page=trimmomatic">TRIMMOMATIC</a></strong>.</p></li>
 <li>
-<p><strong>Alignment</strong> using one of </p>
+<p><strong>Alignment</strong> using one of</p>
 
 <ul>
 <li>
 <strong><a href="http://bio-bwa.sourceforge.net/">BWA</a></strong><br>
 </li>
-<li>
-<strong><a href="http://www.well.ox.ac.uk/project-stampy">STAMPY</a></strong><br>
-</li>
+<li><strong><a href="http://www.well.ox.ac.uk/project-stampy">STAMPY</a></strong></li>
 <li>
 <strong><a href="http://www.novocraft.com">NOVOALIGN</a></strong><br>
 </li>
@@ -373,12 +373,12 @@ These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files 
 </ul>
 </li>
 <li><p><strong>SAM/BAM sorting and indexing</strong> with <strong><a href="https://github.com/lomereiter/sambamba">SAMBAMBA</a></strong>.  </p></li>
-<li><p><strong>Read Group information added</strong> using <strong><a href="http://broadinstitute.github.io/picard/">PICARDTOOLS</a>:<a href="http://broadinstitute.github.io/picard/command-line-overview.html#AddOrReplaceReadGroups">AddOrReplaceReadGroups</a></strong> </p></li>
+<li><p><strong>Read Group information added</strong> using <strong><a href="http://broadinstitute.github.io/picard/">PICARDTOOLS</a>:<a href="http://broadinstitute.github.io/picard/command-line-overview.html#AddOrReplaceReadGroups">AddOrReplaceReadGroups</a></strong></p></li>
 <li><p><strong>Duplicate marking</strong> with <strong><a href="https://github.com/GregoryFaust/samblaster">SAMBLASTER</a></strong>.  </p></li>
 </ul>
 
 <blockquote>
-<p>For academic users and/or commercial/clinical groups whom have paid for GATK licensing, the next steps are to perform   </p>
+<p>For academic users and/or commercial/clinical groups whom have paid for GATK licensing, the next steps are to perform</p>
 </blockquote>
 
 <ul>
@@ -386,18 +386,15 @@ These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files 
 <strong>Indel indel realignment and base quality score recalibration</strong> using <strong><a href="https://www.broadinstitute.org/gatk/">GATK</a></strong> built in tools :
 
 <ul>
-<li>
-<strong><a href="https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_indels_RealignerTargetCreator.php">GATK:RealignerTargetCreator</a></strong> </li>
-<li>
-<strong><a href="https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_indels_IndelRealigner.php">GATK:IndelRealigner</a></strong> </li>
-<li>
-<strong><a href="https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_bqsr_BaseRecalibrator.php">GATK:BaseRecalibrator</a></strong> </li>
+<li><strong><a href="https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_indels_RealignerTargetCreator.php">GATK:RealignerTargetCreator</a></strong></li>
+<li><strong><a href="https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_indels_IndelRealigner.php">GATK:IndelRealigner</a></strong></li>
+<li><strong><a href="https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_bqsr_BaseRecalibrator.php">GATK:BaseRecalibrator</a></strong></li>
 </ul>
 </li>
 </ul>
 
 <blockquote>
-<p>For the non-GATK version    </p>
+<p>For the non-GATK version</p>
 </blockquote>
 
 <ul>
@@ -405,51 +402,38 @@ These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files 
 <p><strong>Base quality score recalibration</strong> using <a href="http://genome.sph.umich.edu/wiki/BamUtil">BamUtil</a>  </p>
 
 <ul>
-<li>
-<strong><a href="http://genome.sph.umich.edu/wiki/BamUtil:_recab">BamUtil:recab</a></strong> </li>
+<li><strong><a href="http://genome.sph.umich.edu/wiki/BamUtil:_recab">BamUtil:recab</a></strong></li>
 </ul>
 </li>
 <li>
-<p><strong>Post alignment quality control and reporting</strong> is performed usng a number of tools and custom scripts: </p>
+<p><strong>Post alignment quality control and reporting</strong> is performed usng a number of tools and custom scripts:</p>
 
 <ul>
 <li><strong><a href="https://github.com/samtools/samtools">SAMTOOLS:flagstats</a></strong></li>
 <li><strong><a href="https://github.com/arq5x/bedtools2">BEDTOOLS:genomecov</a></strong></li>
 <li><strong><a href="https://github.com/arq5x/bedtools2">BEDTOOLS:bamtobed</a></strong></li>
+<li><strong><a href="http://broadinstitute.github.io/picard/command-line-overview.html#CollectMultipleMetrics">PICARDTOOLS:CollectMultipleMetrics</a></strong></li>
+<li><strong><a href="http://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">PICARDTOOLS:CollectAlignmentSummaryMetrics</a></strong></li>
+<li><strong><a href="http://broadinstitute.github.io/picard/command-line-overview.html#CollectWgsMetrics">PICARDTOOLS:CollectWgsMetrics</a></strong></li>
 <li>
-<strong><a href="http://broadinstitute.github.io/picard/command-line-overview.html#CollectMultipleMetrics">PICARDTOOLS:CollectMultipleMetrics</a></strong><br>
-</li>
-<li>
-<strong><a href="http://broadinstitute.github.io/picard/command-line-overview.html#CollectAlignmentSummaryMetrics">PICARDTOOLS:CollectAlignmentSummaryMetrics</a></strong><br>
-</li>
-<li>
-<strong><a href="http://broadinstitute.github.io/picard/command-line-overview.html#CollectWgsMetrics">PICARDTOOLS:CollectWgsMetrics</a></strong><br>
-</li>
-<li>
-<strong><a href="http://broadinstitute.github.io/picard/command-line-overview.html#CollectTargetedPcrMetrics">PICARDTOOLS:CollectTargetedPcrMetrics</a></strong> (coming soon)<br>
-</li>
+<strong><a href="http://broadinstitute.github.io/picard/command-line-overview.html#CollectTargetedPcrMetrics">PICARDTOOLS:CollectTargetedPcrMetrics</a></strong> (coming soon)</li>
 </ul>
 </li>
 <li>
 <p><strong>SNP and small INDEL</strong> calling using one of the following or a combibation of these tools, if the <code>ensemble</code> method is called using <strong><a href="https://github.com/chapmanb/bcbio.variation">bcbio.variation variant-ensemble</a></strong></p>
 
 <ul>
-<li>
-<strong><a href="https://github.com/ekg/freebayes">FREEBAYES</a></strong> </li>
-<li>
-<strong><a href="http://www.well.ox.ac.uk/platypus">PLATYPUS</a></strong> </li>
-<li>
-<strong><a href="https://www.broadinstitute.org/gatk/guide/tooldocs/org_broadinstitute_gatk_tools_walkers_genotyper_UnifiedGenotyper.php">GATK:UnifiedGenotyper</a></strong> </li>
-<li>
-<strong><a href="https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_haplotypecaller_HaplotypeCaller.php">GATK:HaplotypeCaller</a></strong> </li>
+<li><strong><a href="https://github.com/ekg/freebayes">FREEBAYES</a></strong></li>
+<li><strong><a href="http://www.well.ox.ac.uk/platypus">PLATYPUS</a></strong></li>
+<li><strong><a href="https://www.broadinstitute.org/gatk/guide/tooldocs/org_broadinstitute_gatk_tools_walkers_genotyper_UnifiedGenotyper.php">GATK:UnifiedGenotyper</a></strong></li>
+<li><strong><a href="https://www.broadinstitute.org/gatk/gatkdocs/org_broadinstitute_gatk_tools_walkers_haplotypecaller_HaplotypeCaller.php">GATK:HaplotypeCaller</a></strong></li>
 </ul>
 </li>
 <li>
-<p><strong>Structural Variant (CNV)</strong> calling using one of the following or or a combibation of if the <code>ensemble</code> methods are called:- </p>
+<p><strong>Structural Variant (CNV)</strong> calling using one of the following or or a combibation of if the <code>ensemble</code> methods are called:-</p>
 
 <ul>
-<li>
-<strong><a href="https://github.com/tobiasrausch/delly">DELLY</a> : in Dev</strong> </li>
+<li><strong><a href="https://github.com/tobiasrausch/delly">DELLY</a> : in Dev</strong></li>
 <li><strong><a href="https://github.com/arq5x/lumpy-sv/">LUMPY</a>: in Dev</strong></li>
 <li><strong><a href="http://www.bioinf.jku.at/software/cnmops/">cn.MOPS</a>: in Dev</strong></li>
 <li><strong><a href="https://www.stt.msu.edu/users/hengwang/mHMM.html">m-HMM</a>: in Dev</strong></li>
@@ -463,13 +447,11 @@ These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files 
 </ul>
 </li>
 <li>
-<p><strong>Variant annotation</strong> using using one of the following or a combibation of if the <code>ensemble</code> methods are called. </p>
+<p><strong>Variant annotation</strong> using using one of the following or a combibation of if the <code>ensemble</code> methods are called.</p>
 
 <ul>
-<li>
-<strong><a href="http://snpeff.sourceforge.net/">SnpEff</a>: in Dev</strong> </li>
-<li>
-<strong><a href="http://www.openbioinformatics.org/annovar/">ANNOVAR</a>: in Dev</strong> </li>
+<li><strong><a href="http://snpeff.sourceforge.net/">SnpEff</a>: in Dev</strong></li>
+<li><strong><a href="http://www.openbioinformatics.org/annovar/">ANNOVAR</a>: in Dev</strong></li>
 <li><strong><a href="http://www.ensembl.org/info/docs/tools/vep/index.html">VEP</a>: in Dev</strong></li>
 </ul>
 </li>
@@ -482,11 +464,11 @@ These are all tools that allow the user to slice and dice BED/SAM/BAM/VCF files 
 We have noticed considerable speed-ups in alignmnet time and increased quality of SNP/INDEL calls using trimmed vs raw fastq.  </p>
 
 <p><strong>Base quality score recalibration is also recommended.</strong><br>
-As an alternative to GATK, we have added fucntionality for use of 
-<strong><a href="https://github.com/statgen/bamUtil">BamUtil</a>:<a href="http://genome.sph.umich.edu/wiki/BamUtil:_recab">recab</a></strong> 
+As an alternative to GATK, we have added fucntionality for use of
+<strong><a href="https://github.com/statgen/bamUtil">BamUtil</a>:<a href="http://genome.sph.umich.edu/wiki/BamUtil:_recab">recab</a></strong>
 for base quality score recalibration.</p>
 
-<p><strong>Non-GATK users</strong> </p>
+<p><strong>Non-GATK users</strong></p>
 
 <ul>
 <li>are encouraged to use aligners such as <strong><a href="http://www.well.ox.ac.uk/project-stampy">stampy</a></strong> and <strong><a href="http://www.novocraft.com">novoalign</a></strong> that perform base quality score recal on the fly.<br>
@@ -508,6 +490,209 @@ for base quality score recalibration.</p>
 <p>All NGSeasy Docker images can be pulled down from <strong><a href="https://hub.docker.com/u/compbio/">compbio Docker Hub</a></strong> or using the Makefile.<br>
 We provide an Amazon EBS data volume with indexed genomes: XXXXXX  </p>
 
+<h2>
+<a id="table-1-ngseasy-tools" class="anchor" href="#table-1-ngseasy-tools" aria-hidden="true"><span class="octicon octicon-link"></span></a>Table 1. NGSeasy Tools</h2>
+
+<table>
+<thead>
+<tr>
+<th>Docker Image</th>
+<th>Version</th>
+<th>NGS Tool (version)</th>
+<th>Short Description</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>compbio/ngseasy-base</td>
+<td>1.0-r001</td>
+<td>VCFtools (v0.1.12b)</td>
+<td>manipulate vcf</td>
+<td><a href="http://vcftools.sourceforge.net/">link</a></td>
+</tr>
+<tr>
+<td>-</td>
+<td>-</td>
+<td>vt (latest)</td>
+<td>manipulate vcf</td>
+<td><a href="http://genome.sph.umich.edu/wiki/Vt">link</a></td>
+</tr>
+<tr>
+<td>-</td>
+<td>-</td>
+<td>bcftools (1.2-5-g7fa0d25)</td>
+<td>manipulate vcf</td>
+<td><a href="https://github.com/samtools/bcftools">link</a></td>
+</tr>
+<tr>
+<td>-</td>
+<td>-</td>
+<td>vcflib (v1.0.0)</td>
+<td>manipulate vcf</td>
+<td><a href="https://github.com/ekg/vcflib">link</a></td>
+</tr>
+<tr>
+<td>-</td>
+<td>-</td>
+<td>samtools (1.2-17-ge91985a)</td>
+<td>manipulate sam/bam</td>
+<td><a href="https://github.com/samtools/">link</a></td>
+</tr>
+<tr>
+<td>-</td>
+<td>-</td>
+<td>samblaster (0.1.21)</td>
+<td>manipulate sam/bam</td>
+<td><a href="https://github.com/GregoryFaust/samblaster">link</a></td>
+</tr>
+<tr>
+<td>-</td>
+<td>-</td>
+<td>sambamba (v0.5.1)</td>
+<td>manipulate sam/bam</td>
+<td><a href="https://github.com/lomereiter/sambamba">link</a></td>
+</tr>
+<tr>
+<td>-</td>
+<td>-</td>
+<td>bamUtil (1.0.13)</td>
+<td>manipulate sam/bam</td>
+<td><a href="https://github.com/statgen/bamUtil">link</a></td>
+</tr>
+<tr>
+<td>-</td>
+<td>-</td>
+<td>bedtools (v2.23.0-10-g447cb97)</td>
+<td>manipulate bed files</td>
+<td><a href="https://github.com/arq5x/bedtools2">link</a></td>
+</tr>
+<tr>
+<td>-</td>
+<td>-</td>
+<td>seqtk (1.0-r77-dirty)</td>
+<td>manipulate fastq</td>
+<td><a href="https://github.com/lh3/seqtk">link</a></td>
+</tr>
+<tr>
+<td>-</td>
+<td>-</td>
+<td>vawk (0.0.2)</td>
+<td>manipulate vcf</td>
+<td><a href="https://github.com/cc2qe/vawk">link</a></td>
+</tr>
+<tr>
+<td>-</td>
+<td>-</td>
+<td>bioawk (latest)</td>
+<td>manipulate sam/bam/vcf</td>
+<td><a href="https://github.com/lh3/bioawk">link</a></td>
+</tr>
+<tr>
+<td>compbio/ngseasy-fastqc</td>
+<td>1.0-r001</td>
+<td>fastqc (v0.11.2)</td>
+<td>FASTQ Quality Control Plots</td>
+<td><a href="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/">link</a></td>
+</tr>
+<tr>
+<td>compbio/ngseasy-trimmomatic</td>
+<td>1.0-r001</td>
+<td>trimmomatic (0.32)</td>
+<td>FASTQ Quality Trimming</td>
+<td><a href="http://www.usadellab.org/cms/index.php?page=trimmomatic">link</a></td>
+</tr>
+<tr>
+<td>compbio/ngseasy-bwa</td>
+<td>1.0-r001</td>
+<td>bwa ( 0.7.12-r1039)</td>
+<td>Aligner</td>
+<td><a href="http://bio-bwa.sourceforge.net/">link</a></td>
+</tr>
+<tr>
+<td>compbio/ngseasy-stampy</td>
+<td>1.0-r001</td>
+<td>stampy (stampy-1.0.27)</td>
+<td>Aligner</td>
+<td><a href="http://www.well.ox.ac.uk/project-stampy">link</a></td>
+</tr>
+<tr>
+<td>compbio/ngseasy-snap</td>
+<td>1.0-r001</td>
+<td>snap-aligner (1.0beta.18)</td>
+<td>Aligner</td>
+<td><a href="http://snap.cs.berkeley.edu/">link</a></td>
+</tr>
+<tr>
+<td>compbio/ngseasy-bowtie2</td>
+<td>1.0-r001</td>
+<td>bowtie2 (2.2.4)</td>
+<td>Aligner</td>
+<td><a href="http://bowtie-bio.sourceforge.net/bowtie2/index.shtml">link</a></td>
+</tr>
+<tr>
+<td>compbio/ngseasy-novoalign</td>
+<td>1.0-r001</td>
+<td>novoalign (3.02.13)</td>
+<td>Aligner</td>
+<td><a href="http://www.novocraft.com/products/novoalign/">link</a></td>
+</tr>
+<tr>
+<td>compbio/ngseasy-gatk</td>
+<td>1.0-r001</td>
+<td>gatk (3.4-0)</td>
+<td>NGS PowerTools</td>
+<td><a href="https://www.broadinstitute.org/gatk/">link</a></td>
+</tr>
+<tr>
+<td>compbio/ngseasy-picardtools</td>
+<td>1.0-r001</td>
+<td>picardtools (1.128)</td>
+<td>NGS PowerTools</td>
+<td><a href="http://broadinstitute.github.io/picard/">link</a></td>
+</tr>
+<tr>
+<td>compbio/ngseasy-glia</td>
+<td>1.0-r001</td>
+<td>glia (latest)</td>
+<td>NGS local realignment</td>
+<td><a href="https://github.com/ekg/glia">link</a></td>
+</tr>
+<tr>
+<td>compbio/ngseasy-platypus</td>
+<td>1.0-r001</td>
+<td>platypus (0.8.1)</td>
+<td>Variant Caller</td>
+<td><a href="https://github.com/andyrimmer/Platypus">link</a></td>
+</tr>
+<tr>
+<td>compbio/ngseasy-freebayes</td>
+<td>1.0-r001</td>
+<td>freebayes (v0.9.21-19-gc003c1e)</td>
+<td>Variant Caller</td>
+<td><a href="https://github.com/ekg/freebayes">link</a></td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="running-an-ngseasy-tool-interactively" class="anchor" href="#running-an-ngseasy-tool-interactively" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running an NGSeasy Tool Interactively</h2>
+
+<p>Run as non-root user <code>pipeman</code>.</p>
+
+<p><code>-v /media/Data:/home/pipeman</code> : Mounts local directory <code>/media/Data</code> to container directory <code>/home/pipeman</code></p>
+
+<div class="highlight highlight-bash"><pre>TOOL=<span class="pl-s"><span class="pl-pds">"</span>bwa<span class="pl-pds">"</span></span>
+
+docker run \
+-P \
+-w /home/pipeman \
+-e HOME=/home/pipeman \
+-e USER=pipeman \
+--user pipeman \
+-v /media/Data:/home/pipeman \
+-it compbio/ngseasy-<span class="pl-smi">${TOOL}</span>:1.0 /bin/bash</pre></div>
+
 <hr>
 
 <h1>
@@ -523,9 +708,9 @@ But once you're set up, thats it - you are good to go.</p>
 <h2>
 <a id="system-requirements" class="anchor" href="#system-requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>System Requirements</h2>
 
-<p>See Table <a href=""><strong>System Requirements</strong></a> for our recommended system requirements.NGSeasy will run on any modern computer/workstation or cloud infrastructure.  The Hard Disk requirements are based on our experience and result from the fact that the pipeline/tools produce a range of intermediary and temporary files for each sample. </p>
+<p>See Table <a href=""><strong>System Requirements</strong></a> for our recommended system requirements.NGSeasy will run on any modern computer/workstation or cloud infrastructure.  The Hard Disk requirements are based on our experience and result from the fact that the pipeline/tools produce a range of intermediary and temporary files for each sample.</p>
 
-<p>The full NGSeasy install includes indexed genomes for hg19 and b37 for all aligners, annotation files from GATK resource, and all of the NGSeasy docker images. Additional disk space is needed if the user wishes to install the databases associated with the variant annotators, Annovar, VEP and snpEff. </p>
+<p>The full NGSeasy install includes indexed genomes for hg19 and b37 for all aligners, annotation files from GATK resource, and all of the NGSeasy docker images. Additional disk space is needed if the user wishes to install the databases associated with the variant annotators, Annovar, VEP and snpEff.</p>
 
 <p>Based on our experience, a functional basic NGS compute system for a small lab, would consist of at least 4TB disk space, 60GB RAM and at least 32 CPU cores. Internet speed and network connectivity are a major bottle neck when dealing with NGS sized data, and groups are encouraged to think about these issues before embarking on multi sample or population level studies - where compute requirements can very quickly escalate.  </p>
 
@@ -586,12 +771,12 @@ But once you're set up, thats it - you are good to go.</p>
 <h2>
 <a id="getting-ngseasy" class="anchor" href="#getting-ngseasy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting NGSeasy</h2>
 
-<p>We provide a simple <strong>Makefile</strong> to pull all of the public nsgeasy components, scripts and set up to correct project directory structre on your local machines. </p>
+<p>We provide a simple <strong>Makefile</strong> to pull all of the public nsgeasy components, scripts and set up to correct project directory structre on your local machines.</p>
 
 <p>Setting up the initial project can take up a day, depending on your local network connections and speeds.</p>
 
 <div class="highlight highlight-bash"><pre>
-<span class="pl-c">## To get latest dev </span>
+<span class="pl-c">## To get latest dev</span>
 git clone --branch sjn_dev https://github.com/KHP-Informatics/ngseasy.git
 
 <span class="pl-c">## or Git Clone master</span>
@@ -601,8 +786,8 @@ git clone https://github.com/KHP-Informatics/ngseasy.git
 <span class="pl-c1">cd</span> ngseasy
 sudo make all</pre></div>
 
-<p>The default install dir is the users <strong>${HOME}</strong> directory. 
-The  <strong>Makefile</strong> provides options to install to any user defined directory and select NGSeasy version. eg :- </p>
+<p>The default install dir is the users <strong>${HOME}</strong> directory.
+The  <strong>Makefile</strong> provides options to install to any user defined directory and select NGSeasy version. eg :-</p>
 
 <div class="highlight highlight-bash"><pre><span class="pl-c">## EG. Installing to /media/scratch</span>
 make INSTALLDIR=<span class="pl-s"><span class="pl-pds">"</span>/media/scratch<span class="pl-pds">"</span></span> VERSION=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span> all</pre></div>
@@ -612,12 +797,12 @@ make INSTALLDIR=<span class="pl-s"><span class="pl-pds">"</span>/media/scratch<s
 <h2>
 <a id="set-up-ngseasy-project-configuration-file" class="anchor" href="#set-up-ngseasy-project-configuration-file" aria-hidden="true"><span class="octicon octicon-link"></span></a>Set up NGSeasy Project configuration file</h2>
 
-<p>Using Excel or something, make a <strong>[config.file.tsv]</strong>  file and save as [TAB] a Delimited file with <code>.tsv</code> extenstion. 
+<p>Using Excel or something, make a <strong>[config.file.tsv]</strong>  file and save as [TAB] a Delimited file with <code>.tsv</code> extenstion.
 This sets up Information related to: Project Name, Sample Name, Library Type, Pipeline to call, NCPU.</p>
 
-<p>We provide a template that can be used with NGSeasy, see <a href="https://docs.google.com/spreadsheets/d/13DosazuGdeAojZQ6YySM420p76RGleCYjR7a_MvcP2U/edit?usp=sharing">ngseasy_test.config.tsv</a>. </p>
+<p>We provide a template that can be used with NGSeasy, see <a href="https://docs.google.com/spreadsheets/d/13DosazuGdeAojZQ6YySM420p76RGleCYjR7a_MvcP2U/edit?usp=sharing">ngseasy_test.config.tsv</a>.</p>
 
-<p>The <strong>[config.file.tsv]</strong> should contain the following 23 columns for each sample to be run through a pipeline:- </p>
+<p>The <strong>[config.file.tsv]</strong> should contain the following 23 columns for each sample to be run through a pipeline:-</p>
 
 <table>
 <thead>
@@ -782,31 +967,30 @@ This sets up Information related to: Project Name, Sample Name, Library Type, Pi
 <h2>
 <a id="running-ngseasy" class="anchor" href="#running-ngseasy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running NGSeasy</h2>
 
-<p>When running a project or set of samples for the first time, users need to set the <code>-p</code> and <code>-f</code> options to 1. </p>
-
-<div class="highlight highlight-bash"><pre><span class="pl-c">## </span>
-ngseasy -c ngseasy_test.config.tsv -d /media/scratch/ngs_projects  -p 1 -f 1</pre></div>
+<div class="highlight highlight-bash"><pre><span class="pl-c">##</span>
+ngseasy -c ngseasy_test.config.tsv -d /media/scratch/ngs_projects</pre></div>
 
 <hr>
 
 <h2>
 <a id="the-ngseasy-project-directory" class="anchor" href="#the-ngseasy-project-directory" aria-hidden="true"><span class="octicon octicon-link"></span></a>The NGSeasy project directory</h2>
 
-<p>The user needs to make the relevent directory structures on their local machine before starting an NGS run. </p>
+<p>The user needs to make the relevent directory structures on their local machine before starting an NGS run.</p>
 
-<p>On our sysetm we typically set up a top-level driectory called <strong>ngs_projects</strong> within which we store output from all our individual NGS projects. </p>
+<p>On our sysetm we typically set up a top-level driectory called <strong>ngs_projects</strong> within which we store output from all our individual NGS projects.</p>
 
 <p>Here we are working from local top level directory called <strong>media/</strong>, but this can really be any folder on your local system ie your home directory <strong>~/${USER}</strong>.  </p>
 
-<p>Within this directory <strong>media</strong> we make the following folders: - </p>
+<p>Within this directory <strong>media</strong> we make the following folders: -</p>
 
 <div class="highlight highlight-bash"><pre>ngs_projects  
 <span class="pl-k">|</span>  
 <span class="pl-k">|</span>__raw_fastq  
 <span class="pl-k">|</span>__config_files  
-<span class="pl-k">|</span>__reference_genomes_b37  
-<span class="pl-k">|</span>__gatk_resources  
-<span class="pl-k">|</span>__ngseasy</pre></div>
+<span class="pl-k">|</span>__ngseasy_resources  
+   <span class="pl-k">|</span>  
+   <span class="pl-k">|</span>__reference_genomes_b37  
+   <span class="pl-k">|</span>__reference_genomes_hg19</pre></div>
 
 <p>Running the script <code>make XXXX</code> ensures that all relevant directories are set up, and also enforces a clean structure to the NGS project.  </p>
 
@@ -821,17 +1005,13 @@ ngs_projects
 <span class="pl-k">|</span>  
 <span class="pl-k">|</span>__raw_fastq  
 <span class="pl-k">|</span>__config_files  
-<span class="pl-k">|</span>__reference_genomes_b37  
-<span class="pl-k">|</span>__gatk_resources  
-<span class="pl-k">|</span>__ngseasy
+<span class="pl-k">|</span>__run_logs
+<span class="pl-k">|</span>__ngseasy_resources 
 <span class="pl-k">|</span>
 <span class="pl-k">|</span>__ project_id  
     <span class="pl-k">|</span>  
     <span class="pl-k">|</span>__run_logs  
     <span class="pl-k">|</span>__config_files  
-    <span class="pl-k">|</span>__project_vcfs  
-    <span class="pl-k">|</span>__project_bams  
-    <span class="pl-k">|</span>__project_reports  
     <span class="pl-k">|</span>
     <span class="pl-k">|</span>__sample_id_1  
     <span class="pl-k">|</span>   <span class="pl-k">|</span>  
@@ -852,6 +1032,17 @@ ngs_projects
         <span class="pl-k">|</span>__reports  
         <span class="pl-k">|</span>__config_files  </pre></div>
 
+<h2>
+<a id="the-raw_fastq-directory" class="anchor" href="#the-raw_fastq-directory" aria-hidden="true"><span class="octicon octicon-link"></span></a>The raw_fastq Directory</h2>
+
+<p>The <code>raw_fastq</code> Directory is a very special directory indeed.
+This is where the user should copy and or move <strong>ALL NEW RAW FASTQ</strong> Files to.
+This is to be used as an intial staging area for all fastq files.
+NGSeasy expects all raw fastq data to be placed here for all new samples or runs.
+NGSeasy inspects this folder and looks for the fastq file names specified in your confifg file.
+If NGSeasy doen't find them, then it exits.
+We do this to force the user to get organised.</p>
+
 <hr>
 
 <h2>
@@ -859,10 +1050,10 @@ ngs_projects
 
 <p><strong>Work In Progress...</strong></p>
 
-<p>Currently we are not able to automatically build some of the tools in pre-built docker containers due to licensing restrictions. </p>
+<p>Currently we are not able to automatically build some of the tools in pre-built docker containers due to licensing restrictions.</p>
 
-<p>Some of the software has restrictions on use particularly for commercial 
-purposes. Therefore if you wish to use this for commercial purposes, then you 
+<p>Some of the software has restrictions on use particularly for commercial
+purposes. Therefore if you wish to use this for commercial purposes, then you
 leagally have to approach the owners of the various components yourself!  </p>
 
 <p><strong>Software composing the pipeline requiring registration:-</strong>  </p>
@@ -887,17 +1078,17 @@ leagally have to approach the owners of the various components yourself!  </p>
 <h2>
 <a id="building-novoalign" class="anchor" href="#building-novoalign" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building NOVOALIGN</h2>
 
-<p><strong>Download Novoalign from  <a href="http://www.novocraft.com/">http://www.novocraft.com/</a></strong> into the local build directory *<em>ngseasy/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign</em>. 
-Edit the <a href="https://github.com/KHP-Informatics/ngseasy/blob/master/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign/Dockerfile">Dockerfile</a> 
+<p><strong>Download Novoalign from  <a href="http://www.novocraft.com/">http://www.novocraft.com/</a></strong> into the local build directory *<em>ngseasy/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign</em>.
+Edit the <a href="https://github.com/KHP-Informatics/ngseasy/blob/master/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign/Dockerfile">Dockerfile</a>
 to relfect the correct version of novoalign.  </p>
 
-<p>To use all novoalign fucntionality, you will need to <strong>pay for a license</strong>.   </p>
+<p>To use all novoalign fucntionality, you will need to <strong>pay for a license</strong>.</p>
 
 <p>Once you obtained your <strong>novoalign.lic</strong>, download this to the build directory *<em>ngseasy/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign</em>, which now should contain your updated <a href="https://github.com/KHP-Informatics/ngseasy/blob/master/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign/Dockerfile">Dockerfile</a>.</p>
 
 <div class="highlight highlight-bash"><pre><span class="pl-c"># move to ngseasy_stampy folder</span>
 <span class="pl-c1">cd</span> ngseasy/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign
-ls </pre></div>
+ls</pre></div>
 
 <p><strong>the directory should contain the following:-</strong></p>
 
@@ -927,7 +1118,7 @@ the correct version of GATK.  </p>
 
 <div class="highlight highlight-bash"><pre><span class="pl-c"># move to ngseasy_gatk folder</span>
 <span class="pl-c1">cd</span> ngseasy/containerized/ngs_docker_debian/ngs_utils/ngseasy_gatk
-ls </pre></div>
+ls</pre></div>
 
 <p><strong>the directory should contain the following:-</strong></p>
 
@@ -947,15 +1138,13 @@ docker build -t compbio/ngseasy-gatk:v1.0 <span class="pl-c1">.</span></pre></di
 <a id="manually-build-ngseasy-variant-annotaion-container-images" class="anchor" href="#manually-build-ngseasy-variant-annotaion-container-images" aria-hidden="true"><span class="octicon octicon-link"></span></a>Manually Build NGSeasy Variant Annotaion Container Images</h2>
 
 <p>The tools used for variant annotation use large databases and the docker images exceed 10GB. Therefore, the user should manually build these container images prior to running the NGS pipelines.
-Docker build files (<a href="https://docs.docker.com/jsearch/?q=Dockerfile">Dockerfile</a>) are available for </p>
+Docker build files (<a href="https://docs.docker.com/jsearch/?q=Dockerfile">Dockerfile</a>) are available for</p>
 
 <ul>
 <li>
 <a href="https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_annovar/Dockerfile">Annovar</a><br>
 </li>
-<li>
-<a href="https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_vep/Dockerfile">VEP</a><br>
-</li>
+<li><a href="https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_vep/Dockerfile">VEP</a></li>
 <li>
 <a href="https://github.com/KHP-Informatics/ngs/tree/master/containerized/ngs_docker_debian/ngseasy_snpeff/Dockerfile">snpEff</a><br>
 </li>
@@ -1007,7 +1196,7 @@ sudo docker build -t compbio/ngseasy-snpeff:<span class="pl-smi">${VERSION}</spa
 <ul>
 <li>New Aligners:- <a href="http://snap.cs.berkeley.edu/">SNAP</a>, GSNAP, mr- and mrs-Fast,gem</li>
 <li><a href="https://github.com/amplab/snap">https://github.com/amplab/snap</a></li>
-<li>SLOPE (CNV fo targetted NSG) </li>
+<li>SLOPE (CNV fo targetted NSG)</li>
 <li>Cancer Pipelines</li>
 <li>Annotation Pipelines and Databases</li>
 <li>Visualisation Pipelines</li>
