@@ -567,8 +567,6 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
 
 # set BWABAM
 BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
-
-
 ## stampy on bwa aligned data
   logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
 
@@ -576,7 +574,7 @@ BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -t compbio/ngseasy-stampy:${NGSEASYVERSION} /bin/bash -c \
-    "time python  /usr/local/pipeline/stampy-1.0.23/stampy.py \
+    "time python  /usr/local/pipeline/stampy-1.0.27/stampy.py \
       -g ${GENOMEINDEX} \
       -h ${GENOMEINDEX} \
       -t ${NCPU} \
