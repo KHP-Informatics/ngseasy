@@ -1,4 +1,5 @@
 .swp
+.Makefile.swp
 .DS_Store
 containerized/ngs_docker_debian/private_builds/*
 containerized/ngs_docker_debian/private_builds/novoalign/*
