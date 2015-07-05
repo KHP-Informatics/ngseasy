@@ -16,7 +16,8 @@ RUN cd /usr/local/pipeline && \
 	git clone https://github.com/amplab/snap.git && \
 	chmod -R 777 snap && \
 	cd snap && \
-	make && chmod -R 777 ./ \
+	make && \
+	chmod -R 777 /usr/local/pipeline && \
 	cp -v snap* /usr/local/bin
 
 #-------------------------------PERMISSIONS--------------------------
