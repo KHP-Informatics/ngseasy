@@ -1,7 +1,7 @@
 # Base image
 FROM compbio/ngseasy-base:1.0-r001
 
-# Maintainer 
+# Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
@@ -14,10 +14,10 @@ RUN apt-get update -y && apt-get upgrade -y
 # + snap
 RUN cd /usr/local/pipeline && \
 	git clone https://github.com/amplab/snap.git && \
-	chmod -R 777 snap && \	
+	chmod -R 777 snap && \
 	cd snap && \
-	make && \
-	cp -v snap* /usr/local/bin 
+	make && chmod -R 777 ./ \
+	cp -v snap* /usr/local/bin
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
@@ -36,5 +36,3 @@ CMD ["/bin/bash"]
 #Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN apt-get autoclean && apt-get autoremove -y && rm -rf /var/lib/{apt,dpkg,cache,log}/
-
-

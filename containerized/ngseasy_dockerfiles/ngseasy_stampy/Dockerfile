@@ -1,7 +1,7 @@
 # Base image
 FROM compbio/ngseasy-base:1.0-r001
 
-# Maintainer 
+# Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
@@ -10,14 +10,14 @@ MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Remain current
 RUN apt-get update && apt-get upgrade -y
-    
+
 # + stampy (registration required, get compressed file and put in context dir for the build)
-	
+
 RUN wget -O /tmp/stampy-latest.tgz http://www.well.ox.ac.uk/bioinformatics/Software/Stampy-latest.tgz \
     && tar xvf /tmp/stampy-latest.tgz -C /usr/local/pipeline/ \
     && sed -i 's/-Wl//' /usr/local/pipeline/stampy-1.0.27/makefile \
-    && chmod -R 755 /usr/local/pipeline/stampy-1.0.27 \
-    && cd /usr/local/pipeline/stampy-1.0.27 && make \
+    && chmod -R 777 /usr/local/pipeline/stampy-1.0.27 \
+    && cd /usr/local/pipeline/stampy-1.0.27 && make && chmod -R 775 /usr/local/pipeline/stampy-1.0.27 \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.27' /home/pipeman/.bashrc \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.27' ~/.bashrc
 
@@ -37,4 +37,3 @@ CMD ["/bin/bash"]
 #Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN apt-get autoclean && apt-get autoremove -y && rm -rf /var/lib/{apt,dpkg,cache,log}/
-
