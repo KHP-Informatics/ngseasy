@@ -17,7 +17,9 @@ RUN wget -O /tmp/stampy-latest.tgz http://www.well.ox.ac.uk/bioinformatics/Softw
     && tar xvf /tmp/stampy-latest.tgz -C /usr/local/pipeline/ \
     && sed -i 's/-Wl//' /usr/local/pipeline/stampy-1.0.27/makefile \
     && chmod -R 777 /usr/local/pipeline/stampy-1.0.27 \
-    && cd /usr/local/pipeline/stampy-1.0.27 && make && chmod -R 775 /usr/local/pipeline/stampy-1.0.27 \
+    && cd /usr/local/pipeline/stampy-1.0.27 \
+    && make \ 
+    && chmod -R 777 /usr/local/pipeline/ \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.27' /home/pipeman/.bashrc \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.27' ~/.bashrc
 
