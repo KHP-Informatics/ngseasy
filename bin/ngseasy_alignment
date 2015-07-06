@@ -1,6 +1,6 @@
-#!/usr/bin/env bash -x
+#!/usr/bin/env bash
 set -o errexit
-
+set -x
 ########################################################################################################
 # Program: ngseasy_alignment
 # Version 1.0-r001
@@ -538,7 +538,8 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
 ########################################################################################################
 ## stampy : bwa the stampy
 ########################################################################################################
-elif [[ "${ALIGNER}" == "stampy" ]]; then
+elif [[ "${ALIGNER}" == "stampy" ]]
+    then
     docker images | grep ngseasy-stampy 2>&1 || { echo "compbio/ngseasy-stampy:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
     docker images | grep ngseasy-bwa 2>&1 || { echo "compbio/ngseasy-bwa:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
     logger_ngseasy "[${NGSEASY_STEP}]:START Basic ${ALIGNER} Alignment" ${LOGFILE}
@@ -554,7 +555,7 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
   -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE}' \
   ${GENOMEINDEX}.fasta \
   ${FQ1} ${FQ2} | \
-  samblaster --addMateTags | \
+  samblaster --addMateTags --excludeDups | \
   sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam /dev/stdin | \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam && \
@@ -622,13 +623,17 @@ else
       logger_ngseasy "[${NGSEASY_STEP}]:END ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
 fi
 ### Add RG info back to stampy and generate stats CleanSam
-if [[ ! -s "${SOUT}/alignments/${BAM_PREFIX}.dupemk.tmp.bam" ]]; then
+if [[ ! -s "${SOUT}/alignments/${BAM_PREFIX}.dupemk.tmp.bam" ]]
+    then
+
     logger_ngseasy "[${NGSEASY_STEP}]:Can not find stampy bam [${SOUT}/alignments/${BAM_PREFIX}.dupemk.tmp.bam]. Exiting" ${LOGFILE}
     sleep 2s
     exit 1
+
 else
+
     logger_ngseasy "[${NGSEASY_STEP}]:Adding RG info to ${ALIGNER} Aligned BAM" ${LOGFILE}
-  time ${DOCKER_RUN} \
+    time ${DOCKER_RUN} \
       --name alignmentpicard_${BAM_PREFIX} \
       -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
       -t compbio/ngseasy-picardtools:${NGSEASYVERSION} /bin/bash -c \
@@ -658,16 +663,16 @@ else
       chmod -R 777 ${SOUTDocker}/alignments/*"
       wait
       sleep 1s
-## log docker run
-#
-  docker logs alignmentpicard_${BAM_PREFIX} >> ${LOGFILE}.log
-  docker rm -f alignmentpicard_${BAM_PREFIX}
-  logger_ngseasy "[${NGSEASY_STEP}]:END Basic ${ALIGNER} Alignment " ${LOGFILE}
+      docker logs alignmentpicard_${BAM_PREFIX} >> ${LOGFILE}.log
+      docker rm -f alignmentpicard_${BAM_PREFIX}
+      logger_ngseasy "[${NGSEASY_STEP}]:END Basic ${ALIGNER} Alignment " ${LOGFILE}
 fi
+
 ########################################################################################################
 # Bowtie2
 ########################################################################################################
-elif [[ "${ALIGNER}" == "bowtie2" ]]; then
+elif [[ "${ALIGNER}" == "bowtie2" ]]
+    then
     docker images | grep ngseasy-bowtie2 2>&1 || { echo "compbio/ngseasy-bowtie2:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
 # will provide options for tweaking all option in the future
 FAST="--end-to-end --sensitive"
