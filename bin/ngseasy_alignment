@@ -570,14 +570,14 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
 ### set BWABAM input for stampy
 BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
 
-if [[ ! -s ${SOUT}/alignments/${BAM_PREFIX}.tmp.bam ]]; then
+if [[ ! -s "${SOUT}/alignments/${BAM_PREFIX}.tmp.bam" ]]; then
     logger_ngseasy "[${NGSEASY_STEP}]:Can not find BWA input for stampy [${BWABAM}]. Exiting" ${LOGFILE}
     sleep 2s
     exit 1
 else
     logger_ngseasy "[${NGSEASY_STEP}]:BWA input for stampy [${BWABAM}]" ${LOGFILE}
 
-## stampy on bwa aligned data
+### stampy on bwa aligned data
       logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
 
     time ${DOCKER_RUN} \
@@ -620,9 +620,13 @@ else
       docker rm -f alignment_${BAM_PREFIX}
       logger_ngseasy "[${NGSEASY_STEP}]:END ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
 fi
-
-## Add RG info back to stampy and generate stats CleanSam
-      logger_ngseasy "[${NGSEASY_STEP}]:Adding RG info to ${ALIGNER} Aligned BAM" ${LOGFILE}
+### Add RG info back to stampy and generate stats CleanSam
+if [[ ! -s "${SOUT}/alignments/${BAM_PREFIX}.dupemk.tmp.bam" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:Can not find stampy bam [${SOUT}/alignments/${BAM_PREFIX}.dupemk.tmp.bam]. Exiting" ${LOGFILE}
+    sleep 2s
+    exit 1
+else
+    logger_ngseasy "[${NGSEASY_STEP}]:Adding RG info to ${ALIGNER} Aligned BAM" ${LOGFILE}
   time ${DOCKER_RUN} \
       --name alignmentpicard_${BAM_PREFIX} \
       -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -658,7 +662,7 @@ fi
   docker logs alignmentpicard_${BAM_PREFIX} >> ${LOGFILE}.log
   docker rm -f alignmentpicard_${BAM_PREFIX}
   logger_ngseasy "[${NGSEASY_STEP}]:END Basic ${ALIGNER} Alignment " ${LOGFILE}
-
+fi
 ########################################################################################################
 # Bowtie2
 ########################################################################################################
@@ -701,11 +705,9 @@ SLOW="--local --sensitive-local"
     chmod -R 777 ${SOUTDocker}/alignments/*"
     wait
     sleep 1s
-## log docker run
-#
-  docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
-  docker rm -f alignment_${BAM_PREFIX}
-  logger_ngseasy "[${NGSEASY_STEP}]:END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}
+    docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
+    docker rm -f alignment_${BAM_PREFIX}
+    logger_ngseasy "[${NGSEASY_STEP}]:END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}
 
 ########################################################################################################
 # SNAP
