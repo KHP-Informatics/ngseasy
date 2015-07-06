@@ -567,6 +567,7 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
 
 # set BWABAM
 BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
+
 ## stampy on bwa aligned data
   logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
 
