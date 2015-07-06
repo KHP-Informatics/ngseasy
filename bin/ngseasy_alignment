@@ -544,6 +544,7 @@ elif [[ "${ALIGNER}" == "stampy" ]]
     docker images | grep ngseasy-bwa 2>&1 || { echo "compbio/ngseasy-bwa:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
     logger_ngseasy "[${NGSEASY_STEP}]:START Basic ${ALIGNER} Alignment" ${LOGFILE}
     logger_ngseasy "[${NGSEASY_STEP}]:Aligning with BWA before running stampy" ${LOGFILE}
+    sleep 1s
 
   time ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -562,11 +563,16 @@ elif [[ "${ALIGNER}" == "stampy" ]]
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam && \
   chmod -R 777 ${SOUTDocker}/alignments/*"
   wait
+
   sleep 1s
+
   docker logs alignment_${BAM_PREFIX}_bwatmp >> ${LOGFILE}.log
   docker rm -f alignment_${BAM_PREFIX}_bwatmp
+
   sleep 1s
+
   logger_ngseasy "[${NGSEASY_STEP}]:Finished BWA alignmet pre stampy run" ${LOGFILE}
+
   sleep 1s
 
 ### set BWABAM input for stampy
@@ -579,6 +585,8 @@ if [[ ! -s "${SOUT}/alignments/${BAM_PREFIX}.tmp.bam" ]]; then
 else
     logger_ngseasy "[${NGSEASY_STEP}]:BWA input for stampy [${BWABAM}]" ${LOGFILE}
     logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
+
+    sleep 5s
 
     time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
@@ -615,12 +623,17 @@ else
       rm -rf ${SOUTDocker}/tmp/* && \
       chmod -R 777 ${SOUTDocker}/alignments/"
       wait
+
       sleep 1s
+
       docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
       docker rm -f alignment_${BAM_PREFIX}
+
       logger_ngseasy "[${NGSEASY_STEP}]:END ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
       logger_ngseasy "[${NGSEASY_STEP}]:Adding RG info to ${ALIGNER} Aligned BAM" ${LOGFILE}
+
       sleep 1s
+
       time ${DOCKER_RUN} \
       --name alignmentpicard_${BAM_PREFIX} \
       -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -650,10 +663,14 @@ else
       rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam && \
       chmod -R 777 ${SOUTDocker}/alignments/*"
       wait
+
       sleep 1s
+
       docker logs alignmentpicard_${BAM_PREFIX} >> ${LOGFILE}.log
       docker rm -f alignmentpicard_${BAM_PREFIX}
+
       logger_ngseasy "[${NGSEASY_STEP}]:END ${ALIGNER} Alignment " ${LOGFILE}
+      sleep 1s
 fi
 
 ########################################################################################################
