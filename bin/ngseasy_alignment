@@ -586,13 +586,14 @@ else
     logger_ngseasy "[${NGSEASY_STEP}]:BWA input for stampy [${BWABAM}]" ${LOGFILE}
     logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
 
-    sleep 5s
+## add to something
+stampy_version="stampy-1.0.27"
 
     time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     -t compbio/ngseasy-stampy:${NGSEASYVERSION} /bin/bash -c \
-    "time python  /usr/local/pipeline/stampy-1.0.27/stampy.py \
+    "time python  /usr/local/pipeline/${stampy_version}/stampy.py \
       -g ${GENOMEINDEX} \
       -h ${GENOMEINDEX} \
       -t ${NCPU} \
