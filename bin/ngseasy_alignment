@@ -554,7 +554,8 @@ elif [[ "${ALIGNER}" == "stampy" ]]
   -t ${NCPU} \
   -R '@RG\tID:${BAM_PREFIX}\tSM:${BAM_PREFIX}\tPU:${platform_unit}\tPL:${NGS_PLATFORM}\tLB:${DNA_PREP_LIBRARY_ID}\tDT:${RUNDATE}' \
   ${GENOMEINDEX}.fasta \
-  ${FQ1} ${FQ2} | \
+  ${FQ1} \
+  ${FQ2} | \
   samblaster --addMateTags --excludeDups | \
   sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
   sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam /dev/stdin | \
@@ -637,7 +638,7 @@ else
       --name alignmentpicard_${BAM_PREFIX} \
       -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
       -t compbio/ngseasy-picardtools:${NGSEASYVERSION} /bin/bash -c \
-      "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/picard-tools-1.129/picard.jar CleanSam \
+      "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/picard-tools-1.128/picard.jar CleanSam \
       TMP_DIR=${SOUTDocker}/tmp \
       CREATE_INDEX=FALSE \
       VALIDATION_STRINGENCY=SILENT \
