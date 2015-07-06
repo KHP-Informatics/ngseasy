@@ -575,13 +575,11 @@ BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
 
 if [[ ! -s "${SOUT}/alignments/${BAM_PREFIX}.tmp.bam" ]]; then
     logger_ngseasy "[${NGSEASY_STEP}]:Can not find BWA input for stampy [${BWABAM}]. Exiting" ${LOGFILE}
-    sleep 2s
+    sleep 5s
     exit 1
 else
     logger_ngseasy "[${NGSEASY_STEP}]:BWA input for stampy [${BWABAM}]" ${LOGFILE}
-
-### stampy on bwa aligned data
-      logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
 
     time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
@@ -656,7 +654,7 @@ else
       sleep 1s
       docker logs alignmentpicard_${BAM_PREFIX} >> ${LOGFILE}.log
       docker rm -f alignmentpicard_${BAM_PREFIX}
-      logger_ngseasy "[${NGSEASY_STEP}]:END Basic ${ALIGNER} Alignment " ${LOGFILE}
+      logger_ngseasy "[${NGSEASY_STEP}]:END ${ALIGNER} Alignment " ${LOGFILE}
 fi
 
 ########################################################################################################
