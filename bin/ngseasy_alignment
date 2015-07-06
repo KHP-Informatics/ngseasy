@@ -564,12 +564,21 @@ elif [[ "${ALIGNER}" == "stampy" ]]; then
   sleep 1s
   docker logs alignment_${BAM_PREFIX}_bwatmp >> ${LOGFILE}.log
   docker rm -f alignment_${BAM_PREFIX}_bwatmp
+  logger_ngseasy "[${NGSEASY_STEP}]:Finished BWA alignmet pre stampy run" ${LOGFILE}
+  sleep 1s
 
-# set BWABAM
+### set BWABAM input for stampy
 BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
 
+if [[ ! -s ${SOUT}/alignments/${BAM_PREFIX}.tmp.bam ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:Can not find BWA input for stampy [${BWABAM}]. Exiting" ${LOGFILE}
+    sleep 2s
+    exit 1
+else
+    logger_ngseasy "[${NGSEASY_STEP}]:BWA input for stampy [${BWABAM}]" ${LOGFILE}
+
 ## stampy on bwa aligned data
-  logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
+      logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
 
     time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
@@ -604,14 +613,16 @@ BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
       sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
       sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
       rm -rf ${SOUTDocker}/tmp/* && \
-      chmod -R 777 ${SOUTDocker}/alignments/*"
+      chmod -R 777 ${SOUTDocker}/alignments/"
       wait
       sleep 1s
       docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
       docker rm -f alignment_${BAM_PREFIX}
-      logger_ngseasy "[${NGSEASY_STEP}]:Adding RG info to ${ALIGNER} Aligned BAM" ${LOGFILE}
+      logger_ngseasy "[${NGSEASY_STEP}]:END ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
+fi
 
 ## Add RG info back to stampy and generate stats CleanSam
+      logger_ngseasy "[${NGSEASY_STEP}]:Adding RG info to ${ALIGNER} Aligned BAM" ${LOGFILE}
   time ${DOCKER_RUN} \
       --name alignmentpicard_${BAM_PREFIX} \
       -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
