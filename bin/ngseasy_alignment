@@ -603,8 +603,6 @@ BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
       sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
       sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
       sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
-      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam && \
-      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
       rm -rf ${SOUTDocker}/tmp/* && \
       chmod -R 777 ${SOUTDocker}/alignments/*"
       wait
