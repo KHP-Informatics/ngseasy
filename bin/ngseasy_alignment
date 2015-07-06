@@ -621,6 +621,8 @@ else
       sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
       sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
       rm -rf ${SOUTDocker}/tmp/* && \
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam && \
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
       chmod -R 777 ${SOUTDocker}/alignments/"
       wait
 
@@ -633,18 +635,20 @@ else
       logger_ngseasy "[${NGSEASY_STEP}]:Adding RG info to ${ALIGNER} Aligned BAM" ${LOGFILE}
 
       sleep 1s
+## add this to main file somewhere...
+      picard_version="picard-tools-1.128"
 
       time ${DOCKER_RUN} \
       --name alignmentpicard_${BAM_PREFIX} \
       -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
       -t compbio/ngseasy-picardtools:${NGSEASYVERSION} /bin/bash -c \
-      "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/picard-tools-1.128/picard.jar CleanSam \
+      "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/${picard_version}/picard.jar CleanSam \
       TMP_DIR=${SOUTDocker}/tmp \
       CREATE_INDEX=FALSE \
       VALIDATION_STRINGENCY=SILENT \
       INPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam \
       OUTPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmpcleansam.bam && \
-      time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/picard-tools-1.129/picard.jar AddOrReplaceReadGroups \
+      time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/${picard_version}/picard.jar AddOrReplaceReadGroups \
       TMP_DIR=${SOUTDocker}/tmp \
       CREATE_INDEX=FALSE \
       VALIDATION_STRINGENCY=SILENT \
