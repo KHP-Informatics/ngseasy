@@ -299,8 +299,7 @@ DATE=`date +"%d%m%y"`
 
 ########################################################################################################
 ## LOGFILE
-#
-
+########################################################################################################
 ## check and make log directory
 #
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
@@ -309,21 +308,19 @@ then
 fi
 
 ########################################################################################################
-## LOGFILE
+## check and make logfile
 ########################################################################################################
 LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}"
 
-########################################################################################################
-## check and make logfile
-########################################################################################################
 if [ ! -e "${LOGFILE}.log" ]
 then
   touch ${LOGFILE}.log
 fi
 logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
 
-## read config_file
-#
+########################################################################################################
+## read the config_file
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER]"  ${LOGFILE}
@@ -331,7 +328,6 @@ $VERSION\t$NGSUSER]"  ${LOGFILE}
 echo -e "$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
 $NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
 $VERSION\t$NGSUSER" >> ${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}/config_files/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}.config
-
 
 ########################################################################################################
 ## OUTPUT SAMPLE DIR
@@ -354,7 +350,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:Docker Output directory [${SOUTDocker}]" ${LOG
 
 ########################################################################################################
 ## check local dir exists
-#
+########################################################################################################
 if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
 then
   logger_ngseasy "[${NGSEASY_STEP}]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
@@ -443,13 +439,8 @@ fi
 ########################################################################################################
 ## BAM FILE NAME
 ########################################################################################################
-
-# SAMPLE_ID.WEX.PE.ILLUMINA.atrim.bwa.b37.dupemk.bam [dupemk.${BSQR}.bam] [dupemk.${BSQR}.${REALN}.bam]
-#
 BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}"
-
 logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE}
-
 
 ########################################################################################################
 ## BAM Files to use for variant calling
@@ -550,31 +541,30 @@ fi
 ########################################################################################################
 ## callable regions - mapped and has depth
 ########################################################################################################
-  logger_ngseasy "[${NGSEASY_STEP}]:Get Callable Regions" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:Get Callable Regions" ${LOGFILE}
 
 if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]] && [[ ! -e  "${SOUT}/reports/${BAMFILE}.genomecov.bed"  ]]; then
-
   logger_ngseasy "[${NGSEASY_STEP}]:Generating Mapped Reads BED File and Callable Regions File" ${LOGFILE}
-
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name callable_regions_${BAM_PREFIX} \
   -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
-  "time sambamba view -t ${NCPU} -F \"mapping_quality>0 and paired and (not unmapped)\" -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
+  "time sambamba view \
+  -t ${NCPU} -F \"mapping_quality>1 and (paired or proper_pair) and (not unmapped)\" \
+  -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
   bedtools bamtobed | \
   bedtools merge > ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed && \
-  time sambamba view -t ${NCPU} -F \"mapping_quality>0 and paired and (not unmapped)\" -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
-  bedtools genomecov -split -ibam stdin -bga -max 500 | awk '\$4>0' > ${SOUTDocker}/reports/${BAMFILE}.genomecov.bed"
+  time sambamba view \
+  -t ${NCPU} -F \"mapping_quality>1 and (paired or proper_pair) and (not unmapped)\" \
+  -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
+  bedtools genomecov -split -ibam stdin -bga -max 500 | awk '\$4>1' > ${SOUTDocker}/reports/${BAMFILE}.genomecov.bed"
   sleep 1s
   docker logs callable_regions_${BAM_PREFIX} >> ${LOGFILE}.log
   docker rm callable_regions_${BAM_PREFIX}
-
 # move on
 elif [[ -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]]  && [[ -e  "${SOUT}/reports/${BAMFILE}.genomecov.bed"  ]]; then
-
   logger_ngseasy "[${NGSEASY_STEP}]:Mapped Reads [${SOUT}/reports/${BAMFILE}.mapped.reads.bed]" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Callable Regions [${SOUT}/reports/${BAMFILE}.genomecov.bed]" ${LOGFILE}
-
 # cant find shit
 else
   logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find Mapped Reads [${SOUT}/reports/${BAMFILE}.mapped.reads.bed] " ${LOGFILE}
@@ -582,75 +572,60 @@ else
   logger_ngseasy "[${NGSEASY_STEP}]:Exiting" ${LOGFILE}
   sleep 1s
   exit 1
-
 fi
-
 # quick fix to get mapped regrions file for freebayes-parallel
 logger_ngseasy "[${NGSEASY_STEP}]:START Make regions files for var-callers" ${LOGFILE}
-
-time awk '{print $1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.mapped.regions
-time awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.platypus.intervals
-#time awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ','  > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+    awk '{print $1":"$2".."$3}' ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.mapped.regions
+    awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed > ${SOUT}/reports/${BAMFILE}.platypus.intervals
+    #time awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ','  > ${SOUT}/reports/${BAMFILE}.platypus.intervals
 logger_ngseasy "[${NGSEASY_STEP}]:END Make regions files for varcallers" ${LOGFILE}
-
-# time bedtools genomecov -split -ibam ${SOUTDocker}/alignments/${BAMFILE} -g ${GENOMEFILE} -d | /usr/local/pipeline/freebayes/scripts/coverage_to_regions.py ${FAI} 1000 > ${REFFASTA}.1000.regions
-# awk '{print \$1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | awk 'BEGIN{ORS=","}1' > ${SOUT}/reports/${BAMFILE}.platypus.intervals
-
-########################################################################################################
-## fix_ambiguous
-## Custom utils from bcbio and more This needs to be in Dockerfile
-## also need to add http://genome.sph.umich.edu/wiki/Vt to base image or all callers
-## Taken from https://github.com/chapmanb/bcbio-nextgen/blob/98c75603907cb22a3e4cd4fd78f7e995b80bddfd/bcbio/variation/vcfutils.py#L76
-#function fix_ambiguous() {
-#  awk -F$'\t' -v OFS='\t' '{if ($0 !~ /^#/) gsub(/[KMRYSWBVHDX]/, "N", $4) } {print}'
-#}
 
 ########################################################################################################
 ## Freebayes
 ########################################################################################################
-# base_qual="20"
-# map_qual="20"
-
-# awk '{print $1":"$2".."$3}' BAM > test.regions this Fing works woop woop
-
 if [ "${VARCALLER}" == "freebayes-parallel" ]
   then
 
   logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using freebayes-parallel " ${LOGFILE}
 
+  ###  new-freebayes
   ${DOCKER_RUN} \
-  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-  --name Freebayes_${BAM_PREFIX} \
-  -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-  "time \
-  /usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${REFFASTA} 100000) ${NCPU} \
-  -f ${REFFASTA} \
-  -b ${SOUTDocker}/alignments/${BAMFILE} \
-  --min-coverage ${coverage_min} \
-  --min-mapping-quality ${map_qual} \
-  --min-base-quality ${base_qual} \
-  --min-repeat-entropy 1 \
-  --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
-  time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
-  vcffilter -f 'QUAL > 5' -s | \
-  fix_ambiguous | \
-  vcfallelicprimitives --keep-geno | \
-  vcffixup - | \
-  vcfstreamsort | \
-  vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
-  vcfuniqalleles | \
-  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-  bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
-
-# add vt decompose -s - | \ bgzip -i
-
-#logs
-docker logs Freebayes_${BAM_PREFIX} >> ${LOGFILE}.log
-docker rm Freebayes_${BAM_PREFIX}
-
-# logs
-logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFILE}
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    --name Freebayes_${BAM_PREFIX} \
+    -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
+    "sambamba view \
+    -t ${NCPU} \
+    -F \"mapping_quality>5 and (paired or proper_pair)\" \
+    -f bam -o ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
+    ${SOUTDocker}/alignments/${BAMFILE} && \
+    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam && \
+    time \
+    /usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${REFFASTA} 100000) \
+    ${NCPU} \
+    -f ${REFFASTA} \
+    -b ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
+    --min-coverage ${coverage_min} \
+    --min-mapping-quality ${map_qual} \
+    --min-base-quality ${base_qual} \
+    --min-repeat-entropy 1 \
+    --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
+    time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+    vcffilter -f 'QUAL > 5' -s | \
+    fix_ambiguous | \
+    vcfallelicprimitives --keep-geno | \
+    vcffixup - | \
+    vcfstreamsort | \
+    vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+    vcfuniqalleles | \
+    bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+    tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
+    bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
+    tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz && \
+    rm ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam"
+    #logs
+    docker logs Freebayes_${BAM_PREFIX} >> ${LOGFILE}.log
+    docker rm Freebayes_${BAM_PREFIX}
+    logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFILE}
 
 elif [ "${VARCALLER}" == "freebayes-default" ]
   then
@@ -1227,3 +1202,11 @@ fi
 chmod -R 776 ${SOUT}/*
 done < ${RUNFILE}
 logger_ngseasy " END:Variant Calling" ${LOGFILE}
+########################################################################################################
+## fix_ambiguous
+## Custom utils from bcbio and more This needs to be in Dockerfile
+## also need to add http://genome.sph.umich.edu/wiki/Vt to base image or all callers
+## Taken from https://github.com/chapmanb/bcbio-nextgen/blob/98c75603907cb22a3e4cd4fd78f7e995b80bddfd/bcbio/variation/vcfutils.py#L76
+#function fix_ambiguous() {
+#  awk -F$'\t' -v OFS='\t' '{if ($0 !~ /^#/) gsub(/[KMRYSWBVHDX]/, "N", $4) } {print}'
+#}
