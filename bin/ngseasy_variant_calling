@@ -60,6 +60,10 @@ KNOWN_SNPS_1000G=""
 KNOWN_SNPS_OMNI=""
 KNOWN_SNPS_b138=""
 
+base_qual="20"
+map_qual="20"
+coverage_min="2"
+
 ########################################################################################################
 ## Set version and run date
 ########################################################################################################
@@ -604,6 +608,8 @@ logger_ngseasy "[${NGSEASY_STEP}]:END Make regions files for varcallers" ${LOGFI
 ########################################################################################################
 ## Freebayes
 ########################################################################################################
+# base_qual="20"
+# map_qual="20"
 
 # awk '{print $1":"$2".."$3}' BAM > test.regions this Fing works woop woop
 
@@ -620,9 +626,9 @@ if [ "${VARCALLER}" == "freebayes-parallel" ]
   /usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${REFFASTA} 100000) ${NCPU} \
   -f ${REFFASTA} \
   -b ${SOUTDocker}/alignments/${BAMFILE} \
-  --min-coverage 2 \
-  --min-mapping-quality 10 \
-  --min-base-quality 10 \
+  --min-coverage ${coverage_min} \
+  --min-mapping-quality ${map_qual} \
+  --min-base-quality ${base_qual} \
   --min-repeat-entropy 1 \
   --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
   time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
@@ -717,13 +723,13 @@ elif [ "${VARCALLER}" == "platypus" ]
       --assemble=1 \
       --assembleAll=1 \
       --assemblyRegionSize=1500 \
-      --minReads=2  \
+      --minReads=${coverage_min}  \
       --maxGOF=30 \
       --bufferSize=50000 \
       --maxReads=10000000 \
       --minPosterior=5 \
-      --minMapQual=10 \
-      --minBaseQual=10 \
+      --minMapQual=${map_qual} \
+      --minBaseQual=${base_qual} \
       --maxSize 10000 \
       --maxVariants=8 \
       --mergeClusteredVariants=1 \
@@ -768,13 +774,13 @@ elif [ "${VARCALLER}" == "platypus" ]
       --assemble=1 \
       --assembleAll=1 \
       --assemblyRegionSize=1500 \
-      --minReads=2  \
+      --minReads=${coverage_min}  \
       --maxGOF=30 \
       --bufferSize=50000 \
       --maxReads=10000000 \
       --minPosterior=5 \
-      --minMapQual=10 \
-      --minBaseQual=10 \
+      --minMapQual=${map_qual} \
+      --minBaseQual=${base_qual} \
       --maxSize 10000 \
       --maxVariants=8 \
       --mergeClusteredVariants=1 \
