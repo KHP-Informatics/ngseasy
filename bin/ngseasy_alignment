@@ -666,6 +666,9 @@ stampy_version="stampy-1.0.27"
       bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
       rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmpcleansam.bam && \
       rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam && \
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam.bai && \
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam.bai && \
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam && \
       chmod -R 777 ${SOUTDocker}/alignments/*"
       wait
 
