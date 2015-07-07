@@ -587,7 +587,7 @@ if [ "${VARCALLER}" == "freebayes-parallel" ]
   then
 
   logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using freebayes-parallel " ${LOGFILE}
-
+  ###
   ###  new-freebayes
   ${DOCKER_RUN} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
