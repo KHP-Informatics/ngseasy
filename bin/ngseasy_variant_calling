@@ -585,6 +585,9 @@ logger_ngseasy "[${NGSEASY_STEP}]:START Make regions files for var-callers" ${LO
     #time awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ','  > ${SOUT}/reports/${BAMFILE}.platypus.intervals
 logger_ngseasy "[${NGSEASY_STEP}]:END Make regions files for varcallers" ${LOGFILE}
 
+########################################################################################################
+## fliter BAM
+########################################################################################################
 ### quick fix to clean some sam issues pre calling
 logger_ngseasy "[${NGSEASY_STEP}]:START Filter BAM Q20 and proper_pair" ${LOGFILE}
 ${DOCKER_RUN} \
@@ -594,11 +597,10 @@ ${DOCKER_RUN} \
   "sambamba view \
   -t ${NCPU} \
   -F \"mapping_quality>=20 and proper_pair\" \
-  -f bam -o ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
+  -f bam -o ${SOUTDocker}/alignments/${FilteredBAM} \
   ${SOUTDocker}/alignments/${BAMFILE} && \
-  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam && \
-  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam > \
-  ${SOUTDocker}/reports/${BAM_PREFIX}.filtered.bam.flagstat &&"
+  sambamba index ${SOUTDocker}/alignments/${FilteredBAM} && \
+  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${FilteredBAM} > ${SOUTDocker}/alignments/${FilteredBAM}.flagstat"
 logger_ngseasy "[${NGSEASY_STEP}]:END Filter BAM Q20 and proper_pair" ${LOGFILE}
 
 ########################################################################################################
