@@ -1,11 +1,11 @@
 # Base image
-FROM compbio/ngseasy-base:1.0
+FROM compbio/ngseasy-base:1.0-r001
 
 # Maintainer 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
-ENV HOME /root
+##ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 # general purpose tools
@@ -26,7 +26,7 @@ RUN cd /tmp && \
     mv root /usr/local
 
 RUN  echo "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
-    . /root/.bashrc
+    /bin/bash -c ". /root/.bashrc"
 
    
 # speedseq-------------------------------------------------------------
@@ -36,10 +36,10 @@ RUN cd /usr/local/pipeline && \
   git clone --recursive https://github.com/cc2qe/speedseq && \
   chmod -R 777 ./speedseq && \
   cd /usr/local/pipeline/speedseq/src/ && \
-  sed -i s/ROOTFLAGS = -m64 -O3/#ROOTFLAGS = -m64 -O3/g Makefile && \
-  sed -i s/#ROOTFLAGS = -pthread -m64/ROOTFLAGS = -pthread -m64/g Makefile && \ 
+  #sed -i s/ROOTFLAGS = -m64 -O3/#ROOTFLAGS = -m64 -O3/g Makefile && \
+  #sed -i s/#ROOTFLAGS = -pthread -m64/ROOTFLAGS = -pthread -m64/g Makefile && \ 
   cd /usr/local/pipeline/speedseq && \
-  make
+  make ROOTFLAGS=" -pthread -m64"
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
