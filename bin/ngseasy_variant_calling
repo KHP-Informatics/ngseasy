@@ -616,19 +616,11 @@ if [ "${VARCALLER}" == "freebayes-parallel" ]
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     --name Freebayes_${BAM_PREFIX} \
     -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-    "sambamba view \
-    -t ${NCPU} \
-    -F \"mapping_quality>=20 and proper_pair\" \
-    -f bam -o ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
-    ${SOUTDocker}/alignments/${BAMFILE} && \
-    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam && \
-    sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam > \
-    ${SOUTDocker}/reports/${BAM_PREFIX}.filtered.bam.flagstat && \
-    time \
+    "time \
     /usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${REFFASTA} 100000) \
     ${NCPU} \
     -f ${REFFASTA} \
-    -b ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
+    -b ${SOUTDocker}/alignments/${FilteredBAM} \
     --min-coverage ${coverage_min} \
     --min-mapping-quality ${map_qual} \
     --min-base-quality ${base_qual} \
@@ -646,8 +638,7 @@ if [ "${VARCALLER}" == "freebayes-parallel" ]
     bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
     tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
     bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
-    tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz && \
-    rm ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam"
+    tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz"
     #logs
     docker logs Freebayes_${BAM_PREFIX} >> ${LOGFILE}.log
     docker rm Freebayes_${BAM_PREFIX}
@@ -665,7 +656,7 @@ elif [ "${VARCALLER}" == "freebayes-default" ]
     "time \
     /usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${REFFASTA} 100000) ${NCPU} \
     -f ${REFFASTA} \
-    -b ${SOUTDocker}/alignments/${BAMFILE} \
+    -b ${SOUTDocker}/alignments/${FilteredBAM} \
     --min-repeat-entropy 1 \
     --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
     time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
@@ -716,7 +707,7 @@ elif [ "${VARCALLER}" == "platypus" ]
     -t compbio/ngseasy-platypus:${NGSEASYVERSION} /bin/bash -c \
     "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
-      --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
+      --bamFiles=${SOUTDocker}/alignments/${FilteredBAM} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
@@ -767,7 +758,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c \
       "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
-      --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
+      --bamFiles=${SOUTDocker}/alignments/${FilteredBAM} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
@@ -833,7 +824,7 @@ elif [ "${VARCALLER}" == "platypus-default" ]
     -t compbio/ngseasy-platypus:${NGSEASYVERSION} /bin/bash -c \
     "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
-      --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
+      --bamFiles=${SOUTDocker}/alignments/${FilteredBAM} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
@@ -862,7 +853,7 @@ elif [ "${VARCALLER}" == "platypus-default" ]
       -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c \
       "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
       --nCPU ${NCPU} \
-      --bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
+      --bamFiles=${SOUTDocker}/alignments/${FilteredBAM} \
       --refFile=${REFFASTA} \
       --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
       --logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
@@ -909,7 +900,7 @@ elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
   -T UnifiedGenotyper \
   -R ${REFFASTA} \
   -nct ${NCPU} \
-  -I ${SOUTDocker}/alignments/${BAMFILE} \
+  -I ${SOUTDocker}/alignments/${FilteredBAM} \
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
@@ -976,7 +967,7 @@ elif [ "${VARCALLER}" == "HaplotypeCaller" ]
   -T HaplotypeCaller \
   -R ${REFFASTA} \
   -nct ${NCPU} \
-  -I ${SOUTDocker}/alignments/${BAMFILE} \
+  -I ${SOUTDocker}/alignments/${FilteredBAM} \
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   --dbsnp ${KNOWN_SNPS_b138} \
   --output_mode ${GTMODEGATK} \
@@ -1051,7 +1042,7 @@ ${DOCKER_RUN} \
 "time \
 /usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${REFFASTA} 100000) ${NCPU} \
 -f ${REFFASTA} \
--b ${SOUTDocker}/alignments/${BAMFILE} \
+-b ${SOUTDocker}/alignments/${FilteredBAM} \
 --min-coverage 2 \
 --min-mapping-quality 10 \
 --min-base-quality 10 \
@@ -1083,7 +1074,7 @@ ${DOCKER_RUN} \
 -t compbio/ngseasy-platypus:${VERSION} /bin/bash -c \
 "time python /usr/local/pipeline/Platypus/bin/Platypus.py callVariants \
 --nCPU ${NCPU} \
---bamFiles=${SOUTDocker}/alignments/${BAMFILE} \
+--bamFiles=${SOUTDocker}/alignments/${FilteredBAM} \
 --refFile=${REFFASTA} \
 --output=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
 --logFileName=${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.log \
@@ -1143,7 +1134,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller " 
   -T HaplotypeCaller \
   -R ${REFFASTA} \
   -nct ${NCPU} \
-  -I ${SOUTDocker}/alignments/${BAMFILE} \
+  -I ${SOUTDocker}/alignments/${FilteredBAM} \
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf \
   -stand_call_conf 30 \
   -stand_emit_conf 10 \
