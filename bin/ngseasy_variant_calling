@@ -580,6 +580,22 @@ logger_ngseasy "[${NGSEASY_STEP}]:START Make regions files for var-callers" ${LO
     #time awk '{print $1":"$2"-"$3}'  ${SOUT}/reports/${BAMFILE}.mapped.reads.bed | tr '\n' ','  > ${SOUT}/reports/${BAMFILE}.platypus.intervals
 logger_ngseasy "[${NGSEASY_STEP}]:END Make regions files for varcallers" ${LOGFILE}
 
+### quick fix to clean some sam issues pre calling
+logger_ngseasy "[${NGSEASY_STEP}]:START Filter BAM Q20 and proper_pair" ${LOGFILE}
+${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name filterBam_${BAM_PREFIX} \
+  -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
+  "sambamba view \
+  -t ${NCPU} \
+  -F \"mapping_quality>=20 and proper_pair\" \
+  -f bam -o ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
+  ${SOUTDocker}/alignments/${BAMFILE} && \
+  sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam && \
+  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam > \
+  ${SOUTDocker}/reports/${BAM_PREFIX}.filtered.bam.flagstat"
+logger_ngseasy "[${NGSEASY_STEP}]:END Filter BAM Q20 and proper_pair" ${LOGFILE}
+
 ########################################################################################################
 ## Freebayes
 ########################################################################################################
@@ -593,13 +609,7 @@ if [ "${VARCALLER}" == "freebayes-parallel" ]
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     --name Freebayes_${BAM_PREFIX} \
     -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-    "sambamba view \
-    -t ${NCPU} \
-    -F \"mapping_quality>5 and proper_pair\" \
-    -f bam -o ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
-    ${SOUTDocker}/alignments/${BAMFILE} && \
-    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam && \
-    time \
+    "time \
     /usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${REFFASTA} 100000) \
     ${NCPU} \
     -f ${REFFASTA} \
