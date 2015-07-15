@@ -451,6 +451,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:NGSeasy will look for and use the indel re-ali
 if [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "no-bsqr" ]]; then
 
   BAMFILE="${BAM_PREFIX}.dupemk.bam"
+  FilteredBAM="${BAM_PREFIX}.filtered.bam"
 
   logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [no-realn] and BSQR set to [no-bsqr]" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
@@ -468,6 +469,7 @@ if [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "no-bsqr" ]]; then
 elif [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
 
   BAMFILE="${BAM_PREFIX}.dupemk.no-realn.bam-bsqr.bam"
+  FilteredBAM="${BAM_PREFIX}.dupemk.no-realn.bam-bsqr.filtered.bam"
 
   logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [no-realn] and BSQR set to [bam-bsqr]" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
@@ -485,6 +487,7 @@ elif [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
 elif [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "gatk-bsqr" ]]; then
 
   BAMFILE="${BAM_PREFIX}.dupemk.no-realn.gatk-bsqr.bam"
+  FilteredBAM="${BAM_PREFIX}.dupemk.no-realn.gatk-bsqr.filtered.bam"
 
   logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [no-realn] and BSQR set to [gatk-bsqr]" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
@@ -502,6 +505,7 @@ elif [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "gatk-bsqr" ]]; then
 elif [[ "${REALN}" == "bam-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
 
   BAMFILE="${BAM_PREFIX}.dupemk.bam-realn.bam-bsqr.bam"
+  FilteredBAM="${BAM_PREFIX}.dupemk.bam-realn.bam-bsqr.filtered.bam"
 
   logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [bam-realn] and BSQR set to [bam-bsqr]" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
@@ -519,6 +523,7 @@ elif [[ "${REALN}" == "bam-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
 elif [[ "${REALN}" == "gatk-realn" ]] && [[ "${BSQR}" == "gatk-bsqr" ]]; then
 
   BAMFILE="${BAM_PREFIX}.dupemk.gatk-realn.gatk-bsqr.bam"
+  FilteredBAM="${BAM_PREFIX}.dupemk.gatk-realn.gatk-bsqr.filtered.bam"
 
   logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [gatk-realn] and BSQR set to [bam-bsqr]" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
@@ -593,7 +598,7 @@ ${DOCKER_RUN} \
   ${SOUTDocker}/alignments/${BAMFILE} && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam > \
-  ${SOUTDocker}/reports/${BAM_PREFIX}.filtered.bam.flagstat"
+  ${SOUTDocker}/reports/${BAM_PREFIX}.filtered.bam.flagstat &&"
 logger_ngseasy "[${NGSEASY_STEP}]:END Filter BAM Q20 and proper_pair" ${LOGFILE}
 
 ########################################################################################################
@@ -609,7 +614,15 @@ if [ "${VARCALLER}" == "freebayes-parallel" ]
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
     --name Freebayes_${BAM_PREFIX} \
     -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
-    "time \
+    "sambamba view \
+    -t ${NCPU} \
+    -F \"mapping_quality>=20 and proper_pair\" \
+    -f bam -o ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
+    ${SOUTDocker}/alignments/${BAMFILE} && \
+    sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam && \
+    sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam > \
+    ${SOUTDocker}/reports/${BAM_PREFIX}.filtered.bam.flagstat && \
+    time \
     /usr/local/pipeline/freebayes/scripts/freebayes-parallel <(/usr/local/pipeline/freebayes/scripts/fasta_generate_regions.py ${REFFASTA} 100000) \
     ${NCPU} \
     -f ${REFFASTA} \
