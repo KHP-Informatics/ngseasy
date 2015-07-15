@@ -587,7 +587,7 @@ if [ "${VARCALLER}" == "freebayes-parallel" ]
   then
 
   logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using freebayes-parallel " ${LOGFILE}
-
+  ###
   ###  new-freebayes
   ${DOCKER_RUN} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -595,7 +595,7 @@ if [ "${VARCALLER}" == "freebayes-parallel" ]
     -t compbio/ngseasy-freebayes:${NGSEASYVERSION} /bin/bash -c \
     "sambamba view \
     -t ${NCPU} \
-    -F \"mapping_quality>5 and (paired or proper_pair)\" \
+    -F \"mapping_quality>5 and proper_pair\" \
     -f bam -o ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam \
     ${SOUTDocker}/alignments/${BAMFILE} && \
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.filtered.bam && \
@@ -608,6 +608,7 @@ if [ "${VARCALLER}" == "freebayes-parallel" ]
     --min-mapping-quality ${map_qual} \
     --min-base-quality ${base_qual} \
     --min-repeat-entropy 1 \
+    --experimental-gls \
     --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
     time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
     vcffilter -f 'QUAL > 5' -s | \
