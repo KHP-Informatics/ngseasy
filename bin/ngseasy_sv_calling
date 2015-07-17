@@ -693,8 +693,20 @@ elif [ "${CNV}" == "cnvnator" ]
     docker rm -f ${CNV}_${BAM_PREFIX}
     logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using ${CNV} " ${LOGFILE}
 
+########################################################################################################
+## no-sv
+########################################################################################################
+elif [ "${CNV}" == "no-sv" ]
+    then
+    logger_ngseasy "[${NGSEASY_STEP}]:CNV set as [${CNV}]. Skipping SV Calling" ${LOGFILE}
+    sleep 1s
+
+########################################################################################################
+## Option not recognised
+########################################################################################################
 else
-    logger_ngseasy "[${NGSEASY_STEP}]:Do not recognise option CNV [${CNV}]. Exiting" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:Do not recognise option CNV [${CNV}]" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:CNV should be one of [no-sv, sv_lumpy, delly, exomedepth, mhmm , cnvnator]. Exiting" ${LOGFILE}
     sleep 1s
     exit 1
 fi
