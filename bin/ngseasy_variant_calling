@@ -1200,7 +1200,9 @@ logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller " 
   logger_ngseasy " END bcbio-variation in Ensembl Variant Calling using Freebayes + HaplotypeCaller "  ${LOGFILE}
 
 fi
-
+########################################################################################################
+## END
+########################################################################################################
 chmod -R 776 ${SOUT}/*
 done < ${RUNFILE}
 logger_ngseasy " END:Variant Calling" ${LOGFILE}

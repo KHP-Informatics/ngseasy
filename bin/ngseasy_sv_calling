@@ -68,7 +68,7 @@ coverage_min="2"
 ########################################################################################################
 NGSEASYVERSION="1.0-r001"
 RUNDATE=`date +"%d%m%y"`
-NGSEASY_STEP="ngseasy_variant_calling"
+NGSEASY_STEP="ngseasy_sv_calling"
 
 echo -e "\n################################################################"
 echo -e "#"
@@ -117,7 +117,7 @@ function logger_ngseasy() {
 ########################################################################################################
 function ngseasy_variant_calling_usage() {
     echo "
-Program: ngseasy_variant_calling
+Program: ngseasy_sv_calling
 Version 1.0-r001
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
@@ -127,7 +127,7 @@ options:  -c  STRING  configuration file
           -d  STRING  project directory
           -h  NULL    show this message
 
-ngseasy_variant_calling sets up the NGSeasy docker containers for your variant caller of choice.
+ngseasy_sv_calling sets up the NGSeasy docker containers for your CNV caller of choice.
 "
 }
 
@@ -573,10 +573,134 @@ fi
 ########################################################################################################
 ## speedseq lumpy and svtyper
 ########################################################################################################
-if [ "${VARCALLER}" == "sv_lumpy" ]
+if [ "${CNV}" == "sv_lumpy" ]
   then
-  logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using freebayes-parallel " ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using speedseq:lumpy and svtyper " ${LOGFILE}
+  ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name sv_lumpy_${BAM_PREFIX} \
+  -t compbio/ngseasy-speedseq:${NGSEASYVERSION} /bin/bash -c \
+  "time /usr/local/pipeline/speedseq/bin/speedseq sv \
+  -B ${SOUTDocker}/alignments/${BAMFILE} \
+  -S ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam \
+  -D ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam \
+  -R ${REFFASTA} \
+  -t ${NCPU} \
+  -g \
+  -T ${SOUTDocker}/tmp/${BAM_PREFIX}.raw.indels.${CNV}.XXXXXXXXXXXX \
+  -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.indels.${CNV}.vcf && \
+  time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.indels.${CNV}.vcf | \
+  vcffilter -f 'QUAL > 5' -s | \
+  fix_ambiguous | \
+  vcfallelicprimitives --keep-geno | \
+  vcffixup - | \
+  vcfstreamsort | \
+  vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+  vcfuniqalleles | \
+  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.indels.${CNV}.vcf.gz && \
+  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.indels.${CNV}.vcf.gz && \
+  bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.indels.${CNV}.vcf && \
+  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.indels.${CNV}.vcf.gz"
+  wait
+  sleep 1s
+  docker logs sv_lumpy_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm -f sv_lumpy_${BAM_PREFIX}
+  logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using speedseq:lumpy and svtyper " ${LOGFILE}
+
+########################################################################################################
+## delly
+########################################################################################################
+elif [ "${CNV}" == "delly" ]
+  then
+  logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
+  ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name ${CNV}_${BAM_PREFIX} \
+  -t compbio/ngseasy-delly:${NGSEASYVERSION} /bin/bash -c \
+  "[INSERT CODE]"
+  wait
+  sleep 1s
+  docker logs ${CNV}_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm -f ${CNV}_${BAM_PREFIX}
+  logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using ${CNV} " ${LOGFILE}
+
+########################################################################################################
+## exomedepth
+########################################################################################################
+elif [ "${CNV}" == "exomedepth" ]
+    then
+    logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
+    ${DOCKER_RUN} \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    --name ${CNV}_${BAM_PREFIX} \
+    -t compbio/ngseasy-exomedepth:${NGSEASYVERSION} /bin/bash -c \
+    "[INSERT CODE]"
+    wait
+    sleep 1s
+    docker logs ${CNV}_${BAM_PREFIX} >> ${LOGFILE}.log
+    docker rm -f ${CNV}_${BAM_PREFIX}
+    logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using ${CNV} " ${LOGFILE}
+
+########################################################################################################
+## mhmm
+########################################################################################################
+elif [ "${CNV}" == "mhmm" ]
+      then
+      logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
+      ${DOCKER_RUN} \
+      -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+      --name ${CNV}_${BAM_PREFIX} \
+      -t compbio/ngseasy-mhmm:${NGSEASYVERSION} /bin/bash -c \
+      "[INSERT CODE]"
+      wait
+      sleep 1s
+      docker logs ${CNV}_${BAM_PREFIX} >> ${LOGFILE}.log
+      docker rm -f ${CNV}_${BAM_PREFIX}
+      logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using ${CNV} " ${LOGFILE}
+
+########################################################################################################
+## slope
+########################################################################################################
+elif [ "${CNV}" == "slope" ]
+    then
+    logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
+    ${DOCKER_RUN} \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    --name ${CNV}_${BAM_PREFIX} \
+    -t compbio/ngseasy-delly:${NGSEASYVERSION} /bin/bash -c \
+    "[INSERT CODE]"
+    wait
+    sleep 1s
+    docker logs ${CNV}_${BAM_PREFIX} >> ${LOGFILE}.log
+    docker rm -f ${CNV}_${BAM_PREFIX}
+    logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using ${CNV} " ${LOGFILE}
+
+########################################################################################################
+## cnvnator
+########################################################################################################
+elif [ "${CNV}" == "cnvnator" ]
+    then
+    logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
+    ${DOCKER_RUN} \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    --name ${CNV}_${BAM_PREFIX} \
+    -t compbio/ngseasy-delly:${NGSEASYVERSION} /bin/bash -c \
+    "[INSERT CODE]"
+    wait
+    sleep 1s
+    docker logs ${CNV}_${BAM_PREFIX} >> ${LOGFILE}.log
+    docker rm -f ${CNV}_${BAM_PREFIX}
+    logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using ${CNV} " ${LOGFILE}
 
 else
-
+    logger_ngseasy "[${NGSEASY_STEP}]:Do not recognise option CNV [${CNV}]. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
 fi
+
+########################################################################################################
+## END
+########################################################################################################
+chmod -R 776 ${SOUT}/*
+done < ${RUNFILE}
+logger_ngseasy " END:Variant Calling" ${LOGFILE}
