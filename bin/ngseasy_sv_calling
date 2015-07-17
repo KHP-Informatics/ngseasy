@@ -1,0 +1,712 @@
+#!/usr/bin/env bash
+set -o errexit
+
+########################################################################################################
+# Program: ngseasy_sv_calling
+# Version 1.0-r001
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
+########################################################################################################
+#
+#    Copyright (C) 2015  Stephen Jeffrey Newhouse
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License along
+#    with this program; if not, write to the Free Software Foundation, Inc.,
+#    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+#
+########################################################################################################
+
+########################################################################################################
+# reset shit
+########################################################################################################
+PROJECT_ID=""
+SAMPLE_ID=""
+FASTQ1=""
+FASTQ2=""
+PROJECT_DIR=""
+DNA_PREP_LIBRARY_ID=""
+NGS_PLATFORM=""
+NGS_TYPE=""
+BAIT=""
+CAPTURE=""
+GENOMEBUILD=""
+FASTQC=""
+TRIM=""
+BSQR=""
+REALN=""
+ALIGNER=""
+VARCALLER=""
+CNV=""
+ANNOTATOR=""
+CLEANUP=""
+NCPU=""
+NGSEASYVERSION=""
+NGSUSER=""
+REFDIR=""
+GENOMEINDEX=""
+REFFASTA=""
+KNOWN_INDELS=""
+KNOWN_SNPS_1000G=""
+KNOWN_SNPS_OMNI=""
+KNOWN_SNPS_b138=""
+
+base_qual="20"
+map_qual="20"
+coverage_min="2"
+
+########################################################################################################
+## Set version and run date
+########################################################################################################
+NGSEASYVERSION="1.0-r001"
+RUNDATE=`date +"%d%m%y"`
+NGSEASY_STEP="ngseasy_sv_calling"
+
+echo -e "\n################################################################"
+echo -e "#"
+echo -e "# Program: ${NGSEASY_STEP}"
+echo -e "# Version ${NGSEASYVERSION}"
+echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
+echo -e "#"
+echo -e "# Copyright (C) 2015  Stephen Jeffrey Newhouse and Amos Folarin"
+echo -e "# NGSeasy (aka ngseasy) Version ${NGSEASYVERSION} comes with ABSOLUTELY NO WARRANTY;"
+echo -e "# for details see the GNU General Public License."
+echo -e "# This is free software, and you are welcome to redistribute it under certain conditions;"
+echo -e "# see the GNU General Public License for details."
+echo -e "#"
+echo -e "###########################################################################################\n\n"
+
+########################################################################################################
+## test if docker is intsalled and exit if not
+########################################################################################################
+command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
+
+########################################################################################################
+## docker run command
+########################################################################################################
+DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+
+########################################################################################################
+## global logging fuction
+########################################################################################################
+function logger_ngseasy() {
+ message=${1}
+ mylogfile=${2}
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
+}
+
+########################################################################################################
+## global usage
+########################################################################################################
+function ngseasy_variant_calling_usage() {
+    echo "
+Program: ngseasy_sv_calling
+Version 1.0-r001
+Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+
+usage:   ngseasy_sv_calling -c <config_file> -d <project_directory>
+
+options:  -c  STRING  configuration file
+          -d  STRING  project directory
+          -h  NULL    show this message
+
+ngseasy_sv_calling sets up the NGSeasy docker containers for your CNV caller of choice.
+"
+}
+
+########################################################################################################
+## Check options passed in.
+########################################################################################################
+if test -z "$2"
+then
+  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:No options found"
+  ngseasy_variant_calling_usage
+  exit 1
+fi
+
+########################################################################################################
+## get options for command line args
+  while  getopts "hc:d:" opt
+  do
+
+      case ${opt} in
+    h)
+    ngseasy_variant_calling_usage #print help
+    exit 0
+    ;;
+
+    c)
+    config_tsv=${OPTARG}
+    ;;
+
+    d)
+    project_directory=${OPTARG}
+    ;;
+      esac
+  done
+
+########################################################################################################
+## check config file exists.
+#
+if [[ ! -e "${config_tsv}" ]]
+then
+      logger_ngseasy "[${NGSEASY_STEP}]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
+      ngseasy_variant_calling_usage;
+      sleep 1s
+      exit 1;
+else
+      logger_ngseasy "[${NGSEASY_STEP}]:Configuration file found [${config_tsv}] "
+fi
+
+########################################################################################################
+## check project_directory exists.
+#
+if [[ ! -d "${project_directory}" ]]
+  then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR : project_directory [${project_directory}] does not exist "
+    ngseasy_variant_calling_usage;
+    sleep 1s
+    exit 1;
+else
+      logger_ngseasy "[${NGSEASY_STEP}]:Top Level Project Directory [${project_directory}] "
+fi
+
+########################################################################################################
+## check Num feilds in  ${config_tsv}
+#
+logger_ngseasy "[${NGSEASY_STEP}]:Reading [${config_tsv}] "
+logger_ngseasy "[${NGSEASY_STEP}]:Checking number of feilds in  [${config_tsv}] "
+
+numcols=`awk '{ print NF }' ${config_tsv} | sort -g | head -1`
+
+if [[  "$numcols" -lt 23 ]]
+then
+      logger_ngseasy "[${NGSEASY_STEP}]:ERROR: [${config_tsv}] format issue. Check your file! "
+      exit 1;
+  else
+      logger_ngseasy "[${NGSEASY_STEP}]:Number of expected columns [$numcols] of [${config_tsv}] ok...proceeding... "
+fi
+
+########################################################################################################
+## Read config file
+
+## check ${config_tsv}. is this a batch file or the orginal config file
+#
+logger_ngseasy "[${NGSEASY_STEP}]:Checking [${config_tsv}] format" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+
+hasheader=`sed 1q ${config_tsv} | grep PROJECT_ID | wc -l | awk '{print $1}'`
+
+if [[ "${config_tsv}" == *.batch.* ]]
+then
+  logger_ngseasy "[${NGSEASY_STEP}]:[${config_tsv}] is a BACTH file ie a subset of the original config file" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+elif [[ "$hasheader" -eq 1 ]]
+then
+  logger_ngseasy "[${NGSEASY_STEP}]:[${config_tsv}] header present. Removing this" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:[cmd]:sed 1d \${config_tsv} > ${config_tsv}.tmp" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  sed 1d ${config_tsv} > ${config_tsv}.tmp
+  RUNFILE="${config_tsv}.tmp"
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+else
+  RUNFILE="${config_tsv}"
+  logger_ngseasy "[${NGSEASY_STEP}]:[${RUNFILE}] is seemingly perfect" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting RUNFILE to [${RUNFILE}]" ${HOME}/ngseasy_logs/ngseasy.${config_tsv}.${RUNDATE}
+fi
+
+########################################################################################################
+## Read config and loop through all lines calling variant calling with docker
+#
+
+while read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23
+do
+###################
+## reset options
+PROJECT_ID=""
+SAMPLE_ID=""
+FASTQ1=""
+FASTQ2=""
+PROJECT_DIR=""
+DNA_PREP_LIBRARY_ID=""
+NGS_PLATFORM=""
+NGS_TYPE=""
+BAIT=""
+CAPTURE=""
+GENOMEBUILD=""
+FASTQC=""
+TRIM=""
+BSQR=""
+REALN=""
+ALIGNER=""
+VARCALLER=""
+CNV=""
+ANNOTATOR=""
+CLEANUP=""
+NCPU=""
+NGSEASYVERSION=""
+NGSUSER=""
+REFDIR=""
+GENOMEINDEX=""
+REFFASTA=""
+KNOWN_INDELS=""
+KNOWN_SNPS_1000G=""
+KNOWN_SNPS_OMNI=""
+KNOWN_SNPS_b138=""
+###################
+## get options
+PROJECT_ID=$f1;
+SAMPLE_ID=$f2;
+FASTQ1=$f3;
+FASTQ2=$f4;
+PROJECT_DIR=$f5;
+DNA_PREP_LIBRARY_ID=$f6;
+NGS_PLATFORM=$f7;
+NGS_TYPE=$f8;
+BAIT=$f9;
+CAPTURE=$f10;
+GENOMEBUILD=$f11;
+FASTQC=$f12;
+TRIM=$f13;
+REALN=$f14;
+BSQR=$f15;
+ALIGNER=$f16;
+VARCALLER=$f17;
+CNV=$f18;
+ANNOTATOR=$f19;
+CLEANUP=$f20;
+NCPU=$f21;
+NGSEASYVERSION=$f22;
+NGSUSER=$f23;
+DATE=`date +"%d%m%y"`
+
+########################################################################################################
+## LOGFILE
+########################################################################################################
+## check and make log directory
+#
+if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
+then
+  mkdir ${PROJECT_DIR}/${PROJECT_ID}/run_logs/
+fi
+
+########################################################################################################
+## check and make logfile
+########################################################################################################
+LOGFILE="${PROJECT_DIR}/${PROJECT_ID}/run_logs/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}"
+
+if [ ! -e "${LOGFILE}.log" ]
+then
+  touch ${LOGFILE}.log
+fi
+logger_ngseasy "[${NGSEASY_STEP}]:logging to [${LOGFILE}.log]"  ${LOGFILE}
+
+########################################################################################################
+## read the config_file
+########################################################################################################
+logger_ngseasy "[${NGSEASY_STEP}]:Config:[$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
+$VERSION\t$NGSUSER]"  ${LOGFILE}
+# copy config settings to dir
+echo -e "$PROJECT_ID\t$SAMPLE_ID\t$FASTQ1\t$FASTQ2\t$PROJECT_DIR\t$DNA_PREP_LIBRARY_ID\t$NGS_PLATFORM\t
+$NGS_TYPE\t$BAIT\t$CAPTURE\t$GENOMEBUILD\t$FASTQC\t$TRIM\t$BSQR\t$REALN\t$ALIGNER\t$VARCALLER\t$CNV\t$ANNOTATOR\t$CLEANUP\t$NCPU\t
+$VERSION\t$NGSUSER" >> ${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}/config_files/${SAMPLE_ID}.${TRIM}.${BSQR}.${REALN}.${ALIGNER}.${RUNDATE}.${NGSEASY_STEP}.config
+
+########################################################################################################
+## OUTPUT SAMPLE DIR
+#########################################################################################################
+SOUT="${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}"
+logger_ngseasy "[${NGSEASY_STEP}]:Sample Directory [${SOUT}] "
+
+########################################################################################################
+## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
+#
+DOCKERHOME="/home/pipeman/ngs_projects"
+logger_ngseasy "[${NGSEASY_STEP}]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
+
+########################################################################################################
+## Docker OUTPUT SAMPLE DIR
+########################################################################################################
+SOUTDocker="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
+
+logger_ngseasy "[${NGSEASY_STEP}]:Docker Output directory [${SOUTDocker}]" ${LOGFILE}
+
+########################################################################################################
+## check local dir exists
+########################################################################################################
+if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/${SAMPLE_ID}" ]
+then
+  logger_ngseasy "[${NGSEASY_STEP}]: Cant Find Project directory. This is then end. Please Stop and check everything is ok " ${LOGFILE}
+  exit 1
+else
+  logger_ngseasy "[${NGSEASY_STEP}]: Setting OUTPUT directory to [${SOUT}]" ${LOGFILE}
+fi
+
+########################################################################################################
+## Select Genome Build and files
+########################################################################################################
+logger_ngseasy "[${NGSEASY_STEP}]:Checking selected Genome"  ${LOGFILE}
+sleep 1s
+
+if [[ "${GENOMEBUILD}" == "b37" ]]; then
+# reset options as getting bleed through
+  REFDIR=""
+  GENOMEINDEX=""
+  REFFASTA=""
+  KNOWN_INDELS=""
+  KNOWN_SNPS_1000G=""
+  KNOWN_SNPS_OMNI=""
+  KNOWN_SNPS_b138=""
+  DBSNP_RECAB=""
+  GENOMEFILE=""
+  FAI=""
+
+  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37"
+  GENOMEINDEX="${REFDIR}/human_g1k_v37"
+  REFFASTA="${REFDIR}/human_g1k_v37.fasta"
+  DBSNP_RECAB="${REFDIR}/dbsnp_138.b37.recab"
+  GENOMEFILE="${REFDIR}/b37.genome"
+  FAI="${REFDIR}/human_g1k_v37.fasta.fai"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab b37 [${DBSNP_RECAB}]" ${LOGFILE}
+
+  #known indels and SNPs
+  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.b37.vcf"
+  KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.b37.vcf"
+  KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.b37.vcf"
+  KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.b37.vcf"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:KNOWN_INDELS [${KNOWN_INDELS}]"  ${LOGFILE}
+
+## HG19
+elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
+
+  REFDIR=""
+  GENOMEINDEX=""
+  REFFASTA=""
+  KNOWN_INDELS=""
+  KNOWN_SNPS_1000G=""
+  KNOWN_SNPS_OMNI=""
+  KNOWN_SNPS_b138=""
+  DBSNP_RECAB=""
+  GENOMEFILE=""
+  FAI=""
+
+  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hg19"
+  GENOMEINDEX="${REFDIR}/ucsc.hg19"
+  REFFASTA="${REFDIR}/ucsc.hg19.fasta"
+  DBSNP_RECAB="${REFDIR}/dbsnp_138.hg19.recab"
+  GENOMEFILE="${REFDIR}/hg19.genome"
+  FAI="${REFDIR}/ucsc.hg19.fasta.fai"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab hg19 [${DBSNP_RECAB}]" ${LOGFILE}
+
+  #known indels and SNPs
+  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.gz"
+  KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.hg19.sites.vcf"
+  KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.hg19.sites.vcf"
+  KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.hg19.vcf"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:KNOWN_INDELS [${KNOWN_INDELS}]" ${LOGFILE}
+
+else
+  logger_ngseasy "[${NGSEASY_STEP}]:No genome selected. Exiting. Choose one of [b37] or [hg19]. [b38 coming soon]"  ${LOGFILE}
+  sleep 1s
+  exit 1
+fi
+
+########################################################################################################
+## BAM FILE NAME
+########################################################################################################
+BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TRIM}.${ALIGNER}.${GENOMEBUILD}"
+logger_ngseasy "[${NGSEASY_STEP}]:Setting BAM prefix to [${BAM_PREFIX}] " ${LOGFILE}
+
+########################################################################################################
+## BAM Files to use for variant calling
+########################################################################################################
+logger_ngseasy "[${NGSEASY_STEP}]:NGSeasy will look for and use the indel re-aligned and base quality score recalibrated data if available" ${LOGFILE}
+
+# no realn and no bsqr so use dupemk.bam
+if [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "no-bsqr" ]]; then
+
+  BAMFILE="${BAM_PREFIX}.dupemk.bam"
+  FilteredBAM="${BAM_PREFIX}.filtered.bam"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [no-realn] and BSQR set to [no-bsqr]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+# exit if no BAMFILE
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
+
+# no realn plus bam bsqr
+elif [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
+
+  BAMFILE="${BAM_PREFIX}.dupemk.no-realn.bam-bsqr.bam"
+  FilteredBAM="${BAM_PREFIX}.dupemk.no-realn.bam-bsqr.filtered.bam"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [no-realn] and BSQR set to [bam-bsqr]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+  # exit if no BAMFILE
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
+
+# no realn plus gatk bsqr
+elif [[ "${REALN}" == "no-realn" ]] && [[ "${BSQR}" == "gatk-bsqr" ]]; then
+
+  BAMFILE="${BAM_PREFIX}.dupemk.no-realn.gatk-bsqr.bam"
+  FilteredBAM="${BAM_PREFIX}.dupemk.no-realn.gatk-bsqr.filtered.bam"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [no-realn] and BSQR set to [gatk-bsqr]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+    # exit if no BAMFILE
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
+
+# bam-realn and bam-bsqr
+elif [[ "${REALN}" == "bam-realn" ]] && [[ "${BSQR}" == "bam-bsqr" ]]; then
+
+  BAMFILE="${BAM_PREFIX}.dupemk.bam-realn.bam-bsqr.bam"
+  FilteredBAM="${BAM_PREFIX}.dupemk.bam-realn.bam-bsqr.filtered.bam"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [bam-realn] and BSQR set to [bam-bsqr]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+  # exit if no BAMFILE
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
+
+# gatk-realn and gatk-bsqr
+elif [[ "${REALN}" == "gatk-realn" ]] && [[ "${BSQR}" == "gatk-bsqr" ]]; then
+
+  BAMFILE="${BAM_PREFIX}.dupemk.gatk-realn.gatk-bsqr.bam"
+  FilteredBAM="${BAM_PREFIX}.dupemk.gatk-realn.gatk-bsqr.filtered.bam"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:REALN set to [gatk-realn] and BSQR set to [bam-bsqr]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Setting BAMFILE to [${BAMFILE}] " ${LOGFILE}
+
+   # exit if no BAMFILE
+  if [[ ! -e "${SOUT}/alignments/${BAMFILE}" ]]; then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find [${BAMFILE}] for Variant Calling. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+  fi
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Using [${BAMFILE}] for Variant Calling " ${LOGFILE}
+
+else
+  logger_ngseasy "[${NGSEASY_STEP}]:ERROR:Can not find required BAM File for Variant Calling" ${LOGFILE}
+  sleep 1s
+  exit 1
+fi
+
+########################################################################################################
+## fliter BAM
+########################################################################################################
+### quick fix to clean some sam issues pre calling
+
+if [[ ! -e ${SOUT}/alignments/${FilteredBAM} ]]
+    then
+    logger_ngseasy "[${NGSEASY_STEP}]:START Filter BAM Q20 and proper_pair" ${LOGFILE}
+    ${DOCKER_RUN} \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    --name filterBam_${BAM_PREFIX} \
+    -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
+    "sambamba view \
+    -t ${NCPU} \
+    -F \"mapping_quality>=20 and proper_pair\" \
+    -f bam -o ${SOUTDocker}/alignments/${FilteredBAM} \
+    ${SOUTDocker}/alignments/${BAMFILE} && \
+    sambamba index ${SOUTDocker}/alignments/${FilteredBAM} && \
+    sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${FilteredBAM} > ${SOUTDocker}/alignments/${FilteredBAM}.flagstat"
+    wait
+    sleep 1s
+    docker logs filterBam_${BAM_PREFIX} >> ${LOGFILE}.log
+    docker rm -f filterBam_${BAM_PREFIX}
+    logger_ngseasy "[${NGSEASY_STEP}]:END Filter BAM Q20 and proper_pair" ${LOGFILE}
+else
+    logger_ngseasy "[${NGSEASY_STEP}]:Filtered BAM found [${SOUT}/alignments/${FilteredBAM}]" ${LOGFILE}
+fi
+
+########################################################################################################
+## speedseq lumpy and svtyper
+########################################################################################################
+sv_options="-g"
+##sv_options="-g -d"
+
+if [ "${CNV}" == "sv_lumpy" ]
+  then
+  docker images | grep ngseasy-speedseq 2>&1 || { echo "compbio/ngseasy-speedseq:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
+  logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using speedseq:lumpy and svtyper " ${LOGFILE}
+  ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name sv_lumpy_${BAM_PREFIX} \
+  -t compbio/ngseasy-speedseq:${NGSEASYVERSION} /bin/bash -c \
+  "time /usr/local/pipeline/speedseq/bin/speedseq sv \
+  -B ${SOUTDocker}/alignments/${BAMFILE} \
+  -S ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam \
+  -D ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam \
+  -R ${REFFASTA} \
+  -t ${NCPU} \
+  ${sv_options} \
+  -T ${SOUTDocker}/tmp/${BAM_PREFIX}.raw.indels.${CNV}.XXXXXXXXXXXX \
+  -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.indels.${CNV} && \
+  time zcat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.indels.${CNV}.vcf.gz | \
+  vcffilter -f 'QUAL > 5' -s | \
+  fix_ambiguous | \
+  vcfallelicprimitives --keep-geno | \
+  vcffixup - | \
+  vcfstreamsort | \
+  vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
+  vcfuniqalleles | \
+  bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.indels.${CNV}.vcf.gz && \
+  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.indels.${CNV}.vcf.gz"
+  wait
+  sleep 1s
+  docker logs sv_lumpy_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm -f sv_lumpy_${BAM_PREFIX}
+  logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using speedseq:lumpy and svtyper " ${LOGFILE}
+
+########################################################################################################
+## delly
+########################################################################################################
+elif [ "${CNV}" == "delly" ]
+  then
+  logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
+  ${DOCKER_RUN} \
+  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  --name ${CNV}_${BAM_PREFIX} \
+  -t compbio/ngseasy-delly:${NGSEASYVERSION} /bin/bash -c \
+  "[INSERT CODE]"
+  wait
+  sleep 1s
+  docker logs ${CNV}_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm -f ${CNV}_${BAM_PREFIX}
+  logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using ${CNV} " ${LOGFILE}
+
+########################################################################################################
+## exomedepth
+########################################################################################################
+elif [ "${CNV}" == "exomedepth" ]
+    then
+    logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
+    ${DOCKER_RUN} \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    --name ${CNV}_${BAM_PREFIX} \
+    -t compbio/ngseasy-exomedepth:${NGSEASYVERSION} /bin/bash -c \
+    "[INSERT CODE]"
+    wait
+    sleep 1s
+    docker logs ${CNV}_${BAM_PREFIX} >> ${LOGFILE}.log
+    docker rm -f ${CNV}_${BAM_PREFIX}
+    logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using ${CNV} " ${LOGFILE}
+
+########################################################################################################
+## mhmm
+########################################################################################################
+elif [ "${CNV}" == "mhmm" ]
+      then
+      logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
+      ${DOCKER_RUN} \
+      -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+      --name ${CNV}_${BAM_PREFIX} \
+      -t compbio/ngseasy-mhmm:${NGSEASYVERSION} /bin/bash -c \
+      "[INSERT CODE]"
+      wait
+      sleep 1s
+      docker logs ${CNV}_${BAM_PREFIX} >> ${LOGFILE}.log
+      docker rm -f ${CNV}_${BAM_PREFIX}
+      logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using ${CNV} " ${LOGFILE}
+
+########################################################################################################
+## slope
+########################################################################################################
+elif [ "${CNV}" == "slope" ]
+    then
+    logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
+    ${DOCKER_RUN} \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    --name ${CNV}_${BAM_PREFIX} \
+    -t compbio/ngseasy-delly:${NGSEASYVERSION} /bin/bash -c \
+    "[INSERT CODE]"
+    wait
+    sleep 1s
+    docker logs ${CNV}_${BAM_PREFIX} >> ${LOGFILE}.log
+    docker rm -f ${CNV}_${BAM_PREFIX}
+    logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using ${CNV} " ${LOGFILE}
+
+########################################################################################################
+## cnvnator
+########################################################################################################
+elif [ "${CNV}" == "cnvnator" ]
+    then
+    logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
+    ${DOCKER_RUN} \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    --name ${CNV}_${BAM_PREFIX} \
+    -t compbio/ngseasy-delly:${NGSEASYVERSION} /bin/bash -c \
+    "[INSERT CODE]"
+    wait
+    sleep 1s
+    docker logs ${CNV}_${BAM_PREFIX} >> ${LOGFILE}.log
+    docker rm -f ${CNV}_${BAM_PREFIX}
+    logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using ${CNV} " ${LOGFILE}
+
+########################################################################################################
+## no-sv
+########################################################################################################
+elif [ "${CNV}" == "no-sv" ]
+    then
+    logger_ngseasy "[${NGSEASY_STEP}]:CNV set as [${CNV}]. Skipping SV Calling" ${LOGFILE}
+    sleep 1s
+
+########################################################################################################
+## Option not recognised
+########################################################################################################
+else
+    logger_ngseasy "[${NGSEASY_STEP}]:Do not recognise option CNV [${CNV}]" ${LOGFILE}
+    logger_ngseasy "[${NGSEASY_STEP}]:CNV should be one of [no-sv, sv_lumpy, delly, exomedepth, mhmm , cnvnator]. Exiting" ${LOGFILE}
+    sleep 1s
+    exit 1
+fi
+
+########################################################################################################
+## END
+########################################################################################################
+chmod -R 776 ${SOUT}/*
+done < ${RUNFILE}
+logger_ngseasy " END:Variant Calling" ${LOGFILE}

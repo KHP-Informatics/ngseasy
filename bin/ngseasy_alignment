@@ -24,7 +24,7 @@ set -x
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #
 ########################################################################################################
-
+stampy_version="stampy-1.0.27"
 ########################################################################################################
 # clear stuff up
 ########################################################################################################
@@ -475,12 +475,10 @@ elif [[ "${ALIGNER}" == "bwa" ]]; then
   chmod -R 777 ${SOUTDocker}/alignments/*"
   wait
   sleep 1s
-
-# log docker run
-docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
-docker rm -f alignment_${BAM_PREFIX}
-
-logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}
+  # log docker run
+  docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
+  docker rm -f alignment_${BAM_PREFIX}
+  logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}
 
 ########################################################################################################
 ## novoalign
@@ -510,7 +508,7 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
   --splitterFile ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam \
   --unmappedFile ${SOUTDocker}/alignments/${BAM_PREFIX}.unmapped.fastq | \
   sambamba view -t ${NCPU} -S -f bam /dev/stdin | \
-  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin  && \
+  sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam /dev/stdin && \
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
   sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
   bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
@@ -526,14 +524,9 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
   chmod -R 777 ${SOUTDocker}/alignments/*"
   wait
   sleep 1s
-
-## log docker run
-#
   docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
   docker rm -f alignment_${BAM_PREFIX}
-
   logger_ngseasy " END Basic ${ALIGNER} Alignment " ${LOGFILE}
-
 
 ########################################################################################################
 ## stampy : bwa the stampy
@@ -563,19 +556,16 @@ elif [[ "${ALIGNER}" == "stampy" ]]
   sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam && \
   chmod -R 777 ${SOUTDocker}/alignments/*"
   wait
-
   sleep 1s
-
   docker logs alignment_${BAM_PREFIX}_bwatmp >> ${LOGFILE}.log
   docker rm -f alignment_${BAM_PREFIX}_bwatmp
-
   sleep 1s
-
   logger_ngseasy "[${NGSEASY_STEP}]:Finished BWA alignmet pre stampy run" ${LOGFILE}
-
   sleep 1s
 
+########################################################################################################
 ### set BWABAM input for stampy
+########################################################################################################
 BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
 
 if [[ ! -s "${SOUT}/alignments/${BAM_PREFIX}.tmp.bam" ]]; then
@@ -585,10 +575,6 @@ if [[ ! -s "${SOUT}/alignments/${BAM_PREFIX}.tmp.bam" ]]; then
 else
     logger_ngseasy "[${NGSEASY_STEP}]:BWA input for stampy [${BWABAM}]" ${LOGFILE}
     logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
-
-## add to something
-stampy_version="stampy-1.0.27"
-
     time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
     -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -621,26 +607,20 @@ stampy_version="stampy-1.0.27"
       sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
       sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam /dev/stdin && \
       sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.bam && \
-      rm -rf ${SOUTDocker}/tmp/* && \
       rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam && \
       rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
-      chmod -R 777 ${SOUTDocker}/alignments/"
+      rm -rf ${SOUTDocker}/tmp/* && \
+      chmod -R 777 ${SOUTDocker}/alignments/*"
       wait
-
       sleep 1s
-
       docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
       docker rm -f alignment_${BAM_PREFIX}
-
       logger_ngseasy "[${NGSEASY_STEP}]:END ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
       logger_ngseasy "[${NGSEASY_STEP}]:Adding RG info to ${ALIGNER} Aligned BAM" ${LOGFILE}
-
       sleep 1s
-## add this to main file somewhere...
-      picard_version="picard-tools-1.128"
-
+      # Picard tools CleanSam
       time ${DOCKER_RUN} \
-      --name alignmentpicard_${BAM_PREFIX} \
+      --name CleanSam_${BAM_PREFIX} \
       -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
       -t compbio/ngseasy-picardtools:${NGSEASYVERSION} /bin/bash -c \
       "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/${picard_version}/picard.jar CleanSam \
@@ -648,8 +628,18 @@ stampy_version="stampy-1.0.27"
       CREATE_INDEX=FALSE \
       VALIDATION_STRINGENCY=SILENT \
       INPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam \
-      OUTPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmpcleansam.bam && \
-      time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/${picard_version}/picard.jar AddOrReplaceReadGroups \
+      OUTPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmpcleansam.bam"
+      wait
+      sleep 1s
+      docker logs CleanSam_${BAM_PREFIX} >> ${LOGFILE}.log
+      docker rm -f CleanSam_${BAM_PREFIX}
+      sleep 1s
+      # Picard tools AddOrReplaceReadGroups
+      time ${DOCKER_RUN} \
+      --name AddOrReplaceReadGroups_${BAM_PREFIX} \
+      -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+      -t compbio/ngseasy-picardtools:${NGSEASYVERSION} /bin/bash -c \
+      "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/${picard_version}/picard.jar AddOrReplaceReadGroups \
       TMP_DIR=${SOUTDocker}/tmp \
       CREATE_INDEX=FALSE \
       VALIDATION_STRINGENCY=SILENT \
@@ -671,12 +661,9 @@ stampy_version="stampy-1.0.27"
       rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam && \
       chmod -R 777 ${SOUTDocker}/alignments/*"
       wait
-
       sleep 1s
-
-      docker logs alignmentpicard_${BAM_PREFIX} >> ${LOGFILE}.log
-      docker rm -f alignmentpicard_${BAM_PREFIX}
-
+      docker logs AddOrReplaceReadGroups_${BAM_PREFIX} >> ${LOGFILE}.log
+      docker rm -f AddOrReplaceReadGroups_${BAM_PREFIX}
       logger_ngseasy "[${NGSEASY_STEP}]:END ${ALIGNER} Alignment " ${LOGFILE}
       sleep 1s
 fi
@@ -713,6 +700,7 @@ SLOW="--local --sensitive-local"
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
     sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
     bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
+    sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam | \
     sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam /dev/stdin && \
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam && \
     sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
@@ -767,6 +755,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam && \
     sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bam.flagstat && \
     bedtools bamtobed -i ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.bam | bedtools merge > ${SOUTDocker}/reports/${BAM_PREFIX}.dupemk.bed && \
+    sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.sam | \
     sambamba sort -t ${NCPU} -m 2GB --tmpdir=${SOUTDocker}/tmp -o ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam /dev/stdin && \
     sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.discordant.bam && \
     sambamba view -t ${NCPU} -S -f bam ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam | \
@@ -776,18 +765,17 @@ logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
     rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.splitread.sam && \
     rm -rf ${SOUTDocker}/tmp/* && \
     chmod -R 777 ${SOUTDocker}/alignments/*"
-wait
-sleep 1s
-## log docker run
-#
-  docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
-  docker rm -f alignment_${BAM_PREFIX}
-  logger_ngseasy " END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}
+    wait
+    sleep 1s
+    docker logs alignment_${BAM_PREFIX} >> ${LOGFILE}.log
+    docker rm -f alignment_${BAM_PREFIX}
+    logger_ngseasy "[${NGSEASY_STEP}]:END Basic ${ALIGNER} Basic Alignment" ${LOGFILE}
 
+###########################################################################################
 ## exit of no ALIGNER option is provided
-#
+###########################################################################################
 else
-  logger_ngseasy "[${NGSEASY_STEP}]:No ALIGNER option selected. Or ALIGNER option not recognised" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:No ALIGNER [${ALIGNER}] option selected. Or ALIGNER option not recognised" ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:ALIGNER Should be one of [bwa] or [stampy] or [novoalign] or [snap] or [bowtie2]" ${LOGFILE}
   sleep 1s
   exit 1
