@@ -678,7 +678,8 @@ elif [ "${VARCALLER}" == "freebayes-default" ]
     vcfuniqalleles | \
     bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
     tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-    bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
+    bgzip  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf &&\
+    tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz"
 
   #logs
   docker logs Freebayes_${BAM_PREFIX} >> ${LOGFILE}.log
@@ -753,7 +754,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       vcfuniqalleles | \
       bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-      bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
+      bgzip  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
       sleep 1s
       #logs
       docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
@@ -804,7 +805,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       vcfuniqalleles | \
       bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-      bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
+      bgzip  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
       sleep 1s
 
 #logs
@@ -848,7 +849,7 @@ elif [ "${VARCALLER}" == "platypus-default" ]
       vcfuniqalleles | \
       bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-      bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
+      bgzip  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
       sleep 1s
       #logs
       docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
@@ -877,7 +878,7 @@ elif [ "${VARCALLER}" == "platypus-default" ]
       vcfuniqalleles | \
       bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-      bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
+      bgzip  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
       sleep 1s
 
 #logs
@@ -951,7 +952,7 @@ elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
   vcfuniqalleles | \
   bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
   tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-  bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
+  bgzip  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
 
 #logs
   docker logs UnifiedGenotyper_${SAMPLE_ID} >> ${LOGFILE}.log
@@ -1020,7 +1021,7 @@ elif [ "${VARCALLER}" == "HaplotypeCaller" ]
   vcfuniqalleles | \
   bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
   tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-  bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
+  bgzip  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
 
 
 #logs
@@ -1067,7 +1068,7 @@ vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
 vcfuniqalleles | \
 bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
 tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
+bgzip  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
 
 #logs
 docker logs Freebayes_${SAMPLE_ID} >> ${LOGFILE}.log#
@@ -1120,7 +1121,7 @@ vt normalize -r ${REFFASTA} -q - 2> /dev/null | \
 vcfuniqalleles | \
 bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
 tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
+bgzip  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
 sleep 1s
 #logs
 docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
@@ -1186,7 +1187,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller " 
   vcfuniqalleles | \
   bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
   tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-  bgzip -i ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
+  bgzip  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
 
 
 #logs
