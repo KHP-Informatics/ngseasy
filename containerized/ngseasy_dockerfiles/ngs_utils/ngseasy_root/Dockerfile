@@ -19,7 +19,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ################################################################################
 RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y python python-dev python-yaml ncurses-dev python-numpy python-pip
-RUN pip install pysam
+RUN pip install pysam 
 
 ################################################################################
 # install dependencies
