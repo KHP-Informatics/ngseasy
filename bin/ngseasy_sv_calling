@@ -670,7 +670,7 @@ elif [ "${CNV}" == "slope" ]
     logger_ngseasy "[${NGSEASY_STEP}]:END SV Calling using ${CNV} " ${LOGFILE}
 
 ########################################################################################################
-## cnvnator
+## cnvnator: may be redundant if speedseq cv works
 ########################################################################################################
 elif [ "${CNV}" == "cnvnator" ]
     then

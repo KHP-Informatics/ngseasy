@@ -18,8 +18,19 @@ ENV DEBIAN_FRONTEND noninteractive
 # general purpose tools
 ################################################################################
 RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install -y python python-dev python-yaml ncurses-dev python-numpy python-pip
-RUN pip install scipy pysam
+
+RUN apt-get install -y \
+                    gfortran \
+                    python python-dev python-yaml ncurses-dev python-numpy python-pip
+RUN cd /tmp && \
+    wget http://cython.org/release/Cython-0.22.tar.gz && \
+    chmod 777 Cython-0.22.tar.gz && \
+    tar xvf Cython-0.22.tar.gz && \
+    chmod -R 777 Cython-0.22 && \
+    cd Cython-0.22 && \
+    python setup.py install
+
+RUN pip install pysam
 
 ################################################################################
 # install dependencies
@@ -34,7 +45,7 @@ RUN cd /tmp && \
     tar -xvf root_v5.34.20.source.tar.gz && \
     cd root && \
     ./configure && \
-    make && \
+    make -j `ncpu` && \
     cd .. && \
     mv root /usr/local
 
