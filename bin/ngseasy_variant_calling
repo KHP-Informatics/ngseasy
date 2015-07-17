@@ -563,6 +563,7 @@ if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]] && [[ ! -e  "${SOUT
   -t ${NCPU} -F \"mapping_quality>1 and (paired or proper_pair) and (not unmapped)\" \
   -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
   bedtools genomecov -split -ibam stdin -bga -max 500 | awk '\$4>1' > ${SOUTDocker}/reports/${BAMFILE}.genomecov.bed"
+  wait
   sleep 1s
   docker logs callable_regions_${BAM_PREFIX} >> ${LOGFILE}.log
   docker rm callable_regions_${BAM_PREFIX}
@@ -604,6 +605,7 @@ if [[ ! -e ${SOUT}/alignments/${FilteredBAM} ]]
     ${SOUTDocker}/alignments/${BAMFILE} && \
     sambamba index ${SOUTDocker}/alignments/${FilteredBAM} && \
     sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${FilteredBAM} > ${SOUTDocker}/alignments/${FilteredBAM}.flagstat"
+    wait
     sleep 1s
     docker logs filterBam_${BAM_PREFIX} >> ${LOGFILE}.log
     docker rm -f filterBam_${BAM_PREFIX}
@@ -648,7 +650,8 @@ if [ "${VARCALLER}" == "freebayes-parallel" ]
     tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
     bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
     tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz"
-    #logs
+    wait
+    sleep 1s
     docker logs Freebayes_${BAM_PREFIX} >> ${LOGFILE}.log
     docker rm Freebayes_${BAM_PREFIX}
     logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFILE}
@@ -680,7 +683,8 @@ elif [ "${VARCALLER}" == "freebayes-default" ]
     tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
     bgzip  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf &&\
     tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz"
-    #logs
+    wait
+    sleep 1s
     docker logs Freebayes_${BAM_PREFIX} >> ${LOGFILE}.log
     docker rm Freebayes_${BAM_PREFIX}
     logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFILE}
@@ -750,6 +754,7 @@ elif [ "${VARCALLER}" == "platypus" ]
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
       bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz"
+      wait
       sleep 1s
       docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
       docker rm platypus_${BAM_PREFIX}
@@ -801,10 +806,10 @@ elif [ "${VARCALLER}" == "platypus" ]
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
       bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz"
+      wait
       sleep 1s
       docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
       docker rm platypus_${BAM_PREFIX}
-      #logs
       logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Platypus "  ${LOGFILE}
   fi
 
@@ -842,6 +847,7 @@ elif [ "${VARCALLER}" == "platypus-default" ]
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
       bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz"
+      wait
       sleep 1s
       docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
       docker rm platypus_${BAM_PREFIX}
@@ -871,11 +877,10 @@ elif [ "${VARCALLER}" == "platypus-default" ]
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
       bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
       tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz"
+      wait
       sleep 1s
-      #logs
       docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
       docker rm platypus_${BAM_PREFIX}
-      #logs
       logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Platypus default"  ${LOGFILE}
   fi
 ########################################################################################################
@@ -938,7 +943,8 @@ elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
   tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
   bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
   tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz"
-  #logs
+  wait
+  sleep 1s
   docker logs UnifiedGenotyper_${SAMPLE_ID} >> ${LOGFILE}.log
   docker rm UnifiedGenotyper_${SAMPLE_ID}
   logger_ngseasy " END Variant Calling using UnifiedGenotyper "  ${LOGFILE}
@@ -1005,7 +1011,8 @@ elif [ "${VARCALLER}" == "HaplotypeCaller" ]
   tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
   bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
   tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz"
-  #logs
+  wait
+  sleep 1s
   docker logs HaplotypeCaller_${SAMPLE_ID} >> ${LOGFILE}.log
   docker rm HaplotypeCaller_${SAMPLE_ID}
   logger_ngseasy " END Variant Calling using HaplotypeCaller "  ${LOGFILE}
@@ -1044,7 +1051,8 @@ bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
 tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
 bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
 tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz"
-#logs
+wait
+sleep 1s
 docker logs Freebayes_${SAMPLE_ID} >> ${LOGFILE}.log#
 docker rm Freebayes_${SAMPLE_ID}
 logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Freebayes "  ${LOGFILE}
@@ -1097,18 +1105,17 @@ bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
 tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
 bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
 tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz"
+wait
 sleep 1s
 docker logs platypus_${BAM_PREFIX} >> ${LOGFILE}.log
 docker rm platypus_${BAM_PREFIX}
 logger_ngseasy "[${NGSEASY_STEP}]:END Variant Calling using Platypus "  ${LOGFILE}
-
 ########################################################################################################
  VARCALLER="HaplotypeCaller"
 ########################################################################################################
-  ## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
-  # '--output_mode' (-out_mode) is missing.  Valid options are (EMIT_VARIANTS_ONLY,EMIT_ALL_CONFIDENT_SITES,EMIT_ALL_SITES).
+## HaplotypeCaller Standard EMIT_ALL_CONFIDENT_SITES EMIT_VARIANTS_ONLY
+ # '--output_mode' (-out_mode) is missing.  Valid options are (EMIT_VARIANTS_ONLY,EMIT_ALL_CONFIDENT_SITES,EMIT_ALL_SITES).
 logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller "  ${LOGFILE}
-
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name HaplotypeCaller_${BAM_PREFIX} \
@@ -1160,22 +1167,17 @@ logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller " 
   vcfuniqalleles | \
   bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
   tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
-  bgzip  ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
-
-
-#logs
+  bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
+  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
+  wait
+  sleep 1s
   docker logs HaplotypeCaller_${BAM_PREFIX} >> ${LOGFILE}.log
   docker rm HaplotypeCaller_${BAM_PREFIX}
   logger_ngseasy " END Variant Calling using HaplotypeCaller "  ${LOGFILE}
-
-
 ##############################################################################################
 ## bcbio.variation
 ## https://github.com/chapmanb/bcbio.variation
-
-
   logger_ngseasy " START bcbio-variation in Ensembl Variant Calling using Freebayes + HaplotypeCaller "  ${LOGFILE}
-
 #Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
 
   ${DOCKER_RUN} \
