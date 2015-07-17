@@ -606,7 +606,7 @@ if [[ ! -e ${SOUT}/alignments/${FilteredBAM} ]]
     sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${FilteredBAM} > ${SOUTDocker}/alignments/${FilteredBAM}.flagstat"
     sleep 1s
     docker logs filterBam_${BAM_PREFIX} >> ${LOGFILE}.log
-    docker rm filterBam_${BAM_PREFIX}
+    docker rm -f filterBam_${BAM_PREFIX}
     logger_ngseasy "[${NGSEASY_STEP}]:END Filter BAM Q20 and proper_pair" ${LOGFILE}
 else
     logger_ngseasy "[${NGSEASY_STEP}]:Filtered BAM found [${SOUT}/alignments/${FilteredBAM}]" ${LOGFILE}
