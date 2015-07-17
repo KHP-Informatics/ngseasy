@@ -3,14 +3,14 @@
 NGSeasy (beta)
 ===================
 
-### NGSeasy is under heavy re-dev, many things may be broken - bear with us please (come back next week)
+### NGSeasy is under heavy re-dev, things may be broken - bear with us please. Aligment and calling with Platypus or FreeBayes works. 
 
 ****************
 ## [A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box]
 ****************
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**  
 
-**Authors:** Stephen J Newhouse and Amos Folarin
+**Authors:** Stephen J Newhouse and Amos Folarin  
 **Release Version:** **1.0-r001**  
 **Release:** dirty_tango  
 **Publication:** _pending_  
