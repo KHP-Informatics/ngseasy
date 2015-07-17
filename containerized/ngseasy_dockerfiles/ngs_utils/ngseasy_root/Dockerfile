@@ -19,7 +19,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ################################################################################
 RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y python python-dev python-yaml ncurses-dev python-numpy python-pip
-RUN pip install pysam 
+RUN pip install pysam
 
 ################################################################################
 # install dependencies
@@ -48,10 +48,7 @@ ENV ROOTSYS /usr/local/root
 
 RUN cd /usr/local/pipeline && \
   git clone --recursive https://github.com/cc2qe/speedseq && \
-  chmod -R 777 ./speedseq && \
-  cd /usr/local/pipeline/speedseq/src/ && \
-  #sed -i s/ROOTFLAGS = -m64 -O3/#ROOTFLAGS = -m64 -O3/g Makefile && \
-  #sed -i s/#ROOTFLAGS = -pthread -m64/ROOTFLAGS = -pthread -m64/g Makefile && \
+  chmod -R 777 /usr/local/pipeline/speedseq && \
   cd /usr/local/pipeline/speedseq && \
   make ROOTFLAGS=" -pthread -m64"
 
