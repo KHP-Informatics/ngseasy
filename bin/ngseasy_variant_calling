@@ -555,7 +555,7 @@ if [[ ! -e  "${SOUT}/reports/${BAMFILE}.mapped.reads.bed" ]] && [[ ! -e  "${SOUT
   --name callable_regions_${BAM_PREFIX} \
   -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
   "time sambamba view \
-  -t ${NCPU} -F \"mapping_quality>1 and (paired or proper_pair) and (not unmapped)\" \
+  -t ${NCPU} -F \"mapping_quality>=10 and (paired or proper_pair) and (not unmapped)\" \
   -f bam ${SOUTDocker}/alignments/${BAMFILE} | \
   bedtools bamtobed | \
   bedtools merge > ${SOUTDocker}/reports/${BAMFILE}.mapped.reads.bed && \
@@ -589,19 +589,28 @@ logger_ngseasy "[${NGSEASY_STEP}]:END Make regions files for varcallers" ${LOGFI
 ## fliter BAM
 ########################################################################################################
 ### quick fix to clean some sam issues pre calling
-logger_ngseasy "[${NGSEASY_STEP}]:START Filter BAM Q20 and proper_pair" ${LOGFILE}
-${DOCKER_RUN} \
-  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-  --name filterBam_${BAM_PREFIX} \
-  -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
-  "sambamba view \
-  -t ${NCPU} \
-  -F \"mapping_quality>=20 and proper_pair\" \
-  -f bam -o ${SOUTDocker}/alignments/${FilteredBAM} \
-  ${SOUTDocker}/alignments/${BAMFILE} && \
-  sambamba index ${SOUTDocker}/alignments/${FilteredBAM} && \
-  sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${FilteredBAM} > ${SOUTDocker}/alignments/${FilteredBAM}.flagstat"
-logger_ngseasy "[${NGSEASY_STEP}]:END Filter BAM Q20 and proper_pair" ${LOGFILE}
+
+if [[ ! -e ${SOUT}/alignments/${FilteredBAM} ]]
+    then
+    logger_ngseasy "[${NGSEASY_STEP}]:START Filter BAM Q20 and proper_pair" ${LOGFILE}
+    ${DOCKER_RUN} \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    --name filterBam_${BAM_PREFIX} \
+    -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
+    "sambamba view \
+    -t ${NCPU} \
+    -F \"mapping_quality>=20 and proper_pair\" \
+    -f bam -o ${SOUTDocker}/alignments/${FilteredBAM} \
+    ${SOUTDocker}/alignments/${BAMFILE} && \
+    sambamba index ${SOUTDocker}/alignments/${FilteredBAM} && \
+    sambamba flagstat -t ${NCPU} ${SOUTDocker}/alignments/${FilteredBAM} > ${SOUTDocker}/alignments/${FilteredBAM}.flagstat"
+    sleep 1s
+    docker logs filterBam_${BAM_PREFIX} >> ${LOGFILE}.log
+    docker rm filterBam_${BAM_PREFIX}
+    logger_ngseasy "[${NGSEASY_STEP}]:END Filter BAM Q20 and proper_pair" ${LOGFILE}
+else
+    logger_ngseasy "[${NGSEASY_STEP}]:Filtered BAM found [${SOUT}/alignments/${FilteredBAM}]" ${LOGFILE}
+fi
 
 ########################################################################################################
 ## Freebayes
