@@ -90,14 +90,6 @@ echo -e "#######################################################################
 command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
 
 ########################################################################################################
-## test if images are intsalled and exit if not
-########################################################################################################
-docker images | grep ngseasy-freebayes 2>&1 || { echo "compbio/ngseasy-freebayes:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
-docker images | grep ngseasy-platypus 2>&1 || { echo "compbio/ngseasy-platypus:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
-docker images | grep ngseasy-base 2>&1 || { echo "compbio/ngseasy-base:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
-docker images | grep ngseasy-bcbiovar 2>&1 || { echo "compbio/ngseasy-bcbio-variation:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
-
-########################################################################################################
 ## docker run command
 ########################################################################################################
 DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
@@ -121,7 +113,7 @@ Program: ngseasy_sv_calling
 Version 1.0-r001
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
-usage:   ngseasy_variant_calling -c <config_file> -d <project_directory>
+usage:   ngseasy_sv_calling -c <config_file> -d <project_directory>
 
 options:  -c  STRING  configuration file
           -d  STRING  project directory
@@ -578,6 +570,7 @@ sv_options="-g"
 
 if [ "${CNV}" == "sv_lumpy" ]
   then
+  docker images | grep ngseasy-speedseq 2>&1 || { echo "compbio/ngseasy-speedseq:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
   logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using speedseq:lumpy and svtyper " ${LOGFILE}
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
