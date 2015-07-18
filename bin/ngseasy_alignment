@@ -25,6 +25,7 @@ set -x
 #
 ########################################################################################################
 stampy_version="stampy-1.0.27"
+picard_version="picard-tools-1.128"
 ########################################################################################################
 # clear stuff up
 ########################################################################################################
@@ -566,7 +567,8 @@ elif [[ "${ALIGNER}" == "stampy" ]]
 ########################################################################################################
 ### set BWABAM input for stampy
 ########################################################################################################
-BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
+
+    BWABAM=${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam
 
 if [[ ! -s "${SOUT}/alignments/${BAM_PREFIX}.tmp.bam" ]]; then
     logger_ngseasy "[${NGSEASY_STEP}]:Can not find BWA input for stampy [${BWABAM}]. Exiting" ${LOGFILE}
@@ -628,7 +630,8 @@ else
       CREATE_INDEX=FALSE \
       VALIDATION_STRINGENCY=SILENT \
       INPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam \
-      OUTPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmpcleansam.bam"
+      OUTPUT=${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmpcleansam.bam && \
+      sambamba index ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmpcleansam.bam"
       wait
       sleep 1s
       docker logs CleanSam_${BAM_PREFIX} >> ${LOGFILE}.log
