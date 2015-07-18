@@ -12,12 +12,12 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y python-dev 
 
 # cython
-RUN cd /tmp && \
-	wget http://cython.org/release/Cython-0.22.tar.gz && \
-	chmod 777 Cython-0.22.tar.gz && \
-	tar xvf Cython-0.22.tar.gz && \
-	cd Cython-0.22 && \
-	python setup.py install
+#RUN cd /tmp && \
+#	wget http://cython.org/release/Cython-0.22.tar.gz && \
+#	chmod 777 Cython-0.22.tar.gz && \
+#	tar xvf Cython-0.22.tar.gz && \
+#	cd Cython-0.22 && \
+#	python setup.py install
  
 #-----------------------------PLATYPUS-------------------------------
 RUN cd /tmp && \
