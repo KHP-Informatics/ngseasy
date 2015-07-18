@@ -19,9 +19,12 @@ ENV DEBIAN_FRONTEND noninteractive
 ################################################################################
 RUN apt-get update -y && apt-get upgrade -y
 
+# python
 RUN apt-get install -y \
-                    gfortran \
-                    python python-dev python-yaml ncurses-dev python-numpy python-pip
+                    make automake cmake gcc gcc-c++ git ncurses-devel zlib-devel gfortran \
+                    python27 python27-devel python27-pip lapack lapack-devel blas blas-devel
+                    ##python python-dev python-yaml ncurses-dev python-numpy python-pip
+# cython
 RUN cd /tmp && \
     wget http://cython.org/release/Cython-0.22.tar.gz && \
     chmod 777 Cython-0.22.tar.gz && \
@@ -30,7 +33,8 @@ RUN cd /tmp && \
     cd Cython-0.22 && \
     python setup.py install
 
-RUN pip install pysam
+# pysam
+RUN pip-2.7 install pysam numpy scipy
 
 ################################################################################
 # install dependencies
@@ -50,7 +54,7 @@ RUN cd /tmp && \
     mv root /usr/local
 
 RUN  echo "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
-    /bin/bash -c ". /root/.bashrc"
+    /bin/bash -c ". /root/.bashrc && source /root/.bashrc"
 
 ################################################################################
 # speedseq
@@ -58,10 +62,15 @@ RUN  echo "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
 ENV ROOTSYS /usr/local/root
 
 RUN cd /usr/local/pipeline && \
-  git clone --recursive https://github.com/cc2qe/speedseq && \
-  chmod -R 777 /usr/local/pipeline/speedseq && \
-  cd /usr/local/pipeline/speedseq && \
-  make ROOTFLAGS=" -pthread -m64"
+    git clone --recursive https://github.com/cc2qe/speedseq && \
+    chmod -R 777 /usr/local/pipeline/speedseq && \
+    cd /usr/local/pipeline/speedseq && \
+    make -j `ncpu` ROOTFLAGS=" -pthread -m64" && \
+    chmod -R 777 /usr/local/pipeline/speedseq
+
+RUN echo -e "export PATH=/usr/local/pipeline/speedseq/bin:\$PATH" >> ~/.bashrc && \
+    echo -e "export PATH=/usr/local/pipeline/speedseq/bin:\$PATH" >> /home/pipman/.bashrc && \
+    /bin/bash -c "source ~/.bashrc"
 
 ################################################################################
 # PERMISSIONS
