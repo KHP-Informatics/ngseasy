@@ -19,11 +19,15 @@ ENV DEBIAN_FRONTEND noninteractive
 ################################################################################
 RUN apt-get update -y && apt-get upgrade -y
 
-# python
+# python and stuff
 RUN apt-get install -y \
-                    make automake cmake gcc gcc-c++ git ncurses-devel zlib-devel gfortran \
-                    python27 python27-devel python27-pip lapack lapack-devel blas blas-devel
-                    ##python python-dev python-yaml ncurses-dev python-numpy python-pip
+                    make automake cmake gcc gcc c++ ncurses-dev \
+                    zlib-devel gfortran \
+                    liblapack liblapack-dev libatlas-base-dev \
+                    libblas3 libblas-dev \
+                    python python-dev python-yaml python-pip \
+                    python-numpy python-scipy python-pysam
+
 # cython
 RUN cd /tmp && \
     wget http://cython.org/release/Cython-0.22.tar.gz && \
@@ -32,9 +36,6 @@ RUN cd /tmp && \
     chmod -R 777 Cython-0.22 && \
     cd Cython-0.22 && \
     python setup.py install
-
-# pysam
-RUN pip-2.7 install pysam numpy scipy
 
 ################################################################################
 # install dependencies
