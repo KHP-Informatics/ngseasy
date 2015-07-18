@@ -574,7 +574,7 @@ if [ "${CNV}" == "sv_lumpy" ]
   docker images | grep ngseasy-speedseq 2>&1 || { echo "compbio/ngseasy-speedseq:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
   logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using speedseq:lumpy and svtyper " ${LOGFILE}
 
-## select config file based on genome build
+  ## select config file based on genome build
   if [[ "${GENOMEBUILD}" == "b37" ]]
       then
       SPEEDSEQ_CONFIG="/usr/local/pipeline/speedseq/bin/speedseq_b37.config"
@@ -585,7 +585,7 @@ if [ "${CNV}" == "sv_lumpy" ]
     sleep 1s
     exit 1
   fi
-
+## run
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name sv_lumpy_${BAM_PREFIX} \
@@ -599,7 +599,7 @@ if [ "${CNV}" == "sv_lumpy" ]
   ${sv_options} \
   -T ${SOUTDocker}/tmp/${BAM_PREFIX}.raw.indels.${CNV}.XXXXXXXXXXXX \
   -o ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.indels.${CNV} \
-  -X ${SPEEDSEQ_CONFIG} && \
+  -v -K ${SPEEDSEQ_CONFIG} && \
   time zcat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.indels.${CNV}.vcf.gz | \
   vcffilter -f 'QUAL > 5' -s | \
   fix_ambiguous | \
