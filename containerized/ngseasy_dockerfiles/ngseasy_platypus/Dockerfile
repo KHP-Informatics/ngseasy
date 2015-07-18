@@ -26,14 +26,14 @@ RUN cd /tmp && \
 	cd htslib && \
 	autoconf && \
 	./configure  && \
-	make && \
+	make -j `ncpu` && \
 	make install
 
 RUN cd /usr/local/pipeline && \
        git clone --recursive https://github.com/andyrimmer/Platypus.git && \
        chmod -R 777 Platypus && \
        cd Platypus && \
-       make && \
+       make -j `ncpu` && \
        chmod -R 777 ./* && \
        cp -vrf ./bin/* /usr/local/bin
 
@@ -56,6 +56,9 @@ RUN rm -rf /tmp/*
 
 # open ports private only
 EXPOSE 8080
+
+# CMD
+CMD [ "/usr/local/bin/Platypus.py", "--help" ]
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
