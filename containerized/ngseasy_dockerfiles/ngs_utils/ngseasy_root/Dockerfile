@@ -20,7 +20,9 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -y && apt-get upgrade -y
 
 # python and stuff
-RUN apt-get install -y python-numpy python-scipy python-pysam
+RUN apt-get install -y \
+                        isomd5sum \
+                        python-numpy python-scipy python-pysam python-pyisomd5sum
 
 # cython
 RUN cd /tmp && \
@@ -64,8 +66,10 @@ RUN cd /usr/local/pipeline && \
     chmod -R 777 /usr/local/pipeline/speedseq
 
 RUN echo -e "export PATH=/usr/local/pipeline/speedseq/bin:\$PATH" >> ~/.bashrc && \
-    echo -e "export PATH=/usr/local/pipeline/speedseq/bin:\$PATH" >> /home/pipman/.bashrc && \
     /bin/bash -c "source ~/.bashrc"
+
+ADD speedseq_b37.config  /usr/local/pipeline/speedseq/bin/
+ADD speedseq_hg19.config /usr/local/pipeline/speedseq/bin/
 
 ################################################################################
 # PERMISSIONS
