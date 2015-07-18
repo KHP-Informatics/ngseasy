@@ -13,10 +13,10 @@ RUN apt-get update -y && apt-get upgrade -y && apt-get install -y python-dev
 
 # cython
 RUN cd /tmp && \
-	wget http://cython.org/release/Cython-0.22.tar.gz && \
-	chmod 777 Cython-0.22.tar.gz && \
-	tar xvf Cython-0.22.tar.gz && \
-	cd Cython-0.22 && \
+	wget https://github.com/cython/cython/archive/0.22.1.tar.gz && \
+	chmod 777 Cython-0.22.1.tar.gz && \
+	tar xvf Cython-0.22.1.tar.gz && \
+	cd Cython-0.22.1 && \
 	python setup.py install
  
 #-----------------------------PLATYPUS-------------------------------
