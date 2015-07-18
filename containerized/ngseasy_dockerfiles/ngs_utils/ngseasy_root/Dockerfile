@@ -62,10 +62,15 @@ RUN  echo "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
 ENV ROOTSYS /usr/local/root
 
 RUN cd /usr/local/pipeline && \
-  git clone --recursive https://github.com/cc2qe/speedseq && \
-  chmod -R 777 /usr/local/pipeline/speedseq && \
-  cd /usr/local/pipeline/speedseq && \
-  make -j `ncpu` ROOTFLAGS=" -pthread -m64"
+    git clone --recursive https://github.com/cc2qe/speedseq && \
+    chmod -R 777 /usr/local/pipeline/speedseq && \
+    cd /usr/local/pipeline/speedseq && \
+    make -j `ncpu` ROOTFLAGS=" -pthread -m64" && \
+    chmod -R 777 /usr/local/pipeline/speedseq
+
+RUN echo -e "export PATH=/usr/local/pipeline/speedseq/bin:\$PATH" >> ~/.bashrc && \
+    echo -e "export PATH=/usr/local/pipeline/speedseq/bin:\$PATH" >> /home/pipman/.bashrc && \
+    /bin/bash -c "source ~/.bashrc"
 
 ################################################################################
 # PERMISSIONS
