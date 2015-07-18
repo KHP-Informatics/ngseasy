@@ -567,8 +567,8 @@ fi
 ## speedseq lumpy and svtyper
 ########################################################################################################
 
-SV_SPEEDSEQ_OPTIONS=" -g " ## lumpy and svtyper
-#SV_SPEEDSEQ_OPTIONS=" -g -d " ## include cnvnator
+#SV_SPEEDSEQ_OPTIONS=" -g " ## lumpy and svtyper
+SV_SPEEDSEQ_OPTIONS=" -g -d " ## include cnvnator
 
 if [ "${CNV}" == "sv_lumpy" ]
   then

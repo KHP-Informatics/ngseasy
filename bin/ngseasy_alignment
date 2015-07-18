@@ -662,6 +662,7 @@ else
       rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.dupemk.tmp.bam.bai && \
       rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam.bai && \
       rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}.tmp.bam && \
+      rm -v ${SOUTDocker}/alignments/${BAM_PREFIX}/dupemk.tmpcleansam.bam.bai && \
       chmod -R 777 ${SOUTDocker}/alignments/*"
       wait
       sleep 1s
