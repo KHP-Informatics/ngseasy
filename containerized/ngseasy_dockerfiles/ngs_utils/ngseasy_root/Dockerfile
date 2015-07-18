@@ -22,8 +22,8 @@ RUN apt-get update -y && apt-get upgrade -y
 # python and stuff
 RUN apt-get install -y \
                     make automake cmake gcc gcc c++ ncurses-dev \
-                    zlib-devel gfortran \
-                    liblapack liblapack-dev libatlas-base-dev \
+                    gfortran libghc-pipes-zlib-dev libghc-zlib-dev libghc-bzlib-dev \
+                    libblas-dev liblapack3 liblapack-dev libatlas-base-dev \
                     libblas3 libblas-dev \
                     python python-dev python-yaml python-pip \
                     python-numpy python-scipy python-pysam
