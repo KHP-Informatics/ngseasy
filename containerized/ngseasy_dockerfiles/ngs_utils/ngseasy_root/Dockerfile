@@ -65,7 +65,7 @@ RUN cd /usr/local/pipeline && \
     make -j `ncpu` ROOTFLAGS=" -pthread -m64" && \
     chmod -R 777 /usr/local/pipeline/speedseq
 
-RUN echo -e "export PATH=/usr/local/pipeline/speedseq/bin:\$PATH" >> ~/.bashrc && \
+RUN echo "export PATH=/usr/local/pipeline/speedseq/bin:\$PATH" >> ~/.bashrc && \
     /bin/bash -c "source ~/.bashrc"
 
 ADD speedseq_b37.config  /usr/local/pipeline/speedseq/bin/

@@ -566,15 +566,16 @@ fi
 ########################################################################################################
 ## speedseq lumpy and svtyper
 ########################################################################################################
-sv_options="-g"
-##sv_options="-g -d"
+
+sv_options="-g" ## lumpy and svtyper
+#sv_options="-g -d" ## include cnvnator
 
 if [ "${CNV}" == "sv_lumpy" ]
   then
   docker images | grep ngseasy-speedseq 2>&1 || { echo "compbio/ngseasy-speedseq:${NGSEASYVERSION} not installed.  Aborting." >&2; exit 1; }
   logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using speedseq:lumpy and svtyper " ${LOGFILE}
 
-  ## select config file based on genome build
+#### select config file based on genome build
   if [[ "${GENOMEBUILD}" == "b37" ]]
       then
       SPEEDSEQ_CONFIG="/usr/local/pipeline/speedseq/bin/speedseq_b37.config"
@@ -585,7 +586,8 @@ if [ "${CNV}" == "sv_lumpy" ]
     sleep 1s
     exit 1
   fi
-## run
+
+#### run
   ${DOCKER_RUN} \
   -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
   --name sv_lumpy_${BAM_PREFIX} \
