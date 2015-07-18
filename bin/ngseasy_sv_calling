@@ -581,6 +581,7 @@ if [ "${CNV}" == "sv_lumpy" ]
       SPEEDSEQ_CONFIG=""
       SPEEDSEQ_CONFIG="/usr/local/pipeline/speedseq/bin/speedseq_b37.config"
   elif [[ "${GENOMEBUILD}" == "hg19" ]]
+      then
       SPEEDSEQ_CONFIG=""
       SPEEDSEQ_CONFIG="/usr/local/pipeline/speedseq/bin/speedseq_hg19.config"
   else
