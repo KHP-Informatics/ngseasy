@@ -20,13 +20,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -y && apt-get upgrade -y
 
 # python and stuff
-RUN apt-get install -y \
-                    make automake cmake gcc gcc c++ ncurses-dev \
-                    gfortran \
-                    libblas-dev liblapack3 liblapack-dev libatlas-base-dev \
-                    libblas3 libblas-dev \
-                    python python-dev python-yaml python-pip \
-                    python-numpy python-scipy python-pysam
+RUN apt-get install -y python-numpy python-scipy python-pysam
 
 # cython
 RUN cd /tmp && \
