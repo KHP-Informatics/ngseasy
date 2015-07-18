@@ -14,9 +14,9 @@ RUN apt-get update -y && apt-get upgrade -y && apt-get install -y python-dev
 # cython
 RUN cd /tmp && \
 	wget https://github.com/cython/cython/archive/0.22.1.tar.gz && \
-	chmod 777 Cython-0.22.1.tar.gz && \
-	tar xvf Cython-0.22.1.tar.gz && \
-	cd Cython-0.22.1 && \
+	chmod 777 0.22.1.tar.gz && \
+	tar xvf 0.22.1.tar.gz && \
+	cd cython-0.22.1 && \
 	python setup.py install
  
 #-----------------------------PLATYPUS-------------------------------
@@ -58,7 +58,7 @@ RUN rm -rf /tmp/*
 EXPOSE 8080
 
 # CMD
-CMD [ "/usr/local/bin/Platypus.py", "--help" ]
+CMD [ "/usr/local/bin/Platypus.py","callVariants", "-h" ]
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
