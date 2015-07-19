@@ -68,7 +68,7 @@ if [[ ${VAR_CALLER} == "platypus" ]]
             then
             echo -e "VCF File Extension is [gz]"
             echo -e "Processing VCF File"
-            zcat ${VCF}.gz | \
+            zcat ${VCF}.vcf.gz | \
             sed s/TC\=/DP\=/g | sed s/ID=\TC\,/ID=\DP\,/g | \
             sed s/FR\=/AF\=/g | sed s/ID=\FR\,/ID=\AF\,/g | \
             sed s/GL\=/PL\=/g | sed s/ID\=GL\,/ID\=PL\,/g | \
