@@ -51,7 +51,10 @@ if [[ $# -lt 2 ]]
 fi
 ## Some user info...
 echo ""
-echo -e "WARNING: This is a quick and dirty fix to make platypus vcf more like GATK and Freebayes."
+echo -e "Program:ngseasy_vcfclean_platypus"
+echo -e "Version:1.0-r001"
+echo -e "Author:Stephen J Newhouse, stephen.j.newhouse@gmail.com"
+echo -e "WARNING:This is a quick and dirty fix to make platypus vcf more like GATK and Freebayes."
 echo ""
 echo -e "VCF_INPUT=[${VCF_INPUT}]"
 echo -e "VCF_FORMAT=[${VAR_CALLER}]"
