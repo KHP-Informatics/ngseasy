@@ -5,7 +5,9 @@
 # get options
 #################################################################################
 
-VCF="/media/Data/ngs_projects/GCAT_Data/NA12878/vcf/platypus_180715/small.vcf"
+VCF_INPUT="/media/Data/ngs_projects/GCAT_Data/NA12878/vcf/platypus_180715/small.vcf"
+
+VCF=`basname ${VCF}`
 
 #################################################################################
 ## make compatible with other tools and mathc GATK/Freebayes annotaions
@@ -13,14 +15,16 @@ VCF="/media/Data/ngs_projects/GCAT_Data/NA12878/vcf/platypus_180715/small.vcf"
 
 if [[ gzip ]]
     then
-        zcat ${VCF} | sed s/TC\=/DP\=/g | \
-        sed s/"GT:GL:GOF:GQ:NR:NV"/"GT:GL:GOF:GQ:DP:NV"/g | bgzip -c > ${VCF}.fix.gz && \
-        tabix ${VCF}.fix.gz
+        VCF=`basname ${VCF} .gz`
+        zcat ${VCF}.gz | sed s/TC\=/DP\=/g | \
+        sed s/"GT:GL:GOF:GQ:NR:NV"/"GT:GL:GOF:GQ:DP:NV"/g | bgzip -c > ${VCF}.fix.vcf.gz && \
+        tabix ${VCF}.fix.vcf.gz
 elif [[ not gzip ]]
     then
-        cat ${VCF} | sed s/TC\=/DP\=/g | \
-        sed s/"GT:GL:GOF:GQ:NR:NV"/"GT:GL:GOF:GQ:DP:NV"/g |  bgzip -c > ${VCF}.fix.gz && \
-        tabix ${VCF}.fix.gz
+        VCF=`basname ${VCF} .vcf`
+        cat ${VCF}.vcf | sed s/TC\=/DP\=/g | \
+        sed s/"GT:GL:GOF:GQ:NR:NV"/"GT:GL:GOF:GQ:DP:NV"/g |  bgzip -c > ${VCF}.fix.vcf.gz && \
+        tabix ${VCF}.fix.vcf.gz
 else
     ok
 fi
