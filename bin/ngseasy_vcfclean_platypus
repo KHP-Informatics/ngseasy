@@ -1,17 +1,15 @@
 #!/bin/bash
-
-
 #################################################################################
 # usage
 #################################################################################
 
 function usage {
     echo "
-Program: VcfClean
+Program: ngseasy_vcfclean_platypus
 Version 1.0-r001
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
-usage:   VcfClean -v <VCF> -f <Variant Caller>
+usage:   ngseasy_vcfclean_platypus -v <VCF> -f <Variant Caller>
 
 options:  -v  STRING  VCF file : [ vcf or vcf.gz]
           -f  STRING  Variant Caller : [platypus]
@@ -45,8 +43,6 @@ VCF="/media/Data/ngs_projects/GCAT_Data/NA12878/vcf/platypus_180715/small.vcf"
 #################################################################################
 ## make compatible with other tools and mathc GATK/Freebayes annotaions
 #################################################################################
-
-
 
 if [[ ${VCF_FORMAT} == "platypus" ]]
     then
