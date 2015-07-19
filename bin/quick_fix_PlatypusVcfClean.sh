@@ -23,25 +23,21 @@ options:  -v  STRING  configuration file
 # get options
 #################################################################################
 
-  while  getopts "hv:f:" opt
-  do
-
-      case ${opt} in
+while  getopts "hv:f:" opt
+do
+    case ${opt} in
     h)
     usage #print help
     exit 0
     ;;
-
-    c)
+    v)
     VCF_INPUT=${OPTARG}
     ;;
-
-    d)
+    f)
     VCF_FORMAT=${OPTARG}
     ;;
-      esac
-  done
-
+    esac
+done
 
 VCF_FORMAT="platypus"
 VCF_INPUT="/media/Data/ngs_projects/GCAT_Data/NA12878/vcf/platypus_180715/small.vcf"
