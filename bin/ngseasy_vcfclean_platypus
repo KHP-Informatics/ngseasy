@@ -72,7 +72,7 @@ if [[ ${VAR_CALLER} == "platypus" ]]
             sed s/TC\=/DP\=/g | sed s/ID=\TC\,/ID=\DP\,/g | \
             sed s/FR\=/AF\=/g | sed s/ID=\FR\,/ID=\AF\,/g | \
             sed s/GL\=/PL\=/g | sed s/ID\=GL\,/ID\=PL\,/g | \
-            sed s/ID\=NR\,/ID\=DP\,/g | \
+            sed s/^##FORMAT\=\<\ID\=NR\,/^##FORMAT\=\<\ID\=DP\,/g | \
             sed s/"GT:GL:GOF:GQ:NR:NV"/"GT:PL:GOF:GQ:DP:NV"/g | bgzip -c > ${VCF}.alt.vcf.gz && \
             tabix ${VCF}.alt.vcf.gz
             echo -e "Fixed VCF=[${VCF}.alt.vcf.gz]\nDone!"
@@ -85,7 +85,7 @@ if [[ ${VAR_CALLER} == "platypus" ]]
             sed s/TC\=/DP\=/g | sed s/ID=\TC\,/ID=\DP\,/g | \
             sed s/FR\=/AF\=/g | sed s/ID=\FR\,/ID=\AF\,/g | \
             sed s/GL\=/PL\=/g | sed s/ID\=GL\,/ID\=PL\,/g | \
-            sed s/ID\=NR\,/ID\=DP\,/g | \
+            sed s/^##FORMAT\=\<\ID\=NR\,/^##FORMAT\=\<\ID\=DP\,/g | \
             sed s/"GT:GL:GOF:GQ:NR:NV"/"GT:PL:GOF:GQ:DP:NV"/g |  bgzip -c > ${VCF}.alt.vcf.gz && \
             tabix ${VCF}.alt.vcf.gz
             echo -e "Fixed VCF=[${VCF}.alt.vcf.gz]\nDone!"
