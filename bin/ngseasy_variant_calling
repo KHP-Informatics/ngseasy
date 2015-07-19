@@ -636,7 +636,6 @@ if [ "${VARCALLER}" == "freebayes-parallel" ]
     --min-mapping-quality ${map_qual} \
     --min-base-quality ${base_qual} \
     --min-repeat-entropy 1 \
-    --use-best-n-alleles  \
     --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
     time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
     vcffilter -f 'QUAL > 5' -s | \
