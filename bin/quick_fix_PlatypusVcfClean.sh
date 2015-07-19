@@ -13,8 +13,8 @@ Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
 usage:   VcfClean -v <VCF> -f <Variant Caller>
 
-options:  -v  STRING  configuration file
-          -f  STRING  project directory
+options:  -v  STRING  VCF file : [ vcf or vcf.gz]
+          -f  STRING  Variant Caller : [platypus]
           -h  NULL    show this message
 "
 }
