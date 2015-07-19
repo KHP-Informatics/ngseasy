@@ -63,7 +63,7 @@ VCF_EXT=${VCF##*.}
 
 if [[ ${VAR_CALLER} == "platypus" ]]
     then
-    VCF=`basename ${VCF_INPUT} .gz`
+    VCF=`basename ${VCF_INPUT} .vcf.gz`
         if [[ ${VCF_EXT} == "gz" ]]
             then
             echo -e "VCF File Extension is [gz]"
