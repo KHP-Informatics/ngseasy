@@ -58,23 +58,25 @@ echo -e "VCF_FORMAT=[${VAR_CALLER}]"
 #################################################################################
 ## make compatible with other tools and mathc GATK/Freebayes annotaions
 #################################################################################
-VCF=`basename ${VCF_INPUT} .gz`
+VCF=`basename ${VCF_INPUT}`
 VCF_EXT=${VCF##*.}
 
 if [[ ${VAR_CALLER} == "platypus" ]]
     then
-    if [[ ${VCF_EXT} == "gz" ]]
+        VCF=`basename ${VCF_INPUT} .gz`
+        if [[ ${VCF_EXT} == "gz" ]]
+            then
+            echo -e "VCF File Extension is [gz]"
+            zcat ${VCF}.gz | \
+            sed s/TC\=/DP\=/g | sed s/ID=\TC\,/ID=\DP\,/g | \
+            sed s/FR\=/AF\=/g | sed s/ID=\FR\,/ID=\AF\,/g | \
+            sed s/GL\=/PL\=/g | sed s/ID\=GL\,/ID\=PL\,/g | \
+            sed s/"GT:GL:GOF:GQ:NR:NV"/"GT:PL:GOF:GQ:DP:NV"/g | bgzip -c > ${VCF}.alt.vcf.gz && \
+            tabix ${VCF}.alt.vcf.gz
+            echo -e "Fied VCF=[${VCF}.alt.vcf.gz]"
+        elif [[ ${VCF_EXT} == "vcf" ]]
         then
-        echo -e "VCF File Extension is [gz]"
-        zcat ${VCF}.gz | \
-        sed s/TC\=/DP\=/g | sed s/ID=\TC\,/ID=\DP\,/g | \
-        sed s/FR\=/AF\=/g | sed s/ID=\FR\,/ID=\AF\,/g | \
-        sed s/GL\=/PL\=/g | sed s/ID\=GL\,/ID\=PL\,/g | \
-        sed s/"GT:GL:GOF:GQ:NR:NV"/"GT:PL:GOF:GQ:DP:NV"/g | bgzip -c > ${VCF}.alt.vcf.gz && \
-        tabix ${VCF}.alt.vcf.gz
-        echo -e "Fied VCF=[${VCF}.alt.vcf.gz]"
-    elif [[ ${VCF_EXT} == "vcf" ]]
-        then
+        VCF=`basename ${VCF_INPUT} .vcf`
         echo -e "VCF File Extension is [vcf]"
         cat ${VCF}.vcf | \
         sed s/TC\=/DP\=/g | sed s/ID=\TC\,/ID=\DP\,/g | \
