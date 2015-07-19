@@ -30,7 +30,7 @@ else
 fi
 
 
-## TO FIX:-
+## TO FIX:- Get GATK/Freebayes equivalents and check GEMINI requirements
 ##FORMAT=<ID=NV,Number=.,Type=Integer,Description="Number of reads containing variant in this sample">
 ##FORMAT=<ID=NR,Number=.,Type=Integer,Description="Number of reads covering variant location in this sample">
 ##INFO=<ID=TCR,Number=1,Type=Integer,Description="Total reverse strand coverage at this locus">
