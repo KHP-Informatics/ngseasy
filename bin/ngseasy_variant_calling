@@ -742,6 +742,11 @@ elif [ "${VARCALLER}" == "platypus" ]
       --abThreshold 0.0001 \
       --minVarFreq 0.0 && \
       time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+      sed s/TC\=/DP\=/g | sed s/ID=\TC\,/ID=\DP\,/g | \
+      sed s/FR\=/AF\=/g | sed s/ID=\FR\,/ID=\AF\,/g | \
+      sed s/GL\=/PL\=/g | sed s/ID\=GL\,/ID\=PL\,/g | \
+      sed s/^##FORMAT\=\<\ID\=NR\,/\##FORMAT\=\<\ID\=DP\,/g | \
+      sed s/"GT:GL:GOF:GQ:NR:NV"/"GT:PL:GOF:GQ:DP:NV"/g | \
       vcffilter -f 'QUAL > 5' -s | \
       fix_ambiguous | \
       vcfallelicprimitives --keep-geno | \
@@ -794,6 +799,11 @@ elif [ "${VARCALLER}" == "platypus" ]
       --abThreshold 0.0001 \
       --minVarFreq 0.0 && \
       time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
+      sed s/TC\=/DP\=/g | sed s/ID=\TC\,/ID=\DP\,/g | \
+      sed s/FR\=/AF\=/g | sed s/ID=\FR\,/ID=\AF\,/g | \
+      sed s/GL\=/PL\=/g | sed s/ID\=GL\,/ID\=PL\,/g | \
+      sed s/^##FORMAT\=\<\ID\=NR\,/\##FORMAT\=\<\ID\=DP\,/g | \
+      sed s/"GT:GL:GOF:GQ:NR:NV"/"GT:PL:GOF:GQ:DP:NV"/g | \
       vcffilter -f 'QUAL > 5' -s | \
       fix_ambiguous | \
       vcfallelicprimitives --keep-geno | \
@@ -908,28 +918,7 @@ elif [ "${VARCALLER}" == "UnifiedGenotyper" ]
   --unsafe ALL \
   --genotype_likelihoods_model BOTH \
   --genotyping_mode DISCOVERY \
-  --output_mode ${GTMODEGATK} \
-  --annotation AlleleBalance \
-  --annotation BaseCounts \
-  --annotation BaseQualityRankSumTest \
-  --annotation ChromosomeCounts \
-  --annotation ClippingRankSumTest \
-  --annotation Coverage \
-  --annotation FisherStrand \
-  --annotation GCContent \
-  --annotation HaplotypeScore \
-  --annotation HomopolymerRun \
-  --annotation InbreedingCoeff \
-  --annotation LikelihoodRankSumTest \
-  --annotation LowMQ \
-  --annotation MappingQualityRankSumTest \
-  --annotation MappingQualityZero \
-  --annotation QualByDepth \
-  --annotation RMSMappingQuality \
-  --annotation ReadPosRankSumTest \
-  --annotation SpanningDeletions \
-  --annotation TandemRepeatAnnotator \
-  --annotation VariantType && \
+  --output_mode ${GTMODEGATK} && \
   time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
   vcffilter -f 'QUAL > 5' -s | \
   fix_ambiguous | \
@@ -976,28 +965,7 @@ elif [ "${VARCALLER}" == "HaplotypeCaller" ]
   -minPruning 10 \
   --unsafe ALL \
   -pairHMM VECTOR_LOGLESS_CACHING \
-  --genotyping_mode DISCOVERY \
-  --annotation AlleleBalance \
-  --annotation BaseCounts \
-  --annotation BaseQualityRankSumTest \
-  --annotation ChromosomeCounts \
-  --annotation ClippingRankSumTest \
-  --annotation Coverage \
-  --annotation FisherStrand \
-  --annotation GCContent \
-  --annotation HaplotypeScore \
-  --annotation HomopolymerRun \
-  --annotation InbreedingCoeff \
-  --annotation LikelihoodRankSumTest \
-  --annotation LowMQ \
-  --annotation MappingQualityRankSumTest \
-  --annotation MappingQualityZero \
-  --annotation QualByDepth \
-  --annotation RMSMappingQuality \
-  --annotation ReadPosRankSumTest \
-  --annotation SpanningDeletions \
-  --annotation TandemRepeatAnnotator \
-  --annotation VariantType && \
+  --genotyping_mode DISCOVERY && \
   cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
   vcffilter -f 'QUAL > 5' -s | \
   fix_ambiguous | \

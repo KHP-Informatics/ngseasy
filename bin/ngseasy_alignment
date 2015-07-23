@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -o errexit
-set -x
+##ßset -x
 ########################################################################################################
 # Program: ngseasy_alignment
 # Version 1.0-r001
