@@ -205,6 +205,10 @@ as a stagging area for new project and sample data.
 - right now, always run ``ngseasy`` from the location/directory that contains the config.file  
 - each component of ngseasy can be run as a standalone script  
 
+
+## GCAT Report: NGSEASY-NTRIM-BWA-FREEBAYES-D
+[GCAT Report: NGSEASY-NTRIM-BWA-FREEBAYES-D](http://www.bioplanet.com/gcat/reports/6167-seeirhwtfp/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-freebayes-d/compare-570-270-181/group-read-depth)
+
 ****************
 
 
