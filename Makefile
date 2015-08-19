@@ -349,11 +349,88 @@ purgeall:
 	rm -f -v $(TARGET_BIN)/ensembl****yaml && \
 	docker kill $(shell docker ps -a | awk '(print $$1)') && \
 	docker rm -f $(shell docker ps -a | awk '(print $$1)') && \
-	docker rmi -f $(shell docker images -a |  grep ngseasy | awk '(print $$3)') && \
+	docker rmi -f $(shell docker images -a |  grep compbio | awk '(print $$3)') && \
 
 purgegenomes:
 	rm -rfv $(INSTALLDIR)/ngs_resources/reference_genomes_b37 && \
 	rm -rfv $(INSTALLDIR)/ngs_resources/reference_genomes_hg19
+
+############################################################################
+## bwa only b37 resources
+bwab37indexes: ngsprojectdir
+	@echo "Getting bwa b37 resources"
+	cd $(INSTALLDIR)/ngs_resources/reference_genomes_b37 && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_omni2.5.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_omni2.5.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_phase1.indels.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_phase1.indels.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_phase1.snps.high_confidence.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_phase1.snps.high_confidence.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/CEUTrio.HiSeq.WGS.b37.NA12878.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/CEUTrio.HiSeq.WGS.b37.NA12878.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/CEUTrio.HiSeq.WGS.b37.bestPractices.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/CEUTrio.HiSeq.WGS.b37.bestPractices.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/Mills_and_1000G_gold_standard.indels.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/Mills_and_1000G_gold_standard.indels.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.sites.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.sites.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/NA12878.knowledgebase.snapshot.20131119.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/NA12878.knowledgebase.snapshot.20131119.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/contaminant_list.fa && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/dbsnp_138.b37.excluding_sites_after_129.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/dbsnp_138.b37.excluding_sites_after_129.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/dbsnp_138.b37.recab && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/dbsnp_138.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/dbsnp_138.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/hapmap_3.3.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/hapmap_3.3.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/human_g1k_v37.chrom_lengths && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/human_g1k_v37.fasta && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/human_g1k_v37.fasta.amb && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/human_g1k_v37.fasta.ann && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/human_g1k_v37.fasta.bwt && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/human_g1k_v37.fasta.fai && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/human_g1k_v37.fasta.pac && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/human_g1k_v37.fasta.sa && \
+	chmod -R 775 $(INSTALLDIR)/ngs_projects/ngseasy_resources/reference_genomes_b37/
+
+############################################################################
+## novoalign only b37 resources
+novoalignb37indexes: ngsprojectdir
+		@echo "Getting novoalign b37 resources"
+		cd $(INSTALLDIR)/ngs_resources/reference_genomes_b37 && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_omni2.5.b37.vcf && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_omni2.5.b37.vcf.idx && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_phase1.indels.b37.vcf && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_phase1.indels.b37.vcf.idx && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_phase1.snps.high_confidence.b37.vcf && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/1000G_phase1.snps.high_confidence.b37.vcf.idx && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/CEUTrio.HiSeq.WGS.b37.NA12878.vcf && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/CEUTrio.HiSeq.WGS.b37.NA12878.vcf.idx && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/CEUTrio.HiSeq.WGS.b37.bestPractices.b37.vcf && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/CEUTrio.HiSeq.WGS.b37.bestPractices.b37.vcf.idx && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/Mills_and_1000G_gold_standard.indels.b37.vcf && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/Mills_and_1000G_gold_standard.indels.b37.vcf.idx && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.sites.vcf && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.sites.vcf.idx && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.vcf && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.vcf.idx && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/NA12878.knowledgebase.snapshot.20131119.b37.vcf && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/NA12878.knowledgebase.snapshot.20131119.b37.vcf.idx && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/contaminant_list.fa && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/dbsnp_138.b37.excluding_sites_after_129.vcf && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/dbsnp_138.b37.excluding_sites_after_129.vcf.idx && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/dbsnp_138.b37.recab && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/dbsnp_138.b37.vcf && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/dbsnp_138.b37.vcf.idx && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/hapmap_3.3.b37.vcf && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/hapmap_3.3.b37.vcf.idx && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/human_g1k_v37.chrom_lengths && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/human_g1k_v37.fasta && \
+		wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_b37/human_g1k_v37.novoindex && \
+		chmod -R 775 $(INSTALLDIR)/ngs_projects/ngseasy_resources/reference_genomes_b37/
 
 ############################################################################
 ## Make sep chroms
