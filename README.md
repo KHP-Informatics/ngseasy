@@ -47,11 +47,18 @@ Please contact us for help/guidance on using the beta release.
 ****************
 
 
-# Issues, Questions and Queries
+## Issues, Questions and Queries
 
 **Please Direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues]**
 
-# WARNING!
+When sending bug reports etc please provide:- 
+
+- Date of Download
+- OS and version
+- Basic Machine Specs (CPU, RAM)
+- Network Speed ([Testing Internet Connection Speed]())
+
+**WARNING!**
 NGSeasy is not [numpty](http://www.urbandictionary.com/define.php?term=Numpty) or bad data proof!  
 
 Please read the docs, stay calm, take your time and think about what you are doing...and if [www.google.com] doesnt help, then please direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues].
@@ -169,12 +176,9 @@ sudo make install
 
 **> 500 Mbit/s** : anything less will add a lot of time to set up (days - weeks).
 
-Testing Internet Connection Speed :- 
+**Testing Internet Connection Speed**
 
 source : http://askubuntu.com/questions/104755/how-to-check-internet-speed-via-terminal
-
-> I recommend the speedtest-cli tool for this. I created a blog post (Measure > Internet Connection Speed from the Linux Command Line) that goes into detail > of downloading, installing and usage of it.
-> The short version is this:
 
 ```bash
 wget -O speedtest-cli https://raw.github.com/sivel/speedtest-cli/master/speedtest_cli.py
