@@ -131,14 +131,15 @@ git clone https://github.com/KHP-Informatics/ngseasy.git
 ```
 
 - Default install directory is `/home/${USER}`
-- `make ...` sets up top level directory structure in `/home/${USER}` by default
 - in this example user home is `/home/ec2-user`
-- installs scripts to `/usr/local/bin/`
-- gets all docker images
-- gets indexed hg19 and b37 genomes
-- gets GATK recources for hg19 and b37 genomes
-- gets whole genome and exome test data
+- `make INTSALLDIR="/home/ec2-user" all` 
+   - sets up top level directory structure
+   - gets all docker images
+   - gets indexed hg19 and b37 genomes
+   - gets GATK recources for hg19 and b37 genomes
+   - gets whole genome and exome test data
 - Always set your **`INTSALLDIR`** : If you run `sudo make all` the install path will be `/home/root`. Please dont do this!
+- `sudo make install` installs scripts to `/usr/local/bin/`  
 
 ```bash
 #############################################
