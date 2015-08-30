@@ -196,11 +196,15 @@ Upload: 5.18 Mbit/s
 
 ## Install time on Amazon EC2
 
+Connection Speed: ~ 800 Mbit/s 
+
 ```
 real    94m54.237s
 user    12m26.960s
 sys     28m46.648s
 ```
+
+Note: We have only tested NGSeasy installation on Amazon EC2, Openstack and UK University Networks. These are all fairly fast networks with speeds exceeding 800 Mbit/s on average. 
 
 ## Running NGSeasy for the first time on the test data
 
