@@ -117,7 +117,7 @@ For more examples and ideas, visit:
  http://docs.docker.com/userguide/
 ```
 
-## Get and Install NGSeasy
+## Get NGSeasy
 
 ```bash
 
@@ -129,6 +129,8 @@ cd /home/${USER}
 
 git clone https://github.com/KHP-Informatics/ngseasy.git
 ```
+
+## Install NGSeasy
 
 - Default install directory is `/home/${USER}`
 - in this example user home is `/home/ec2-user`
