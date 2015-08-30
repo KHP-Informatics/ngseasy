@@ -253,7 +253,7 @@ fi
 
 
 ###########################################################################################
-## Set up Project Dir and Fastq Files
+## 0. Set up Project Dir and Fastq Files
 ###########################################################################################
 
 logger_ngseasy "[ngseasy]:Calling ngseasy_initiate_project" ${config_run_log}

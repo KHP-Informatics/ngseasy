@@ -347,9 +347,9 @@ clean:
 purgeall:
 	rm -f -v $(TARGET_BIN)/ngseas* && \
 	rm -f -v $(TARGET_BIN)/ensembl****yaml && \
-	docker kill $(shell docker ps -a | awk '(print $$1)') && \
-	docker rm -f $(shell docker ps -a | awk '(print $$1)') && \
-	docker rmi -f $(shell docker images -a |  grep compbio | awk '(print $$3)') && \
+	docker kill \$(shell docker ps -a | awk '(print $$1)') && \
+	docker rm -f \$(shell docker ps -a | awk '(print $$1)') && \
+	docker rmi -f \$(shell docker images -a |  grep compbio | awk '(print $$3)')
 
 purgegenomes:
 	rm -rfv $(INSTALLDIR)/ngs_resources/reference_genomes_b37 && \
