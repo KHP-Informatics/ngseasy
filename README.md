@@ -56,9 +56,7 @@ This post reviews the various security implications of using Docker to run appli
 ### NGSeasy Security
 **All NGSeasy applications are run as the non-root user `pipeman` within each container**
 
-## For the impatient
-
-### Install Docker
+## Install Docker
 
 Full instructions at https://docs.docker.com/.
 
@@ -119,7 +117,7 @@ For more examples and ideas, visit:
  http://docs.docker.com/userguide/
 ```
 
-### Get and Install NGSeasy
+## Get and Install NGSeasy
 
 ```bash
 
@@ -130,33 +128,34 @@ For more examples and ideas, visit:
 cd /home/${USER}
 
 git clone https://github.com/KHP-Informatics/ngseasy.git
+```
 
+- Default install directory is `/home/${USER}`
+- `make ...` sets up top level directory structure in `/home/${USER}` by default
+- in this example user home is `/home/ec2-user`
+- installs scripts to `/usr/local/bin/`
+- gets all docker images
+- gets indexed hg19 and b37 genomes
+- gets GATK recources for hg19 and b37 genomes
+- gets whole genome and exome test data
+- Always set your **`INTSALLDIR`** : If you run `sudo make all` the install path will be `/home/root`. Please dont do this!
+
+```bash
 #############################################
 ## install NGSeasy                         ##
 #############################################
-#
-# default install directory is /home/${USER}
-# make sets up top level directory structure in /home/${USER} by default
-# in this example user home is /home/ec2-user
-# installs scripts to /usr/local/bin/
-# gets all docker images
-# gets indexed hg19 and b37 genomes
-# gets GATK recources for hg19 and b37 genomes
-# gets whole genome and exome test data
 
 cd ngseasy
 
+## 1.
 make INTSALLDIR="/home/ec2-user" all
 
+## 2. 
 sudo make install
-
-# NOTE:-
-# if you run sudo make all - install path is /home/root
-# Install can take a while, 1-2 hours, so go get a coffee
-# just chill...
-# if your network is bad...then who knows how long...
-# still..just chill...
 ```
+
+Installation can take a while, 1-2 hours, so go get a coffee../just chill...if your network is bad...then who knows how long...still..just chill...or go get fast internet!
+
 ## Recommended Network Speed
 
 **> 500 Mbit/s** : anything less will add a lot of time to set up (days - weeks).
