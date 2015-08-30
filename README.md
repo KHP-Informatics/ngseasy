@@ -15,6 +15,8 @@ NGSeasy (beta): A [Dockerized](https://www.docker.com/) NGS pipeline and tool-bo
 - **NGSeasy will update every 12 months**
 - **GUI in development**
 
+[**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**](https://github.com/KHP-Informatics/ngseasy.git)
+
 ## Author Contact Details
 
 Please contact us for help/guidance on using the beta release.
@@ -31,13 +33,6 @@ Please contact us for help/guidance on using the beta release.
 
 **Lets us know if you want other tools added to NGSeasy**
 
-****************
-
-[**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**](https://github.com/KHP-Informatics/ngseasy.git)
-
-****************
-
-
 ## Issues, Questions and Queries
 
 **Please Direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues]**
@@ -48,6 +43,8 @@ When sending bug reports etc please provide:-
 - OS and version
 - Basic Machine Specs (CPU, RAM)
 - Network Speed ([Testing Internet Connection Speed]())
+- The Code you ran eg:- `ngseasy -c my.config.tsv -d /My/Dir `
+- The exact error as printed to screen
 
 **WARNING!**
 NGSeasy is not [numpty](http://www.urbandictionary.com/define.php?term=Numpty) or bad data proof!  
