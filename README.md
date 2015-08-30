@@ -14,6 +14,7 @@ NGSeasy (beta): A [Dockerized](https://www.docker.com/) NGS pipeline and tool-bo
 - **NGSeasy-1.0-r001 (dirty_tango) contains most of the core functionality to go from raw fastq to raw vcf calls**
 - **NGSeasy will update every 12 months**
 - **GUI in development**
+- **Lets us know if you want other tools added to NGSeasy**
 
 [**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**](https://github.com/KHP-Informatics/ngseasy.git)
 
@@ -30,8 +31,6 @@ Please contact us for help/guidance on using the beta release.
 <a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">
 <img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
 </a>
-
-**Lets us know if you want other tools added to NGSeasy**
 
 ## Issues, Questions and Queries
 
