@@ -18,7 +18,7 @@ NGSeasy (beta): A [Dockerized](https://www.docker.com/) NGS pipeline and tool-bo
 
 [**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**](https://github.com/KHP-Informatics/ngseasy.git)
 
-## GCAT Reports 
+## NGSeasy Genome Comparison & Analytic Testing ([GCAT](http://www.bioplanet.com/gcat)) Reports 
 Here we provide a quick look at basic NGSeasy performance (more results coming soon).
 
 |GCAT Report|Test Data |Pipeline|
@@ -29,10 +29,11 @@ Here we provide a quick look at basic NGSeasy performance (more results coming s
 
 Please contact us for help/guidance on using the beta release.
 
-- Dr Amos Folarin <amosfolarin@gmail.com>, [@amosfolarin](https://twitter.com/amosfolarin?lang=en),
-View Amos's profile on [LinkedIn](http://www.linkedin.com/pub/amos-folarin/34/b06/978)
+|Author|email|Twitter| LinkedIn|
+|----|----|----|----|
+|Dr Stephen J Newhouse| <stephen.j.newhouse@gmail.com>| [@s_j_newhouse](https://twitter.com/s_j_newhouse?lang=en)| View Steve's profile on [LinkedIn](http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a)|
+| Dr Amos Folarin| <amosfolarin@gmail.com>| [@amosfolarin](https://twitter.com/amosfolarin?lang=en)|View Amos's profile on [LinkedIn](http://www.linkedin.com/pub/amos-folarin/34/b06/978)|
 
-- Dr Stephen J Newhouse <stephen.j.newhouse@gmail.com>, [@s_j_newhouse](https://twitter.com/s_j_newhouse?lang=en), View Steve's profile on [LinkedIn](http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a)
 
 
 ## Issues, Questions and Queries
