@@ -165,8 +165,36 @@ sudo make install
 # if your network is bad...then who knows how long...
 # still..just chill...
 ```
+## Recommended Network Speed
 
-Install time on Amazon EC2
+**> 500 Mbit/s** : anything less will add a lot of time to set up (days - weeks).
+
+Testing Internet Connection Speed :- 
+
+source : http://askubuntu.com/questions/104755/how-to-check-internet-speed-via-terminal
+
+> I recommend the speedtest-cli tool for this. I created a blog post (Measure > Internet Connection Speed from the Linux Command Line) that goes into detail > of downloading, installing and usage of it.
+> The short version is this:
+
+```bash
+wget -O speedtest-cli https://raw.github.com/sivel/speedtest-cli/master/speedtest_cli.py
+chmod +x speedtest-cli
+./speedtest-cli
+```
+
+```
+Retrieving speedtest.net configuration...
+Retrieving speedtest.net server list...
+Testing from Comcast Cable (x.x.x.x)...
+Selecting best server based on ping...
+Hosted by FiberCloud, Inc (Seattle, WA) [12.03 km]: 44.028 ms
+Testing download speed........................................
+Download: 32.29 Mbit/s
+Testing upload speed..................................................
+Upload: 5.18 Mbit/s
+```
+
+## Install time on Amazon EC2
 
 ```
 real    94m54.237s
@@ -174,7 +202,7 @@ user    12m26.960s
 sys     28m46.648s
 ```
 
-### Running NGSeasy for the first time on the test data
+## Running NGSeasy for the first time on the test data
 
 **Important!** NGSeasy is controlled from a single `config` file. See [ngseasy_test.config.tsv](link) for a basic template. It is important that the user sets this up properly before running NGSeasy.
 
