@@ -22,15 +22,11 @@ NGSeasy (beta): A [Dockerized](https://www.docker.com/) NGS pipeline and tool-bo
 
 Please contact us for help/guidance on using the beta release.
 
-- Amos Folarin <amosfolarin@gmail.com>  [@amosfolarin](https://twitter.com/amosfolarin?lang=en)
-<a href="http://www.linkedin.com/pub/amos-folarin/34/b06/978">
-<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Amos's profile on LinkedIn">
-</a>
+- Dr Amos Folarin <amosfolarin@gmail.com>, [@amosfolarin](https://twitter.com/amosfolarin?lang=en),
+View Amos's profile on [LinkedIn](http://www.linkedin.com/pub/amos-folarin/34/b06/978)
 
-- Stephen J Newhouse <stephen.j.newhouse@gmail.com> [@s_j_newhouse](https://twitter.com/s_j_newhouse?lang=en)  
-<a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">
-<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
-</a>
+- Dr Stephen J Newhouse <stephen.j.newhouse@gmail.com>, [@s_j_newhouse](https://twitter.com/s_j_newhouse?lang=en), View Steve's profile on [LinkedIn](http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a)
+
 
 ## Issues, Questions and Queries
 
