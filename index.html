@@ -44,15 +44,58 @@
 <p><a href="https://github.com/KHP-Informatics/ngseasy.git"><strong>NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.</strong></a></p>
 
 <h2>
+<a id="ngseasy-genome-comparison--analytic-testing-gcat-reports" class="anchor" href="#ngseasy-genome-comparison--analytic-testing-gcat-reports" aria-hidden="true"><span class="octicon octicon-link"></span></a>NGSeasy Genome Comparison &amp; Analytic Testing (<a href="http://www.bioplanet.com/gcat">GCAT</a>) Reports</h2>
+
+<p>Here we provide a quick look at basic NGSeasy performance (more results coming soon).</p>
+
+<table>
+<thead>
+<tr>
+<th>GCAT Report</th>
+<th>Test Data</th>
+<th>Pipeline</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://www.bioplanet.com/gcat/reports/6167-seeirhwtfp/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-freebayes-d/compare-570-270-181/group-read-depth"><strong>NGSEASY-NTRIM-BWA-FREEBAYES-D</strong></a></td>
+<td>illumina-100bp-pe-exome-150x</td>
+<td>fastq &gt; bwa &gt; freebayes</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
 <a id="author-contact-details" class="anchor" href="#author-contact-details" aria-hidden="true"><span class="octicon octicon-link"></span></a>Author Contact Details</h2>
 
 <p>Please contact us for help/guidance on using the beta release.</p>
 
-<ul>
-<li><p>Dr Amos Folarin <a href="mailto:amosfolarin@gmail.com">amosfolarin@gmail.com</a>, <a href="https://twitter.com/amosfolarin?lang=en">@amosfolarin</a>,
-View Amos's profile on <a href="http://www.linkedin.com/pub/amos-folarin/34/b06/978">LinkedIn</a></p></li>
-<li><p>Dr Stephen J Newhouse <a href="mailto:stephen.j.newhouse@gmail.com">stephen.j.newhouse@gmail.com</a>, <a href="https://twitter.com/s_j_newhouse?lang=en">@s_j_newhouse</a>, View Steve's profile on <a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">LinkedIn</a></p></li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Author</th>
+<th>email</th>
+<th>Twitter</th>
+<th>LinkedIn</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dr Stephen J Newhouse</td>
+<td><a href="mailto:stephen.j.newhouse@gmail.com">stephen.j.newhouse@gmail.com</a></td>
+<td><a href="https://twitter.com/s_j_newhouse?lang=en">@s_j_newhouse</a></td>
+<td>View Steve's profile on <a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">LinkedIn</a>
+</td>
+</tr>
+<tr>
+<td>Dr Amos Folarin</td>
+<td><a href="mailto:amosfolarin@gmail.com">amosfolarin@gmail.com</a></td>
+<td><a href="https://twitter.com/amosfolarin?lang=en">@amosfolarin</a></td>
+<td>View Amos's profile on <a href="http://www.linkedin.com/pub/amos-folarin/34/b06/978">LinkedIn</a>
+</td>
+</tr>
+</tbody>
+</table>
 
 <h2>
 <a id="issues-questions-and-queries" class="anchor" href="#issues-questions-and-queries" aria-hidden="true"><span class="octicon octicon-link"></span></a>Issues, Questions and Queries</h2>
@@ -272,11 +315,6 @@ as a stagging area for new project and sample data.<br>
 <li>each component of ngseasy can be run as a standalone script<br>
 </li>
 </ul>
-
-<h2>
-<a id="gcat-report-ngseasy-ntrim-bwa-freebayes-d" class="anchor" href="#gcat-report-ngseasy-ntrim-bwa-freebayes-d" aria-hidden="true"><span class="octicon octicon-link"></span></a>GCAT Report: NGSEASY-NTRIM-BWA-FREEBAYES-D</h2>
-
-<p><a href="http://www.bioplanet.com/gcat/reports/6167-seeirhwtfp/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-freebayes-d/compare-570-270-181/group-read-depth">GCAT Report: NGSEASY-NTRIM-BWA-FREEBAYES-D</a></p>
 
 <hr>
 
@@ -805,17 +843,6 @@ But once you're set up, thats it - you are good to go.</p>
 
 <p>Setting up the initial project can take up a day, depending on your local network connections and speeds.</p>
 
-<div class="highlight highlight-bash"><pre>
-<span class="pl-c">## To get latest dev</span>
-git clone --branch sjn_dev https://github.com/KHP-Informatics/ngseasy.git
-
-<span class="pl-c">## or Git Clone master</span>
-git clone https://github.com/KHP-Informatics/ngseasy.git
-
-<span class="pl-c">## move to ngseasy folder and run make all</span>
-<span class="pl-c1">cd</span> ngseasy
-sudo make all</pre></div>
-
 <p>The default install dir is the users <strong>${HOME}</strong> directory.
 The  <strong>Makefile</strong> provides options to install to any user defined directory and select NGSeasy version. eg :-</p>
 
@@ -984,23 +1011,6 @@ This sets up Information related to: Project Name, Sample Name, Library Type, Pi
 </tr>
 </tbody>
 </table>
-
-<h3>
-<a id="some-explanations-" class="anchor" href="#some-explanations-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Some explanations:-</h3>
-
-<h4>
-<a id="trim" class="anchor" href="#trim" aria-hidden="true"><span class="octicon octicon-link"></span></a>TRIM</h4>
-
-<p><strong>atrimm</strong> - adaptor trimming plus read quality trimming<br>
-<strong>btrim</strong> - basic read read quality trimming  </p>
-
-<h2>
-<a id="running-ngseasy" class="anchor" href="#running-ngseasy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running NGSeasy</h2>
-
-<div class="highlight highlight-bash"><pre><span class="pl-c">##</span>
-ngseasy -c ngseasy_test.config.tsv -d /media/scratch/ngs_projects</pre></div>
-
-<hr>
 
 <h2>
 <a id="the-ngseasy-project-directory" class="anchor" href="#the-ngseasy-project-directory" aria-hidden="true"><span class="octicon octicon-link"></span></a>The NGSeasy project directory</h2>
@@ -1264,7 +1274,7 @@ sudo docker build -t compbio/ngseasy-snpeff:<span class="pl-smi">${VERSION}</spa
 
 <hr>
 
-<p><a href="http://core.brc.iop.kcl.ac.uk">Funded by Biomedical Research Centre</a>: <a href="http://core.brc.iop.kcl.ac.uk">http://core.brc.iop.kcl.ac.uk</a></p>
+<p>(C) 2015 Stephen J Newhouse &amp; Amos Folarin </p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/KHP-Informatics/ngseasy">NGSeasy</a> is maintained by <a href="https://github.com/KHP-Informatics">KHP-Informatics</a>.</span>
