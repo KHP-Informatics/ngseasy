@@ -18,6 +18,13 @@ NGSeasy (beta): A [Dockerized](https://www.docker.com/) NGS pipeline and tool-bo
 
 [**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**](https://github.com/KHP-Informatics/ngseasy.git)
 
+## GCAT Reports 
+Here we provide a quick look at basic NGSeasy performance (more results coming soon).
+
+|GCAT Report|Test Data |Pipeline|
+|----|----|----|
+|[**NGSEASY-NTRIM-BWA-FREEBAYES-D**] (http://www.bioplanet.com/gcat/reports/6167-seeirhwtfp/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-freebayes-d/compare-570-270-181/group-read-depth)|illumina-100bp-pe-exome-150x|fastq > bwa > freebayes|
+
 ## Author Contact Details
 
 Please contact us for help/guidance on using the beta release.
@@ -227,10 +234,6 @@ This runs the following basic pipeline on Whole Exome PE 30x Illumina data, alig
 as a stagging area for new project and sample data.  
 - right now, always run ``ngseasy`` from the location/directory that contains the config.file  
 - each component of ngseasy can be run as a standalone script  
-
-
-## GCAT Report: NGSEASY-NTRIM-BWA-FREEBAYES-D
-[GCAT Report: NGSEASY-NTRIM-BWA-FREEBAYES-D](http://www.bioplanet.com/gcat/reports/6167-seeirhwtfp/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-freebayes-d/compare-570-270-181/group-read-depth)
 
 ****************
 
@@ -483,19 +486,6 @@ We provide a simple **Makefile** to pull all of the public nsgeasy components, s
 
 Setting up the initial project can take up a day, depending on your local network connections and speeds.
 
-```bash
-
-## To get latest dev
-git clone --branch sjn_dev https://github.com/KHP-Informatics/ngseasy.git
-
-## or Git Clone master
-git clone https://github.com/KHP-Informatics/ngseasy.git
-
-## move to ngseasy folder and run make all
-cd ngseasy
-sudo make all
-```
-
 The default install dir is the users **${HOME}** directory.
 The  **Makefile** provides options to install to any user defined directory and select NGSeasy version. eg :-
 
@@ -541,25 +531,6 @@ CLEANUP|STRING|clean up temp files|TRUE, FALSE
 NCPU|NUMBER|number of cores|1 .. N
 VERSION|NUMBER|NGSeasy version|1.0
 NGSUSER|STRING|user email|stephen.j.newhouse@gmail.com
-
-### Some explanations:-
-
-#### TRIM
-**atrimm** - adaptor trimming plus read quality trimming  
-**btrim** - basic read read quality trimming  
-
-
-
-## Running NGSeasy
-
-```bash
-##
-ngseasy -c ngseasy_test.config.tsv -d /media/scratch/ngs_projects
-```
-
-
-
-*******************************
 
 ## The NGSeasy project directory
 The user needs to make the relevent directory structures on their local machine before starting an NGS run.
@@ -656,7 +627,8 @@ leagally have to approach the owners of the various components yourself!
 Once you have paid/registered and downloaded the tool, we provide scripts and guidance for building these tools on your system.  
 
 Its as easy as:-  
-```{bash}
+
+```bash
 docker build -t compbio/ngseasy-${TOOL} .
 ```
 
@@ -743,7 +715,8 @@ Docker build files ([Dockerfile](https://docs.docker.com/jsearch/?q=Dockerfile))
 **Large Variant Annotation Container Images**
 
 Its as easy as:-  
-```{bash}
+
+```bash
 docker build -t compbio/ngseasy-${TOOL} .
 ```
 ********
@@ -794,4 +767,4 @@ sudo docker build -t compbio/ngseasy-snpeff:${VERSION} .
 - http://plagnol-lab.blogspot.co.uk/2013/11/faq-and-clarifications-for-exomedepth-r.html
 
 *************************
-[Funded by Biomedical Research Centre](http://core.brc.iop.kcl.ac.uk): http://core.brc.iop.kcl.ac.uk
+(C) 2015 Stephen J Newhouse & Amos Folarin 
