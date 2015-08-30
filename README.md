@@ -91,7 +91,9 @@ Verify your work by running ``docker`` without ``sudo``.
 ```bash
 docker run hello-world
 ```
+
 ..this is what you should get...
+
 ```
 Unable to find image 'hello-world:latest' locally
 Pulling repository hello-world
