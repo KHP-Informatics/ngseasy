@@ -222,12 +222,14 @@ fi
 logger_ngseasy "[${NGSEASY_STEP}]:CMD: awk 'NR >1 {print $5"/"$1}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/Project_list" ${config_run_log}
 awk 'NR >1 {print $5"/"$1}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/Project_list_${NGSEASYVERSION}.${configfile_name}.${RUNDATE}
 
-while read -f PROJECTNAME
+#while read -f PROJECTNAME
+while read PROJECTNAME
 do
 
     if [[ ! -d "${project_directory}/${PROJECTNAME}" ]]; then
 
         mkdir -p ${project_directory}/${PROJECTNAME}
+
         chmod -R 776 ${project_directory}/${PROJECTNAME}
 
         logger_ngseasy "[${NGSEASY_STEP}]:Making [${project_directory}/${PROJECTNAME}] project directory" ${config_run_log}

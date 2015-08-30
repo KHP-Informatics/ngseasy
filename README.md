@@ -1,13 +1,8 @@
 ![NGSeasy_logo](https://github.com/KHP-Informatics/ngseasy/blob/sjn_dev/figs/NGSeasy_logo_0.0.1.png)
 
-NGSeasy (beta)
-===================
+NGSeasy (beta): A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box
+=====================================================================================
 
-### NGSeasy is under heavy re-dev, things may be broken - bear with us please. Aligment and calling with Platypus or FreeBayes works. 
-
-****************
-## [A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box]
-****************
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**  
 
 **Authors:** Stephen J Newhouse and Amos Folarin  
@@ -15,43 +10,38 @@ NGSeasy (beta)
 **Release:** dirty_tango  
 **Publication:** _pending_  
 
-_This is the latest dev project: undergoing massive re-dev , links may be broken...stay tuned and [email us](https://github.com/KHP-Informatics/ngseasy/issues)...give us a few weeks._
-
-**Note:** NGSeasy is under **heavy development** and the code and docs evolve quickly.  
-
 - **NGSeasy-1.0 Full Production release will be available Late 2015**  
 - **NGSeasy-1.0-r001 (dirty_tango) contains most of the core functionality to go from raw fastq to raw vcf calls**
 - **NGSeasy will update every 12 months**
 - **GUI in development**
+- **Lets us know if you want other tools added to NGSeasy**
+
+[**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**](https://github.com/KHP-Informatics/ngseasy.git)
 
 ## Author Contact Details
 
 Please contact us for help/guidance on using the beta release.
 
-- Amos Folarin <amosfolarin@gmail.com>  [@amosfolarin](https://twitter.com/amosfolarin?lang=en)
-<a href="http://www.linkedin.com/pub/amos-folarin/34/b06/978">
-<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Amos's profile on LinkedIn">
-</a>
+- Dr Amos Folarin <amosfolarin@gmail.com>, [@amosfolarin](https://twitter.com/amosfolarin?lang=en),
+View Amos's profile on [LinkedIn](http://www.linkedin.com/pub/amos-folarin/34/b06/978)
 
-- Stephen J Newhouse <stephen.j.newhouse@gmail.com> [@s_j_newhouse](https://twitter.com/s_j_newhouse?lang=en)  
-<a href="http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a">
-<img src="http://www.linkedin.com/img/webpromo/btn_viewmy_160x33.png" width="160" height="33" alt="View Steve's profile on LinkedIn">
-</a>
-
-**Lets us know if you want other tools added to NGSeasy**
-
-****************
-
-[**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**](https://github.com/KHP-Informatics/ngseasy.git)
-
-****************
+- Dr Stephen J Newhouse <stephen.j.newhouse@gmail.com>, [@s_j_newhouse](https://twitter.com/s_j_newhouse?lang=en), View Steve's profile on [LinkedIn](http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a)
 
 
-# Issues, Questions and Queries
+## Issues, Questions and Queries
 
 **Please Direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues]**
 
-# WARNING!
+When sending bug reports etc please provide:- 
+
+- Date of Download
+- OS and version
+- Basic Machine Specs (CPU, RAM)
+- Network Speed ([Testing Internet Connection Speed]())
+- The Code you ran eg:- `ngseasy -c my.config.tsv -d /My/Dir `
+- The exact error as printed to screen
+
+**WARNING!**
 NGSeasy is not [numpty](http://www.urbandictionary.com/define.php?term=Numpty) or bad data proof!  
 
 Please read the docs, stay calm, take your time and think about what you are doing...and if [www.google.com] doesnt help, then please direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues].
@@ -66,9 +56,7 @@ This post reviews the various security implications of using Docker to run appli
 ### NGSeasy Security
 **All NGSeasy applications are run as the non-root user `pipeman` within each container**
 
-## For the impatient
-
-### Install Docker
+## Install Docker
 
 Full instructions at https://docs.docker.com/.
 
@@ -101,7 +89,9 @@ Verify your work by running ``docker`` without ``sudo``.
 ```bash
 docker run hello-world
 ```
+
 ..this is what you should get...
+
 ```
 Unable to find image 'hello-world:latest' locally
 Pulling repository hello-world
@@ -127,7 +117,7 @@ For more examples and ideas, visit:
  http://docs.docker.com/userguide/
 ```
 
-### Get and Install NGSeasy
+## Get and Install NGSeasy
 
 ```bash
 
@@ -138,35 +128,64 @@ For more examples and ideas, visit:
 cd /home/${USER}
 
 git clone https://github.com/KHP-Informatics/ngseasy.git
+```
 
+- Default install directory is `/home/${USER}`
+- in this example user home is `/home/ec2-user`
+- `make INTSALLDIR="/home/ec2-user" all` 
+   - sets up top level directory structure
+   - gets all docker images
+   - gets indexed hg19 and b37 genomes
+   - gets GATK recources for hg19 and b37 genomes
+   - gets whole genome and exome test data
+- Always set your **`INTSALLDIR`** : If you run `sudo make all` the install path will be `/home/root`. Please dont do this!
+- `sudo make install` installs scripts to `/usr/local/bin/`  
+
+```bash
 #############################################
 ## install NGSeasy                         ##
 #############################################
-#
-# default install directory is /home/${USER}
-# make sets up top level directory structure in /home/${USER} by default
-# in this example user home is /home/ec2-user
-# installs scripts to /usr/local/bin/
-# gets all docker images
-# gets indexed hg19 and b37 genomes
-# gets GATK recources for hg19 and b37 genomes
-# gets whole genome and exome test data
 
 cd ngseasy
 
+## 1.
 make INTSALLDIR="/home/ec2-user" all
 
+## 2. 
 sudo make install
-
-# NOTE:-
-# if you run sudo make all - install path is /home/root
-# Install can take a while, 1-2 hours, so go get a coffee
-# just chill...
-# if your network is bad...then who knows how long...
-# still..just chill...
 ```
 
-Install time on Amazon EC2
+Installation can take a while, 1-2 hours, so go get a coffee../just chill...if your network is bad...then who knows how long...still..just chill...or go get fast internet!
+
+## Recommended Network Speed
+
+**> 500 Mbit/s** : anything less will add a lot of time to set up (days - weeks).
+
+**Testing Internet Connection Speed**
+
+source : http://askubuntu.com/questions/104755/how-to-check-internet-speed-via-terminal
+
+```bash
+wget -O speedtest-cli https://raw.github.com/sivel/speedtest-cli/master/speedtest_cli.py
+chmod +x speedtest-cli
+./speedtest-cli
+```
+
+```
+Retrieving speedtest.net configuration...
+Retrieving speedtest.net server list...
+Testing from Comcast Cable (x.x.x.x)...
+Selecting best server based on ping...
+Hosted by FiberCloud, Inc (Seattle, WA) [12.03 km]: 44.028 ms
+Testing download speed........................................
+Download: 32.29 Mbit/s
+Testing upload speed..................................................
+Upload: 5.18 Mbit/s
+```
+
+## Install time on Amazon EC2
+
+Connection Speed: ~ 800 Mbit/s 
 
 ```
 real    94m54.237s
@@ -174,7 +193,9 @@ user    12m26.960s
 sys     28m46.648s
 ```
 
-### Running NGSeasy for the first time on the test data
+Note: We have only tested NGSeasy installation on Amazon EC2, Openstack and UK University Networks. These are all fairly fast networks with speeds exceeding 800 Mbit/s on average. 
+
+## Running NGSeasy for the first time on the test data
 
 **Important!** NGSeasy is controlled from a single `config` file. See [ngseasy_test.config.tsv](link) for a basic template. It is important that the user sets this up properly before running NGSeasy.
 
