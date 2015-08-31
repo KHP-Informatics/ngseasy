@@ -32,7 +32,7 @@ Please contact us for help/guidance on using the beta release.
 |Author|email|Twitter| LinkedIn|
 |----|----|----|----|
 |Dr Stephen J Newhouse| <stephen.j.newhouse@gmail.com>| [@s_j_newhouse](https://twitter.com/s_j_newhouse?lang=en)| View Steve's profile on [LinkedIn](http://uk.linkedin.com/pub/dr-stephen-newhouse/29/89a/11a)|
-| Dr Amos Folarin| <amosfolarin@gmail.com>| [@amosfolarin](https://twitter.com/amosfolarin?lang=en)|View Amos's profile on [LinkedIn](http://www.linkedin.com/pub/amos-folarin/34/b06/978)|
+|Dr Amos Folarin| <amosfolarin@gmail.com>| [@amosfolarin](https://twitter.com/amosfolarin?lang=en)|View Amos's profile on [LinkedIn](http://www.linkedin.com/pub/amos-folarin/34/b06/978)|
 
 
 
@@ -47,6 +47,7 @@ When sending bug reports etc please provide:-
 - Basic Machine Specs (CPU, RAM)
 - Network Speed ([Testing Internet Connection Speed](https://github.com/KHP-Informatics/ngseasy/tree/master#recommended-network-speed))
 - The Code you ran eg:- `ngseasy -c my.config.tsv -d /My/Dir `
+- your config file  
 - The exact error as printed to screen
 
 **WARNING!**
