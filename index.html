@@ -122,21 +122,6 @@ NGSeasy is not <a href="http://www.urbandictionary.com/define.php?term=Numpty">n
 <p><strong>Please read the docs</strong>, stay calm, take your time and think about what you are doing...and if [<a href="http://www.google.com">www.google.com</a>] doesnt help, then please direct all queries to [<a href="https://github.com/KHP-Informatics/ngseasy/issues">https://github.com/KHP-Informatics/ngseasy/issues</a>].</p>
 
 <h2>
-<a id="docker-security" class="anchor" href="#docker-security" aria-hidden="true"><span class="octicon octicon-link"></span></a>Docker Security...</h2>
-
-<p>This post reviews the various security implications of using Docker to run applications within containers, and how to address them:
-<a href="https://blog.docker.com/2013/08/containers-docker-how-secure-are-they/#more-697">How Secure are Containers?</a></p>
-
-<blockquote>
-<p>Docker containers are, by default, quite secure; especially if you take care of running your processes inside the containers as non-privileged users (i.e. non root).</p>
-</blockquote>
-
-<h3>
-<a id="ngseasy-security" class="anchor" href="#ngseasy-security" aria-hidden="true"><span class="octicon octicon-link"></span></a>NGSeasy Security</h3>
-
-<p><strong>All NGSeasy applications are run as the non-root user <code>pipeman</code> within each container</strong></p>
-
-<h2>
 <a id="install-docker" class="anchor" href="#install-docker" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install Docker</h2>
 
 <p>Full instructions at <a href="https://docs.docker.com/">https://docs.docker.com/</a>.</p>
@@ -192,6 +177,16 @@ For more examples and ideas, visit:
 </code></pre>
 
 <h2>
+<a id="docker-security" class="anchor" href="#docker-security" aria-hidden="true"><span class="octicon octicon-link"></span></a>Docker Security...</h2>
+
+<p>This post reviews the various security implications of using Docker to run applications within containers, and how to address them:
+<a href="https://blog.docker.com/2013/08/containers-docker-how-secure-are-they/#more-697">How Secure are Containers?</a></p>
+
+<blockquote>
+<p>Docker containers are, by default, quite secure; especially if you take care of running your processes inside the containers as non-privileged users (i.e. non root).</p>
+</blockquote>
+
+<h2>
 <a id="get-ngseasy" class="anchor" href="#get-ngseasy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get NGSeasy</h2>
 
 <div class="highlight highlight-bash"><pre>
@@ -241,6 +236,11 @@ make INTSALLDIR=<span class="pl-s"><span class="pl-pds">"</span>/home/ec2-user<s
 sudo make install</pre></div>
 
 <p>Installation can take a while, 1-2 hours, so go get a coffee../just chill...if your network is bad...then who knows how long...still..just chill...or go get fast internet!</p>
+
+<h2>
+<a id="ngseasy-security" class="anchor" href="#ngseasy-security" aria-hidden="true"><span class="octicon octicon-link"></span></a>NGSeasy Security</h2>
+
+<p><strong>All NGSeasy applications are run as the non-root user <code>pipeman</code> within each container</strong></p>
 
 <h2>
 <a id="recommended-network-speed" class="anchor" href="#recommended-network-speed" aria-hidden="true"><span class="octicon octicon-link"></span></a>Recommended Network Speed</h2>
