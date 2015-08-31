@@ -23,7 +23,8 @@ Here we provide a quick look at basic NGSeasy performance (more results coming s
 
 |GCAT Report|Test Data |Pipeline|
 |----|----|----|
-|[**NGSEASY-NTRIM-BWA-FREEBAYES-D**] (http://www.bioplanet.com/gcat/reports/6167-seeirhwtfp/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-freebayes-d/compare-570-270-181/group-read-depth)|illumina-100bp-pe-exome-150x|fastq > bwa > freebayes|
+|[**NGSEASY-NTRIM-BWA-FREEBAYES-D**](http://www.bioplanet.com/gcat/reports/6167-seeirhwtfp/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-freebayes-d/compare-570-270-181/group-read-depth)|illumina-100bp-pe-exome-150x|fastq > bwa > freebayes|
+|[**NGSEASY-NTRIM-BWA-PLATYPUS-D**](http://www.bioplanet.com/gcat/reports/6264-uzdswfzmkv/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-platypus-d/compare-571-180/group-read-depth)|illumina-100bp-pe-exome-150x|fastq > bwa > platypus|
 
 ## Author Contact Details
 
@@ -208,7 +209,7 @@ Note: We have only tested NGSeasy installation on Amazon EC2, Openstack and UK U
 
 ## Running NGSeasy for the first time on the test data
 
-**Important!** NGSeasy is controlled from a single `config` file. See [ngseasy_test.config.tsv](link) for a basic template. It is important that the user sets this up properly before running NGSeasy.
+**Important!** NGSeasy is controlled from a single `config` file. See [ngseasy_test.config.tsv](https://github.com/KHP-Informatics/ngseasy/blob/master/test/ngseasy_test.config.tsv) for a basic template. It is important that the user sets this up properly before running NGSeasy.
 
 ```bash
 #############################################
