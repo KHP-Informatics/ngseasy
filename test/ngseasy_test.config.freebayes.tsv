@@ -1,2 +1,2 @@
-PROJECT_ID	SAMPLE_ID	FASTQ1	FASTQ2	PROJECT_DIR	DNA_PREP_LIBRARY_ID	NGS_PLATFORM		NGS_TYPE	BAIT	CAPTURE	GENOMEBUILD	FASTQC	TRIM	BSQR	REALN	ALIGNER	VARCALLER	CNV	ANNOTATOR	CLEANUP	NCPU	VERSION	NGSUSER
-Test_NGS	NA12878	illumina.100bp.pe.wex.150x_1.fastq.gz	illumina.100bp.pe.wex.150x_2.fastq.gz	/media/Data/ngs_projects		100bp150x.PE	ILLUMINA	WEX	no-bait	no-cap	hg19	qc-fastqc	no-trim	no-bsqr	no-realn	bwa	freebayes	no-sv	no-anno	FALSE	32	1.0-r001	stephen.j.newhouse@gmail.com
+PROJECT_ID	SAMPLE_ID	FASTQ1	FASTQ2	PROJECT_DIR	DNA_PREP_LIBRARY_ID	NGS_PLATFORM  NGS_TYPE	BAIT	CAPTURE	GENOMEBUILD	FASTQC	TRIM	BSQR	REALN	ALIGNER	VARCALLER	CNV	ANNOTATOR	CLEANUP	NCPU	VERSION	NGSUSER
+Test_NGS	NA12878	illumina.100bp.pe.wex.150x_1.fastq.gz	illumina.100bp.pe.wex.150x_2.fastq.gz /media/Data/ngs_projects  100bp150x.PE	ILLUMINA	WEX	no-bait	no-cap	hg19	qc-fastqc	no-trim	no-bsqr	no-realn	bwa	freebayes	no-sv	no-anno	FALSE	32	1.0-r001	stephen.j.newhouse@gmail.com
