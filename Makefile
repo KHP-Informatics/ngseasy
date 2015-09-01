@@ -298,8 +298,6 @@ testdata: ngsprojectdir
 	@echo "Get Test data and stick it in raw_fastq"
 	cd $(INSTALLDIR)/ngs_projects/raw_fastq && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/ && \
-	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878D_HiSeqX_R1.fastq.gz && \
-	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878D_HiSeqX_R2.fastq.gz && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.150x_1.fastq.gz && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.150x_2.fastq.gz && \
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.30x_1.fastq.gz && \
@@ -308,6 +306,8 @@ testdata: ngsprojectdir
 	cd $(INSTALLDIR)/ngs_projects/config_files && \
 	cp -v $(DIR)/test/ngseasy_test.config.tsv $(INSTALLDIR)/ngs_projects/config_files/ && \
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/config_files/
+##	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878D_HiSeqX_R1.fastq.gz && \
+##	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/NA12878D_HiSeqX_R2.fastq.gz && \
 
 ## Manual Builds
 gatk:
