@@ -23,8 +23,8 @@ Here we provide a quick look at basic NGSeasy performance (more results coming s
 
 |GCAT Report|Test Data |Pipeline|
 |----|----|----|
-|[**NGSEASY-NTRIM-BWA-FREEBAYES-D**](http://www.bioplanet.com/gcat/reports/6167-seeirhwtfp/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-freebayes-d/compare-570-270-181/group-read-depth)|illumina-100bp-pe-exome-150x|[fastq > bwa > freebayes](https://github.com/KHP-Informatics/ngseasy/blob/master/test/ngseasy_test.config.freebayes.tsv)|
-|[**NGSEASY-NTRIM-BWA-PLATYPUS-D**](http://www.bioplanet.com/gcat/reports/6264-uzdswfzmkv/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-platypus-d/compare-571-180/group-read-depth)|illumina-100bp-pe-exome-150x|[fastq > bwa > platypus](https://github.com/KHP-Informatics/ngseasy/blob/master/test/ngseasy_test.config.platypus.tsv)|
+|[**NGSEASY-NTRIM-BWA-FREEBAYES-D**](http://www.bioplanet.com/gcat/reports/6167-seeirhwtfp/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-freebayes-d/compare-570-270-181/group-read-depth)|[illumina-100bp-pe-exome-150x](https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.150x_1.fastq.gz)|[fastq > bwa > freebayes](https://github.com/KHP-Informatics/ngseasy/blob/master/test/ngseasy_test.config.freebayes.tsv)|
+|[**NGSEASY-NTRIM-BWA-PLATYPUS-D**](http://www.bioplanet.com/gcat/reports/6264-uzdswfzmkv/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-platypus-d/compare-571-180/group-read-depth)|[illumina-100bp-pe-exome-150x](https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.150x_2.fastq.gz)|[fastq > bwa > platypus](https://github.com/KHP-Informatics/ngseasy/blob/master/test/ngseasy_test.config.platypus.tsv)|
 
 An example of the run commands:
 
