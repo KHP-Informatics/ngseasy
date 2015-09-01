@@ -44,7 +44,7 @@
 <p><a href="https://github.com/KHP-Informatics/ngseasy.git"><strong>NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.</strong></a></p>
 
 <h2>
-<a id="ngseasy-genome-comparison--analytic-testing-gcat-reports" class="anchor" href="#ngseasy-genome-comparison--analytic-testing-gcat-reports" aria-hidden="true"><span class="octicon octicon-link"></span></a>NGSeasy Genome Comparison &amp; Analytic Testing (<a href="http://www.bioplanet.com/gcat">GCAT</a>) Reports</h2>
+<a id="ngseasy-genome-comparison--analytic-testing-gcat-reports" class="anchor" href="#ngseasy-genome-comparison--analytic-testing-gcat-reports" aria-hidden="true"><span class="octicon octicon-link"></span></a>NGSeasy: Genome Comparison &amp; Analytic Testing (<a href="http://www.bioplanet.com/gcat">GCAT</a>) Reports</h2>
 
 <p>Here we provide a quick look at basic NGSeasy performance (more results coming soon).</p>
 
@@ -59,16 +59,21 @@
 <tbody>
 <tr>
 <td><a href="http://www.bioplanet.com/gcat/reports/6167-seeirhwtfp/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-freebayes-d/compare-570-270-181/group-read-depth"><strong>NGSEASY-NTRIM-BWA-FREEBAYES-D</strong></a></td>
-<td>illumina-100bp-pe-exome-150x</td>
+<td><a href="https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.150x_1.fastq.gz">illumina-100bp-pe-exome-150x</a></td>
 <td><a href="https://github.com/KHP-Informatics/ngseasy/blob/master/test/ngseasy_test.config.freebayes.tsv">fastq &gt; bwa &gt; freebayes</a></td>
 </tr>
 <tr>
 <td><a href="http://www.bioplanet.com/gcat/reports/6264-uzdswfzmkv/variant-calls/illumina-100bp-pe-exome-150x/ngseasy-ntrim-bwa-platypus-d/compare-571-180/group-read-depth"><strong>NGSEASY-NTRIM-BWA-PLATYPUS-D</strong></a></td>
-<td>illumina-100bp-pe-exome-150x</td>
+<td><a href="https://s3-eu-west-1.amazonaws.com/ngseasy.data/fastq_test_data/illumina.100bp.pe.wex.150x_2.fastq.gz">illumina-100bp-pe-exome-150x</a></td>
 <td><a href="https://github.com/KHP-Informatics/ngseasy/blob/master/test/ngseasy_test.config.platypus.tsv">fastq &gt; bwa &gt; platypus</a></td>
 </tr>
 </tbody>
 </table>
+
+<p>An example of the run commands:</p>
+
+<div class="highlight highlight-bash"><pre>ngseasy -c ngseasy_test.config.freebayes.tsv -d /media/Data/ngs_projects
+ngseasy -c ngseasy_test.config.platypus.tsv  -d /media/Data/ngs_projects</pre></div>
 
 <h2>
 <a id="author-contact-details" class="anchor" href="#author-contact-details" aria-hidden="true"><span class="octicon octicon-link"></span></a>Author Contact Details</h2>
