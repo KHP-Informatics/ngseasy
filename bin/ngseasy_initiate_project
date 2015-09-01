@@ -226,16 +226,16 @@ awk 'NR >1 {print $5"/"$1}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_tmp/Pr
 while read PROJECTNAME
 do
 
-    if [[ ! -d "${project_directory}/${PROJECTNAME}" ]]; then
+    if [[ ! -d "${PROJECTNAME}" ]]; then
 
-        mkdir -p ${project_directory}/${PROJECTNAME}
+        mkdir -p ${PROJECTNAME}
 
-        chmod -R 776 ${project_directory}/${PROJECTNAME}
+        chmod -R 776 ${PROJECTNAME}
 
-        logger_ngseasy "[${NGSEASY_STEP}]:Making [${project_directory}/${PROJECTNAME}] project directory" ${config_run_log}
+        logger_ngseasy "[${NGSEASY_STEP}]:Making [${PROJECTNAME}] project directory" ${config_run_log}
 
     else
-        logger_ngseasy "[${NGSEASY_STEP}]:Project directory [${project_directory}/${PROJECTNAME}] Exists" ${config_run_log}
+        logger_ngseasy "[${NGSEASY_STEP}]:Project directory [${PROJECTNAME}] Exists" ${config_run_log}
 
     fi
 
@@ -253,7 +253,7 @@ awk 'NR >1 {print $5"/"$1"/"$2}' ${config_tsv} | sort | uniq > ${HOME}/ngseasy_t
 
 ## Read project_list
 #
-while read -r f1
+while read f1
 do
 
 PROJECT_SAMPLE_DIRS=$f1
