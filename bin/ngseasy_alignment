@@ -360,12 +360,29 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build index [${GENOMEINDEX}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build dir [${REFDIR}]"  ${LOGFILE}
   sleep 1s
+## hs37d5 and hs38DH added 04.08.15 generated using bwakit
+elif [[ "${GENOMEBUILD}" == "hs37d5" ]]; then
+
+  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hs37d5"
+  GENOMEINDEX="${REFDIR}/hs37d5"
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build index [${GENOMEINDEX}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build dir [${REFDIR}]"  ${LOGFILE}
+  sleep 1s
+
+elif [[ "${GENOMEBUILD}" == "hs38DH" ]]; then
+
+  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hs38DH"
+  GENOMEINDEX="${REFDIR}/hs38DH"
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build index [${GENOMEINDEX}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build dir [${REFDIR}]"  ${LOGFILE}
+  sleep 1s
 
 else
   logger_ngseasy "[${NGSEASY_STEP}]:No genome selected. Exiting. Choose one of [b37] or [hg19]"  ${LOGFILE}
   exit 1
 fi
-
 
 ########################################################################################################
 ## check if Trimmed data alread exists and use it
