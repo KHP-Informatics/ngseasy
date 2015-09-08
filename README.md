@@ -18,7 +18,7 @@ NGSeasy (beta): A [Dockerized](https://www.docker.com/) NGS pipeline and tool-bo
 
 [**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**](https://github.com/KHP-Informatics/ngseasy.git)
 
-## NGSeasy: Genome Comparison & Analytic Testing ([GCAT](http://www.bioplanet.com/gcat)) Reports 
+## NGSeasy: Genome Comparison & Analytic Testing ([GCAT](http://www.bioplanet.com/gcat)) Reports
 Here we provide a quick look at basic NGSeasy performance (more results coming soon).
 
 |GCAT Report|Test Data |Pipeline|
@@ -48,7 +48,7 @@ Please contact us for help/guidance on using the beta release.
 
 **Please Direct all queries to [https://github.com/KHP-Informatics/ngseasy/issues]**
 
-When sending bug reports etc please provide:- 
+When sending bug reports etc please provide:-
 
 - Date of Download
 - OS and version
@@ -148,7 +148,7 @@ git clone https://github.com/KHP-Informatics/ngseasy.git
 
 - Default install directory is `/home/${USER}`
 - in this example user home is `/home/ec2-user`
-- `make INTSALLDIR="/home/ec2-user" all` 
+- `make INTSALLDIR="/home/ec2-user" all`
    - sets up top level directory structure
    - gets all docker images
    - gets indexed hg19 and b37 genomes
@@ -167,7 +167,7 @@ cd ngseasy
 ## 1.
 make INTSALLDIR="/home/ec2-user" all
 
-## 2. 
+## 2.
 sudo make install
 ```
 
@@ -204,7 +204,7 @@ Upload: 5.18 Mbit/s
 
 ## Install time on Amazon EC2
 
-Connection Speed: ~ 800 Mbit/s 
+Connection Speed: ~ 800 Mbit/s
 
 ```
 real    94m54.237s
@@ -212,7 +212,7 @@ user    12m26.960s
 sys     28m46.648s
 ```
 
-Note: We have only tested NGSeasy installation on Amazon EC2, Openstack and UK University Networks. These are all fairly fast networks with speeds exceeding 800 Mbit/s on average. 
+Note: We have only tested NGSeasy installation on Amazon EC2, Openstack and UK University Networks. These are all fairly fast networks with speeds exceeding 800 Mbit/s on average.
 
 ## Running NGSeasy for the first time on the test data
 
@@ -275,6 +275,14 @@ We have adapted the current best practices from the Genome Analysis Toolkit (GAT
 
 As the containers themselves can be run as executables with pre-specified cpu and RAM resources, the orchestration of the pipeline can be placed under the control of conventional load balancers if this mode is required.  
 
+## Genomes
+
+| Genome |
+|--------|
+|hs37d5|
+|b37|
+|hg19|
+|hs38DH|
 
 ****************
 
@@ -577,7 +585,7 @@ ngs_projects
 |__raw_fastq  
 |__config_files  
 |__run_logs
-|__ngseasy_resources 
+|__ngseasy_resources
 |
 |__ project_id  
 	|  
@@ -777,4 +785,4 @@ sudo docker build -t compbio/ngseasy-snpeff:${VERSION} .
 - http://plagnol-lab.blogspot.co.uk/2013/11/faq-and-clarifications-for-exomedepth-r.html
 
 *************************
-(C) 2015 Stephen J Newhouse & Amos Folarin 
+(C) 2015 Stephen J Newhouse & Amos Folarin
