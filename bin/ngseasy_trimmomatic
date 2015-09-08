@@ -409,7 +409,15 @@ fi
 ########################################################################################################
 # adapter_fa : check of this is in palce and exit if not
 ########################################################################################################
-adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37/contaminant_list.fa"
+if [[ ${GENOMEBUILD} == "b37" ]]; then
+    adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37/contaminant_list.fa"
+elif [[ ${GENOMEBUILD} == "hg19" ]]; then
+    adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hg19/contaminant_list.fa"
+elif [[ "${GENOMEBUILD}" == "hs37d5" ]]; then
+    adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hs37d5/contaminant_list.fa"
+elif [[ "${GENOMEBUILD}" == "hs38DH" ]]; then
+    adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hs38DH/contaminant_list.fa"
+fi
 logger_ngseasy "[${NGSEASY_STEP}]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
 
 ########################################################################################################
@@ -454,46 +462,41 @@ if [ -s "${SOUT}/fastq/${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${TRIM}_1
 then
 	logger_ngseasy "[${NGSEASY_STEP}]:PE Trimmed Data already exists...skipping [${NGSEASY_STEP}]" ${LOGFILE}
 
+########################################################################################################
+## atrim
 elif [[ "$TRIM" == "atrim" ]]; then
 	logger_ngseasy "[${NGSEASY_STEP}]:Trimmomatic not run yet" ${LOGFILE}
 
 ########################################################################################################
 ## run compbio/ngseasy-trimmomatic
-#
+########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:START qc of raw fastq files" ${LOGFILE}
 logger_ngseasy "[${NGSEASY_STEP}]:TRIM set to [$TRIM] - adaptor trim. Adaptor and read quality trimming" ${LOGFILE}
-
-## get ngs_resource mapping
-myresources=`dirname ${PROJECT_DIR}`
-NGSResources="${myresources}/ngs_resources"
-
-## run trimmomatic
-#
 logger_ngseasy "[${NGSEASY_STEP}]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 AVGQUAL:2 MINLEN:75 " ${LOGFILE}
 
-	${DOCKER_RUN} \
-	--rm=true \
-	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-	-v ${NGSResources}:/home/pipeman/ngs_resources \
-	--name trimmomatic_${BAM_PREFIX} \
-	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
-	PE \
-	-threads ${NCPU} \
-	${SOUTDocker}/fastq/${FQ1} \
-	${SOUTDocker}/fastq/${FQ2} \
-	${qcPEFQ1} ${qcSEFQ1} \
-	${qcPEFQ2} ${qcSEFQ2} \
-	ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
-	LEADING:3 \
-	TRAILING:3 \
-	SLIDINGWINDOW:4:15 \
-	AVGQUAL:2 \
-	MINLEN:75
+${DOCKER_RUN} \
+    --rm=true \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    --name trimmomatic_${BAM_PREFIX} \
+    -t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+    PE \
+    -threads ${NCPU} \
+    ${SOUTDocker}/fastq/${FQ1} \
+    ${SOUTDocker}/fastq/${FQ2} \
+    ${qcPEFQ1} ${qcSEFQ1} \
+    ${qcPEFQ2} ${qcSEFQ2} \
+    ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
+    LEADING:3 \
+    TRAILING:3 \
+    SLIDINGWINDOW:4:15 \
+    AVGQUAL:2 \
+    MINLEN:75
 
 logger_ngseasy "[${NGSEASY_STEP}]:FastQC post Trimmomatic" ${LOGFILE}
 
+########################################################################################################
 ##  compbio/ngseasy-fastqc
-#
+########################################################################################################
 	${DOCKER_RUN} \
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -511,35 +514,16 @@ logger_ngseasy "[${NGSEASY_STEP}]:FastQC post Trimmomatic" ${LOGFILE}
 
 ########################################################################################################
 ## Just QC FASTQ NO ADAPTOR TRIM
-# btrim is basic qc-trim
-#
+## btrim is basic qc-trim
+########################################################################################################
 elif [[ "$TRIM" == "btrim" ]]; then
 
 logger_ngseasy "[${NGSEASY_STEP}]:START qc of raw fastq files" ${LOGFILE}
 logger_ngseasy "[${NGSEASY_STEP}]:TRIM set to [$TRIM] - basic trim. Just read quality trimming. No adaptor trimming" ${LOGFILE}
 
-#if [[ ! -s ${SOUT}/fastq/${FQ1}.art_filt.gz  ]] && [[ ! -s ${SOUT}/fastq/${FQ2}.art_filt.gz ]]; then
-## make parallel cmd
-#
-#echo -e "
-#zcat ${SOUTDocker}/fastq/${FQ1} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/fastq/${FQ1}.art_filt.gz
-#zcat ${SOUTDocker}/fastq/${FQ2} | fastx_artifacts_filter -Q33 -i - -z -o ${SOUTDocker}/fastq/${FQ2}.art_filt.gz
-#" > ${SOUT}/parallel_fastx.cmd
-#
-## run fastx_artifacts_filter
-#
-#logger_ngseasy "[${NGSEASY_STEP}]:[cmd]: fastx_artifacts_filter. Removing Homopolymer reads" ${LOGFILE}
-#
-#	${DOCKER_RUN} \
-#	--rm=true \
-#	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-#	--name fastx_artifacts_filter_${BAM_PREFIX} \
-#	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} /bin/bash -c "cat ${SOUTDocker}/parallel_fastx.cmd | parallel -j 2 --no-notice"
-#fi
-
-
-## run trimmomatic
-#
+########################################################################################################
+## run trimmomatic btrim
+########################################################################################################
 	${DOCKER_RUN} \
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
@@ -559,8 +543,9 @@ logger_ngseasy "[${NGSEASY_STEP}]:TRIM set to [$TRIM] - basic trim. Just read qu
 
 logger_ngseasy "[${NGSEASY_STEP}]:START FastQC post Trimmomatic" ${LOGFILE}
 
+########################################################################################################
 ##  compbio/ngseasy-fastqc
-#
+########################################################################################################
 	${DOCKER_RUN} \
 	--rm=true \
 	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
