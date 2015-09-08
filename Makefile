@@ -291,6 +291,69 @@ hg19:
 	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hg19/ucsc.hg19.stidx && \
 	chmod -R 775 $(INSTALLDIR)/ngs_projects/ngseasy_resources/reference_genomes_hg19/
 
+## hs37d5
+hs37d5:
+	@echo "Get hs37d5 Genomes indexed and resources"
+	cd $(INSTALLDIR)/ngs_projects/ngseasy_resources && \
+	mkdir -p reference_genomes_hs37d5 && \
+	cd $(INSTALLDIR)/ngs_projects/ngseasy_resources/reference_genomes_hs37d5 && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/1000G_omni2.5.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/1000G_omni2.5.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/1000G_phase1.indels.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/1000G_phase1.indels.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/1000G_phase1.snps.high_confidence.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/1000G_phase1.snps.high_confidence.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/CEUTrio.HiSeq.WGS.b37.bestPractices.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/CEUTrio.HiSeq.WGS.b37.bestPractices.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/CEUTrio.HiSeq.WGS.b37.NA12878.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/CEUTrio.HiSeq.WGS.b37.NA12878.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/contaminant_list.fa && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/dbsnp_138.b37.excluding_sites_after_129.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/dbsnp_138.b37.excluding_sites_after_129.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/dbsnp_138.b37.recab && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/dbsnp_138.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/dbsnp_138.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/Genome && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/GenomeIndex && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/GenomeIndexHash && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hapmap_3.3.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hapmap_3.3.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.1.bt2 && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.2.bt2 && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.3.bt2 && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.4.bt2 && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.fasta && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.fasta.amb && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.fasta.ann && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.fasta.bwt && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.fasta.fai && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.fasta.novoindex && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.fasta.pac && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.fasta.sa && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.rev.1.bt2 && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.rev.2.bt2 && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.sthash && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/hs37d5.stidx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/human_g1k_v37_0.5Kwindows.bed && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/human_g1k_v37_1Kwindows.bed && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/LCR_hg19_rmsk.bed && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/Mills_and_1000G_gold_standard.indels.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/Mills_and_1000G_gold_standard.indels.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.sites.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.sites.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/NA12878.HiSeq.WGS.bwa.cleaned.raw.subset.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/NA12878.knowledgebase.snapshot.20131119.b37.vcf && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/NA12878.knowledgebase.snapshot.20131119.b37.vcf.idx && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/nexterarapidcapture_exome_targetedregions_v1.2.bed && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/nexterarapidcapture_expandedexome_targetedregions.bed && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/OverflowTable && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/S03723314_Regions.bed && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/S06588914_Regions_trimmed.bed && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/SeqCap_EZ_Exome_v3_capture.bed && \
+	wget https://s3-eu-west-1.amazonaws.com/ngseasy.data/reference_genomes_hs37d5/SeqCap_EZ_Exome_v3_primary.bed && \
+	chmod -R 775 $(INSTALLDIR)/ngs_projects/ngseasy_resources/reference_genomes_hs37d5/
+
 ##  Test data and stick it in raw_fastq
 
 
@@ -337,7 +400,7 @@ annovardb:
 	--rm=true \
 	-i -t compbio/ngseasy-annovar:$(VERSION) \
 	 /bin/bash -c \
-	"/bin/bash /usr/local/pipeline/annovar/get_annovar_gene_databases.sh && /bin/bash /usr/local/pipeline/annovar/get_annovar_databases.sh"
+	"/bin/bash /usr/local/pipeline/annovar/get_annovar_gene_databases.sh && \bin/bash /usr/local/pipeline/annovar/get_annovar_databases.sh"
 
 ## Cleanups
 clean:
