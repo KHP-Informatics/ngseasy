@@ -472,9 +472,6 @@ elif [[ "$TRIM" == "atrim" ]]; then
 ########################################################################################################
 logger_ngseasy "[${NGSEASY_STEP}]:START qc of raw fastq files" ${LOGFILE}
 logger_ngseasy "[${NGSEASY_STEP}]:TRIM set to [$TRIM] - adaptor trim. Adaptor and read quality trimming" ${LOGFILE}
-
-## run trimmomatic
-#
 logger_ngseasy "[${NGSEASY_STEP}]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 AVGQUAL:2 MINLEN:75 " ${LOGFILE}
 
 ${DOCKER_RUN} \
@@ -517,7 +514,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:FastQC post Trimmomatic" ${LOGFILE}
 
 ########################################################################################################
 ## Just QC FASTQ NO ADAPTOR TRIM
-# btrim is basic qc-trim
+## btrim is basic qc-trim
 ########################################################################################################
 elif [[ "$TRIM" == "btrim" ]]; then
 
@@ -525,7 +522,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:START qc of raw fastq files" ${LOGFILE}
 logger_ngseasy "[${NGSEASY_STEP}]:TRIM set to [$TRIM] - basic trim. Just read quality trimming. No adaptor trimming" ${LOGFILE}
 
 ########################################################################################################
-## run trimmomatic
+## run trimmomatic btrim
 ########################################################################################################
 	${DOCKER_RUN} \
 	--rm=true \
