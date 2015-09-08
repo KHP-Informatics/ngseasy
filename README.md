@@ -277,7 +277,7 @@ As the containers themselves can be run as executables with pre-specified cpu an
 
 ## Genomes
 
-| Genome |
+| Genome Build |
 |--------|
 |hs37d5|
 |b37|
