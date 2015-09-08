@@ -409,7 +409,17 @@ fi
 ########################################################################################################
 # adapter_fa : check of this is in palce and exit if not
 ########################################################################################################
-adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37/contaminant_list.fa"
+
+if [[ ${GENOMEBUILD} == "b37" ]]; then
+    adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37/contaminant_list.fa"
+elif [[ ${GENOMEBUILD} == "hg19" ]]; then
+    adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hg19/contaminant_list.fa"
+elif [[ "${GENOMEBUILD}" == "hs37d5" ]]; then
+    adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hs37d5/contaminant_list.fa"
+elif [[ "${GENOMEBUILD}" == "hs38DH" ]]; then
+    adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hs38DH/contaminant_list.fa"
+fi
+
 logger_ngseasy "[${NGSEASY_STEP}]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
 
 ########################################################################################################
@@ -464,8 +474,8 @@ logger_ngseasy "[${NGSEASY_STEP}]:START qc of raw fastq files" ${LOGFILE}
 logger_ngseasy "[${NGSEASY_STEP}]:TRIM set to [$TRIM] - adaptor trim. Adaptor and read quality trimming" ${LOGFILE}
 
 ## get ngs_resource mapping
-myresources=`dirname ${PROJECT_DIR}`
-NGSResources="${myresources}/ngs_resources"
+##myresources=`dirname ${PROJECT_DIR}`
+##NGSResources="${myresources}/ngseasy_resources"
 
 ## run trimmomatic
 #
