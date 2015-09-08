@@ -477,24 +477,23 @@ logger_ngseasy "[${NGSEASY_STEP}]:TRIM set to [$TRIM] - adaptor trim. Adaptor an
 #
 logger_ngseasy "[${NGSEASY_STEP}]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:5:true LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 AVGQUAL:2 MINLEN:75 " ${LOGFILE}
 
-	${DOCKER_RUN} \
-	--rm=true \
-	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
-	-v ${NGSResources}:/home/pipeman/ngs_resources \
-	--name trimmomatic_${BAM_PREFIX} \
-	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
-	PE \
-	-threads ${NCPU} \
-	${SOUTDocker}/fastq/${FQ1} \
-	${SOUTDocker}/fastq/${FQ2} \
-	${qcPEFQ1} ${qcSEFQ1} \
-	${qcPEFQ2} ${qcSEFQ2} \
-	ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
-	LEADING:3 \
-	TRAILING:3 \
-	SLIDINGWINDOW:4:15 \
-	AVGQUAL:2 \
-	MINLEN:75
+${DOCKER_RUN} \
+    --rm=true \
+    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    --name trimmomatic_${BAM_PREFIX} \
+    -t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
+    PE \
+    -threads ${NCPU} \
+    ${SOUTDocker}/fastq/${FQ1} \
+    ${SOUTDocker}/fastq/${FQ2} \
+    ${qcPEFQ1} ${qcSEFQ1} \
+    ${qcPEFQ2} ${qcSEFQ2} \
+    ILLUMINACLIP:${adapter_fa}:2:30:10:5:true \
+    LEADING:3 \
+    TRAILING:3 \
+    SLIDINGWINDOW:4:15 \
+    AVGQUAL:2 \
+    MINLEN:75
 
 logger_ngseasy "[${NGSEASY_STEP}]:FastQC post Trimmomatic" ${LOGFILE}
 
