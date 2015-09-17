@@ -409,9 +409,9 @@ fi
 ########################################################################################################
 # adapter_fa : check of this is in palce and exit if not
 ########################################################################################################
-if [[ ${GENOMEBUILD} == "b37" ]]; then
+if [[ "${GENOMEBUILD}" == "b37" ]]; then
     adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37/contaminant_list.fa"
-elif [[ ${GENOMEBUILD} == "hg19" ]]; then
+elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
     adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hg19/contaminant_list.fa"
 elif [[ "${GENOMEBUILD}" == "hs37d5" ]]; then
     adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hs37d5/contaminant_list.fa"
