@@ -29,7 +29,7 @@
 <p><strong>Authors:</strong> Stephen J Newhouse and Amos Folarin<br>
 <strong>Release Version:</strong> <strong>1.0-r001</strong><br>
 <strong>Release:</strong> dirty_tango<br>
-<strong>Publication:</strong> <em>pending</em>  </p>
+<strong>Publication:</strong> Folarin AA, Dobson RJ and Newhouse SJ. <a href="http://f1000research.com/articles/4-997/v1">NGSeasy</a>: a next generation sequencing pipeline in Docker containers [version 1; referees: awaiting peer review] F1000Research 2015, 4(ISCB Comm J):997 (doi: 10.12688/f1000research.7104.1).   </p>
 
 <ul>
 <li>
@@ -72,7 +72,7 @@
 
 <p>An example of the run commands:</p>
 
-<div class="highlight highlight-bash"><pre>ngseasy -c ngseasy_test.config.freebayes.tsv -d /media/Data/ngs_projects
+<div class="highlight highlight-source-shell"><pre>ngseasy -c ngseasy_test.config.freebayes.tsv -d /media/Data/ngs_projects
 ngseasy -c ngseasy_test.config.platypus.tsv  -d /media/Data/ngs_projects</pre></div>
 
 <h2>
@@ -112,7 +112,7 @@ ngseasy -c ngseasy_test.config.platypus.tsv  -d /media/Data/ngs_projects</pre></
 
 <p><strong>Please Direct all queries to [<a href="https://github.com/KHP-Informatics/ngseasy/issues">https://github.com/KHP-Informatics/ngseasy/issues</a>]</strong></p>
 
-<p>When sending bug reports etc please provide:- </p>
+<p>When sending bug reports etc please provide:-</p>
 
 <ul>
 <li>Date of Download</li>
@@ -144,13 +144,13 @@ NGSeasy is not <a href="http://www.urbandictionary.com/define.php?term=Numpty">n
 
 <p><strong>Create a docker group</strong></p>
 
-<div class="highlight highlight-bash"><pre>sudo addgroup docker</pre></div>
+<div class="highlight highlight-source-shell"><pre>sudo addgroup docker</pre></div>
 
 <p><strong>Add user to docker group</strong>  </p>
 
 <p>Here user is <code>ec2-user</code></p>
 
-<div class="highlight highlight-bash"><pre>sudo usermod -aG docker ec2-user</pre></div>
+<div class="highlight highlight-source-shell"><pre>sudo usermod -aG docker ec2-user</pre></div>
 
 <p>Log out and log back in.</p>
 
@@ -158,7 +158,7 @@ NGSeasy is not <a href="http://www.urbandictionary.com/define.php?term=Numpty">n
 
 <p>Verify your work by running <code>docker</code> without <code>sudo</code>.</p>
 
-<div class="highlight highlight-bash"><pre>docker run hello-world</pre></div>
+<div class="highlight highlight-source-shell"><pre>docker run hello-world</pre></div>
 
 <p>..this is what you should get...</p>
 
@@ -199,7 +199,7 @@ For more examples and ideas, visit:
 <h2>
 <a id="get-ngseasy" class="anchor" href="#get-ngseasy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get NGSeasy</h2>
 
-<div class="highlight highlight-bash"><pre>
+<div class="highlight highlight-source-shell"><pre>
 <span class="pl-c">#############################################</span>
 <span class="pl-c">## Get NGSeasy                             ##</span>
 <span class="pl-c">#############################################</span>
@@ -217,7 +217,7 @@ git clone https://github.com/KHP-Informatics/ngseasy.git</pre></div>
 <li>in this example user home is <code>/home/ec2-user</code>
 </li>
 <li>
-<code>make INTSALLDIR="/home/ec2-user" all</code> 
+<code>make INTSALLDIR="/home/ec2-user" all</code>
 
 <ul>
 <li>sets up top level directory structure</li>
@@ -233,7 +233,7 @@ git clone https://github.com/KHP-Informatics/ngseasy.git</pre></div>
 </li>
 </ul>
 
-<div class="highlight highlight-bash"><pre><span class="pl-c">#############################################</span>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c">#############################################</span>
 <span class="pl-c">## install NGSeasy                         ##</span>
 <span class="pl-c">#############################################</span>
 
@@ -242,7 +242,7 @@ git clone https://github.com/KHP-Informatics/ngseasy.git</pre></div>
 <span class="pl-c">## 1.</span>
 make INTSALLDIR=<span class="pl-s"><span class="pl-pds">"</span>/home/ec2-user<span class="pl-pds">"</span></span> all
 
-<span class="pl-c">## 2. </span>
+<span class="pl-c">## 2.</span>
 sudo make install</pre></div>
 
 <p>Installation can take a while, 1-2 hours, so go get a coffee../just chill...if your network is bad...then who knows how long...still..just chill...or go get fast internet!</p>
@@ -261,7 +261,7 @@ sudo make install</pre></div>
 
 <p>source : <a href="http://askubuntu.com/questions/104755/how-to-check-internet-speed-via-terminal">http://askubuntu.com/questions/104755/how-to-check-internet-speed-via-terminal</a></p>
 
-<div class="highlight highlight-bash"><pre>wget -O speedtest-cli https://raw.github.com/sivel/speedtest-cli/master/speedtest_cli.py
+<div class="highlight highlight-source-shell"><pre>wget -O speedtest-cli https://raw.github.com/sivel/speedtest-cli/master/speedtest_cli.py
 chmod +x speedtest-cli
 ./speedtest-cli</pre></div>
 
@@ -279,21 +279,21 @@ Upload: 5.18 Mbit/s
 <h2>
 <a id="install-time-on-amazon-ec2" class="anchor" href="#install-time-on-amazon-ec2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install time on Amazon EC2</h2>
 
-<p>Connection Speed: ~ 800 Mbit/s </p>
+<p>Connection Speed: ~ 800 Mbit/s</p>
 
 <pre><code>real    94m54.237s
 user    12m26.960s
 sys     28m46.648s
 </code></pre>
 
-<p>Note: We have only tested NGSeasy installation on Amazon EC2, Openstack and UK University Networks. These are all fairly fast networks with speeds exceeding 800 Mbit/s on average. </p>
+<p>Note: We have only tested NGSeasy installation on Amazon EC2, Openstack and UK University Networks. These are all fairly fast networks with speeds exceeding 800 Mbit/s on average.</p>
 
 <h2>
 <a id="running-ngseasy-for-the-first-time-on-the-test-data" class="anchor" href="#running-ngseasy-for-the-first-time-on-the-test-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running NGSeasy for the first time on the test data</h2>
 
 <p><strong>Important!</strong> NGSeasy is controlled from a single <code>config</code> file. See <a href="https://github.com/KHP-Informatics/ngseasy/blob/master/test/ngseasy_test.config.tsv">ngseasy_test.config.tsv</a> for a basic template. It is important that the user sets this up properly before running NGSeasy.</p>
 
-<div class="highlight highlight-bash"><pre><span class="pl-c">#############################################</span>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c">#############################################</span>
 <span class="pl-c">## 0. Move to config file dir</span>
 
 <span class="pl-c1">cd</span> /home/ec2-user/ngs_projects/config_files/
@@ -372,6 +372,31 @@ as a stagging area for new project and sample data.<br>
 <p>We have adapted the current best practices from the Genome Analysis Toolkit (GATK, <a href="http://www.broadinstitute.org/gatk/guide/best-practices">http://www.broadinstitute.org/gatk/guide/best-practices</a>)  for processing raw alignments in SAM/BAM format and variant calling. The current workflow, has been optimised for Illumina platforms, but can easily be adapted for other sequencing platforms, with minimal effort.  </p>
 
 <p>As the containers themselves can be run as executables with pre-specified cpu and RAM resources, the orchestration of the pipeline can be placed under the control of conventional load balancers if this mode is required.  </p>
+
+<h2>
+<a id="genomes" class="anchor" href="#genomes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Genomes</h2>
+
+<table>
+<thead>
+<tr>
+<th>Genome Build</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hs37d5</td>
+</tr>
+<tr>
+<td>b37</td>
+</tr>
+<tr>
+<td>hg19</td>
+</tr>
+<tr>
+<td>hs38DH</td>
+</tr>
+</tbody>
+</table>
 
 <hr>
 
@@ -762,7 +787,7 @@ We provide an Amazon EBS data volume with indexed genomes: XXXXXX  </p>
 
 <p><code>-v /media/Data:/home/pipeman</code> : Mounts local directory <code>/media/Data</code> to container directory <code>/home/pipeman</code></p>
 
-<div class="highlight highlight-bash"><pre>TOOL=<span class="pl-s"><span class="pl-pds">"</span>bwa<span class="pl-pds">"</span></span>
+<div class="highlight highlight-source-shell"><pre>TOOL=<span class="pl-s"><span class="pl-pds">"</span>bwa<span class="pl-pds">"</span></span>
 
 docker run \
 -P \
@@ -858,7 +883,7 @@ But once you're set up, thats it - you are good to go.</p>
 <p>The default install dir is the users <strong>${HOME}</strong> directory.
 The  <strong>Makefile</strong> provides options to install to any user defined directory and select NGSeasy version. eg :-</p>
 
-<div class="highlight highlight-bash"><pre><span class="pl-c">## EG. Installing to /media/scratch</span>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c">## EG. Installing to /media/scratch</span>
 make INSTALLDIR=<span class="pl-s"><span class="pl-pds">"</span>/media/scratch<span class="pl-pds">"</span></span> VERSION=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span> all</pre></div>
 
 <p>The  <strong>Makefile</strong> also allows installation of selected components (check out its insides!).</p>
@@ -1035,7 +1060,7 @@ This sets up Information related to: Project Name, Sample Name, Library Type, Pi
 
 <p>Within this directory <strong>media</strong> we make the following folders: -</p>
 
-<div class="highlight highlight-bash"><pre>ngs_projects  
+<div class="highlight highlight-source-shell"><pre>ngs_projects  
 <span class="pl-k">|</span>  
 <span class="pl-k">|</span>__raw_fastq  
 <span class="pl-k">|</span>__config_files  
@@ -1052,13 +1077,13 @@ furture version will allow any format  </p>
 
 <p>Running <code>ngseasy</code> with the relevent configuration file, will set up the following directory structure for every project and sample within a project:-  </p>
 
-<div class="highlight highlight-bash"><pre><span class="pl-c1">.</span>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">.</span>
 ngs_projects  
 <span class="pl-k">|</span>  
 <span class="pl-k">|</span>__raw_fastq  
 <span class="pl-k">|</span>__config_files  
 <span class="pl-k">|</span>__run_logs
-<span class="pl-k">|</span>__ngseasy_resources 
+<span class="pl-k">|</span>__ngseasy_resources
 <span class="pl-k">|</span>
 <span class="pl-k">|</span>__ project_id  
     <span class="pl-k">|</span>  
@@ -1125,7 +1150,7 @@ leagally have to approach the owners of the various components yourself!  </p>
 
 <p>Its as easy as:-  </p>
 
-<div class="highlight highlight-bash"><pre>docker build -t compbio/ngseasy-<span class="pl-smi">${TOOL}</span> <span class="pl-c1">.</span></pre></div>
+<div class="highlight highlight-source-shell"><pre>docker build -t compbio/ngseasy-<span class="pl-smi">${TOOL}</span> <span class="pl-c1">.</span></pre></div>
 
 <h2>
 <a id="building-novoalign" class="anchor" href="#building-novoalign" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building NOVOALIGN</h2>
@@ -1138,7 +1163,7 @@ to relfect the correct version of novoalign.  </p>
 
 <p>Once you obtained your <strong>novoalign.lic</strong>, download this to the build directory *<em>ngseasy/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign</em>, which now should contain your updated <a href="https://github.com/KHP-Informatics/ngseasy/blob/master/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign/Dockerfile">Dockerfile</a>.</p>
 
-<div class="highlight highlight-bash"><pre><span class="pl-c"># move to ngseasy_stampy folder</span>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># move to ngseasy_stampy folder</span>
 <span class="pl-c1">cd</span> ngseasy/containerized/ngs_docker_debian/ngs_aligners/ngseasy_novoalign
 ls</pre></div>
 
@@ -1153,7 +1178,7 @@ novocraftV3.02.08.Linux3.0.tar.gz
 
 <p><strong>build novoalign</strong></p>
 
-<div class="highlight highlight-bash"><pre><span class="pl-c"># build</span>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># build</span>
 docker build -t compbio/ngseasy-novoalign:v1.0 <span class="pl-c1">.</span></pre></div>
 
 <hr>
@@ -1168,7 +1193,7 @@ docker build -t compbio/ngseasy-novoalign:v1.0 <span class="pl-c1">.</span></pre
 <p>Edit the <a href="https://github.com/KHP-Informatics/ngseasy/blob/master/containerized/ngs_docker_debian/ngs_utils/ngseasy_gatk/Dockerfile">Dockerfile</a> to relfect
 the correct version of GATK.  </p>
 
-<div class="highlight highlight-bash"><pre><span class="pl-c"># move to ngseasy_gatk folder</span>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># move to ngseasy_gatk folder</span>
 <span class="pl-c1">cd</span> ngseasy/containerized/ngs_docker_debian/ngs_utils/ngseasy_gatk
 ls</pre></div>
 
@@ -1181,7 +1206,7 @@ GenomeAnalysisTK-3.3-0.tar.bz2
 
 <p><strong>build gatk</strong></p>
 
-<div class="highlight highlight-bash"><pre><span class="pl-c"># build</span>
+<div class="highlight highlight-source-shell"><pre><span class="pl-c"># build</span>
 docker build -t compbio/ngseasy-gatk:v1.0 <span class="pl-c1">.</span></pre></div>
 
 <hr>
@@ -1210,14 +1235,14 @@ Docker build files (<a href="https://docs.docker.com/jsearch/?q=Dockerfile">Dock
 
 <p>Its as easy as:-  </p>
 
-<div class="highlight highlight-bash"><pre>docker build -t compbio/ngseasy-<span class="pl-smi">${TOOL}</span> <span class="pl-c1">.</span></pre></div>
+<div class="highlight highlight-source-shell"><pre>docker build -t compbio/ngseasy-<span class="pl-smi">${TOOL}</span> <span class="pl-c1">.</span></pre></div>
 
 <hr>
 
 <h2>
 <a id="build-vep" class="anchor" href="#build-vep" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build VEP</h2>
 
-<div class="highlight highlight-bash"><pre>
+<div class="highlight highlight-source-shell"><pre>
 <span class="pl-c1">cd</span> /media/ngs_projects/nsgeasy/ngs/containerized/ngs_docker_debian/ngseasy_vep
 
 sudo docker build -t compbio/ngseasy-vep:<span class="pl-smi">${VERSION}</span> <span class="pl-c1">.</span></pre></div>
@@ -1227,7 +1252,7 @@ sudo docker build -t compbio/ngseasy-vep:<span class="pl-smi">${VERSION}</span> 
 <h2>
 <a id="build-annovar" class="anchor" href="#build-annovar" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build Annovar</h2>
 
-<div class="highlight highlight-bash"><pre><span class="pl-c1">cd</span> /media/ngs_projects/nsgeasy/ngs/containerized/ngs_docker_debian/ngseasy_annovar
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> /media/ngs_projects/nsgeasy/ngs/containerized/ngs_docker_debian/ngseasy_annovar
 
 sudo docker build -t compbio/ngseasy-annovar:<span class="pl-smi">${VERSION}</span> <span class="pl-c1">.</span></pre></div>
 
@@ -1236,7 +1261,7 @@ sudo docker build -t compbio/ngseasy-annovar:<span class="pl-smi">${VERSION}</sp
 <h2>
 <a id="build-snpeff" class="anchor" href="#build-snpeff" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build snpEff</h2>
 
-<div class="highlight highlight-bash"><pre><span class="pl-c1">cd</span> /media/ngs_projects/nsgeasy/ngs/containerized/ngs_docker_debian/ngseasy_snpeff
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> /media/ngs_projects/nsgeasy/ngs/containerized/ngs_docker_debian/ngseasy_snpeff
 
 sudo docker build -t compbio/ngseasy-snpeff:<span class="pl-smi">${VERSION}</span> <span class="pl-c1">.</span></pre></div>
 
@@ -1286,7 +1311,7 @@ sudo docker build -t compbio/ngseasy-snpeff:<span class="pl-smi">${VERSION}</spa
 
 <hr>
 
-<p>(C) 2015 Stephen J Newhouse &amp; Amos Folarin </p>
+<p>(C) 2015 Stephen J Newhouse &amp; Amos Folarin</p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/KHP-Informatics/ngseasy">NGSeasy</a> is maintained by <a href="https://github.com/KHP-Informatics">KHP-Informatics</a>.</span>
