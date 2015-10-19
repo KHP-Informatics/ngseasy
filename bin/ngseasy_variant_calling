@@ -1135,7 +1135,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:START Variant Calling using HaplotypeCaller " 
   bgzip -c > ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
   tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.snps.indels.${VARCALLER}.vcf.gz && \
   bgzip ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
-  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf"
+  tabix ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf.gz"
   wait
   sleep 1s
   docker logs HaplotypeCaller_${BAM_PREFIX} >> ${LOGFILE}.log
