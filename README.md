@@ -9,6 +9,7 @@ NGSeasy (beta): A [Dockerized](https://www.docker.com/) NGS pipeline and tool-bo
 **Release Version:** **1.0-r001**  
 **Release:** dirty_tango  
 **Publication:** Folarin AA, Dobson RJ and Newhouse SJ. [NGSeasy](http://f1000research.com/articles/4-997/v1): a next generation sequencing pipeline in Docker containers [version 1; referees: awaiting peer review] F1000Research 2015, 4(ISCB Comm J):997 (doi: 10.12688/f1000research.7104.1).   
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.31444.svg)](http://dx.doi.org/10.5281/zenodo.31444)  
 
 - **NGSeasy-1.0 Full Production release will be available Late 2015**  
 - **NGSeasy-1.0-r001 (dirty_tango) contains most of the core functionality to go from raw fastq to raw vcf calls**
