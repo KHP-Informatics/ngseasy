@@ -2,14 +2,14 @@
 
 NGSeasy (beta): A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box
 =====================================================================================
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.31444.svg)](http://dx.doi.org/10.5281/zenodo.31444)
 
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**  
 
 **Authors:** Stephen J Newhouse and Amos Folarin  
 **Release Version:** **1.0-r001**  
 **Release:** dirty_tango  
-**Publication:** Folarin AA, Dobson RJ and Newhouse SJ. [NGSeasy](http://f1000research.com/articles/4-997/v1): a next generation sequencing pipeline in Docker containers [version 1; referees: awaiting peer review] F1000Research 2015, 4(ISCB Comm J):997 (doi: 10.12688/f1000research.7104.1).   
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.31444.svg)](http://dx.doi.org/10.5281/zenodo.31444)  
+**Publication:** Folarin AA, Dobson RJ and Newhouse SJ. NGSeasy: a next generation sequencing pipeline in Docker containers [version 1; referees: 2 approved with reservations] F1000Research 2015, 4(ISCB Comm J):997 (doi: 10.12688/f1000research.7104.1).   
 
 - **NGSeasy-1.0 Full Production release will be available Late 2015**  
 - **NGSeasy-1.0-r001 (dirty_tango) contains most of the core functionality to go from raw fastq to raw vcf calls**
@@ -18,6 +18,13 @@ NGSeasy (beta): A [Dockerized](https://www.docker.com/) NGS pipeline and tool-bo
 - **Lets us know if you want other tools added to NGSeasy**
 
 [**NGSeasy is completely open source and we encourage interested folks to jump in and get involved in the dev with us.**](https://github.com/KHP-Informatics/ngseasy.git)
+
+## Contributing to NGSEASY
+- Fork it!
+- Create your **feature branch**: `git checkout -b my-new-feature`
+- Commit your changes: `git commit -am 'Add some feature'`
+- Push to the branch: `git push origin my-new-feature`
+- Submit a pull request!
 
 ## NGSeasy: Genome Comparison & Analytic Testing ([GCAT](http://www.bioplanet.com/gcat)) Reports
 Here we provide a quick look at basic NGSeasy performance (more results coming soon).
@@ -438,6 +445,9 @@ We provide an Amazon EBS data volume with indexed genomes: XXXXXX
 | compbio/ngseasy-glia | 1.0-r001| glia (latest) | NGS local realignment | [link](https://github.com/ekg/glia) |
 | compbio/ngseasy-platypus | 1.0-r001 | platypus (0.8.1) | Variant Caller | [link](https://github.com/andyrimmer/Platypus) |
 | compbio/ngseasy-freebayes | 1.0-r001 | freebayes (v0.9.21-19-gc003c1e) | Variant Caller | [link](https://github.com/ekg/freebayes) |
+
+## to add
+- ABRA
 
 ## Running an NGSeasy Tool Interactively
 
