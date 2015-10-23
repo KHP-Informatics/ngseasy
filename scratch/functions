@@ -13,7 +13,7 @@ function logger_ngseasy() {
 ########################################################################################################
 ## test if docker installed and exit if not
 ########################################################################################################
-function docker_installed(){
+function is_docker_installed(){
     command -v docker >/dev/null 2>&1 || { echo -e "\n\nDocker not installed.\n\nAborting....." >&2; exit 1; }
     echo -e "Docker Installed ok"
     echo -e "Checking Docker Version and Info\n"
@@ -22,4 +22,46 @@ function docker_installed(){
     echo -e "\n----\nDocker Version\n----\n${DOCKERVERSION}\n----\n"Docker Info"\n----\n${DOCKERINFO}\n----\n"
     echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:START]":[${USER}]:[`uname -a`]"
     sleep 1s
+}
+
+########################################################################################################
+## Check options passed in.
+########################################################################################################
+function options_test(){
+if [[ -z "$config_tsv" ]]; then
+    echo -e "\nERROR: No options were passed. Exiting"
+    sleep 1s
+	usage_ngseasy
+	sleep 1s
+	exit 1
+fi
+}
+
+#######################################################################################################
+## check config file exists.
+########################################################################################################
+NGSEASY_STEP=""
+function configfile_exists(){
+if [[ ! -e "${config_tsv}" ]]
+then
+	    logger_ngseasy "[${NGSEASY_STEP}]:ERROR : [${config_tsv}] does not exist or can not be found. Exiting "
+	    ngseasy_alignment_usage;
+	    exit 1;
+else
+	    logger_ngseasy "[${NGSEASY_STEP}]:Configuration file found [${config_tsv}] "
+fi
+}
+
+########################################################################################################
+## check project_directory exists.
+########################################################################################################
+function project_directory_exists(){
+if [[ ! -d "${project_directory}" ]]
+  then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR : project_directory [${project_directory}] does not exist "
+    ngseasy_alignment_usage;
+    exit 1;
+else
+	    logger_ngseasy "[${NGSEASY_STEP}]:Top Level Project Directory [${project_directory}] "
+fi
 }
