@@ -9,3 +9,17 @@ function logger_ngseasy() {
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
+
+########################################################################################################
+## test if docker installed and exit if not
+########################################################################################################
+function docker_installed(){
+    command -v docker >/dev/null 2>&1 || { echo -e "\n\nDocker not installed.\n\nAborting....." >&2; exit 1; }
+    echo -e "Docker Installed ok"
+    echo -e "Checking Docker Version and Info\n"
+    DOCKERVERSION=`docker version`
+    DOCKERINFO=`docker info`
+    echo -e "\n----\nDocker Version\n----\n${DOCKERVERSION}\n----\n"Docker Info"\n----\n${DOCKERINFO}\n----\n"
+    echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:START]":[${USER}]:[`uname -a`]"
+    sleep 1s
+}
