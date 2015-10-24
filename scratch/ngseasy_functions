@@ -20,6 +20,14 @@ coverage_min="2"
 ########################################################################################################
 DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
 
+function docker_run_ngseasy(){
+    DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+}
+
+function bash_run_ngseasy(){
+    NGSEASY_RUN="/bin/bash"
+}
+
 ########################################################################################################
 ## global logging fuction
 ########################################################################################################
