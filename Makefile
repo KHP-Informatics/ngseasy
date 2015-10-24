@@ -34,7 +34,9 @@ DIR=$(shell pwd)
 
 ################################################################
 ## Install bin path - edit at will
-TARGET_BIN=/usr/local/bin
+## TARGET_BIN=/usr/local/bin
+## changed to move bin to user folder. no need for sudo with install
+TARGET_BIN=$(INSTALLDIR)
 
 ################################################################
 ## relative path to ngseasy scripts
@@ -52,7 +54,8 @@ all:	ngsprojectdir dockerimages testdata b37 hg19
 install:
 	@echo "Installing ngseasy scripts to system..."
 	chmod 775 $(SRC)/* && \
-	cp -rv $(SRC)/* $(TARGET_BIN)/
+	mkdir $(INSTALLDIR)/bin && \
+	cp -rv $(SRC)/* $(TARGET_BIN)/bin/
 
 ## fix permissions. run - sudo make NGSUSER="ec2-user" fixuser
 fixuser:
