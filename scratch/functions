@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+set -o errexit
+########################################################################################################
+# Program: ngseasy_functions : Common commands and functions all ngseasy scripts use
+# Version 1.0-r001
+# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
+########################################################################################################
+
+########################################################################################################
+## docker run command
+########################################################################################################
+DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+
+########################################################################################################
+## global logging fuction
+########################################################################################################
+function logger_ngseasy() {
+ message=${1}
+ mylogfile=${2}
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
+ echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
+}
+########################################################################################################
+## test if docker installed and exit if not
+########################################################################################################
+function is_docker_installed(){
+    command -v docker >/dev/null 2>&1 || { echo -e "\n\nDocker not installed.\n\nAborting....." >&2; exit 1; }
+    echo -e "Docker Installed ok"
+    echo -e "Checking Docker Version and Info\n"
+    DOCKERVERSION=`docker version`
+    DOCKERINFO=`docker info`
+    echo -e "\n----\nDocker Version\n----\n${DOCKERVERSION}\n----\n"Docker Info"\n----\n${DOCKERINFO}\n----\n"
+    echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:START]":[${USER}]:[`uname -a`]"
+    sleep 1s
+}
+
+########################################################################################################
+## Check options passed in.
+########################################################################################################
+function test_for_command_line_args(){
+if [[ "$#" -lt 1 ]]; then
+    echo -e "\nERROR: No options were passed. Exiting"
+	exit 1
+fi
+}
+
+#######################################################################################################
+## check config file exists.
+########################################################################################################
+function test_configfile_exists(){
+if [[ ! -e "${config_tsv}" ]]
+then
+	    logger_ngseasy "[${NGSEASY_STEP}]:ERROR:[${config_tsv}] does not exist or can not be found. Exiting "
+	    exit 1;
+else
+	    logger_ngseasy "[${NGSEASY_STEP}]:Configuration file found [${config_tsv}] "
+fi
+}
+
+########################################################################################################
+## check project_directory exists.
+########################################################################################################
+function project_directory_exists(){
+if [[ ! -d "${project_directory}" ]]
+  then
+    logger_ngseasy "[${NGSEASY_STEP}]:ERROR : project_directory [${project_directory}] does not exist "
+    ngseasy_alignment_usage;
+    exit 1;
+else
+	    logger_ngseasy "[${NGSEASY_STEP}]:Top Level Project Directory [${project_directory}] "
+fi
+}
+
+
+########################################################################################################
+## Select Genome Build and files
+########################################################################################################
+function select_genome_build_files(){
+if [[ "${GENOMEBUILD}" == "b37" ]]; then
+# reset options as getting bleed through
+  REFDIR=""
+  GENOMEINDEX=""
+  REFFASTA=""
+  KNOWN_INDELS=""
+  KNOWN_SNPS_1000G=""
+  KNOWN_SNPS_OMNI=""
+  KNOWN_SNPS_b138=""
+  DBSNP_RECAB=""
+  GENOMEFILE=""
+  FAI=""
+
+  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37"
+  GENOMEINDEX="${REFDIR}/human_g1k_v37"
+  REFFASTA="${REFDIR}/human_g1k_v37.fasta"
+  DBSNP_RECAB="${REFDIR}/dbsnp_138.b37.recab"
+  GENOMEFILE="${REFDIR}/b37.genome"
+  FAI="${REFDIR}/human_g1k_v37.fasta.fai"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]" ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab b37 [${DBSNP_RECAB}]" ${LOGFILE}
+
+  #known indels and SNPs
+  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.b37.vcf"
+  KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.b37.vcf"
+  KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.b37.vcf"
+  KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.b37.vcf"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:KNOWN_INDELS [${KNOWN_INDELS}]"  ${LOGFILE}
+
+## HG19
+elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
+
+  REFDIR=""
+  GENOMEINDEX=""
+  REFFASTA=""
+  KNOWN_INDELS=""
+  KNOWN_SNPS_1000G=""
+  KNOWN_SNPS_OMNI=""
+  KNOWN_SNPS_b138=""
+  DBSNP_RECAB=""
+  GENOMEFILE=""
+  FAI=""
+
+  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hg19"
+  GENOMEINDEX="${REFDIR}/ucsc.hg19"
+  REFFASTA="${REFDIR}/ucsc.hg19.fasta"
+  DBSNP_RECAB="${REFDIR}/dbsnp_138.hg19.recab"
+  GENOMEFILE="${REFDIR}/hg19.genome"
+  FAI="${REFDIR}/ucsc.hg19.fasta.fai"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:Fasta [${REFFASTA}]"  ${LOGFILE}
+  logger_ngseasy "[${NGSEASY_STEP}]:dbSNP file for bam recab hg19 [${DBSNP_RECAB}]" ${LOGFILE}
+
+  #known indels and SNPs
+  KNOWN_INDELS="${REFDIR}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.gz"
+  KNOWN_SNPS_1000G="${REFDIR}/1000G_phase1.snps.high_confidence.hg19.sites.vcf"
+  KNOWN_SNPS_OMNI="${REFDIR}/1000G_omni2.5.hg19.sites.vcf"
+  KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.hg19.vcf"
+
+  logger_ngseasy "[${NGSEASY_STEP}]:KNOWN_INDELS [${KNOWN_INDELS}]" ${LOGFILE}
+
+else
+  logger_ngseasy "[${NGSEASY_STEP}]:No genome selected. Exiting. Choose one of [b37] or [hg19]. [b38 coming soon]"  ${LOGFILE}
+  sleep 1s
+  exit 1
+fi
+}

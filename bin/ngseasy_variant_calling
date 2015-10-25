@@ -4,7 +4,6 @@ set -o errexit
 ########################################################################################################
 # Program: ngseasy_variant_calling
 # Version 1.0-r001
-# Version 1.0-r001
 # Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
 ########################################################################################################
 #
