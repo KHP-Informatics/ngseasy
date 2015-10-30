@@ -5,6 +5,14 @@ set -o errexit
 ########################################################################################################
 # reset shit
 ########################################################################################################
+config_tsv=""
+project_directory=""
+DOCKERVERSION=""
+DOCKERINFO=""
+NGSEASY_BIN_VERSION=""  # add this option to logs and make so that docker images are seperated from scripts versions and commits
+NGSEASYVERSION=""
+NGSEASY_STEP=""
+## congig options
 PROJECT_ID=""
 SAMPLE_ID=""
 FASTQ1=""
@@ -36,11 +44,15 @@ KNOWN_SNPS_1000G=""
 KNOWN_SNPS_OMNI=""
 KNOWN_SNPS_b138=""
 SPEEDSEQ_CONFIG=""
-NGSEASYVERSION=""
-NGSEASY_STEP=""
+SPEEDSEQ_SV=""
+
 LOGFILE=""
 DOCKERHOME=""
 BAM_PREFIX=""
+########################################################################################################
+## docker run command
+########################################################################################################
+DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
 ########################################################################################################
 ### var calling options
 ########################################################################################################
@@ -48,23 +60,50 @@ base_qual="20"
 map_qual="20"
 coverage_min="2"
 
-if [[ ${SPEEDSEQ_SV} == "complete"  ]]; then
-    SV_SPEEDSEQ_OPTIONS=" -g " ## lumpy and svtyper
-elif [[ ${SPEEDSEQ_SV} == "standard"  ]]; then
-    SV_SPEEDSEQ_OPTIONS=" -g -d " ## include cnvnator
-else
-    logger_ngseasy "[${NGSEASY_STEP}]:ERROR : ["SPEEDSEQ_SV"] not set "
-    exit 1
-fi
-########################################################################################################
-## docker run command
-########################################################################################################
-DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+function select_speedseq_sv_options() {
+    if [[ ${SPEEDSEQ_SV} == "complete"  ]]; then
+        SV_SPEEDSEQ_OPTIONS=" -g " ## lumpy and svtyper
+    elif [[ ${SPEEDSEQ_SV} == "standard"  ]]; then
+        SV_SPEEDSEQ_OPTIONS=" -g -d " ## include cnvnator
+    else
+        logger_ngseasy "[${NGSEASY_STEP}]:ERROR : ["SPEEDSEQ_SV"] not set "
+        exit 1
+    fi
+}
+
+###########################################################################################
+## global usage
+###########################################################################################
+function usage_ngseasy() {
+    echo "
+Program: ${NGSEASY_STEP}
+Version 1.0-r001
+Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+
+usage:   ${NGSEASY_STEP} -c <config_file> -d <project_directory>
+
+options:  -c  STRING	configuration file
+          -d  STRING	project directory
+          -h  NULL	show this message
+"
+}
+
 ########################################################################################################
 ## test if docker is intsalled and exit if not
 ########################################################################################################
-function is_docker_intsalled() {
+function check_if_docker_intsalled() {
     command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not installed.  Aborting." >&2; exit 1; }
+}
+########################################################################################################
+## get version of intsalled docker
+########################################################################################################
+function get_version_of_docker() {
+    echo -e "Checking Docker Version and Info\n"
+    DOCKERVERSION=`docker version`
+    DOCKERINFO=`docker info`
+    echo -e "\n----\nDocker Version\n----\n${DOCKERVERSION}\n----\n"Docker Info"\n----\n${DOCKERINFO}\n----\n"
+    echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"[Log:START]":[${USER}]:[`uname -a`]"
+    sleep 1s
 }
 ########################################################################################################
 ## global logging fuction
@@ -75,6 +114,32 @@ function logger_ngseasy() {
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]" >> ${mylogfile}.log;
  echo -e [`date`]":[NGSEASY:${NGSEASYVERSION}]:"${message}":[${USER}]:[`uname -a`]"
 }
+########################################################################################################
+## check and make ngs_projects/run_logs
+########################################################################################################
+function make_project_dir_configfile_log() {
+    configfile_name=`basename ${config_tsv}`
+    # set logile name and make it if it does not exist
+    config_run_log="${project_directory}/run_logs/ngseasy.${NGSEASYVERSION}.${configfile_name}.${RUNDATE}"
+    if [[ ! -e "${config_run_log}.log" ]]
+    then
+    	logger_ngseasy "[ngseasy]:Making log file [${config_run_log}.log]"
+    	touch ${config_run_log}.log
+    	logger_ngseasy "[ngseasy]:Log file [${config_run_log}.log]"
+    else
+    	logger_ngseasy "[ngseasy]:Log file [${config_run_log}.log]"
+    fi
+}
+########################################################################################################
+# find out where we are running from
+########################################################################################################
+function get_working_directory() {
+    my_current_dirctory=`pwd`
+    logger_ngseasy "[ngseasy]:Current working directory [${my_current_dirctory}]" ${config_run_log}
+    logger_ngseasy "[ngseasy]:Config file set as [${config_tsv}]" ${config_run_log}
+}
+
+
 ########################################################################################################
 ## check config file exists.
 ########################################################################################################
@@ -141,7 +206,7 @@ function check_config_format() {
     fi
 }
 ########################################################################################################
-## LOGFILE check and make log directory
+## LOGFILE check and make log directory ${PROJECT_DIR}/${PROJECT_ID}
 ########################################################################################################
 function check_and_make_run_log_directory() {
     if [ ! -d "${PROJECT_DIR}/${PROJECT_ID}/run_logs/" ]
