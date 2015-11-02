@@ -9,16 +9,20 @@ ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 # Update
-RUN apt-get update -y && apt-get upgrade -y
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y g++ libssl-dev zlib1g-dev
 
-#-------------------------NGS-TOOL---------------------------------------
-ADD GenomeAnalysisTK-3.3-0.tar.bz2 /usr/local/pipeline/GenomeAnalysisTK-3.3-0
+#--------------------------------libStatGen/BamUtil-----------------------------
+# Install libStatGen and BamUtil
 
-RUN cd /usr/local/pipeline/GenomeAnalysisTK-3.3-0 && \
-	sed -i '$aCLASSPATH=:${CLASSPATH}:/usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar' /home/pipeman/.bashrc && \
-	sed -i '$aPATH=${PATH}:/usr/local/pipeline/GenomeAnalysisTK-3.3-0' /home/pipeman/.bashrc && \
-	echo "alias ngsGATK='/usr/local/pipeline/GenomeAnalysisTK-3.3-0'" >>  /home/pipeman/.bashrc && \
-	sed -i '$aPATH=${PATH}:/usr/local/pipeline/GenomeAnalysisTK-3.3-0' /root/.bashrc
+RUN cd /usr/local/pipeline && \
+  git clone https://github.com/statgen/libStatGen.git && \
+  cd libStatGen && \
+  make all && \
+  cd /usr/local/pipeline && \
+  git clone https://github.com/statgen/bamUtil.git && \
+  cd bamUtil && \
+  make cloneLib && \
+  make all
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
@@ -37,3 +41,8 @@ CMD ["/bin/bash"]
 #Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN apt-get autoclean && apt-get autoremove -y && rm -rf /var/lib/{apt,dpkg,cache,log}/
+
+
+
+
+
