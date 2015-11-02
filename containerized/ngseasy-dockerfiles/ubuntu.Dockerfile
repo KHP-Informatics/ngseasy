@@ -1,9 +1,7 @@
-# NGSeasy Base Image
-
 # base image
 FROM ubuntu:14.04.1
 
-# Maintainer 
+# Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
@@ -65,7 +63,7 @@ RUN apt-get update && \
   libX11-dev libXpm-dev libXft-dev libXext-dev \
   asciidoc
 
-#---------------------------------JAVA-------------------------------------------------------------------------------------#  
+#---------------------------------JAVA-------------------------------------------------------------------------------------#
 # upgrade java
 RUN apt-get install -y openjdk-7-jdk openjdk-7-doc openjdk-7-jre-lib
 
@@ -84,14 +82,14 @@ RUN groupadd ngsgroup && \
   usermod -aG ngsgroup pipeman && \
   usermod -aG sudo pipeman
 
-#-----------------------------NGS TOOLS DIRECTORY------------------------------------------------------------------------#  
+#-----------------------------NGS TOOLS DIRECTORY------------------------------------------------------------------------#
 #make pipeline install dirs
 RUN mkdir /usr/local/pipeline && \
   chown pipeman:ngsgroup /usr/local/pipeline && \
   chmod 775 /usr/local/pipeline
-  
+
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline 
+RUN chmod -R 777 /usr/local/pipeline
 RUN chown -R pipeman:ngsgroup /usr/local/pipeline
 
 #---------------------------------------------------------------------
@@ -110,6 +108,3 @@ RUN apt-get clean && \
     apt-get autoclean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/
-
-
-
