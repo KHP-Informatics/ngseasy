@@ -21,8 +21,8 @@ RUN apt-get update -y && apt-get upgrade -y
 
 # python and stuff
 RUN apt-get install -y \
-                        isomd5sum \
-                        python-numpy python-scipy python-pysam python-pyisomd5sum
+  isomd5sum \
+  python-numpy python-scipy python-pysam python-pyisomd5sum
 
 # cython
 RUN cd /tmp && \
