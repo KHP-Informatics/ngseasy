@@ -54,13 +54,11 @@ RUN apt-get install -y openjdk-7-jdk openjdk-7-doc openjdk-7-jre-lib
 
 # set JAVA_HOME
 ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
-RUN sed -i 'aPATH=$PATH:/usr/lib/jvm/java-7-openjdk-amd64/jre/bin' /root/.bashrc
 
 # Create a pipeline user:ngseasy and group:ngseasy
 RUN useradd -m -U -s /bin/bash ngseasy && \
   cd /home/ngseasy && \
   echo "#bash config file for user ngseasy" >> /home/ngseasy/.bashrc && \
-  sed -i 'aPATH=$PATH:/usr/lib/jvm/java-7-openjdk-amd64/jre/bin' /home/ngseasy/.bashrc && \
   usermod -aG sudo ngseasy
 
 # make pipeline install dirs
