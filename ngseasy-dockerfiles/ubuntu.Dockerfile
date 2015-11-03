@@ -57,18 +57,15 @@ ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
 RUN sed -i 'aPATH=$PATH:/usr/lib/jvm/java-7-openjdk-amd64/jre/bin' /root/.bashrc
 
 # Create a pipeline user:ngseasy and group:ngseasy
-RUN useradd -m -s /bin/bash ngseasy && \
+RUN useradd -m -U -s /bin/bash ngseasy && \
   cd /home/ngseasy && \
   echo "#bash config file for user ngseasy" >> /home/ngseasy/.bashrc && \
-  sed -i 'aPATH=$PATH:/usr/lib/jvm/java-7-openjdk-amd64/jre/bin' /home/ngseasy/.bashrc
-
-RUN groupadd ngseasy && \
-  usermod -aG ngseasy ngseasy && \
+  sed -i 'aPATH=$PATH:/usr/lib/jvm/java-7-openjdk-amd64/jre/bin' /home/ngseasy/.bashrc && \
   usermod -aG sudo ngseasy
 
 # make pipeline install dirs
 RUN mkdir /usr/local/pipeline && \
-  chown ngseasy:ngseasy /usr/local/pipeline
+    chown ngseasy:ngseasy /usr/local/pipeline
 
 # PERMISSIONS
 RUN chmod -R 777 /usr/local/pipeline
