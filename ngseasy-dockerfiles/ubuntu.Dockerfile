@@ -5,10 +5,9 @@ MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 # Remain current
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get dist-upgrade -y
 # Basic dependencies
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
   apt-utils \
   automake \
-  ant \
   bash \
   binutils \
   perl \
@@ -16,7 +15,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
   build-essential \
   bzip2 \
   c++11 \
-  cdbs \
   cmake \
   cron \
   curl \
@@ -35,11 +33,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
   libpcre3-dev \
   libreadline-dev \
   make \
-  mercurial \
   php5-curl \
   python python-dev python-yaml ncurses-dev zlib1g-dev python-numpy python-pip \
   sudo \
-  subversion \
   tabix \
   tree \
   unzip \
@@ -51,26 +47,24 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
   libconfig-dev \
   ncurses-dev \
   zlib1g-dev \
-  yum \
-  libX11-dev libXpm-dev libXft-dev libXext-dev \
-  asciidoc
+  libX11-dev libXpm-dev libXft-dev libXext-dev
 
-# upgrade java
+# get java 7
 RUN apt-get install -y openjdk-7-jdk openjdk-7-doc openjdk-7-jre-lib
 
-# set java
+# set JAVA_HOME
 ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
 RUN sed -i 'aPATH=$PATH:/usr/lib/jvm/java-7-openjdk-amd64/jre/bin' /root/.bashrc
 
-# Create a pipeline user:pipeman and group:ngsgroup
+# Create a pipeline user:ngseasy and group:ngseasy
+RUN useradd -m -s /bin/bash ngseasy && \
+  cd /home/ngseasy && \
+  echo "#bash config file for user ngseasy" >> /home/ngseasy/.bashrc && \
+  sed -i 'aPATH=$PATH:/usr/lib/jvm/java-7-openjdk-amd64/jre/bin' /home/ngseasy/.bashrc
 
-RUN useradd -m -s /bin/bash pipeman && \
-  cd /home/pipeman && \
-  echo "#bash config file for user pipeman" >> /home/pipeman/.bashrc
-
-RUN groupadd ngsgroup && \
-  usermod -aG ngsgroup pipeman && \
-  usermod -aG sudo pipeman
+RUN groupadd ngseasy && \
+  usermod -aG ngseasy ngseasy && \
+  usermod -aG sudo ngseasy
 
 # make pipeline install dirs
 RUN mkdir /usr/local/pipeline && \
