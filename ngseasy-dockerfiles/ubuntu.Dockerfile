@@ -68,11 +68,11 @@ RUN groupadd ngseasy && \
 
 # make pipeline install dirs
 RUN mkdir /usr/local/pipeline && \
-  chown pipeman:ngsgroup /usr/local/pipeline
+  chown ngseasy:ngseasy /usr/local/pipeline
 
 # PERMISSIONS
 RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+RUN chown -R ngseasy:ngseasy /usr/local/pipeline
 
 # Cleanup the temp dir
 RUN rm -rvf /tmp/*

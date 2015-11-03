@@ -17,7 +17,7 @@ RUN apt-get install libffi-dev libxml2-dev libxslt1-dev python-dev
 RUN cd /usr/local/pipeline/ && \
 	wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh && \
 	bash Miniconda-latest-Linux-x86_64.sh -b && \
-	sed -i '$aPATH=${PATH}:${HOME}/miniconda/bin' /home/pipeman/.bashrc && \
+	sed -i '$aPATH=${PATH}:${HOME}/miniconda/bin' /home/ngseasy/.bashrc && \
 	sed -i '$aPATH=${PATH}:${HOME}/miniconda/bin' ~/.bashrc && \
 	export PATH=${PATH}:${HOME}/miniconda/bin
 
@@ -30,7 +30,7 @@ RUN pip install chanjo && \
 
 #-------------------------------PERMISSIONS-------------------------
 RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+RUN chown -R ngseasy:ngseasy /usr/local/pipeline
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

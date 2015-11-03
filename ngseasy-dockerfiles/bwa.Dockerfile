@@ -21,7 +21,7 @@ RUN wget -O /tmp/bwa-0.7.12.tar.bz2 http://sourceforge.net/projects/bio-bwa/file
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline/bwa-0.7.12
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline/bwa-0.7.12
+RUN chown -R ngseasy:ngseasy /usr/local/pipeline/bwa-0.7.12
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

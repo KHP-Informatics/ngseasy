@@ -15,14 +15,14 @@ RUN apt-get update -y && apt-get upgrade -y
 RUN wget -O /tmp/picard-tools-1.129.zip https://github.com/broadinstitute/picard/releases/download/1.129/picard-tools-1.129.zip \
     && mkdir /usr/local/pipeline/picardtools \
     && unzip /tmp/picard-tools-1.129.zip -d /usr/local/pipeline/picardtools/ \
-    && chown -R pipeman:ngsgroup /usr/local/pipeline/picardtools \
-    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/picardtools/picard-tools-1.129/snappy-java-1.0.3-rc3.jar' /home/pipeman/.bashrc \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/picardtools/picard-tools-1.129' /home/pipeman/.bashrc \
+    && chown -R ngseasy:ngseasy /usr/local/pipeline/picardtools \
+    && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/pipeline/picardtools/picard-tools-1.129/snappy-java-1.0.3-rc3.jar' /home/ngseasy/.bashrc \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/picardtools/picard-tools-1.129' /home/ngseasy/.bashrc \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/picardtools/picard-tools-1.129' ~/.bashrc
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+RUN chown -R ngseasy:ngseasy /usr/local/pipeline
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

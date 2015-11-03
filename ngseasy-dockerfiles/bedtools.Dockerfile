@@ -15,14 +15,14 @@ RUN apt-get update -y && apt-get upgrade -y
 RUN cd /usr/local/pipeline \
     && git clone https://github.com/arq5x/bedtools2.git \
     && cd bedtools2 && make clean && make all \
-    && chown -R pipeman:ngsgroup /usr/local/pipeline/bedtools2 \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/bedtools2/bin' /home/pipeman/.bashrc \
-    && echo "alias ngsBedtools='/usr/local/pipeline/bedtools2/bin'" >> /home/pipeman/.bashrc
+    && chown -R ngseasy:ngseasy /usr/local/pipeline/bedtools2 \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/bedtools2/bin' /home/ngseasy/.bashrc \
+    && echo "alias ngsBedtools='/usr/local/pipeline/bedtools2/bin'" >> /home/ngseasy/.bashrc
 
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+RUN chown -R ngseasy:ngseasy /usr/local/pipeline
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

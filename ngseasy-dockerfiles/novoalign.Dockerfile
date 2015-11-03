@@ -19,7 +19,7 @@ ADD novocraftV3.02.11.Linux3.0.tar.gz /usr/local/pipeline/
 ADD novosortV1.03.01.Linux3.0.tar.gz /tmp/
 
 RUN cp -v /tmp/novocraft/novosort /usr/local/pipeline/novocraft/ \
-      && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/novocraft' /home/pipeman/.bashrc \
+      && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/novocraft' /home/ngseasy/.bashrc \
       && chmod -R 777 /usr/local/pipeline/novocraft \
       && cp -rfv /usr/local/pipeline/novocraft/* /usr/local/bin
 
@@ -30,7 +30,7 @@ RUN cp -v /usr/local/pipeline/novocraft/novoalign.lic /usr/local/bin
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 766 /usr/local/pipeline/***
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+RUN chown -R ngseasy:ngseasy /usr/local/pipeline
 
 # Cleanup the temp dir
 RUN rm -rf /tmp/*

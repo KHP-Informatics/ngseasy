@@ -23,23 +23,23 @@ RUN cd /usr/local/pipeline \
 	&& make \
 	&& cd /usr/local/pipeline/htslib \
 	&& make \
-	&& chown -R pipeman:ngsgroup /usr/local/pipeline/samtools \
-	&& chown -R pipeman:ngsgroup /usr/local/pipeline/bcftools \
-	&& chown -R pipeman:ngsgroup /usr/local/pipeline/htslib \
-	&& sed  -i '$aPATH=${PATH}:/usr/local/pipeline/samtools' /home/pipeman/.bashrc \
+	&& chown -R ngseasy:ngseasy /usr/local/pipeline/samtools \
+	&& chown -R ngseasy:ngseasy /usr/local/pipeline/bcftools \
+	&& chown -R ngseasy:ngseasy /usr/local/pipeline/htslib \
+	&& sed  -i '$aPATH=${PATH}:/usr/local/pipeline/samtools' /home/ngseasy/.bashrc \
 	&& sed  -i '$aPATH=${PATH}:/usr/local/pipeline/samtools' ~/.bashrc \
-	&& echo "alias ngsSAMtools='/usr/local/pipeline/samtools'" >>  /home/pipeman/.bashrc \
-        && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/bcftools' /home/pipeman/.bashrc \
+	&& echo "alias ngsSAMtools='/usr/local/pipeline/samtools'" >>  /home/ngseasy/.bashrc \
+        && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/bcftools' /home/ngseasy/.bashrc \
         && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/bcftools' ~/.bashrc \        
-        && echo "alias ngsBCFtools='/usr/local/pipeline/bcftools'" >>  /home/pipeman/.bashrc \
-        && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/htslib' /home/pipeman/.bashrc \
+        && echo "alias ngsBCFtools='/usr/local/pipeline/bcftools'" >>  /home/ngseasy/.bashrc \
+        && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/htslib' /home/ngseasy/.bashrc \
         && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/htslib' ~/.bashrc \        
-        && echo "alias ngsHTSlib='/usr/local/pipeline/htslib'" >>  /home/pipeman/.bashrc 
+        && echo "alias ngsHTSlib='/usr/local/pipeline/htslib'" >>  /home/ngseasy/.bashrc 
 
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+RUN chown -R ngseasy:ngseasy /usr/local/pipeline
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

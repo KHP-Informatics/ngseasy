@@ -44,12 +44,12 @@ ADD fix_ambiguous /usr/local/bin/
 #  && cd /usr/local/pipeline/Platypus_0.7.9.1 \
 #  && /bin/bash /usr/local/pipeline/Platypus_0.7.9.1/buildPlatypus.sh \
 #  && chmod -R 755 /usr/local/pipeline/Platypus_0.7.9.1 \
-#  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.9.1' /home/pipeman/.bashrc \
+#  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.9.1' /home/ngseasy/.bashrc \
 #  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.9.1' ~/.bashrc
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 766 /usr/local/pipeline/***
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+RUN chown -R ngseasy:ngseasy /usr/local/pipeline
 
 # Cleanup the temp dir
 RUN rm -rf /tmp/*

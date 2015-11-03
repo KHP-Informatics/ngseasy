@@ -28,7 +28,7 @@ RUN cd /usr/local/pipeline && \
   
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline 
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+RUN chown -R ngseasy:ngseasy /usr/local/pipeline
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

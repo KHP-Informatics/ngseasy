@@ -17,7 +17,7 @@ RUN cd /usr/local/pipeline \
   && cd /usr/local/pipeline/freebayes \
   && make \
   && chmod -R 777 /usr/local/pipeline/freebayes \
-  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/freebayes/bin' /home/pipeman/.bashrc \
+  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/freebayes/bin' /home/ngseasy/.bashrc \
   && sed -i '$aPATH=${PATH}:/usr/local/pipeline/freebayes/bin' ~/.bashrc \
   && cp -v /usr/local/pipeline/freebayes/bin/* /usr/local/bin
 
@@ -25,7 +25,7 @@ ADD fix_ambiguous /usr/local/bin/
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+RUN chown -R ngseasy:ngseasy /usr/local/pipeline
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

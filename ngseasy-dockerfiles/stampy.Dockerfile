@@ -20,12 +20,12 @@ RUN wget -O /tmp/stampy-latest.tgz http://www.well.ox.ac.uk/bioinformatics/Softw
     && cd /usr/local/pipeline/stampy-1.0.27 \
     && make \ 
     && chmod -R 777 /usr/local/pipeline/ \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.27' /home/pipeman/.bashrc \
+    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.27' /home/ngseasy/.bashrc \
     && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.27' ~/.bashrc
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 766 /usr/local/pipeline/***
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+RUN chown -R ngseasy:ngseasy /usr/local/pipeline
 
 # Cleanup the temp dir
 RUN rm -rf /tmp/*

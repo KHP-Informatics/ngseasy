@@ -74,25 +74,25 @@ ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
 RUN sed -i 'aPATH=$PATH:/usr/lib/jvm/java-7-openjdk-amd64/jre/bin' /root/.bashrc
 
 #-------------------------------Add user----------------------------------------------------------------------------------#
-# Create a pipeline user:pipeman and group:ngsgroup
+# Create a pipeline user:ngseasy and group:ngseasy
 
-RUN useradd -m -s /bin/bash pipeman && \
-  cd /home/pipeman && \
-  echo "#bash config file for user pipeman" >> /home/pipeman/.bashrc
+RUN useradd -m -s /bin/bash ngseasy && \
+  cd /home/ngseasy && \
+  echo "#bash config file for user ngseasy" >> /home/ngseasy/.bashrc
 
-RUN groupadd ngsgroup && \
-  usermod -aG ngsgroup pipeman && \
-  usermod -aG sudo pipeman
+RUN groupadd ngseasy && \
+  usermod -aG ngseasy ngseasy && \
+  usermod -aG sudo ngseasy
 
 #-----------------------------NGS TOOLS DIRECTORY------------------------------------------------------------------------#  
 #make pipeline install dirs
 RUN mkdir /usr/local/pipeline && \
-  chown pipeman:ngsgroup /usr/local/pipeline && \
+  chown ngseasy:ngseasy /usr/local/pipeline && \
   chmod 775 /usr/local/pipeline
   
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline 
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+RUN chown -R ngseasy:ngseasy /usr/local/pipeline
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

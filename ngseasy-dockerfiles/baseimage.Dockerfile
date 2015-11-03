@@ -74,7 +74,7 @@ RUN cd /usr/local/pipeline && \
 # seqtk and trimadap
 RUN cd /usr/local/pipeline/ && \
     git clone https://github.com/lh3/seqtk.git && \
-    chown -R pipeman:ngsgroup /usr/local/pipeline/seqtk && \
+    chown -R ngseasy:ngseasy /usr/local/pipeline/seqtk && \
     cd seqtk/ && \
     chmod -R 777 ./* && \
     make && \
@@ -143,7 +143,7 @@ RUN cd /usr/local/pipeline && \
   
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/pipeline 
-RUN chown -R pipeman:ngsgroup /usr/local/pipeline
+RUN chown -R ngseasy:ngseasy /usr/local/pipeline
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir
