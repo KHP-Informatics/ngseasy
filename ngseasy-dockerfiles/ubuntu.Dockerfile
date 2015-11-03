@@ -63,11 +63,9 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
 
 # make pipeline install dirs
 RUN mkdir /usr/local/pipeline && \
-    chown ngseasy:ngseasy /usr/local/pipeline
-
-# PERMISSIONS
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+    chown ngseasy:ngseasy /usr/local/pipeline &&
+    chmod -R 777 /usr/local/pipeline && \
+    chown -R ngseasy:ngseasy /usr/local/pipeline
 
 # Cleanup the temp dir
 RUN rm -rvf /tmp/*
