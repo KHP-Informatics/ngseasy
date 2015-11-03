@@ -50,3 +50,5 @@ RUN apt-get clean && \
 
 
 
+USER ngseasy
+WORKDIR /home/ngseasy

@@ -69,3 +69,5 @@ RUN apt-get autoclean && apt-get autoremove -y && rm -rf /var/lib/{apt,dpkg,cach
 
 
 
+USER ngseasy
+WORKDIR /home/ngseasy

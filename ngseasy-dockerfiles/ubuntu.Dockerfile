@@ -61,7 +61,7 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   echo "#bash config file for user ngseasy" >> /home/ngseasy/.bashrc && \
   usermod -aG sudo ngseasy
 
-# make pipeline install dirs
+# make pipeline install dirs and sort permissions out
 RUN mkdir /usr/local/pipeline && \
     chown ngseasy:ngseasy /usr/local/pipeline &&
     chmod -R 777 /usr/local/pipeline && \

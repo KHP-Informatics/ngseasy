@@ -6,3 +6,5 @@ cd ogap && \
 make all && \
 cp -v ogap /usr/local/bin
 
+USER ngseasy
+WORKDIR /home/ngseasy

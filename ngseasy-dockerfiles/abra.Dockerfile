@@ -27,3 +27,5 @@ RUN apt-get clean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
     rm -rf /usr/local/pipeline/*
+USER ngseasy
+WORKDIR /home/ngseasy
