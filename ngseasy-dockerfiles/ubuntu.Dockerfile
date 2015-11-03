@@ -1,19 +1,11 @@
 # base image
-FROM ubuntu:14.04.1
-
+FROM ubuntu:14.04.3
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
-
-# Set correct environment variables.
-ENV HOME /root
-ENV DEBIAN_FRONTEND noninteractive
-
 # Remain current
-RUN apt-get update && apt-get dist-upgrade -y
-
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get dist-upgrade -y
 # Basic dependencies
-RUN apt-get update && \
-  apt-get install -y --no-install-recommends \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
   apt-utils \
   automake \
   ant \
@@ -63,15 +55,13 @@ RUN apt-get update && \
   libX11-dev libXpm-dev libXft-dev libXext-dev \
   asciidoc
 
-#---------------------------------JAVA-------------------------------------------------------------------------------------#
 # upgrade java
 RUN apt-get install -y openjdk-7-jdk openjdk-7-doc openjdk-7-jre-lib
 
-#set java
+# set java
 ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
 RUN sed -i 'aPATH=$PATH:/usr/lib/jvm/java-7-openjdk-amd64/jre/bin' /root/.bashrc
 
-#-------------------------------Add user----------------------------------------------------------------------------------#
 # Create a pipeline user:pipeman and group:ngsgroup
 
 RUN useradd -m -s /bin/bash pipeman && \
@@ -82,27 +72,24 @@ RUN groupadd ngsgroup && \
   usermod -aG ngsgroup pipeman && \
   usermod -aG sudo pipeman
 
-#-----------------------------NGS TOOLS DIRECTORY------------------------------------------------------------------------#
-#make pipeline install dirs
+# make pipeline install dirs
 RUN mkdir /usr/local/pipeline && \
-  chown pipeman:ngsgroup /usr/local/pipeline && \
-  chmod 775 /usr/local/pipeline
+  chown pipeman:ngsgroup /usr/local/pipeline
 
-#-------------------------------PERMISSIONS--------------------------
+# PERMISSIONS
 RUN chmod -R 777 /usr/local/pipeline
 RUN chown -R pipeman:ngsgroup /usr/local/pipeline
 
-#---------------------------------------------------------------------
-#Cleanup the temp dir
+# Cleanup the temp dir
 RUN rm -rvf /tmp/*
 
-#open ports private only
+# open ports private only
 EXPOSE 8080
 
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]
 
-#Clean up APT when done.
+# Clean up APT when done.
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     apt-get autoclean && \
