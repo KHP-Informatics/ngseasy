@@ -47,10 +47,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
   libconfig-dev \
   ncurses-dev \
   zlib1g-dev \
-  libX11-dev libXpm-dev libXft-dev libXext-dev
-
-# get java 7
-RUN apt-get install -y openjdk-7-jdk openjdk-7-doc openjdk-7-jre-lib
+  libX11-dev libXpm-dev libXft-dev libXext-dev \
+  openjdk-7-jdk \
+  openjdk-7-doc \
+  openjdk-7-jre-lib
 
 # set JAVA_HOME
 ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
