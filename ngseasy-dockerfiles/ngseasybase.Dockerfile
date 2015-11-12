@@ -1,10 +1,7 @@
-# NGSeasy Base Image
-
 # base image
-# FROM debian:jessie
-FROM compbio/debian-base:1.0
+FROM compbio/ubuntu-base:1.0
 
-# Maintainer 
+# Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.
@@ -14,11 +11,23 @@ ENV DEBIAN_FRONTEND noninteractive
 # Remain current
 RUN apt-get update &&  apt-get upgrade -y && apt-get dist-upgrade -y && apt-get install -y ldc asciidoc
 
+# Create a pipeline user:ngseasy and group:ngseasy
+RUN useradd -m -U -s /bin/bash ngseasy && \
+  cd /home/ngseasy && \
+  echo "#bash config file for user ngseasy" >> /home/ngseasy/.bashrc && \
+  usermod -aG sudo ngseasy
+
+# make pipeline install dirs and sort permissions out
+RUN mkdir /usr/local/pipeline && \
+    chown ngseasy:ngseasy /usr/local/pipeline &&
+    chmod -R 777 /usr/local/pipeline && \
+    chown -R ngseasy:ngseasy /usr/local/pipeline
+
 #--------------STANDARD NGS TOOLS----------------------------------------------------------------------------------------------#
 # Tools used for processing SAM/BAM/BED/VCF files
 # samtools,htslib,bcftools,parallel,bamUtil,sambamba,samblaster,vcftools,vcflib,seqtk,ogap,bamleftalign,bedtools2,libStatGen
 
-# ngs tools     
+# ngs tools
 
 # samtools, htslib, bcftools
 RUN cd /usr/local/pipeline && \
@@ -35,9 +44,9 @@ RUN cd /usr/local/pipeline && \
     make install && \
     cd /usr/local/pipeline/samtools && \
     make && \
-    make install    
+    make install
 
-# parallel    
+# parallel
 RUN cd /usr/local/pipeline && \
     wget http://ftpmirror.gnu.org/parallel/parallel-20140222.tar.bz2 && \
     bzip2 -dc parallel-20140222.tar.bz2 | tar xvf - && \
@@ -59,14 +68,14 @@ RUN cd /usr/local/pipeline && \
     make install
 
 # samblaster and sambamba
-RUN cd /usr/local/pipeline && \ 
-    git clone git://github.com/GregoryFaust/samblaster.git && \ 
-    cd samblaster && \ 
-    make && \ 
+RUN cd /usr/local/pipeline && \
+    git clone git://github.com/GregoryFaust/samblaster.git && \
+    cd samblaster && \
+    make && \
     cp samblaster /usr/local/bin/ && \
-    cd /usr/local/pipeline && \ 
-    curl -OL https://github.com/lomereiter/sambamba/releases/download/v0.5.1/sambamba_v0.5.1_linux.tar.bz2 && \ 
-    tar -xjvf sambamba_v0.5.1_linux.tar.bz2 && \ 
+    cd /usr/local/pipeline && \
+    curl -OL https://github.com/lomereiter/sambamba/releases/download/v0.5.1/sambamba_v0.5.1_linux.tar.bz2 && \
+    tar -xjvf sambamba_v0.5.1_linux.tar.bz2 && \
     mv sambamba_v0.5.1 sambamba && \
     chmod +rwx sambamba && \
     cp sambamba /usr/local/bin/
@@ -82,7 +91,7 @@ RUN cd /usr/local/pipeline/ && \
     cp -v trimadap /usr/local/bin/ && \
     sed  -i '$aPATH=${PATH}:/usr/local/pipeline/seqtk' /root/.bashrc
 
-# ogap  and bamleftalign  
+# ogap  and bamleftalign
 RUN cd /usr/local/pipeline/ && \
     git clone --recursive https://github.com/ekg/ogap.git && \
     cd ogap && \
@@ -124,7 +133,7 @@ RUN cd /usr/local/pipeline/ && \
     chmod -R 777 vt/ && \
     cd vt && \
     make && \
-    cp -v vt /usr/local/bin 
+    cp -v vt /usr/local/bin
 
 # vawk and bioawk
 RUN cd /usr/local/pipeline && \
@@ -140,9 +149,9 @@ RUN cd /usr/local/pipeline && \
     cp -v bioawk /usr/local/bin && \
     cp -v maketab /usr/local/bin
 
-  
+
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline 
+RUN chmod -R 777 /usr/local/pipeline
 RUN chown -R ngseasy:ngseasy /usr/local/pipeline
 
 #---------------------------------------------------------------------
