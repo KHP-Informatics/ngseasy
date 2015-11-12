@@ -1,15 +1,11 @@
 # base image
 FROM compbio/ubuntu-base:1.0
-
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
-
-# Set correct environment variables.
-ENV HOME /root
+LABEL
 ENV DEBIAN_FRONTEND noninteractive
-
 # Remain current
-RUN apt-get update &&  apt-get upgrade -y && apt-get dist-upgrade -y && apt-get install -y ldc asciidoc
+RUN apt-get update &&  apt-get install -y ldc asciidoc
 
 # Create a pipeline user:ngseasy and group:ngseasy
 RUN useradd -m -U -s /bin/bash ngseasy && \
@@ -172,8 +168,6 @@ RUN apt-get clean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
     rm -rf /usr/local/pipeline/*
-
-
 
 USER ngseasy
 WORKDIR /home/ngseasy
