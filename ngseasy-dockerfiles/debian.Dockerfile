@@ -37,6 +37,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
   openjdk-7-doc \
   openjdk-7-jre-lib && \
 
+# Ensure permissions are set for update in place by arbitrary users
+# https://github.com/chapmanb/bcbio-nextgen/blob/master/Dockerfile#L68
+  find /usr/local -perm /u+x -execdir chmod a+x {} \; && \
+  find /usr/local -perm /u+w -execdir chmod a+w {} \; && \
+
 # clean up
   apt-get clean && \
   rm -rf /var/lib/apt/lists/* && \
