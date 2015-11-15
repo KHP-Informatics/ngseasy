@@ -1,5 +1,5 @@
 # base image
-FROM compbio/debian-base:r1.0-002
+FROM compbio/debian:r1.0-002
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 LABEL Description="This is the base image for all ngseasy tools images; Contains SAM/BAM/VCF/BED Parsers" Version="r1.0-002"
@@ -20,7 +20,7 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
 
 # STANDARD NGS TOOLS
 # Tools used for processing SAM/BAM/BED/VCF files
-# samtools,htslib,bcftools,parallel,bamUtil,sambamba,samblaster,vcftools,vcflib,seqtk,ogap,bamleftalign,bedtools2,libStatGen
+# samtools,htslib,bcftools,parallel,bamUtil,sambamba,samblaster,vcftools,vcflib,seqtk,bedtools2,libStatGen
 
 # samtools, htslib, bcftools
 RUN cd /usr/local/ngs/bin && \
