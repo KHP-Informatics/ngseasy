@@ -3,7 +3,6 @@ FROM compbio/debian:r1.0-002
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 LABEL Description="This is the base image for all ngseasy tools images; Contains SAM/BAM/VCF/BED Parsers" Version="r1.0-002"
-ENV DEBIAN_FRONTEND noninteractive
 # Remain current
 #RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
 #  ldc \
