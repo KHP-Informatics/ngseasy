@@ -7,7 +7,7 @@ LABEL Description="This is the base image for all ngseasy tools images; Contains
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
   apt-get install -y \
-# needed for htslib
+# needed for htslib build
   zlib1g-dev \
   libncurses5-dev
 
