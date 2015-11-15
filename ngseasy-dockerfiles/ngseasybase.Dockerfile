@@ -9,7 +9,7 @@ RUN apt-get update && \
   apt-get install -y \
 # needed for htslib
   zlib1g-dev \
-  libncurses
+   libncurses5-dev
 
 # Create a user:ngseasy and group:ngseasy
 RUN useradd -m -U -s /bin/bash ngseasy && \
