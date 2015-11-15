@@ -7,6 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Remain current
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
   ldc \
+  python \
   asciidoc
 
 # Create a user:ngseasy and group:ngseasy
