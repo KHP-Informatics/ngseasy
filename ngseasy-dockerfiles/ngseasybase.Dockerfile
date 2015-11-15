@@ -145,7 +145,6 @@ RUN cd /usr/local/ngs/bin && \
   cd gvcftools && \
   git checkout v0.16 && \
   make && \
-  mv bin /usr/local/ngs/bin/gvcftools && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin/gvcftools' /home/ngseasy/.bashrc && \
   chmod -R 755 /usr/local/ngs/bin/gvcftools && \
   chown -R ngseasy:ngseasy /usr/local/ngs/bin/pipeline && \
