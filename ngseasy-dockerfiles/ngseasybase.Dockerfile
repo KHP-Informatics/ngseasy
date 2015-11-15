@@ -71,6 +71,8 @@ RUN cd /usr/local/ngs/bin && \
   cd samblaster && \
   make && \
   cp samblaster /usr/local/bin/ && \
+
+# sambamba
   cd /usr/local/ngs/bin && \
   curl -OL https://github.com/lomereiter/sambamba/releases/download/v0.5.1/sambamba_v0.5.1_linux.tar.bz2 && \
   tar -xjvf sambamba_v0.5.1_linux.tar.bz2 && \
