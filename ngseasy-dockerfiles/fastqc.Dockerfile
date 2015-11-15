@@ -6,14 +6,14 @@ MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
     RUN wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.2.zip \
         && unzip /tmp/fastqc_v0.11.2.zip -d /usr/local/ngs/bin/ \
         && chmod -R 766 /usr/local/ngs/bin/ \
-        && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/FastQC/jbzip2-0.9.jar:/usr/local/ngs/bin/FastQC/sam-1.103.jar' /home/pipeman/.bashrc \
-        && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/FastQC' /home/pipeman/.bashrc \
+        && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/FastQC/jbzip2-0.9.jar:/usr/local/ngs/bin/FastQC/sam-1.103.jar' /home/ngseasy/.bashrc \
+        && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/FastQC' /home/ngseasy/.bashrc \
         && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/FastQC' /root/.bashrc \
         && ln -s /usr/local/ngs/bin/FastQC/fastqc /usr/local/bin/fastqc
 
 #-------------------------------PERMISSIONS--------------------------
 RUN chmod -R 777 /usr/local/ngs/bin
-RUN chown -R pipeman:ngsgroup /usr/local/ngs/bin
+RUN chown -R ngseasy:ngsgroup /usr/local/ngs/bin
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir
