@@ -4,10 +4,8 @@ FROM compbio/debian:r1.0-002
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 LABEL Description="This is the base image for all ngseasy tools images; Contains SAM/BAM/VCF/BED Parsers" Version="r1.0-002"
 # Remain current
-#RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
-#  ldc \
-#  python \
-#  asciidoc
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  zlib
 
 # Create a user:ngseasy and group:ngseasy
 RUN useradd -m -U -s /bin/bash ngseasy && \
