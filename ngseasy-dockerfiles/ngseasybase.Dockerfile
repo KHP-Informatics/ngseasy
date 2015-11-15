@@ -139,6 +139,19 @@ RUN cd /usr/local/ngs/bin && \
   cp -v bioawk /usr/local/bin && \
   cp -v maketab /usr/local/bin && \
 
+# gVCFtools
+  cd /usr/local/ngs/bin && \
+  git clone --recursive https://github.com/sequencing/gvcftools.git && \
+  cd gvcftools && \
+  git checkout v0.16 && \
+  make && \
+  mv bin /usr/local/ngs/bin/gvcftools && \
+  sed -i '$aPATH=$PATH:/usr/local/ngs/bin/gvcftools' /home/ngseasy/.bashrc && \
+  chmod -R 755 /usr/local/ngs/bin/gvcftools && \
+  chown -R ngseasy:ngseasy /usr/local/ngs/bin/pipeline && \
+  ln -s //usr/local/ngs/bin/gvcftools/* /usr/local/bin/ && \
+  rm -rvf /tmp/* && \
+
 # Clean up APT when done.
   apt-get clean && \
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
