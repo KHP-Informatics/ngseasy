@@ -8,7 +8,8 @@ RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
   apt-get install -y \
 # needed for htslib
-  zlib1g-dev
+  zlib1g-dev \
+  libncurses
 
 # Create a user:ngseasy and group:ngseasy
 RUN useradd -m -U -s /bin/bash ngseasy && \
