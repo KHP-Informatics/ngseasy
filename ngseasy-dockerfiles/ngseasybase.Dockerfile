@@ -7,6 +7,7 @@ LABEL Description="This is the base image for all ngseasy tools images; Contains
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
   apt-get install -y \
+# needed for htslib
   zlib1g-dev
 
 # Create a user:ngseasy and group:ngseasy
