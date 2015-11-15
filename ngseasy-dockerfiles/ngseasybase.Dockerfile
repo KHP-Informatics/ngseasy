@@ -16,7 +16,7 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
 
 # make /usr/local/ngs/bin install dirs and sort permissions out
   mkdir /usr/local/ngs/bin && \
-  chown ngseasy:ngseasy /usr/local/ngs/bin  &&
+  chown ngseasy:ngseasy /usr/local/ngs/bin  && \
   chmod -R 777 /usr/local/ngs/bin  && \
   chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
