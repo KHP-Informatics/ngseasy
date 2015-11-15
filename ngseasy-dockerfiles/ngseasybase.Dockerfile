@@ -9,7 +9,7 @@ RUN apt-get update && \
   apt-get install -y \
 # needed for htslib build
   zlib1g-dev \
-  libncurses5-dev
+  libncurses5-dev \
 
 # Create a user:ngseasy and group:ngseasy
 RUN useradd -m -U -s /bin/bash ngseasy && \
@@ -140,7 +140,6 @@ RUN cd /usr/local/ngs/bin && \
 # Clean up APT when done.
   apt-get clean && \
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-  apt-get remove -y asciidoc && \
   apt-get autoclean && \
   apt-get autoremove -y && \
   rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
