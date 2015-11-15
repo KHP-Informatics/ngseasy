@@ -12,20 +12,20 @@ MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 RUN apt-get update -y && apt-get upgrade -y
 
 #---------------------- FREEBAYES  -------------------------------- 
-RUN cd /usr/local/pipeline \
+RUN cd /usr/local/ngs/bin \
   && git clone --recursive git://github.com/ekg/freebayes.git \
-  && cd /usr/local/pipeline/freebayes \
+  && cd /usr/local/ngs/bin/freebayes \
   && make \
-  && chmod -R 777 /usr/local/pipeline/freebayes \
-  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/freebayes/bin' /home/ngseasy/.bashrc \
-  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/freebayes/bin' ~/.bashrc \
-  && cp -v /usr/local/pipeline/freebayes/bin/* /usr/local/bin
+  && chmod -R 777 /usr/local/ngs/bin/freebayes \
+  && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/freebayes/bin' /home/ngseasy/.bashrc \
+  && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/freebayes/bin' ~/.bashrc \
+  && cp -v /usr/local/ngs/bin/freebayes/bin/* /usr/local/bin
 
 ADD fix_ambiguous /usr/local/bin/
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

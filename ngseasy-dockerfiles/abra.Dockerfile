@@ -2,14 +2,14 @@ FROM compbio/ngseasy-base:1.0
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 ## ABRA - Assembly Based ReAligner https://github.com/mozack/abra
-RUN cd /usr/local/pipeline && \
+RUN cd /usr/local/ngs/bin && \
     wget https://github.com/mozack/abra/releases/download/v0.94/abra-0.94-SNAPSHOT-jar-with-dependencies.jar && \
     chmod 775 abra-0.94-SNAPSHOT-jar-with-dependencies.jar && \
     mv -v abra-0.94-SNAPSHOT-jar-with-dependencies.jar /usr/local/bin/abra-0.94
 
 ## PERMISSIONS
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 ## Cleanup the temp dir
 RUN rm -rvf /tmp/*
@@ -26,6 +26,6 @@ RUN apt-get clean && \
     apt-get autoclean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
-    rm -rf /usr/local/pipeline/*
+    rm -rf /usr/local/ngs/bin/*
 USER ngseasy
 WORKDIR /home/ngseasy

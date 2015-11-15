@@ -12,8 +12,8 @@ RUN cd /usr/local/ngs/bin/ && \
     git submodule update --recursive && \
     cd /usr/local/ngs/bin/VarDictJava && \
     ./gradlew clean installApp && \
-    chmod -R 755 /usr/local/pipeline/VarDictJava && \
-    chown -R ngseasy:ngseasy /usr/local/pipeline && \
+    chmod -R 755 /usr/local/ngs/bin/VarDictJava && \
+    chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
     sed  -i '$aPATH=$PATH:/usr/local/ngs/bin//VarDictJava/VarDict' /home/ngseasy/.bashrc
 #./gradlew clean javadoc && \
 

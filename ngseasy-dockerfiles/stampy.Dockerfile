@@ -14,18 +14,18 @@ RUN apt-get update && apt-get upgrade -y
 # + stampy (registration required, get compressed file and put in context dir for the build)
 
 RUN wget -O /tmp/stampy-latest.tgz http://www.well.ox.ac.uk/bioinformatics/Software/Stampy-latest.tgz \
-    && tar xvf /tmp/stampy-latest.tgz -C /usr/local/pipeline/ \
-    && sed -i 's/-Wl//' /usr/local/pipeline/stampy-1.0.27/makefile \
-    && chmod -R 777 /usr/local/pipeline/stampy-1.0.27 \
-    && cd /usr/local/pipeline/stampy-1.0.27 \
+    && tar xvf /tmp/stampy-latest.tgz -C /usr/local/ngs/bin/ \
+    && sed -i 's/-Wl//' /usr/local/ngs/bin/stampy-1.0.27/makefile \
+    && chmod -R 777 /usr/local/ngs/bin/stampy-1.0.27 \
+    && cd /usr/local/ngs/bin/stampy-1.0.27 \
     && make \ 
-    && chmod -R 777 /usr/local/pipeline/ \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.27' /home/ngseasy/.bashrc \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/stampy-1.0.27' ~/.bashrc
+    && chmod -R 777 /usr/local/ngs/bin/ \
+    && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/stampy-1.0.27' /home/ngseasy/.bashrc \
+    && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/stampy-1.0.27' ~/.bashrc
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 766 /usr/local/pipeline/***
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 766 /usr/local/ngs/bin/***
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 # Cleanup the temp dir
 RUN rm -rf /tmp/*

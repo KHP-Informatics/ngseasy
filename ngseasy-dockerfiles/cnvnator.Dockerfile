@@ -57,8 +57,8 @@ RUN mkdir -p /root/genomes/GRCh37/chroms && \
     cat human_g1k_v37.fasta | awk 'BEGIN { CHROM="" } { if ($1~"^>") CHROM=substr($1,2); print $0 > CHROM".fa" }'
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

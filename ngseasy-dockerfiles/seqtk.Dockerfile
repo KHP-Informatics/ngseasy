@@ -11,18 +11,18 @@ ENV HOME /root
 RUN apt-get update -y
 
 # + seqtk
-    RUN cd /usr/local/pipeline/ \
+    RUN cd /usr/local/ngs/bin/ \
     && git clone https://github.com/lh3/seqtk.git \
-    && chown -R ngseasy:ngseasy /usr/local/pipeline/seqtk \
+    && chown -R ngseasy:ngseasy /usr/local/ngs/bin/seqtk \
     && cd seqtk/ \
     && make \
-    && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/seqtk' /home/ngseasy/.bashrc \
-    && echo "alias ngsSeqtk='/usr/local/pipeline/seqtk'" >>  /home/ngseasy/.bashrc \
+    && sed  -i '$aPATH=${PATH}:/usr/local/ngs/bin/seqtk' /home/ngseasy/.bashrc \
+    && echo "alias ngsSeqtk='/usr/local/ngs/bin/seqtk'" >>  /home/ngseasy/.bashrc \
 
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 766 /usr/local/pipeline/***
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 766 /usr/local/ngs/bin/***
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 # Cleanup the temp dir
 RUN rm -rf /tmp/*

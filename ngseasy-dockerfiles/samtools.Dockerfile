@@ -13,33 +13,33 @@ RUN apt-get update -y && apt-get upgrade -y && \
 	apt-get install -y debhelper dpkg-dev g++-multilib  libgpm-dev pkg-config ncurses-base libncursesw5 libncurses5-dev
  
 # + samtools, htslib and bcftools
-RUN cd /usr/local/pipeline \
+RUN cd /usr/local/ngs/bin \
 	&& git clone --branch=develop git://github.com/samtools/htslib.git \
 	&& git clone --branch=develop git://github.com/samtools/bcftools.git \
 	&& git clone --branch=develop git://github.com/samtools/samtools.git \
-	&& cd /usr/local/pipeline/bcftools \
+	&& cd /usr/local/ngs/bin/bcftools \
 	&& make \
-	&& cd /usr/local/pipeline/samtools \
+	&& cd /usr/local/ngs/bin/samtools \
 	&& make \
-	&& cd /usr/local/pipeline/htslib \
+	&& cd /usr/local/ngs/bin/htslib \
 	&& make \
-	&& chown -R ngseasy:ngseasy /usr/local/pipeline/samtools \
-	&& chown -R ngseasy:ngseasy /usr/local/pipeline/bcftools \
-	&& chown -R ngseasy:ngseasy /usr/local/pipeline/htslib \
-	&& sed  -i '$aPATH=${PATH}:/usr/local/pipeline/samtools' /home/ngseasy/.bashrc \
-	&& sed  -i '$aPATH=${PATH}:/usr/local/pipeline/samtools' ~/.bashrc \
-	&& echo "alias ngsSAMtools='/usr/local/pipeline/samtools'" >>  /home/ngseasy/.bashrc \
-        && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/bcftools' /home/ngseasy/.bashrc \
-        && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/bcftools' ~/.bashrc \        
-        && echo "alias ngsBCFtools='/usr/local/pipeline/bcftools'" >>  /home/ngseasy/.bashrc \
-        && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/htslib' /home/ngseasy/.bashrc \
-        && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/htslib' ~/.bashrc \        
-        && echo "alias ngsHTSlib='/usr/local/pipeline/htslib'" >>  /home/ngseasy/.bashrc 
+	&& chown -R ngseasy:ngseasy /usr/local/ngs/bin/samtools \
+	&& chown -R ngseasy:ngseasy /usr/local/ngs/bin/bcftools \
+	&& chown -R ngseasy:ngseasy /usr/local/ngs/bin/htslib \
+	&& sed  -i '$aPATH=${PATH}:/usr/local/ngs/bin/samtools' /home/ngseasy/.bashrc \
+	&& sed  -i '$aPATH=${PATH}:/usr/local/ngs/bin/samtools' ~/.bashrc \
+	&& echo "alias ngsSAMtools='/usr/local/ngs/bin/samtools'" >>  /home/ngseasy/.bashrc \
+        && sed  -i '$aPATH=${PATH}:/usr/local/ngs/bin/bcftools' /home/ngseasy/.bashrc \
+        && sed  -i '$aPATH=${PATH}:/usr/local/ngs/bin/bcftools' ~/.bashrc \        
+        && echo "alias ngsBCFtools='/usr/local/ngs/bin/bcftools'" >>  /home/ngseasy/.bashrc \
+        && sed  -i '$aPATH=${PATH}:/usr/local/ngs/bin/htslib' /home/ngseasy/.bashrc \
+        && sed  -i '$aPATH=${PATH}:/usr/local/ngs/bin/htslib' ~/.bashrc \        
+        && echo "alias ngsHTSlib='/usr/local/ngs/bin/htslib'" >>  /home/ngseasy/.bashrc 
 
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

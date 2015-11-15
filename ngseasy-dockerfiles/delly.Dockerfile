@@ -17,19 +17,19 @@ RUN apt-get install -y build-essential g++ git cmake zlib1g-dev libboost-date-ti
 ENV BOOST_ROOT /usr
 
 # install delly
-RUN cd /usr/local/pipeline && \
+RUN cd /usr/local/ngs/bin && \
     wget https://github.com/tobiasrausch/delly/releases/download/v0.6.3/delly_v0.6.3_CentOS5.4_x86_64bit && \
     wget https://github.com/tobiasrausch/delly/releases/download/v0.6.3/delly_v0.6.3_parallel_linux_x86_64bit && \
     mv -v delly_v0.6.3_CentOS5.4_x86_64bit delly && \
     mv -v delly_v0.6.3_parallel_linux_x86_64bit delly-parallel && \
-    chmod -R 777 /usr/local/pipeline && \
+    chmod -R 777 /usr/local/ngs/bin && \
     cp -v delly /usr/local/bin && \
     cp -v delly-parallel /usr/local/bin
 
 ADD fix_ambiguous /usr/local/bin/
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

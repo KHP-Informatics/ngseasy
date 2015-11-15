@@ -13,13 +13,13 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update &&  apt-get upgrade -y && apt-get dist-upgrade -y
 
 # glia
-RUN cd /usr/local/pipeline && \
+RUN cd /usr/local/ngs/bin && \
     git clone --recursive https://github.com/ekg/glia.git && \
     chmod -R 777 ./glia && \
     cd ./glia && \
     make && \
     cp -v ./glia /usr/local/bin/ && \
-    cd /usr/local/pipeline && \
+    cd /usr/local/ngs/bin && \
     git clone --branch v0.9.20 --recursive git://github.com/ekg/freebayes.git  && \
     chmod -R 777 freebayes && \
     cd freebayes && \
@@ -27,8 +27,8 @@ RUN cd /usr/local/pipeline && \
     cp -v ./bin/* /usr/local/bin/
   
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline 
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin 
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir
@@ -46,7 +46,7 @@ RUN apt-get clean && \
     apt-get autoclean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
-    rm -rf /usr/local/pipeline/*
+    rm -rf /usr/local/ngs/bin/*
 
 
 

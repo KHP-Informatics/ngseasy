@@ -12,17 +12,17 @@ MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 RUN apt-get update -y && apt-get upgrade -y
 
 # + snap
-RUN cd /usr/local/pipeline && \
+RUN cd /usr/local/ngs/bin && \
 	git clone https://github.com/amplab/snap.git && \
 	chmod -R 777 snap && \
 	cd snap && \
 	make && \
-	chmod -R 777 /usr/local/pipeline && \
+	chmod -R 777 /usr/local/ngs/bin && \
 	cp -v snap* /usr/local/bin
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

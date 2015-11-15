@@ -13,15 +13,15 @@ RUN apt-get update -y && apt-get upgrade -y
 
 # + bwa
 RUN wget -O /tmp/bwa-0.7.12.tar.bz2 http://sourceforge.net/projects/bio-bwa/files/bwa-0.7.12.tar.bz2 \
-    && tar xjvf /tmp/bwa-0.7.12.tar.bz2 -C /usr/local/pipeline/ \
-    && chmod -R 777 /usr/local/pipeline \
-    && cd /usr/local/pipeline/bwa-0.7.12 && make \
-    && cp -v /usr/local/pipeline/bwa-0.7.12/bwa /usr/local/bin
+    && tar xjvf /tmp/bwa-0.7.12.tar.bz2 -C /usr/local/ngs/bin/ \
+    && chmod -R 777 /usr/local/ngs/bin \
+    && cd /usr/local/ngs/bin/bwa-0.7.12 && make \
+    && cp -v /usr/local/ngs/bin/bwa-0.7.12/bwa /usr/local/bin
 
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline/bwa-0.7.12
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline/bwa-0.7.12
+RUN chmod -R 777 /usr/local/ngs/bin/bwa-0.7.12
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin/bwa-0.7.12
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

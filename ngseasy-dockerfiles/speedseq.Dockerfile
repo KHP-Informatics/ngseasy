@@ -58,24 +58,24 @@ RUN  echo "source /usr/local/root/bin/thisroot.sh" >>  /root/.bashrc  && \
 ################################################################################
 ENV ROOTSYS /usr/local/root
 
-RUN cd /usr/local/pipeline && \
+RUN cd /usr/local/ngs/bin && \
     git clone --recursive https://github.com/cc2qe/speedseq && \
-    chmod -R 777 /usr/local/pipeline/speedseq && \
-    cd /usr/local/pipeline/speedseq && \
+    chmod -R 777 /usr/local/ngs/bin/speedseq && \
+    cd /usr/local/ngs/bin/speedseq && \
     make -j `ncpu` ROOTFLAGS=" -pthread -m64" && \
-    chmod -R 777 /usr/local/pipeline/speedseq
+    chmod -R 777 /usr/local/ngs/bin/speedseq
 
-RUN echo "export PATH=/usr/local/pipeline/speedseq/bin:\$PATH" >> ~/.bashrc && \
+RUN echo "export PATH=/usr/local/ngs/bin/speedseq/bin:\$PATH" >> ~/.bashrc && \
     /bin/bash -c "source ~/.bashrc"
 
-ADD speedseq_b37.config  /usr/local/pipeline/speedseq/bin/
-ADD speedseq_hg19.config /usr/local/pipeline/speedseq/bin/
+ADD speedseq_b37.config  /usr/local/ngs/bin/speedseq/bin/
+ADD speedseq_hg19.config /usr/local/ngs/bin/speedseq/bin/
 
 ################################################################################
 # PERMISSIONS
 ################################################################################
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 ################################################################################
 #Cleanup the temp dir

@@ -29,7 +29,7 @@ RUN cd /tmp && \
 	make && \
 	make install
 
-RUN cd /usr/local/pipeline && \
+RUN cd /usr/local/ngs/bin && \
        git clone --recursive https://github.com/andyrimmer/Platypus.git && \
        chmod -R 777 Platypus && \
        cd Platypus && \
@@ -40,16 +40,16 @@ RUN cd /usr/local/pipeline && \
 ADD fix_ambiguous /usr/local/bin/
 
 #RUN wget -O /tmp/Platypus-latest.tgz http://www.well.ox.ac.uk/bioinformatics/Software/Platypus-latest.tgz \
-#  && tar xvf /tmp/Platypus-latest.tgz -C /usr/local/pipeline/ \
-#  && cd /usr/local/pipeline/Platypus_0.7.9.1 \
-#  && /bin/bash /usr/local/pipeline/Platypus_0.7.9.1/buildPlatypus.sh \
-#  && chmod -R 755 /usr/local/pipeline/Platypus_0.7.9.1 \
-#  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.9.1' /home/ngseasy/.bashrc \
-#  && sed -i '$aPATH=${PATH}:/usr/local/pipeline/Platypus_0.7.9.1' ~/.bashrc
+#  && tar xvf /tmp/Platypus-latest.tgz -C /usr/local/ngs/bin/ \
+#  && cd /usr/local/ngs/bin/Platypus_0.7.9.1 \
+#  && /bin/bash /usr/local/ngs/bin/Platypus_0.7.9.1/buildPlatypus.sh \
+#  && chmod -R 755 /usr/local/ngs/bin/Platypus_0.7.9.1 \
+#  && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/Platypus_0.7.9.1' /home/ngseasy/.bashrc \
+#  && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/Platypus_0.7.9.1' ~/.bashrc
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 766 /usr/local/pipeline/***
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 766 /usr/local/ngs/bin/***
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 # Cleanup the temp dir
 RUN rm -rf /tmp/*

@@ -16,17 +16,17 @@ RUN apt-get update -y && apt-get upgrade -y
 
 RUN apt-get install -y python-numpy
 
-RUN cd /usr/local/pipeline \
+RUN cd /usr/local/ngs/bin \
     && git clone git://github.com/arq5x/lumpy-sv.git \
-    && cd /usr/local/pipeline/lumpy-sv \
+    && cd /usr/local/ngs/bin/lumpy-sv \
     && make \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/lumpy-sv/bin' /home/ngseasy/.bashrc \
-    && sed -i '$aPATH=${PATH}:/usr/local/pipeline/lumpy-sv/bin' ~/.bashrc
+    && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/lumpy-sv/bin' /home/ngseasy/.bashrc \
+    && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/lumpy-sv/bin' ~/.bashrc
 
 ADD fix_ambiguous /usr/local/bin/
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

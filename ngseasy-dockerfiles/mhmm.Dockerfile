@@ -49,14 +49,14 @@ RUN apt-get update -y && apt-get upgrade -y
 #---------------------------------m-HMM -------------------------------------#
   
 RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite()' && \
-	cd /usr/local/pipeline/ && \
+	cd /usr/local/ngs/bin/ && \
 	curl -k -L -O https://www.stt.msu.edu/users/hengwang/mHMM%20Data/mHMM_1.0.tar.gz && \
 	R CMD INSTALL mHMM_1.0.tar.gz && \
 	rm mHMM_1.0.tar.gz;
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

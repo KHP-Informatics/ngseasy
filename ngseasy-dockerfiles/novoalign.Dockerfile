@@ -15,22 +15,22 @@ RUN apt-get update -y && apt-get upgrade -y
 # + get novoalign.lic from novoalign ~ $1000 and put in context dir for the build
 # + get updated version of novosort novosortV1.03.01.Linux3.0.tar.gz and put in context dir for the build
 
-ADD novocraftV3.02.11.Linux3.0.tar.gz /usr/local/pipeline/
+ADD novocraftV3.02.11.Linux3.0.tar.gz /usr/local/ngs/bin/
 ADD novosortV1.03.01.Linux3.0.tar.gz /tmp/
 
-RUN cp -v /tmp/novocraft/novosort /usr/local/pipeline/novocraft/ \
-      && sed  -i '$aPATH=${PATH}:/usr/local/pipeline/novocraft' /home/ngseasy/.bashrc \
-      && chmod -R 777 /usr/local/pipeline/novocraft \
-      && cp -rfv /usr/local/pipeline/novocraft/* /usr/local/bin
+RUN cp -v /tmp/novocraft/novosort /usr/local/ngs/bin/novocraft/ \
+      && sed  -i '$aPATH=${PATH}:/usr/local/ngs/bin/novocraft' /home/ngseasy/.bashrc \
+      && chmod -R 777 /usr/local/ngs/bin/novocraft \
+      && cp -rfv /usr/local/ngs/bin/novocraft/* /usr/local/bin
 
 # + get novoalign.lic 
-COPY novoalign.lic /usr/local/pipeline/novocraft/
+COPY novoalign.lic /usr/local/ngs/bin/novocraft/
 
-RUN cp -v /usr/local/pipeline/novocraft/novoalign.lic /usr/local/bin 
+RUN cp -v /usr/local/ngs/bin/novocraft/novoalign.lic /usr/local/bin 
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 766 /usr/local/pipeline/***
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 766 /usr/local/ngs/bin/***
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 # Cleanup the temp dir
 RUN rm -rf /tmp/*

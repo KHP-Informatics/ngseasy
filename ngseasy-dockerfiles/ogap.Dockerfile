@@ -1,6 +1,6 @@
 
 
-RUN cd /usr/local/pipeline && \
+RUN cd /usr/local/ngs/bin && \
 git clone --recursive https://github.com/ekg/ogap.git && \
 cd ogap && \
 make all && \

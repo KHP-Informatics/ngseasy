@@ -14,7 +14,7 @@ RUN apt-get install libffi-dev libxml2-dev libxslt1-dev python-dev
 
 ## CHANJO #####################################################
 
-RUN cd /usr/local/pipeline/ && \
+RUN cd /usr/local/ngs/bin/ && \
 	wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh && \
 	bash Miniconda-latest-Linux-x86_64.sh -b && \
 	sed -i '$aPATH=${PATH}:${HOME}/miniconda/bin' /home/ngseasy/.bashrc && \
@@ -29,8 +29,8 @@ RUN pip install chanjo && \
 	pip install chanjo-report
 
 #-------------------------------PERMISSIONS-------------------------
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

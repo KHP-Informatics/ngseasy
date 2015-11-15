@@ -12,21 +12,21 @@ MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 RUN apt-get update -y && apt-get upgrade -y
 
 #-------------------------NGS-TOOL---------------------------------------
-ADD GenomeAnalysisTK-3.3-0.tar.bz2 /usr/local/pipeline/GenomeAnalysisTK-3.3-0/
+ADD GenomeAnalysisTK-3.3-0.tar.bz2 /usr/local/ngs/bin/GenomeAnalysisTK-3.3-0/
 
-RUN cd /usr/local/pipeline/GenomeAnalysisTK-3.3-0 && \
-	sed -i '$aCLASSPATH=:${CLASSPATH}:/usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar' /home/ngseasy/.bashrc && \
-	sed -i '$aCLASSPATH=:${CLASSPATH}:/usr/local/pipeline/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar' /root/.bashrc && \
-	sed -i '$aPATH=${PATH}:/usr/local/pipeline/GenomeAnalysisTK-3.3-0' /home/ngseasy/.bashrc && \
-	sed -i '$aPATH=${PATH}:/usr/local/pipeline/GenomeAnalysisTK-3.3-0' /root/.bashrc && \
-	chmod 777 /usr/local/pipeline/GenomeAnalysisTK-3.3-0/* && \	
-	cp -rfv /usr/local/pipeline/GenomeAnalysisTK-3.3-0/* /usr/local/bin/
+RUN cd /usr/local/ngs/bin/GenomeAnalysisTK-3.3-0 && \
+	sed -i '$aCLASSPATH=:${CLASSPATH}:/usr/local/ngs/bin/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar' /home/ngseasy/.bashrc && \
+	sed -i '$aCLASSPATH=:${CLASSPATH}:/usr/local/ngs/bin/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar' /root/.bashrc && \
+	sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/GenomeAnalysisTK-3.3-0' /home/ngseasy/.bashrc && \
+	sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/GenomeAnalysisTK-3.3-0' /root/.bashrc && \
+	chmod 777 /usr/local/ngs/bin/GenomeAnalysisTK-3.3-0/* && \	
+	cp -rfv /usr/local/ngs/bin/GenomeAnalysisTK-3.3-0/* /usr/local/bin/
 
 ADD fix_ambiguous /usr/local/bin/ 
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

@@ -11,41 +11,41 @@ RUN apt-get install libffi-dev libxml2-dev libxslt1-dev python-dev
 ## PINDEL #####################################################
 ## http://gmt.genome.wustl.edu/packages/pindel/quick-start.html
 # samtools, htslib, bcftools
-RUN cd /usr/local/pipeline && \
+RUN cd /usr/local/ngs/bin && \
     git clone --branch=develop git://github.com/samtools/htslib.git && \
     git clone --branch=develop git://github.com/samtools/bcftools.git && \
     git clone --branch=develop git://github.com/samtools/samtools.git && \
-    cd /usr/local/pipeline/htslib && \
+    cd /usr/local/ngs/bin/htslib && \
     autoconf && \
     ./configure  && \
     make && \
     make install && \
-    cd /usr/local/pipeline/bcftools && \
+    cd /usr/local/ngs/bin/bcftools && \
     make && \
     make install 
     ##&& \
-    ##cd /usr/local/pipeline/samtools && \
+    ##cd /usr/local/ngs/bin/samtools && \
     ##make && \
     ##make install
 
-ADD samtools-0.1.19.tar.bz2 /usr/local/pipeline/
+ADD samtools-0.1.19.tar.bz2 /usr/local/ngs/bin/
 
-RUN cd /usr/local/pipeline/ && \
+RUN cd /usr/local/ngs/bin/ && \
 	cd samtools-0.1.19 && \
 	chmod -R 777 ./* && \
 	make
 
-RUN cd /usr/local/pipeline/ && \
+RUN cd /usr/local/ngs/bin/ && \
 	git clone git://github.com/genome/pindel.git && \
 	chmod -R 777 ./pindel && \
 	cd pindel && \
-	/bin/sh ./INSTALL /usr/local/pipeline/samtools-0.1.19 && \
-    chmod -R 777 /usr/local/pipeline/pindel && \
+	/bin/sh ./INSTALL /usr/local/ngs/bin/samtools-0.1.19 && \
+    chmod -R 777 /usr/local/ngs/bin/pindel && \
     cp -puv Adaptor.pm bam2pindel.pl pindel pindel2vcf sam2pindel /usr/local/bin/
 
 #-------------------------------PERMISSIONS-------------------------
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir

@@ -54,11 +54,11 @@ RUN apt-get update \
 #------------------------------------------------------------------------
 # USER SETUP
 #------------------------------------------------------------------------
-# Create a pipeline user:ngseasy and group:ngseasy
+# Create a ngs/bin user:ngseasy and group:ngseasy
 RUN useradd -m -s /bin/bash ngseasy && cd /home/ngseasy && echo "#bash config file for user ngseasy" >> /home/ngseasy/.bashrc
 RUN groupadd ngseasy
 RUN usermod -G ngseasy ngseasy
-RUN mkdir /usr/local/pipeline && chown ngseasy:ngseasy /usr/local/pipeline && chmod 775 /usr/local/pipeline
+RUN mkdir /usr/local/ngs/bin && chown ngseasy:ngseasy /usr/local/ngs/bin && chmod 775 /usr/local/ngs/bin
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

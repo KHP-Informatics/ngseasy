@@ -14,19 +14,19 @@ RUN apt-get update -y && apt-get upgrade -y && apt-get install -y g++ libssl-dev
 #--------------------------------libStatGen/BamUtil-----------------------------
 # Install libStatGen and BamUtil
 
-RUN cd /usr/local/pipeline && \
+RUN cd /usr/local/ngs/bin && \
   git clone https://github.com/statgen/libStatGen.git && \
   cd libStatGen && \
   make all && \
-  cd /usr/local/pipeline && \
+  cd /usr/local/ngs/bin && \
   git clone https://github.com/statgen/bamUtil.git && \
   cd bamUtil && \
   make cloneLib && \
   make all
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/pipeline
-RUN chown -R ngseasy:ngseasy /usr/local/pipeline
+RUN chmod -R 777 /usr/local/ngs/bin
+RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------
 #Cleanup the temp dir
