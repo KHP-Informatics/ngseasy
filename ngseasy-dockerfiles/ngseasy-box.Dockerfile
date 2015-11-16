@@ -152,9 +152,8 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   rm -rvf /tmp/* && \
 
 # fastc
-cd /usr/local/ngs/bin && \
-  wget -O /tmp/fastqc_v0.11.2.zip \
-  http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.2.zip \
+  cd /usr/local/ngs/bin \
+  && wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.2.zip \
   && unzip /tmp/fastqc_v0.11.2.zip -d /usr/local/ngs/bin/ \
   && chmod -R 766 /usr/local/ngs/bin/ \
   && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/FastQC/jbzip2-0.9.jar:/usr/local/ngs/bin/FastQC/sam-1.103.jar' /home/ngseasy/.bashrc \
@@ -162,17 +161,16 @@ cd /usr/local/ngs/bin && \
   && ln -s /usr/local/ngs/bin/FastQC/fastqc /usr/local/bin/fastqc && \
 
 # Trimmomatic
-  cd /usr/local/ngs/bin && \
-  wget -O /tmp/Trimmomatic-0.32.zip \
-  http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.32.zip \
+  cd /usr/local/ngs/bin \
+  && wget -O /tmp/Trimmomatic-0.32.zip http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.32.zip \
   && unzip /tmp/Trimmomatic-0.32.zip -d /usr/local/ngs/bin/ \
   && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/Trimmomatic-0.32/trimmomatic-0.32.jar' /home/ngseasy/.bashrc \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/Trimmomatic-0.32' /home/ngseasy/.bashrc \
   && cp -v /usr/local/ngs/bin/Trimmomatic-0.32/trimmomatic-0.32.jar /usr/local/bin && \
 
 # Picard
-  cd /usr/local/ngs/bin && \
-  wget -O /tmp/picard-tools-1.129.zip https://github.com/broadinstitute/picard/releases/download/1.129/picard-tools-1.129.zip \
+  cd /usr/local/ngs/bin \
+  && wget -O /tmp/picard-tools-1.129.zip https://github.com/broadinstitute/picard/releases/download/1.129/picard-tools-1.129.zip \
   && mkdir /usr/local/ngs/bin/picardtools \
   && unzip /tmp/picard-tools-1.129.zip -d /usr/local/ngs/bin/picardtools/ \
   && chown -R ngseasy:ngseasy /usr/local/ngs/bin/picardtools \
@@ -181,24 +179,24 @@ cd /usr/local/ngs/bin && \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/picardtools/picard-tools-1.129' ~/.bashrc && \
 
 # bwa
-cd /usr/local/ngs/bin && \
-wget -O /tmp/bwa-0.7.12.tar.bz2 http://sourceforge.net/projects/bio-bwa/files/bwa-0.7.12.tar.bz2 \
+  cd /usr/local/ngs/bin \
+  && wget -O /tmp/bwa-0.7.12.tar.bz2 http://sourceforge.net/projects/bio-bwa/files/bwa-0.7.12.tar.bz2 \
   && tar xjvf /tmp/bwa-0.7.12.tar.bz2 -C /usr/local/ngs/bin/ \
   && chmod -R 777 /usr/local/ngs/bin \
   && cd /usr/local/ngs/bin/bwa-0.7.12 && make \
   && cp -v /usr/local/ngs/bin/bwa-0.7.12/bwa /usr/local/bin && \
 
 # snap
-cd /usr/local/ngs/bin && \
-  	git clone https://github.com/amplab/snap.git && \
-  	chmod -R 777 snap && \
-  	cd snap && \
-  	make && \
-  	chmod -R 777 /usr/local/ngs/bin && \
-  	cp -v snap* /usr/local/bin && \
+  cd /usr/local/ngs/bin && \
+  git clone https://github.com/amplab/snap.git && \
+  chmod -R 777 snap && \
+  cd snap && \
+  make && \
+  chmod -R 777 /usr/local/ngs/bin && \
+  cp -v snap* /usr/local/bin && \
 
 # freebayes
-cd /usr/local/ngs/bin && \
+  cd /usr/local/ngs/bin \
   && git clone --recursive git://github.com/ekg/freebayes.git \
   && cd /usr/local/ngs/bin/freebayes \
   && make \
@@ -206,19 +204,19 @@ cd /usr/local/ngs/bin && \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/freebayes/bin' /home/ngseasy/.bashrc \
   && cp -v /usr/local/ngs/bin/freebayes/bin/* /usr/local/bin && \
 
-# Update
+# get python
   apt-get install -y python-dev && \
 
-# cython
-cd /tmp && \
-  	wget https://github.com/cython/cython/archive/0.22.1.tar.gz && \
-  	chmod 777 0.22.1.tar.gz && \
-  	tar xvf 0.22.1.tar.gz && \
-  	cd cython-0.22.1 && \
-  	python setup.py install && \
+# cython - platypus
+  cd /tmp && \
+  wget https://github.com/cython/cython/archive/0.22.1.tar.gz && \
+  chmod 777 0.22.1.tar.gz && \
+  tar xvf 0.22.1.tar.gz && \
+  cd cython-0.22.1 && \
+  python setup.py install && \
 
 # Platypus
-cd /usr/local/ngs/bin && \
+  cd /usr/local/ngs/bin && \
   git clone --recursive https://github.com/andyrimmer/Platypus.git && \
   chmod -R 777 Platypus && \
   cd Platypus && \
@@ -227,7 +225,7 @@ cd /usr/local/ngs/bin && \
   cp -vrf ./bin/* /usr/local/bin && \
 
 # VarDict
-cd /usr/local/ngs/bin/ && \
+  cd /usr/local/ngs/bin/ && \
   git clone --recursive https://github.com/AstraZeneca-NGS/VarDictJava.git && \
   cd VarDictJava && \
   git checkout v1.4.0 && \
