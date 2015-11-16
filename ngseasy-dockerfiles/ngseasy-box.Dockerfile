@@ -225,14 +225,21 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   cp -vrf ./bin/* /usr/local/bin && \
 
 # VarDict
+  apt-get install -y \
+  libatlas3-base \
+  libopenblas-base \
+  r-base \
+  r-base-dev \
+  littler && \
+  apt-get autoremove -y && \
+  apt-get autoclean && \
+  apt-get clean && \
+  apt-get purge && \
   cd /usr/local/ngs/bin/ && \
   git clone --recursive https://github.com/AstraZeneca-NGS/VarDictJava.git && \
-  cd VarDictJava && \
-  git checkout v1.4.0 && \
-  git submodule update --recursive && \
   cd /usr/local/ngs/bin/VarDictJava && \
   ./gradlew clean installApp && \
-  chmod -R 755 /usr/local/ngs/bin/VarDictJava && \
+  chmod -R 777 /usr/local/ngs/bin/VarDictJava && \
   chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
   sed  -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/VarDict' /home/ngseasy/.bashrc && \
 
@@ -252,5 +259,7 @@ RUN chmod -R 777 /usr/local/ngs/bin && chown -R ngseasy:ngseasy /usr/local/ngs/b
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]
 
+# run as user ngseasy
+HOME /home/ngseasy
 USER ngseasy
 WORKDIR /home/ngseasy
