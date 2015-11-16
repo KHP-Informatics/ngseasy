@@ -166,7 +166,7 @@ wget -O /tmp/Trimmomatic-0.32.zip http://www.usadellab.org/cms/uploads/supplemen
   && unzip /tmp/Trimmomatic-0.32.zip -d /usr/local/ngs/bin/ \
   && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/Trimmomatic-0.32/trimmomatic-0.32.jar' /home/ngseasy/.bashrc \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/Trimmomatic-0.32' /home/ngseasy/.bashrc \
-  && cp -v /usr/local/ngs/bin/Trimmomatic-0.32/trimmomatic-0.32.jar /usr/local/bin
+  && cp -v /usr/local/ngs/bin/Trimmomatic-0.32/trimmomatic-0.32.jar /usr/local/bin && \
 
 # Picard
 cd /usr/local/ngs/bin && \
