@@ -1,19 +1,24 @@
 FROM debian:jessie
+
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
+
 LABEL Description="This is the base image for compbio. Based on debian:jessie. This is Fat Image" NickName="little-fatty-deb" URL="https://hub.docker.com/r/library/debian/" Version="1.0"
 
-# Remain current and upgrade apt-get and add additional repos
+ENV DEBIAN_FRONTEND noninteractive
+
+# set R version
+# https://github.com/rocker-org/rocker/blob/master/r-base/Dockerfile#L38
+ENV R_BASE_VERSION 3.2.2
+
+# Remain current, upgrade apt-get, add build tools, R, JAVA and python
 RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' /etc/apt/sources.list && \
   apt-key adv --keyserver keys.gnupg.net --recv-key 381BA480 && \
-  DEBIAN_FRONTEND=noninteractive \
   apt-get update && apt-get dist-upgrade -y && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
   apt-get purge && \
-  apt-get update && \
-  apt-get upgrade -y && \
-  apt-get install -y \
+  apt-get install -y --no-install-recommends \
   ant \
   asciidoc \
   automake \
@@ -21,6 +26,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   binutils \
   build-essential \
   bzip2 \
+  ca-certificates \
   cmake \
   curl \
   dkms \
@@ -36,6 +42,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   gradle \
   graphviz \
   htop \
+  less \
   libatlas-dev \
   libblas-dev \
   libbz2-dev \
@@ -73,32 +80,51 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   vim \
   wget \
   zlib1g \
+  apt-get autoremove -y && \
+  apt-get autoclean && \
+  apt-get clean && \
+  apt-get purge && \
 # java
+  apt-get install -y --no-install-recommends \
   openjdk-7-jdk \
   openjdk-7-doc \
   openjdk-7-jre-lib \
-# R
+  apt-get autoremove -y && \
+  apt-get autoclean && \
+  apt-get clean && \
+  apt-get purge && \
+# Install R
+# https://github.com/rocker-org/rocker/blob/master/r-base/Dockerfile#L45
+  apt-get install -y --no-install-recommends \
   libatlas3-base \
   libopenblas-base \
-  r-base \
-  r-base-dev \
+  r-base=${R_BASE_VERSION}* \
+  r-base-dev=${R_BASE_VERSION}* \
+  r-recommended=${R_BASE_VERSION}* \
   littler && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
   apt-get purge && \
-# python modules
+# python modules scipy stack
+  apt-get install -y --no-install-recommends \
+  python-numpy \
+  python-scipy \
+  python-matplotlib \
+  python-pandas \
+  python-sympy \
+  python-nose && \
+  apt-get autoremove -y && \
+  apt-get autoclean && \
+  apt-get clean && \
+  apt-get purge && \
+# pip installs
   pip install \
   Cython \
-  pytabix \
-  python-dateutil \
-  numpy \
-  matplotlib \
-  regex \
-  deepdiff \
-  intervaltree \
-  pygr \
-  XlsxWriter && \
+  apt-get autoremove -y && \
+  apt-get autoclean && \
+  apt-get clean && \
+  apt-get purge && \
 
 # Ensure permissions are set for update in place by arbitrary users
 # From: https://github.com/chapmanb/bcbio-nextgen/blob/master/Dockerfile#L68
