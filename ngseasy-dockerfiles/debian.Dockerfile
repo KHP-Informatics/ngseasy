@@ -13,7 +13,8 @@ ENV R_BASE_VERSION 3.2.2
 # Remain current, upgrade apt-get, add build tools, R, JAVA and python
 RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' /etc/apt/sources.list && \
   apt-key adv --keyserver keys.gnupg.net --recv-key 381BA480 && \
-  apt-get update && apt-get dist-upgrade -y && \
+  apt-get update && \
+  apt-get dist-upgrade -y && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
@@ -79,7 +80,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   unzip \
   vim \
   wget \
-  zlib1g \
+  zlib1g && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
@@ -88,7 +89,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   apt-get install -y --no-install-recommends \
   openjdk-7-jdk \
   openjdk-7-doc \
-  openjdk-7-jre-lib \
+  openjdk-7-jre-lib && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
@@ -120,7 +121,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   apt-get purge && \
 # pip installs
   pip install \
-  Cython \
+  Cython && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
