@@ -254,6 +254,7 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   wget -O lein https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein && \
   chmod 777 lein && \
   cp -v lein /usr/local/bin && \
+  lein && \
 
 # chapmanb/bcbio.variation
   cd  /usr/local/ngs/bin/ && \
