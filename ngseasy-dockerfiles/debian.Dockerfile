@@ -1,6 +1,7 @@
 FROM debian:jessie
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
-LABEL Description="This is the base image for compbio. Based on debian:jessie. Fat Image" NickName="little-fatty-deb" URL="https://hub.docker.com/r/library/debian/" Version="1.0"
+LABEL Description="This is the base image for compbio. Based on debian:jessie. This is Fat Image" NickName="little-fatty-deb" URL="https://hub.docker.com/r/library/debian/" Version="1.0"
+
 # Remain current and upgrade apt-get and add additional repos
 RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' /etc/apt/sources.list && \
   apt-key adv --keyserver keys.gnupg.net --recv-key 381BA480 && \

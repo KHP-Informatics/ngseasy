@@ -1,8 +1,10 @@
 # base image
 FROM compbio/debian:r1.0-002
+
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 LABEL Description="This is the NGS-Tool Box (Big-Kahuna) for NGSeasy" Version="r1.0-002"
+
 # Remain current
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
@@ -44,14 +46,14 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   make && \
   make install && \
 
-# parallel
-  cd /usr/local/ngs/bin && \
-  wget http://ftpmirror.gnu.org/parallel/parallel-20140222.tar.bz2 && \
-  bzip2 -dc parallel-20140222.tar.bz2 | tar xvf - && \
-  cd parallel-20140222 && \
-  ./configure && \
-  make && \
-  make install && \
+# parallel (this is now in little-fatty-deb)
+#  cd /usr/local/ngs/bin && \
+#  wget http://ftpmirror.gnu.org/parallel/parallel-20140222.tar.bz2 && \
+#  bzip2 -dc parallel-20140222.tar.bz2 | tar xvf - && \
+#  cd parallel-20140222 && \
+#  ./configure && \
+#  make && \
+#  make install && \
 
 # libStatGen and bamUtil
   cd /usr/local/ngs/bin && \
@@ -65,7 +67,7 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   make all && \
   make install && \
 
-# samblaster and sambamba
+# samblaster
   cd /usr/local/ngs/bin && \
   git clone git://github.com/GregoryFaust/samblaster.git && \
   cd samblaster && \
@@ -143,13 +145,9 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   cd /usr/local/ngs/bin && \
   git clone --recursive https://github.com/sequencing/gvcftools.git && \
   cd gvcftools && \
-  git checkout v0.16 && \
   make && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin/gvcftools' /home/ngseasy/.bashrc && \
-  chmod -R 755 /usr/local/ngs/bin/gvcftools && \
-  chown -R ngseasy:ngseasy /usr/local/ngs/bin/ && \
   ln -s //usr/local/ngs/bin/gvcftools/* /usr/local/bin/ && \
-  rm -rvf /tmp/* && \
 
 # fastc
   cd /usr/local/ngs/bin \
@@ -204,16 +202,15 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/freebayes/bin' /home/ngseasy/.bashrc \
   && cp -v /usr/local/ngs/bin/freebayes/bin/* /usr/local/bin && \
 
-# get python
-  apt-get install -y python-dev && \
-
-# cython - platypus
-  cd /tmp && \
-  wget https://github.com/cython/cython/archive/0.22.1.tar.gz && \
-  chmod 777 0.22.1.tar.gz && \
-  tar xvf 0.22.1.tar.gz && \
-  cd cython-0.22.1 && \
-  python setup.py install && \
+# get python (now in little-fatty-deb)
+#  apt-get install -y python-dev && \
+# cython for platypus
+#  cd /tmp && \
+#  wget https://github.com/cython/cython/archive/0.22.1.tar.gz && \
+#  chmod 777 0.22.1.tar.gz && \
+#  tar xvf 0.22.1.tar.gz && \
+#  cd cython-0.22.1 && \
+#  python setup.py install && \
 
 # Platypus
   cd /usr/local/ngs/bin && \
@@ -225,22 +222,11 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   cp -vrf ./bin/* /usr/local/bin && \
 
 # VarDict
-  apt-get install -y \
-  libatlas3-base \
-  libopenblas-base \
-  r-base \
-  r-base-dev \
-  littler && \
-  apt-get autoremove -y && \
-  apt-get autoclean && \
-  apt-get clean && \
-  apt-get purge && \
   cd /usr/local/ngs/bin/ && \
   git clone --recursive https://github.com/AstraZeneca-NGS/VarDictJava.git && \
   cd /usr/local/ngs/bin/VarDictJava && \
   ./gradlew clean installApp && \
   chmod -R 777 /usr/local/ngs/bin/VarDictJava && \
-  chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
   sed  -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/VarDict' /home/ngseasy/.bashrc && \
 
 # Clean up APT when done.
