@@ -1,7 +1,7 @@
 # Base image
 FROM compbio/ngseasy-base:1.0-r001
 
-# Maintainer 
+# Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # Set correct environment variables.

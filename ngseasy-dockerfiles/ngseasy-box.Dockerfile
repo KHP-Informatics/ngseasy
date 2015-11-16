@@ -3,12 +3,13 @@ FROM compbio/debian:r1.0-002
 
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
-LABEL Description="This is the NGS-Tool Box (Big-Kahuna) for NGSeasy" Version="r1.0-002"
+
+LABEL Description="This is the NGSeasy Big-Kahuna Tool Box" NickName="Big-Kahuna" Version="0.5"
 
 # Remain current
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
-  apt-get install -y \
+  apt-get install -y --no-install-recommends \
 # needed for htslib build
   zlib1g-dev \
   libncurses5-dev
@@ -25,10 +26,7 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   chmod -R 777 /usr/local/ngs/bin  && \
   chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
 
-# STANDARD NGS TOOLS
-# Tools used for processing SAM/BAM/BED/VCF files
-# samtools,htslib,bcftools,parallel,bamUtil,sambamba,samblaster,vcftools,vcflib,seqtk,bedtools2,libStatGen
-
+# NGSeasy Tools
 # samtools, htslib, bcftools
   cd /usr/local/ngs/bin && \
   git clone --branch=develop git://github.com/samtools/htslib.git && \
@@ -147,7 +145,7 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   cd gvcftools && \
   make && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin/gvcftools' /home/ngseasy/.bashrc && \
-  ln -s //usr/local/ngs/bin/gvcftools/* /usr/local/bin/ && \
+  ln -s /usr/local/ngs/bin/gvcftools/* /usr/local/bin/ && \
 
 # fastc
   cd /usr/local/ngs/bin \
@@ -228,6 +226,35 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   ./gradlew clean installApp && \
   chmod -R 777 /usr/local/ngs/bin/VarDictJava && \
   sed  -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/VarDict' /home/ngseasy/.bashrc && \
+
+# ABRA - Assembly Based ReAligner https://github.com/mozack/abra
+  cd /usr/local/ngs/bin && \
+  wget https://github.com/mozack/abra/releases/download/v0.94/abra-0.94-SNAPSHOT-jar-with-dependencies.jar && \
+  chmod 775 abra-0.94-SNAPSHOT-jar-with-dependencies.jar && \
+  mv -v abra-0.94-SNAPSHOT-jar-with-dependencies.jar /usr/local/bin/abra-0.94 && \
+
+# glia
+  cd /usr/local/ngs/bin && \
+  git clone --recursive https://github.com/ekg/glia.git && \
+  chmod -R 777 ./glia && \
+  cd ./glia && \
+  make && \
+  cp -v ./glia /usr/local/bin/ && \
+
+# ogap
+  cd /usr/local/ngs/bin/ && \
+  git clone --recursive https://github.com/ekg/ogap.git && \
+  cd ogap && \
+  make all && \
+  chmod -R 777 ./* && \
+  cp -v ogap /usr/local/bin/ && \
+
+# chapmanb/bcbio.variation
+  cd  /usr/local/ngs/bin/ && \
+  wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.2.6/bcbio.variation-0.2.6-standalone.jar && \
+  chmod -R 777 bcbio.variation-0.2.6-standalone.jar && \
+  ln -s bcbio.variation-0.2.6-standalone.jar /usr/local/bin/bcbio.variation.jar && \
+  wget 
 
 # Clean up APT when done.
   apt-get clean && \
