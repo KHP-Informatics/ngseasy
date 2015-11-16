@@ -249,12 +249,46 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   chmod -R 777 ./* && \
   cp -v ogap /usr/local/bin/ && \
 
+# lein for chapmanb/bcbio.variation
+  cd  /usr/local/ngs/bin/ && \
+  wget -O lein https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein && \
+  chmod 777 lein && \
+  cp -v lein /usr/local/bin && \
+
 # chapmanb/bcbio.variation
   cd  /usr/local/ngs/bin/ && \
   wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.2.6/bcbio.variation-0.2.6-standalone.jar && \
   chmod -R 777 bcbio.variation-0.2.6-standalone.jar && \
   ln -s bcbio.variation-0.2.6-standalone.jar /usr/local/bin/bcbio.variation.jar && \
-  wget 
+
+# CNVkit
+# https://github.com/chapmanb/cnvkit and https://github.com/etal/cnvkit
+  cd  /usr/local/ngs/bin/ && \
+  pip install pandas biopython pysam pyvcf --upgrade && \
+  Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite()' && \
+  Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("PSCBS", "cghFLasso")' && \
+  pip install cnvkit==0.7.3 && \
+
+# lumpy-sv
+  cd  /usr/local/ngs/bin/ && \
+  git clone --recursive https://github.com/arq5x/lumpy-sv.git && \
+  cd lumpy-sv && \
+  make && \
+  chmod -R 777 ./bin/ && \
+  cp -v bin/* /usr/local/bin/ && \
+
+# bamkit
+  cd  /usr/local/ngs/bin/ && \
+  git clone --recursive https://github.com/hall-lab/bamkit.git && \
+  chmod -R 777 ./bamkit/ && \
+  cp -v ./bamkit/bam* /usr/local/bin/ && \
+  cp -v ./bamkit/sectosupp /usr/local/bin/ && \
+
+# svtyper
+  cd  /usr/local/ngs/bin/ && \
+  git clone --recursive  https://github.com/hall-lab/svtyper.git && \
+  chmod -R 777 ./svtyper && \
+  cp -v ./svtyper/svtyper /usr/loca/bin/ && \
 
 # Clean up APT when done.
   apt-get clean && \

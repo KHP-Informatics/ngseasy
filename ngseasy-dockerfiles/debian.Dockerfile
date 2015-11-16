@@ -109,11 +109,14 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   apt-get purge && \
 # python modules scipy stack
   apt-get install -y --no-install-recommends \
+  python-biopython \
   python-numpy \
   python-scipy \
   python-matplotlib \
+  spython-reportlab \
   python-pandas \
   python-sympy \
+  python-tk \
   python-nose && \
   apt-get autoremove -y && \
   apt-get autoclean && \
