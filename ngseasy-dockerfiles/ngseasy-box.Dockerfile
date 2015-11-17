@@ -1,25 +1,32 @@
 # base image
-FROM compbio/debian:r1.0-002
+FROM compbio/debian:v1.0-r002
 
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 LABEL Description="This is the NGSeasy Big-Kahuna Tool Box" NickName="Big-Kahuna" Version="0.5"
 
-# Remain current
+# Remain current and get random dependencies
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive \
   apt-get install -y --no-install-recommends \
-# needed for htslib build
+  man \
+  bison \
+  flex \
+  byacc \
   zlib1g-dev \
-  libncurses5-dev
+  libncurses5-dev && \
+  apt-get autoremove -y && \
+  apt-get autoclean && \
+  apt-get clean && \
+  apt-get purge && \
 
 # Create a user:ngseasy and group:ngseasy
-RUN useradd -m -U -s /bin/bash ngseasy && \
+  useradd -m -U -s /bin/bash ngseasy && \
   cd /home/ngseasy && \
   usermod -aG sudo ngseasy && \
 
-# make /usr/local/ngs/bin install dirs and sort permissions out
+# make dirs: /usr/local/ngs/bin and sort permissions out
   mkdir /usr/local/ngs && \
   mkdir /usr/local/ngs/bin && \
   chown ngseasy:ngseasy /usr/local/ngs/bin  && \
@@ -43,6 +50,7 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   cd /usr/local/ngs/bin/samtools && \
   make && \
   make install && \
+  rm -r bcftools htslib samtools && \
 
 # parallel (this is now in little-fatty-deb)
 #  cd /usr/local/ngs/bin && \
@@ -58,12 +66,15 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   git clone https://github.com/statgen/libStatGen.git && \
   cd libStatGen && \
   make all && \
+  make install && \
   cd /usr/local/ngs/bin && \
   git clone https://github.com/statgen/bamUtil.git && \
   cd bamUtil && \
   make cloneLib && \
   make all && \
   make install && \
+  rm -r /usr/local/ngs/bin/libStatGen && \
+  rm -r /usr/local/ngs/bin/bamUtil && \
 
 # samblaster
   cd /usr/local/ngs/bin && \
@@ -71,6 +82,8 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   cd samblaster && \
   make && \
   cp samblaster /usr/local/bin/ && \
+  cd /usr/local/bin/ && \
+  rm -r /usr/local/ngs/bin/samblaster && \
 
 # sambamba
   cd /usr/local/ngs/bin && \
@@ -78,7 +91,10 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   tar -xjvf sambamba_v0.5.1_linux.tar.bz2 && \
   mv sambamba_v0.5.1 sambamba && \
   chmod +rwx sambamba && \
-  cp sambamba /usr/local/bin/ && \
+  cp -v sambamba /usr/local/bin/ && \
+  cd /usr/local/ngs/bin && \
+  rm sambamba_v0.5.1_linux.tar.bz2 && \
+  rm /usr/local/ngs/bin/sambamba && \
 
 # seqtk and trimadap
   cd /usr/local/ngs/bin/ && \
@@ -87,17 +103,23 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   cd seqtk/ && \
   chmod -R 777 ./* && \
   make && \
+  chmod 777 seqtk && \
+  chmod 777 trimadap && \
   cp -v seqtk /usr/local/bin/ && \
   cp -v trimadap /usr/local/bin/ && \
-
-# vcftools
   cd /usr/local/ngs/bin/ && \
-  wget -O /tmp/vcftools_0.1.12b.tar.gz http://sourceforge.net/projects/vcftools/files/vcftools_0.1.12b.tar.gz && \
-  tar xzvf /tmp/vcftools_0.1.12b.tar.gz -C /usr/local/ngs/bin/  && \
-  export PERL5LIB=/usr/local/ngs/bin/vcftools_0.1.12b/perl/  && \
-  cd /usr/local/ngs/bin/vcftools_0.1.12b/ && \
+  rm -r /usr/local/ngs/bin/seqtk && \
+
+# vcftools https://github.com/vcftools/vcftools
+  cd /usr/local/ngs/bin/ && \
+  git clone https://github.com/vcftools/vcftools.git && \
+  cd vcftools && \
+  ./autogen.sh && \
+  ./configure && \
   make && \
-  cp -vrf /usr/local/ngs/bin/vcftools_0.1.12b/bin/*  /usr/local/bin/ && \
+  make install && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r ./vcftools && \
 
 # vcflib
   cd /usr/local/ngs/bin/ && \
@@ -105,15 +127,20 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   git clone --recursive git://github.com/ekg/vcflib.git && \
   cd vcflib && \
   make && \
-  cp ./bin/* /usr/local/bin/ && \
+  chmod -R 777 ./bin/ && \
+  cp -v ./bin/* /usr/local/bin/ && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r ./vcflib && \
 
 # bedtools
   cd /usr/local/ngs/bin && \
   git clone https://github.com/arq5x/bedtools2.git && \
   cd bedtools2 && \
-  make clean && \
   make all && \
+  chmod -R 777 ./* && \
   make install && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r ./bedtools2 && \
 
 # vt
   cd /usr/local/ngs/bin && \
@@ -121,14 +148,18 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   chmod -R 777 vt/ && \
   cd vt && \
   make && \
+  chmod -R 777 vt && \
   cp -v vt /usr/local/bin && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r ./vt && \
 
 # vawk
   cd /usr/local/ngs/bin && \
   git clone https://github.com/cc2qe/vawk.git && \
   chmod -R 777 vawk/ && \
   cp -v vawk/vawk /usr/local/bin && \
-  apt-get install -y bison flex byacc && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r ./vawk && \
 
 # bioawk
   cd /usr/local/ngs/bin && \
@@ -200,16 +231,6 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/freebayes/bin' /home/ngseasy/.bashrc \
   && cp -v /usr/local/ngs/bin/freebayes/bin/* /usr/local/bin && \
 
-# get python (now in little-fatty-deb)
-#  apt-get install -y python-dev && \
-# cython for platypus
-#  cd /tmp && \
-#  wget https://github.com/cython/cython/archive/0.22.1.tar.gz && \
-#  chmod 777 0.22.1.tar.gz && \
-#  tar xvf 0.22.1.tar.gz && \
-#  cd cython-0.22.1 && \
-#  python setup.py install && \
-
 # Platypus
   cd /usr/local/ngs/bin && \
   git clone --recursive https://github.com/andyrimmer/Platypus.git && \
@@ -218,6 +239,18 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   make && \
   chmod -R 777 ./* && \
   cp -vrf ./bin/* /usr/local/bin && \
+
+# scalpel
+  SCALPEL_VERSION="0.5.2" && \
+  cd /usr/local/ngs/bin && \
+  http://sourceforge.net/projects/scalpel/files/scalpel-${SCALPEL_VERSION}.tar.gz && \
+  tar -xvf scalpel-${SCALPEL_VERSION}.tar.gz && \
+  cd scalpel-${SCALPEL_VERSION} && \
+  make && \
+  chmod -R 777 ./* && \
+  sed -i '$aPATH=$PATH:/usr/local/ngs/bin/scalpel-0.5.2/' /home/ngseasy/.bashrc && \
+
+#  export PATH=$PATH:/usr/local/ngs/bin/scalpel-0.5.2 && \
 
 # VarDict
   cd /usr/local/ngs/bin/ && \
@@ -258,17 +291,19 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
 
 # chapmanb/bcbio.variation
   cd  /usr/local/ngs/bin/ && \
-  wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.2.6/bcbio.variation-0.2.6-standalone.jar && \
-  chmod -R 777 bcbio.variation-0.2.6-standalone.jar && \
-  ln -s bcbio.variation-0.2.6-standalone.jar /usr/local/bin/bcbio.variation.jar && \
+  BCBIO_VAR_VERSION="0.2.6" && \
+  wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.2.6/bcbio.variation-${BCBIO_VAR_VERSION}-standalone.jar && \
+  chmod -R 777 bcbio.variation-${BCBIO_VAR_VERSION}--standalone.jar && \
+  ln -s bcbio.variation-${BCBIO_VAR_VERSION}--standalone.jar /usr/local/bin/bcbio.variation.jar && \
 
 # CNVkit
 # https://github.com/chapmanb/cnvkit and https://github.com/etal/cnvkit
   cd  /usr/local/ngs/bin/ && \
+  CNVKIT_VERSION="0.7.3" && \
   pip install pandas biopython pysam pyvcf --upgrade && \
   Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite()' && \
   Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("PSCBS", "cghFLasso")' && \
-  pip install cnvkit==0.7.3 && \
+  pip install cnvkit==${CNVKIT_VERSION} && \
 
 # lumpy-sv
   cd  /usr/local/ngs/bin/ && \
@@ -289,7 +324,10 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   cd  /usr/local/ngs/bin/ && \
   git clone --recursive  https://github.com/hall-lab/svtyper.git && \
   chmod -R 777 ./svtyper && \
-  cp -v ./svtyper/svtyper /usr/loca/bin/ && \
+  cp -v ./svtyper/svtyper /usr/local/bin/ && \
+
+# source .bashrc
+  bash -c "source /home/ngseasy/.bashrc" && \
 
 # Clean up APT when done.
   apt-get clean && \
