@@ -108,7 +108,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   apt-get clean && \
   apt-get purge && \
 # python modules scipy stack
-  apt-get install -y --no-install-recommends \
+  apt-get install -y \
   python-biopython \
   python-numpy \
   python-scipy \
@@ -122,9 +122,14 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   apt-get autoclean && \
   apt-get clean && \
   apt-get purge && \
-# pip installs
-  pip install \
-  Cython && \
+# install cython
+  CYTHON_VERSION="0.23" && \
+  cd /tmp && \
+  wget http://cython.org/release/Cython-${CYTHON_VERSION}.tar.gz && \
+  tar xvf Cython-${CYTHON_VERSION}.tar.gz && \
+  chmod -R 777 Cython-${CYTHON_VERSION} && \
+  cd Cython-${CYTHON_VERSION} && \
+  python setup.py install && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
