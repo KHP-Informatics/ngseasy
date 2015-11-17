@@ -32,6 +32,8 @@ RUN apt-get update && \
   chown ngseasy:ngseasy /usr/local/ngs/bin  && \
   chmod -R 777 /usr/local/ngs/bin  && \
   chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
+  sed -i '$aPATH=$PATH:/usr/local/ngs/bin' /home/ngseasy/.bashrc && \
+  bash -c "source /home/ngseasy/.bashrc" && \
 
 # NGSeasy Tools
 # samtools, htslib, bcftools
@@ -249,8 +251,14 @@ RUN apt-get update && \
   make && \
   chmod -R 777 ./* && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin/scalpel-0.5.2/' /home/ngseasy/.bashrc && \
+  rm scalpel-${SCALPEL_VERSION}.tar.gz && \
 
-#  export PATH=$PATH:/usr/local/ngs/bin/scalpel-0.5.2 && \
+# varscan
+  VARSCAN_VERSION="v2.3.9" && \
+  cd /usr/local/ngs/bin && \
+  wget http://sourceforge.net/projects/varscan/files/VarScan.${VARSCAN_VERSION}.jar && \
+  chmod -R 777 VarScan.${VARSCAN_VERSION}.jar && \
+  ln -s VarScan.${VARSCAN_VERSION}.jar VarScan.jar && \
 
 # VarDict
   cd /usr/local/ngs/bin/ && \
