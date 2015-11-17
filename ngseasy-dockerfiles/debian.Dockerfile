@@ -113,7 +113,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   python-numpy \
   python-scipy \
   python-matplotlib \
-  spython-reportlab \
+  python-reportlab \
   python-pandas \
   python-sympy \
   python-tk \
