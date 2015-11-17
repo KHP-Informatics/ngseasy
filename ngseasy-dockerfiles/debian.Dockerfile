@@ -20,6 +20,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   apt-get clean && \
   apt-get purge && \
   apt-get install -y --no-install-recommends \
+  apt-utils \
   ant \
   asciidoc \
   automake \
@@ -108,7 +109,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   apt-get clean && \
   apt-get purge && \
 # python modules scipy stack
-  apt-get install -y \
+  apt-get install -y  --no-install-recommends \
   python-biopython \
   python-numpy \
   python-scipy \
