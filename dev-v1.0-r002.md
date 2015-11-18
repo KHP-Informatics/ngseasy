@@ -13,7 +13,92 @@
 Linux sjn-devbox-ubuntu 3.19.0-31-generic #36-Ubuntu SMP Wed Oct 7 15:04:02 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
-## Ubuntu version
+### lscpu
+
+```
+ubuntu@sjn-devbox-ubuntu:~/sjn_bin$ lscpu
+Architecture:          x86_64
+CPU op-mode(s):        32-bit, 64-bit
+Byte Order:            Little Endian
+CPU(s):                32
+On-line CPU(s) list:   0-31
+Thread(s) per core:    1
+Core(s) per socket:    1
+Socket(s):             32
+NUMA node(s):          1
+Vendor ID:             GenuineIntel
+CPU family:            6
+Model:                 42
+Model name:            Intel Xeon E312xx (Sandy Bridge)
+Stepping:              1
+CPU MHz:               2699.998
+BogoMIPS:              5399.99
+Hypervisor vendor:     KVM
+Virtualization type:   full
+L1d cache:             32K
+L1i cache:             32K
+L2 cache:              4096K
+NUMA node0 CPU(s):     0-31
+```
+
+### Hardware
+
+```
+ubuntu@sjn-devbox-ubuntu:~/sjn_bin$ sudo lshw -short
+H/W path        Device  Class      Description
+==============================================
+                        system     Computer
+/0                      bus        Motherboard
+/0/0                    memory     230GiB System memory
+/0/1                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/2                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/3                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/4                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/5                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/6                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/7                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/8                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/9                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/a                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/b                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/c                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/d                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/e                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/f                    processor  Intel Xeon E312xx (Sandy Bridge)
+/0/10                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/11                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/12                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/13                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/14                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/15                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/16                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/17                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/18                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/19                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/1a                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/1b                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/1c                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/1d                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/1e                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/1f                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/20                   processor  Intel Xeon E312xx (Sandy Bridge)
+/0/100                  bridge     440FX - 82441FX PMC [Natoma]
+/0/100/1                bridge     82371SB PIIX3 ISA [Natoma/Triton II]
+/0/100/1.1              storage    82371SB PIIX3 IDE [Natoma/Triton II]
+/0/100/1.2              bus        82371SB PIIX3 USB [Natoma/Triton II]
+/0/100/1.2/1    usb1    bus        UHCI Host Controller
+/0/100/1.2/1/1          input      QEMU USB Tablet
+/0/100/1.3              bridge     82371AB/EB/MB PIIX4 ACPI
+/0/100/2                display    GD 5446
+/0/100/3        eth0    network    Virtio network device
+/0/100/4                storage    Virtio block device
+/0/100/5                generic    Virtio memory balloon
+/0/100/6                storage    Virtio block device
+/0/100/7                storage    Virtio block device
+```
+
+
+### Ubuntu version
 
 ```
 LSB Version:	core-2.0-amd64:core-2.0-noarch:core-3.0-amd64:core-3.0-noarch:core-3.1-amd64:core-3.1-noarch:core-3.2-amd64:core-3.2-noarch:core-4.0-amd64:core-4.0-noarch:core-4.1-amd64:core-4.1-noarch:security-4.0-amd64:security-4.0-noarch:security-4.1-amd64:security-4.1-noarch
