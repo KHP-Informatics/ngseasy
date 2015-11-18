@@ -204,6 +204,7 @@ RUN apt-get update && \
   cd /usr/local/ngs/bin \
   && wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-${TRIMMOMATIC_VERSION}.zip \
   && unzip Trimmomatic-${TRIMMOMATIC_VERSION}.zip \
+  && chmod -R 777 Trimmomatic-${TRIMMOMATIC_VERSION}/* \
   && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/Trimmomatic-0.32/trimmomatic-0.32.jar' /home/ngseasy/.bashrc \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/Trimmomatic-0.32' /home/ngseasy/.bashrc \
   && cp -v /usr/local/ngs/bin/Trimmomatic-0.32/trimmomatic-0.32.jar /usr/local/bin && \
@@ -211,19 +212,21 @@ RUN apt-get update && \
   rm Trimmomatic-${TRIMMOMATIC_VERSION}.zip && \
 
 # Picard
+  PICARD_VERSION="1.141" && \
   cd /usr/local/ngs/bin \
-  && wget -O /tmp/picard-tools-1.129.zip https://github.com/broadinstitute/picard/releases/download/1.129/picard-tools-1.129.zip \
-  && mkdir /usr/local/ngs/bin/picardtools \
-  && unzip /tmp/picard-tools-1.129.zip -d /usr/local/ngs/bin/picardtools/ \
-  && chown -R ngseasy:ngseasy /usr/local/ngs/bin/picardtools \
-  && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/picardtools/picard-tools-1.129/snappy-java-1.0.3-rc3.jar' /home/ngseasy/.bashrc \
-  && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/picardtools/picard-tools-1.129' /home/ngseasy/.bashrc \
-  && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/picardtools/picard-tools-1.129' ~/.bashrc && \
+  && wget https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard-tools-${PICARD_VERSION}.zip \
+  && unzip picard-tools-${PICARD_VERSION}.zip \
+  && chmod -R 777 /usr/local/ngs/bin/picard-tools-${PICARD_VERSION} \
+  && cp -v /usr/local/ngs/bin/picard-tools-${PICARD_VERSION}/* /usr/local/bin/ \
+  && cd /usr/local/ngs/bin/ \
+  && rm -r picard-tools-${PICARD_VERSION}/* \
+  && rm -r picard-tools-${PICARD_VERSION}.zip \
 
 # bwa
+  BWA_VERSION="0.7.12" && \
   cd /usr/local/ngs/bin \
-  && wget -O /tmp/bwa-0.7.12.tar.bz2 http://sourceforge.net/projects/bio-bwa/files/bwa-0.7.12.tar.bz2 \
-  && tar xjvf /tmp/bwa-0.7.12.tar.bz2 -C /usr/local/ngs/bin/ \
+  && wget http://sourceforge.net/projects/bio-bwa/files/bwa-${BWA_VERSION}.tar.bz2 \
+  && tar xjvf bwa-${BWA_VERSION}.tar.bz2 \
   && chmod -R 777 /usr/local/ngs/bin \
   && cd /usr/local/ngs/bin/bwa-0.7.12 && make \
   && cp -v /usr/local/ngs/bin/bwa-0.7.12/bwa /usr/local/bin && \
