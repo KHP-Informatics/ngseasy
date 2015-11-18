@@ -222,14 +222,16 @@ RUN apt-get update && \
   && rm -r picard-tools-${PICARD_VERSION}/* \
   && rm -r picard-tools-${PICARD_VERSION}.zip \
 
-# bwa
+# bwakit
+# http://sourceforge.net/projects/bio-bwa/files/bwakit/
+# http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-0.7.12_x64-linux.tar.bz2
   BWA_VERSION="0.7.12" && \
   cd /usr/local/ngs/bin \
-  && wget http://sourceforge.net/projects/bio-bwa/files/bwa-${BWA_VERSION}.tar.bz2 \
-  && tar xjvf bwa-${BWA_VERSION}.tar.bz2 \
+  && wget http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-${BWA_VERSION}_x64-linux.tar.bz2 \
+  && tar xjvf bwakit-${BWA_VERSION}_x64-linux.tar.bz2 \
   && chmod -R 777 /usr/local/ngs/bin \
-  && cd /usr/local/ngs/bin/bwa-0.7.12 && make \
-  && cp -v /usr/local/ngs/bin/bwa-0.7.12/bwa /usr/local/bin && \
+  && ln -s /usr/local/ngs/bin/bwa.kit/bwa /usr/local/bin/bwa \
+
 
 # snap
   cd /usr/local/ngs/bin && \
