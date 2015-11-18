@@ -13,6 +13,16 @@
 Linux sjn-devbox-ubuntu 3.19.0-31-generic #36-Ubuntu SMP Wed Oct 7 15:04:02 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
+## Ubuntu version
+
+```
+LSB Version:	core-2.0-amd64:core-2.0-noarch:core-3.0-amd64:core-3.0-noarch:core-3.1-amd64:core-3.1-noarch:core-3.2-amd64:core-3.2-noarch:core-4.0-amd64:core-4.0-noarch:core-4.1-amd64:core-4.1-noarch:security-4.0-amd64:security-4.0-noarch:security-4.1-amd64:security-4.1-noarch
+Distributor ID:	Ubuntu
+Description:	Ubuntu 15.04
+Release:	15.04
+Codename:	vivid
+```
+
 ## Docker Version
 
 ```
