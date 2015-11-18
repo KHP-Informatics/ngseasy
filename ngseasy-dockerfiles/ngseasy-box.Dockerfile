@@ -169,33 +169,46 @@ RUN apt-get update && \
   chmod -R 777 bioawk/ && \
   cd bioawk && \
   make && \
+  chmod -R 777 ./ && \
   cp -v bioawk /usr/local/bin && \
   cp -v maketab /usr/local/bin && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r ./bioawk && \
 
-# gVCFtools
+# gVCFtools: https://sites.google.com/site/gvcftools/home/strelka-workflow-installation/installation-prerequisites
+  GVCFTOOLS_VERSION="0.16" && \
   cd /usr/local/ngs/bin && \
-  git clone --recursive https://github.com/sequencing/gvcftools.git && \
-  cd gvcftools && \
+  wget https://sites.google.com/site/gvcftools/home/download/gvcftools-${GVCFTOOLS_VERSION}.tar.gz && \
+  tar -xvf gvcftools-${GVCFTOOLS_VERSION}.tar.gz && \
+  cd gvcftools-${GVCFTOOLS_VERSION} && \
   make && \
-  sed -i '$aPATH=$PATH:/usr/local/ngs/bin/gvcftools' /home/ngseasy/.bashrc && \
-  ln -s /usr/local/ngs/bin/gvcftools/* /usr/local/bin/ && \
+  chmod -R 777 ./ && \
+  cp -v ./bin/* /usr/local/bin/ && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r ./gvcftools-${GVCFTOOLS_VERSION}* && \
 
 # fastc
+  FASTQC_VERSION="0.11.4" && \
   cd /usr/local/ngs/bin \
-  && wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.2.zip \
-  && unzip /tmp/fastqc_v0.11.2.zip -d /usr/local/ngs/bin/ \
-  && chmod -R 766 /usr/local/ngs/bin/ \
+  && wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQC_VERSION}.zip \
+  && unzip fastqc_v${FASTQC_VERSION}.zip \
+  && chmod -R 777 ./FastQC/ \
   && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/FastQC/jbzip2-0.9.jar:/usr/local/ngs/bin/FastQC/sam-1.103.jar' /home/ngseasy/.bashrc \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/FastQC' /home/ngseasy/.bashrc \
   && ln -s /usr/local/ngs/bin/FastQC/fastqc /usr/local/bin/fastqc && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r fastqc_v${FASTQC_VERSION}.zip && \
 
 # Trimmomatic
+  TRIMMOMATIC_VERSION="0.32" && \
   cd /usr/local/ngs/bin \
-  && wget -O /tmp/Trimmomatic-0.32.zip http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.32.zip \
-  && unzip /tmp/Trimmomatic-0.32.zip -d /usr/local/ngs/bin/ \
+  && wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-${TRIMMOMATIC_VERSION}.zip \
+  && unzip Trimmomatic-${TRIMMOMATIC_VERSION}.zip \
   && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/Trimmomatic-0.32/trimmomatic-0.32.jar' /home/ngseasy/.bashrc \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/Trimmomatic-0.32' /home/ngseasy/.bashrc \
   && cp -v /usr/local/ngs/bin/Trimmomatic-0.32/trimmomatic-0.32.jar /usr/local/bin && \
+  cd /usr/local/ngs/bin/ && \
+  rm Trimmomatic-${TRIMMOMATIC_VERSION}.zip && \
 
 # Picard
   cd /usr/local/ngs/bin \
