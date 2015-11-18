@@ -231,16 +231,48 @@ RUN apt-get update && \
   && tar xjvf bwakit-${BWA_VERSION}_x64-linux.tar.bz2 \
   && chmod -R 777 /usr/local/ngs/bin \
   && ln -s /usr/local/ngs/bin/bwa.kit/bwa /usr/local/bin/bwa \
+  && cd /usr/local/ngs/bin \
+  && rm bwakit-${BWA_VERSION}_x64-linux.tar.bz2 \
 
-
-# snap
+# snap v1.0beta.18 snap-aligner
   cd /usr/local/ngs/bin && \
   git clone https://github.com/amplab/snap.git && \
   chmod -R 777 snap && \
   cd snap && \
   make && \
-  chmod -R 777 /usr/local/ngs/bin && \
-  cp -v snap* /usr/local/bin && \
+  chmod -R 777 /usr/local/ngs/bin/snap && \
+  cp -v snap-aligner /usr/local/bin && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r snap && \
+
+# novoalign: need to add novoalign.lic to /usr/local/bin/ after build
+  NOVOALIGN_VERSION="V3.03.02" && \
+  cd /usr/local/ngs/bin && \
+  wget https://s3-eu-west-1.amazonaws.com/novoalign/novocraft${NOVOALIGN_VERSION}.Linux3.0.tar.gz && \
+  tar xvf novocraft${NOVOALIGN_VERSION}.Linux3.0.tar.gz && \
+  chmod -R 777 novocraft && \
+  cp -v novocraft/* /usr/local/bin/ && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r novocraft && \
+  rm novocraft${NOVOALIGN_VERSION}.Linux3.0.tar.gz && \
+
+# bowtie2
+
+# stampy
+
+# mrsfast
+# https://github.com/sfu-compbio/mrsfast/
+  cd /usr/local/ngs/bin && \
+  git clone https://github.com/sfu-compbio/mrsfast && \
+  chmod -R 777 mrsfast && \
+  cd mrsfast && \
+  make && \
+  chmod 777 snp_indexer && \
+  chmod 777 mrsfast && \
+  cp -v snp_indexer /usr/local/bin && \
+  cp -v mrsfast /usr/local/bin && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r mrsfast && \
 
 # freebayes
   cd /usr/local/ngs/bin \
