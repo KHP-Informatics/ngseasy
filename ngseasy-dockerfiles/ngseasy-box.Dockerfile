@@ -222,6 +222,8 @@ RUN apt-get update && \
   && rm -r picard-tools-${PICARD_VERSION}/* \
   && rm -r picard-tools-${PICARD_VERSION}.zip \
 
+# GATK
+
 # bwakit
 # http://sourceforge.net/projects/bio-bwa/files/bwakit/
 # http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-0.7.12_x64-linux.tar.bz2
@@ -257,8 +259,29 @@ RUN apt-get update && \
   rm novocraft${NOVOALIGN_VERSION}.Linux3.0.tar.gz && \
 
 # bowtie2
+  BOWTIE2_VERSION="2.2.6" && \
+  cd /usr/local/ngs/bin && \
+  wget http://sourceforge.net/projects/bowtie-bio/files/bowtie2/${BOWTIE2_VERSION}/bowtie2-${BOWTIE2_VERSION}-linux-x86_64.zip && \
+  unzip bowtie2-${BOWTIE2_VERSION}-linux-x86_64.zip && \
+  cd bowtie2-${BOWTIE2_VERSION} && \
+  chmod -R 777 ./ && \
+  cp -v bowtie2* /usr/local/bin/ && \
+  cp -r scripts /usr/local/ngs/bin/bowtie2_scripts && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r bowtie2-${BOWTIE2_VERSION} && \
+  rm bowtie2-${BOWTIE2_VERSION}-linux-x86_64.zip && \
 
 # stampy
+  STAMPY_VERSION="1.0.28" && \
+  cd /usr/local/ngs/bin && \
+  wget http://www.well.ox.ac.uk/bioinformatics/Software/Stampy-latest.tgz && \
+  tar -xvf Stampy-latest.tgz && \
+  chmod -R 777 stampy-${STAMPY_VERSION} && \
+  make && \
+  export PATH=$PATH:/usr/local/ngs/bin/stampy-${STAMPY_VERSION} && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r Stampy-latest.tgz && \
+
 
 # mrsfast
 # https://github.com/sfu-compbio/mrsfast/
