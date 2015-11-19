@@ -25,6 +25,11 @@ params.variantCaller =
 params.svCaller =
 
 process fastqQc {
+  container 'image_name_1'
+
+  """
+  hshshs
+  """
 }
 
 process qctrimm {
