@@ -367,6 +367,7 @@ RUN apt-get update && \
   chmod -R 777 bcbio.variation-${BCBIO_VAR_VERSION}-standalone.jar && \
   ln -s bcbio.variation-${BCBIO_VAR_VERSION}-standalone.jar bcbio.variation.jar && \
 
+##  bcbio.variation.recall (https://github.com/chapmanb/bcbio.variation.recall)
 # GATK_FRAMEWORK, io_lib, scramble, staden for bcbio.variation.recall.
 # http://sourceforge.net/p/staden/discussion/347718/thread/88e0e73b/
   cd /usr/local/ngs/bin/ && \
@@ -388,6 +389,14 @@ RUN apt-get update && \
   make && \
   make install && \
   rm -r /usr/local/ngs/bin/io_lib-${IO_LIB_VERSION}.tar.gz && \
+  cd /usr/local/ngs/bin/ && \
+  git clone --recursive https://github.com/chapmanb/bcbio.variation.recall.git && \
+  cd bcbio.variation.recall && \
+  export LEIN_ROOT=yes && \
+  make && \
+
+
+
 #  cd /usr/local/ngs/bin/ && \
 #  STADEN_VERSION="2.0.0b10" && \
 #  wget http://sourceforge.net/projects/staden/files/staden/${STADEN_VERSION}/staden-${STADEN_VERSION}-linux-x86_64.tar.gz && \
