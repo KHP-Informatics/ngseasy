@@ -162,7 +162,7 @@ aligners: bwa, snap, mrsfast, bowtie2, novoalign, stampy
 
 ## Basic Variant Callers
 ```
-varcallers: freebayes, platypus, VarDict, VarScan, samtools
+varcallers: freebayes, platypus, VarDict, VarScan, samtools,gatk-hc
 ```
 
 | Variant Callers | 
@@ -172,6 +172,8 @@ varcallers: freebayes, platypus, VarDict, VarScan, samtools
 | VarDict |
 | VarScan |
 | samtools |
+| gatk-hc |
+
 
 ## Structural Variant Callers
 
