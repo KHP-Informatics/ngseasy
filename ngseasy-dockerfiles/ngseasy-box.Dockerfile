@@ -52,7 +52,10 @@ RUN apt-get update && \
   cd /usr/local/ngs/bin/samtools && \
   make && \
   make install && \
-  rm -r bcftools htslib samtools && \
+  cd /usr/local/ngs/bin && \
+  rm -r bcftools && \
+  rm -r htslib && \
+  rm -r samtools && \
 
 # parallel (this is now in little-fatty-deb)
 #  cd /usr/local/ngs/bin && \
