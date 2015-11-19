@@ -351,6 +351,7 @@ RUN apt-get update && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/build/install/VarDict/bin' /home/ngseasy/.bashrc && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/build/install/VarDict/lib' /home/ngseasy/.bashrc && \
 
+## chapmanb/bcbio.variation
 # lein for chapmanb/bcbio.variation
   cd  /usr/local/ngs/bin/ && \
   wget -O lein https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein && \
@@ -375,7 +376,7 @@ RUN apt-get update && \
   Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("PSCBS", "cghFLasso")' && \
   pip install cnvkit==${CNVKIT_VERSION} && \
 
-# bamkit
+# bamkit. this in
   cd  /usr/local/ngs/bin/ && \
   git clone --recursive https://github.com/hall-lab/bamkit.git && \
   chmod -R 777 ./bamkit/ && \
@@ -409,7 +410,7 @@ RUN apt-get update && \
   ABRA_VERSION="0.94" && \
   wget https://github.com/mozack/abra/releases/download/v${ABRA_VERSION}/abra-${ABRA_VERSION}-SNAPSHOT-jar-with-dependencies.jar && \
   chmod 777 abra-${ABRA_VERSION}-SNAPSHOT-jar-with-dependencies.jar && \
-  ln -s abra-0.94-SNAPSHOT-jar-with-dependencies.jar /usr/local/bin/abra.jar && \
+  ln -s abra-0.94-SNAPSHOT-jar-with-dependencies.jar abra.jar && \
 
 # glia
   cd /usr/local/ngs/bin && \
