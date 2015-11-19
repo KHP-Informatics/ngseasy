@@ -378,7 +378,7 @@ RUN apt-get update && \
   cd /usr/local/ngs/bin/ && \
   rm -r gatk-framework-${GATK_FRAMEWORK_VERSION}.tar.gz && \
   rm -r gatk-framework-${GATK_FRAMEWORK_VERSION} && \
-  apt-get install -y --no-install-recommends libstaden-read-dev && \
+  apt-get install -y --no-install-recommends libstaden-read-dev staden-io-lib-utils staden staden-common && \
   IO_LIB_VERSION="1.14.6" && \
   wget http://sourceforge.net/projects/staden/files/io_lib/${IO_LIB_VERSION}/io_lib-${IO_LIB_VERSION}.tar.gz && \
   tar -xvf io_lib-${IO_LIB_VERSION}.tar.gz && \
