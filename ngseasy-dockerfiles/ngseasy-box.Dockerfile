@@ -308,7 +308,7 @@ RUN apt-get update && \
   cd /usr/local/ngs/bin/ && \
   rm -r freebayes && \
 
-# Platypus
+# Platypus VERSION := 0.8.1
   cd /usr/local/ngs/bin && \
   git clone --recursive https://github.com/andyrimmer/Platypus.git && \
   chmod -R 777 Platypus && \
@@ -316,6 +316,7 @@ RUN apt-get update && \
   make && \
   chmod -R 777 ./* && \
   cp -vrf ./bin/* /usr/local/bin && \
+  cp -vrf ./scripts/* /usr/local/bin && \
 
 # scalpel
   SCALPEL_VERSION="0.5.2" && \
