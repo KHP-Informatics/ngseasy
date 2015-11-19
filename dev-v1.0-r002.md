@@ -136,6 +136,14 @@ OpenJDK Runtime Environment (IcedTea 2.6.1) (7u85-2.6.1-6+deb8u1)
 OpenJDK 64-Bit Server VM (build 24.85-b03, mixed mode)
 ```
 
+## Python Version
+
+```bash
+Python 2.7.9
+```
+
+******************
+
 ## Aligners
 
 ```
