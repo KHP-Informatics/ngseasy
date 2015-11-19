@@ -35,7 +35,7 @@ RUN apt-get update && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin' /home/ngseasy/.bashrc && \
   bash -c "source /home/ngseasy/.bashrc" && \
 
-# NGSeasy Tools
+## NGSeasy Tools
 # samtools, htslib, bcftools
   cd /usr/local/ngs/bin && \
   git clone --branch=develop git://github.com/samtools/htslib.git && \
@@ -222,8 +222,7 @@ RUN apt-get update && \
   && rm -r picard-tools-${PICARD_VERSION}/* \
   && rm -r picard-tools-${PICARD_VERSION}.zip \
 
-# GATK
-
+## Aligners
 # bwakit
 # http://sourceforge.net/projects/bio-bwa/files/bwakit/
 # http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-0.7.12_x64-linux.tar.bz2
@@ -296,6 +295,7 @@ RUN apt-get update && \
   cd /usr/local/ngs/bin/ && \
   rm -r mrsfast && \
 
+## Variant Calling
 # freebayes
   cd /usr/local/ngs/bin \
   && git clone --recursive git://github.com/ekg/freebayes.git \
@@ -401,30 +401,31 @@ RUN apt-get update && \
   cp -v ./svtyper/svtyper /usr/local/bin/ && \
   cp -v ./svtyper/scripts/* /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
-  rm -r svtyper && \ 
+  rm -r svtyper && \
 
-  # ABRA - Assembly Based ReAligner https://github.com/mozack/abra
-    cd /usr/local/ngs/bin && \
-    ABRA_VERSION="0.94" && \
-    wget https://github.com/mozack/abra/releases/download/v${ABRA_VERSION}/abra-${ABRA_VERSION}-SNAPSHOT-jar-with-dependencies.jar && \
-    chmod 777 abra-${ABRA_VERSION}-SNAPSHOT-jar-with-dependencies.jar && \
-    ln -s abra-0.94-SNAPSHOT-jar-with-dependencies.jar /usr/local/bin/abra.jar && \
+## ReAligners
+# ABRA - Assembly Based ReAligner https://github.com/mozack/abra
+  cd /usr/local/ngs/bin && \
+  ABRA_VERSION="0.94" && \
+  wget https://github.com/mozack/abra/releases/download/v${ABRA_VERSION}/abra-${ABRA_VERSION}-SNAPSHOT-jar-with-dependencies.jar && \
+  chmod 777 abra-${ABRA_VERSION}-SNAPSHOT-jar-with-dependencies.jar && \
+  ln -s abra-0.94-SNAPSHOT-jar-with-dependencies.jar /usr/local/bin/abra.jar && \
 
-  # glia
-    cd /usr/local/ngs/bin && \
-    git clone --recursive https://github.com/ekg/glia.git && \
-    chmod -R 777 ./glia && \
-    cd ./glia && \
-    make && \
-    cp -v ./glia /usr/local/bin/ && \
+# glia
+  cd /usr/local/ngs/bin && \
+  git clone --recursive https://github.com/ekg/glia.git && \
+  chmod -R 777 ./glia && \
+  cd ./glia && \
+  make && \
+  cp -v ./glia /usr/local/bin/ && \
 
-  # ogap
-    cd /usr/local/ngs/bin/ && \
-    git clone --recursive https://github.com/ekg/ogap.git && \
-    cd ogap && \
-    make all && \
-    chmod -R 777 ./* && \
-    cp -v ogap /usr/local/bin/ && \
+# ogap
+  cd /usr/local/ngs/bin/ && \
+  git clone --recursive https://github.com/ekg/ogap.git && \
+  cd ogap && \
+  make all && \
+  chmod -R 777 ./* && \
+  cp -v ogap /usr/local/bin/ && \
 
 # source .bashrc
   bash -c "source /home/ngseasy/.bashrc" && \
