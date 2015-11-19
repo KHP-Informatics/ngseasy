@@ -354,16 +354,17 @@ RUN apt-get update && \
 # lein for chapmanb/bcbio.variation
   cd  /usr/local/ngs/bin/ && \
   wget -O lein https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein && \
-  chmod 777 lein && \
+  chmod 755 lein && \
   cp -v lein /usr/local/bin && \
+  export LEIN_ROOT=yes && \
   lein && \
 
 # chapmanb/bcbio.variation
   cd  /usr/local/ngs/bin/ && \
   BCBIO_VAR_VERSION="0.2.6" && \
   wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.2.6/bcbio.variation-${BCBIO_VAR_VERSION}-standalone.jar && \
-  chmod -R 777 bcbio.variation-${BCBIO_VAR_VERSION}--standalone.jar && \
-  ln -s bcbio.variation-${BCBIO_VAR_VERSION}--standalone.jar /usr/local/bin/bcbio.variation.jar && \
+  chmod -R 777 bcbio.variation-${BCBIO_VAR_VERSION}-standalone.jar && \
+  ln -s bcbio.variation-${BCBIO_VAR_VERSION}-standalone.jar bcbio.variation.jar && \
 
 # CNVkit
 # https://github.com/chapmanb/cnvkit and https://github.com/etal/cnvkit
