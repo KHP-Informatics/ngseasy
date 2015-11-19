@@ -418,7 +418,11 @@ RUN apt-get update && \
   chmod -R 777 ./glia && \
   cd ./glia && \
   make && \
+  chmod -R 777 ./* && \
   cp -v ./glia /usr/local/bin/ && \
+  cp -v fastahack/fastahack /usr/local/bin/ && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r glia && \
 
 # ogap
   cd /usr/local/ngs/bin/ && \
@@ -427,6 +431,9 @@ RUN apt-get update && \
   make all && \
   chmod -R 777 ./* && \
   cp -v ogap /usr/local/bin/ && \
+  cp -v ./smithwaterman/smithwaterman /usr/local/bin/ && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r ogap && \
 
 # source .bashrc
   bash -c "source /home/ngseasy/.bashrc" && \

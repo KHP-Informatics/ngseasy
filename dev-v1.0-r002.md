@@ -190,9 +190,8 @@ svcallers: lumpy,lumpyexpress,svtyper, cnvkit
 
 ## Re-Aligners
 
-
 ```
-realn: abra.jar
+realn: abra.jar, glia, ogap
 ```
 
 |Re-Aligners| 
@@ -200,3 +199,8 @@ realn: abra.jar
 |abra|
 |glia|
 |ogap|
+
+************
+
+## Random Lists...
+- [List of sequence alignment software ](https://en.wikipedia.org/wiki/List_of_sequence_alignment_software)  
