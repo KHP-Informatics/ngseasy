@@ -151,12 +151,12 @@ aligners: bwa, snap, mrsfast, bowtie2, novoalign, stampy
 ```
 
 | Aligners | 
-|------|
+|:------|
 |bwa|
 |snap|
 |mrsfast|
 |bowtie2|
-| novoalign|
+|novoalign|
 |stampy|
 
 
@@ -165,8 +165,8 @@ aligners: bwa, snap, mrsfast, bowtie2, novoalign, stampy
 varcallers: freebayes, platypus, VarDict, VarScan, samtools,gatk-hc
 ```
 
-| Variant Callers | 
-|------|
+|Variant Callers | 
+|:------|
 | freebayes |
 | platypus |
 | VarDict |
@@ -177,3 +177,13 @@ varcallers: freebayes, platypus, VarDict, VarScan, samtools,gatk-hc
 
 ## Structural Variant Callers
 
+```
+svcallers: lumpy,lumpyexpress,svtyper, cnvkit
+```
+
+|Structural Variant Callers | 
+|:------|
+|lumpy |
+|lumpyexpress|
+|svtyper|
+|cnvkit|

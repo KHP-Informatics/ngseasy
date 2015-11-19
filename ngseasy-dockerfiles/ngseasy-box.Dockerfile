@@ -375,26 +375,33 @@ RUN apt-get update && \
   Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("PSCBS", "cghFLasso")' && \
   pip install cnvkit==${CNVKIT_VERSION} && \
 
-# lumpy-sv
-  cd  /usr/local/ngs/bin/ && \
-  git clone --recursive https://github.com/arq5x/lumpy-sv.git && \
-  cd lumpy-sv && \
-  make && \
-  chmod -R 777 ./bin/ && \
-  cp -v bin/* /usr/local/bin/ && \
-
 # bamkit
   cd  /usr/local/ngs/bin/ && \
   git clone --recursive https://github.com/hall-lab/bamkit.git && \
   chmod -R 777 ./bamkit/ && \
   cp -v ./bamkit/bam* /usr/local/bin/ && \
   cp -v ./bamkit/sectosupp /usr/local/bin/ && \
+  rm -r ./bamkit/ && \
+
+# lumpy-sv
+  cd  /usr/local/ngs/bin/ && \
+  git clone --recursive https://github.com/arq5x/lumpy-sv.git && \
+  cd lumpy-sv && \
+  make && \
+  chmod -R 777 ./* && \
+  cp -v bin/* /usr/local/bin/ && \
+  cp -v scripts/* /usr/local/bin/ && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r lumpy-sv && \
 
 # svtyper
   cd  /usr/local/ngs/bin/ && \
   git clone --recursive  https://github.com/hall-lab/svtyper.git && \
   chmod -R 777 ./svtyper && \
   cp -v ./svtyper/svtyper /usr/local/bin/ && \
+  cp -v ./svtyper/scripts/* /usr/local/bin/ && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r svtyper && \ 
 
   # ABRA - Assembly Based ReAligner https://github.com/mozack/abra
     cd /usr/local/ngs/bin && \
@@ -418,7 +425,6 @@ RUN apt-get update && \
     make all && \
     chmod -R 777 ./* && \
     cp -v ogap /usr/local/bin/ && \
-
 
 # source .bashrc
   bash -c "source /home/ngseasy/.bashrc" && \
