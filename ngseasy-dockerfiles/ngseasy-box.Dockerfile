@@ -223,7 +223,7 @@ RUN apt-get update && \
   && cp -v /usr/local/ngs/bin/picard-tools-${PICARD_VERSION}/* /usr/local/bin/ \
   && cd /usr/local/ngs/bin/ \
   && rm -r picard-tools-${PICARD_VERSION}/* \
-  && rm -r picard-tools-${PICARD_VERSION}.zip \
+  && rm -r picard-tools-${PICARD_VERSION}.zip && \
 
 ## Aligners
 # bwakit
@@ -236,7 +236,7 @@ RUN apt-get update && \
   && chmod -R 777 /usr/local/ngs/bin \
   && ln -s /usr/local/ngs/bin/bwa.kit/bwa /usr/local/bin/bwa \
   && cd /usr/local/ngs/bin \
-  && rm bwakit-${BWA_VERSION}_x64-linux.tar.bz2 \
+  && rm bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
 
 # snap v1.0beta.18 snap-aligner
   cd /usr/local/ngs/bin && \
