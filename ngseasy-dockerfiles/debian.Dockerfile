@@ -9,6 +9,11 @@ ENV DEBIAN_FRONTEND noninteractive
 # set R version
 # https://github.com/rocker-org/rocker/blob/master/r-base/Dockerfile#L38
 ENV R_BASE_VERSION 3.2.2
+# Set the locale
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 # Remain current, upgrade apt-get, add build tools, R, JAVA and python
 RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' /etc/apt/sources.list && \

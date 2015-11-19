@@ -361,11 +361,24 @@ RUN apt-get update && \
   lein && \
 
 # chapmanb/bcbio.variation
-  cd  /usr/local/ngs/bin/ && \
+  cd /usr/local/ngs/bin/ && \
   BCBIO_VAR_VERSION="0.2.6" && \
   wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.2.6/bcbio.variation-${BCBIO_VAR_VERSION}-standalone.jar && \
   chmod -R 777 bcbio.variation-${BCBIO_VAR_VERSION}-standalone.jar && \
   ln -s bcbio.variation-${BCBIO_VAR_VERSION}-standalone.jar bcbio.variation.jar && \
+
+# GATK_FRAMEWORK for bcbio.variation.recall
+  cd /usr/local/ngs/bin/ && \
+  GATK_FRAMEWORK_VERSION="3.4-46" && \
+  wget https://github.com/chapmanb/gatk/releases/download/v${GATK_FRAMEWORK_VERSION}-framework/gatk-framework-${GATK_FRAMEWORK_VERSION}.tar.gz && \
+  tar -xvf gatk-framework-${GATK_FRAMEWORK_VERSION}.tar.gz && \
+  chmod -R 777 && \
+  cp -v && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r gatk-framework-${GATK_FRAMEWORK_VERSION}.tar.gz && \
+  
+
+
 
 # CNVkit
 # https://github.com/chapmanb/cnvkit and https://github.com/etal/cnvkit
