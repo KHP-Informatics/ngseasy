@@ -367,7 +367,8 @@ RUN apt-get update && \
   chmod -R 777 bcbio.variation-${BCBIO_VAR_VERSION}-standalone.jar && \
   ln -s bcbio.variation-${BCBIO_VAR_VERSION}-standalone.jar bcbio.variation.jar && \
 
-# GATK_FRAMEWORK for bcbio.variation.recall
+# GATK_FRAMEWORK, io_lib, scramble, staden for bcbio.variation.recall.
+# http://sourceforge.net/p/staden/discussion/347718/thread/88e0e73b/
   cd /usr/local/ngs/bin/ && \
   GATK_FRAMEWORK_VERSION="3.4-46" && \
   wget https://github.com/chapmanb/gatk/releases/download/v${GATK_FRAMEWORK_VERSION}-framework/gatk-framework-${GATK_FRAMEWORK_VERSION}.tar.gz && \
@@ -377,8 +378,24 @@ RUN apt-get update && \
   cd /usr/local/ngs/bin/ && \
   rm -r gatk-framework-${GATK_FRAMEWORK_VERSION}.tar.gz && \
   rm -r gatk-framework-${GATK_FRAMEWORK_VERSION} && \
+  apt-get install -y --no-install-recommends libstaden-read-dev && \
   IO_LIB_VERSION="1.14.6" && \
   wget http://sourceforge.net/projects/staden/files/io_lib/${IO_LIB_VERSION}/io_lib-${IO_LIB_VERSION}.tar.gz && \
+  tar -xvf io_lib-${IO_LIB_VERSION}.tar.gz && \
+  cd io_lib-${IO_LIB_VERSION} && \
+  chmod -R 777 ./* && \
+  ./configure && \
+  make && \
+  make install && \
+  rm -r /usr/local/ngs/bin/io_lib-${IO_LIB_VERSION}.tar.gz && \
+#  cd /usr/local/ngs/bin/ && \
+#  STADEN_VERSION="2.0.0b10" && \
+#  wget http://sourceforge.net/projects/staden/files/staden/${STADEN_VERSION}/staden-${STADEN_VERSION}-linux-x86_64.tar.gz && \
+#  wget http://sourceforge.net/projects/staden/files/staden/${STADEN_VERSION}/staden-${STADEN_VERSION}-src.tar.gz && \
+#  tar -xvf staden-${STADEN_VERSION}-linux-x86_64.tar.gz && \
+#  tar -xvf staden-${STADEN_VERSION}-src.tar.gz && \
+#  rm -r staden-${STADEN_VERSION}-linux-x86_64.tar.gz && \
+#  rm -r staden-${STADEN_VERSION}-src.tar.gz && \
 
 
 
