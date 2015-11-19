@@ -317,6 +317,9 @@ RUN apt-get update && \
   chmod -R 777 ./* && \
   cp -vrf ./bin/* /usr/local/bin && \
   cp -vrf ./scripts/* /usr/local/bin && \
+  cp -v ./*.py /usr/local/bin && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r Platypus && \
 
 # scalpel
   SCALPEL_VERSION="0.5.2" && \
