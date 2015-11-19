@@ -24,28 +24,28 @@ params.baserecal =
 params.variantCaller =
 params.svCaller =
 
-process fastqQc {
-  container 'image_name_1'
+process ngs-fastqc {
+  container 'compbio/ngseasy-fastqc:v1.0-r002'
 
   """
   hshshs
   """
 }
 
-process qctrimm {
+process ngs-qctrimm {
 }
 
-process align {
+process ngs-align {
 }
 
-process realign {
+process ngs-realign {
 }
 
-process bqqr {
+process ngs-bsqr {
 }
 
-process varcall {
+process ngs-varcall {
 }
 
-process svcall {
+process ngs-svcall {
 }
