@@ -304,7 +304,7 @@ RUN apt-get update && \
   && chmod -R 777 /usr/local/ngs/bin/freebayes \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/freebayes/bin' /home/ngseasy/.bashrc \
   && cp -v /usr/local/ngs/bin/freebayes/bin/* /usr/local/bin \
-  && cp -v /usr/local/ngs/bin/freebayes/scripts/* /usr/local/bin &&
+  && cp -v /usr/local/ngs/bin/freebayes/scripts/* /usr/local/bin && \
   cd /usr/local/ngs/bin/ && \
   rm -r freebayes && \
 
