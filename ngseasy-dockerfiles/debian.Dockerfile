@@ -9,11 +9,6 @@ ENV DEBIAN_FRONTEND noninteractive
 # set R version
 # https://github.com/rocker-org/rocker/blob/master/r-base/Dockerfile#L38
 ENV R_BASE_VERSION 3.2.2
-# Set the locale
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
 
 # Remain current, upgrade apt-get, add build tools, R, JAVA and python
 RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' /etc/apt/sources.list && \
@@ -38,6 +33,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   curl \
   dkms \
   dpkg-dev \
+  debconf \
   gcc \
   g++ \
   gpp \
@@ -87,6 +83,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   vim \
   wget \
   zlib1g && \
+  dpkg-reconfigure locales && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
@@ -154,6 +151,12 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   rm -rf /tmp/* && \
   rm -rf /var/tmp/* && \
   rm -rf /var/lib/{apt,dpkg,cache,log}/
+
+  # Set the locale
+  RUN locale-gen en_US.UTF-8
+  ENV LANG en_US.UTF-8
+  ENV LANGUAGE en_US:en
+  ENV LC_ALL en_US.UTF-8
 
 # set JAVA_HOME
   ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk-amd64

@@ -392,20 +392,11 @@ RUN apt-get update && \
   cd /usr/local/ngs/bin/ && \
   git clone --recursive https://github.com/chapmanb/bcbio.variation.recall.git && \
   cd bcbio.variation.recall && \
+  chmod -R 777 ./* && \
   export LEIN_ROOT=yes && \
   make && \
-
-
-
-#  cd /usr/local/ngs/bin/ && \
-#  STADEN_VERSION="2.0.0b10" && \
-#  wget http://sourceforge.net/projects/staden/files/staden/${STADEN_VERSION}/staden-${STADEN_VERSION}-linux-x86_64.tar.gz && \
-#  wget http://sourceforge.net/projects/staden/files/staden/${STADEN_VERSION}/staden-${STADEN_VERSION}-src.tar.gz && \
-#  tar -xvf staden-${STADEN_VERSION}-linux-x86_64.tar.gz && \
-#  tar -xvf staden-${STADEN_VERSION}-src.tar.gz && \
-#  rm -r staden-${STADEN_VERSION}-linux-x86_64.tar.gz && \
-#  rm -r staden-${STADEN_VERSION}-src.tar.gz && \
-
+  chmod -R 777 ./* && \
+  cp -v /usr/local/ngs/bin/bcbio.variation.recall/bin/* /usr/local/bin && \
 
 
 # CNVkit
