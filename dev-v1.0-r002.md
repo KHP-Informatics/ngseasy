@@ -127,3 +127,32 @@ Server:
  Built:        Tue Nov  3 17:48:04 UTC 2015
  OS/Arch:      linux/amd64
 ```
+
+## Aligners
+
+```
+aligners: bwa, snap, mrsfast, bowtie2, novoalign, stampy
+```
+
+| Aligners | 
+|------|
+|bwa|
+|snap|
+|mrsfast|
+|bowtie2|
+| novoalign|
+|stampy|
+
+
+## Basic Variant Callers
+```
+varcallers: freebayes, platypus
+```
+
+| Variant Callers | 
+|------|
+| freebayes |
+| platypus |
+
+## Structural Variant Callers
+

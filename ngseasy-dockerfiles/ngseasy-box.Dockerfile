@@ -324,12 +324,13 @@ RUN apt-get update && \
 # scalpel
   SCALPEL_VERSION="0.5.2" && \
   cd /usr/local/ngs/bin && \
-  http://sourceforge.net/projects/scalpel/files/scalpel-${SCALPEL_VERSION}.tar.gz && \
+  wget http://sourceforge.net/projects/scalpel/files/scalpel-${SCALPEL_VERSION}.tar.gz && \
   tar -xvf scalpel-${SCALPEL_VERSION}.tar.gz && \
   cd scalpel-${SCALPEL_VERSION} && \
   make && \
   chmod -R 777 ./* && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin/scalpel-0.5.2/' /home/ngseasy/.bashrc && \
+  cd /usr/local/ngs/bin/ && \
   rm scalpel-${SCALPEL_VERSION}.tar.gz && \
 
 # varscan
