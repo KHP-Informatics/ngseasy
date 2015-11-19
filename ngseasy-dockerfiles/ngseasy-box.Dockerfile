@@ -372,11 +372,13 @@ RUN apt-get update && \
   GATK_FRAMEWORK_VERSION="3.4-46" && \
   wget https://github.com/chapmanb/gatk/releases/download/v${GATK_FRAMEWORK_VERSION}-framework/gatk-framework-${GATK_FRAMEWORK_VERSION}.tar.gz && \
   tar -xvf gatk-framework-${GATK_FRAMEWORK_VERSION}.tar.gz && \
-  chmod -R 777 && \
-  cp -v && \
+  chmod -R 777 gatk-framework-${GATK_FRAMEWORK_VERSION}/* && \
+  cp -v gatk-framework-${GATK_FRAMEWORK_VERSION}/* /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
   rm -r gatk-framework-${GATK_FRAMEWORK_VERSION}.tar.gz && \
-  
+  rm -r gatk-framework-${GATK_FRAMEWORK_VERSION} && \
+  IO_LIB_VERSION="1.14.6" && \
+  wget http://sourceforge.net/projects/staden/files/io_lib/${IO_LIB_VERSION}/io_lib-${IO_LIB_VERSION}.tar.gz && \
 
 
 
