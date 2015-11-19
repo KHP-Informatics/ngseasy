@@ -83,7 +83,6 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   vim \
   wget \
   zlib1g && \
-  dpkg-reconfigure locales && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
@@ -152,11 +151,19 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   rm -rf /var/tmp/* && \
   rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-  # Set the locale
-  RUN locale-gen en_US.UTF-8
-  ENV LANG en_US.UTF-8
-  ENV LANGUAGE en_US:en
-  ENV LC_ALL en_US.UTF-8
+# Install program to configure locales
+RUN dpkg-reconfigure locales && \
+  locale-gen C.UTF-8 && \
+  /usr/sbin/update-locale LANG=C.UTF-8 && \
+
+# Install needed default locale for Makefly
+  echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
+  locale-gen
+  
+# Set default locale for the environment
+ENV LC_ALL C.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
 
 # set JAVA_HOME
   ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk-amd64
