@@ -154,14 +154,14 @@ aligners: bwa, snap, mrsfast, bowtie2, novoalign, stampy
 
 ## Basic Variant Callers
 ```
-varcallers: freebayes, platypus, vardict, VarScan, samtools
+varcallers: freebayes, platypus, VarDict, VarScan, samtools
 ```
 
 | Variant Callers | 
 |------|
 | freebayes |
 | platypus |
-| vardict |
+| VarDict |
 | VarScan |
 | samtools |
 

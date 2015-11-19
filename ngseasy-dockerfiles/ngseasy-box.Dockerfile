@@ -341,14 +341,16 @@ RUN apt-get update && \
   ln -s VarScan.${VARSCAN_VERSION}.jar varscan.jar && \
 
 
-# VarDict
+# VarDict cmd: VarDict
   cd /usr/local/ngs/bin/ && \
   export JAVA_HOME="/usr/lib/jvm/java-1.7.0-openjdk-amd64" && \
   git clone --recursive https://github.com/AstraZeneca-NGS/VarDictJava.git && \
   cd /usr/local/ngs/bin/VarDictJava && \
   ./gradlew clean installApp && \
   chmod -R 777 /usr/local/ngs/bin/VarDictJava && \
-  sed  -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/VarDict' /home/ngseasy/.bashrc && \
+  sed -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/VarDict' /home/ngseasy/.bashrc && \
+  sed -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/build/install/VarDict/bin' /home/ngseasy/.bashrc && \
+  sed -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/build/install/VarDict/lib' /home/ngseasy/.bashrc && \
 
 # ABRA - Assembly Based ReAligner https://github.com/mozack/abra
   cd /usr/local/ngs/bin && \
