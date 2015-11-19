@@ -128,6 +128,14 @@ Server:
  OS/Arch:      linux/amd64
 ```
 
+## java version 
+
+```bash
+java version "1.7.0_85"
+OpenJDK Runtime Environment (IcedTea 2.6.1) (7u85-2.6.1-6+deb8u1)
+OpenJDK 64-Bit Server VM (build 24.85-b03, mixed mode)
+```
+
 ## Aligners
 
 ```
@@ -146,13 +154,16 @@ aligners: bwa, snap, mrsfast, bowtie2, novoalign, stampy
 
 ## Basic Variant Callers
 ```
-varcallers: freebayes, platypus
+varcallers: freebayes, platypus, vardict, VarScan, samtools
 ```
 
 | Variant Callers | 
 |------|
 | freebayes |
 | platypus |
+| vardict |
+| VarScan |
+| samtools |
 
 ## Structural Variant Callers
 

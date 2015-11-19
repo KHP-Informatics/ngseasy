@@ -151,7 +151,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 # set JAVA_HOME
-  ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java
+  ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk-amd64
 
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]

@@ -338,10 +338,12 @@ RUN apt-get update && \
   cd /usr/local/ngs/bin && \
   wget http://sourceforge.net/projects/varscan/files/VarScan.${VARSCAN_VERSION}.jar && \
   chmod -R 777 VarScan.${VARSCAN_VERSION}.jar && \
-  ln -s VarScan.${VARSCAN_VERSION}.jar VarScan.jar && \
+  ln -s VarScan.${VARSCAN_VERSION}.jar varscan.jar && \
+
 
 # VarDict
   cd /usr/local/ngs/bin/ && \
+  export JAVA_HOME="/usr/lib/jvm/java-1.7.0-openjdk-amd64" && \
   git clone --recursive https://github.com/AstraZeneca-NGS/VarDictJava.git && \
   cd /usr/local/ngs/bin/VarDictJava && \
   ./gradlew clean installApp && \
