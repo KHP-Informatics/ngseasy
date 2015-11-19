@@ -340,7 +340,6 @@ RUN apt-get update && \
   chmod -R 777 VarScan.${VARSCAN_VERSION}.jar && \
   ln -s VarScan.${VARSCAN_VERSION}.jar varscan.jar && \
 
-
 # VarDict cmd: VarDict
   cd /usr/local/ngs/bin/ && \
   export JAVA_HOME="/usr/lib/jvm/java-1.7.0-openjdk-amd64" && \
@@ -351,28 +350,6 @@ RUN apt-get update && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/VarDict' /home/ngseasy/.bashrc && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/build/install/VarDict/bin' /home/ngseasy/.bashrc && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/build/install/VarDict/lib' /home/ngseasy/.bashrc && \
-
-# ABRA - Assembly Based ReAligner https://github.com/mozack/abra
-  cd /usr/local/ngs/bin && \
-  wget https://github.com/mozack/abra/releases/download/v0.94/abra-0.94-SNAPSHOT-jar-with-dependencies.jar && \
-  chmod 775 abra-0.94-SNAPSHOT-jar-with-dependencies.jar && \
-  mv -v abra-0.94-SNAPSHOT-jar-with-dependencies.jar /usr/local/bin/abra-0.94 && \
-
-# glia
-  cd /usr/local/ngs/bin && \
-  git clone --recursive https://github.com/ekg/glia.git && \
-  chmod -R 777 ./glia && \
-  cd ./glia && \
-  make && \
-  cp -v ./glia /usr/local/bin/ && \
-
-# ogap
-  cd /usr/local/ngs/bin/ && \
-  git clone --recursive https://github.com/ekg/ogap.git && \
-  cd ogap && \
-  make all && \
-  chmod -R 777 ./* && \
-  cp -v ogap /usr/local/bin/ && \
 
 # lein for chapmanb/bcbio.variation
   cd  /usr/local/ngs/bin/ && \
@@ -417,6 +394,30 @@ RUN apt-get update && \
   git clone --recursive  https://github.com/hall-lab/svtyper.git && \
   chmod -R 777 ./svtyper && \
   cp -v ./svtyper/svtyper /usr/local/bin/ && \
+
+  # ABRA - Assembly Based ReAligner https://github.com/mozack/abra
+    cd /usr/local/ngs/bin && \
+    ABRA_VERSION="0.94" && \
+    wget https://github.com/mozack/abra/releases/download/v${ABRA_VERSION}/abra-${ABRA_VERSION}-SNAPSHOT-jar-with-dependencies.jar && \
+    chmod 777 abra-${ABRA_VERSION}-SNAPSHOT-jar-with-dependencies.jar && \
+    ln -s abra-0.94-SNAPSHOT-jar-with-dependencies.jar /usr/local/bin/abra.jar && \
+
+  # glia
+    cd /usr/local/ngs/bin && \
+    git clone --recursive https://github.com/ekg/glia.git && \
+    chmod -R 777 ./glia && \
+    cd ./glia && \
+    make && \
+    cp -v ./glia /usr/local/bin/ && \
+
+  # ogap
+    cd /usr/local/ngs/bin/ && \
+    git clone --recursive https://github.com/ekg/ogap.git && \
+    cd ogap && \
+    make all && \
+    chmod -R 777 ./* && \
+    cp -v ogap /usr/local/bin/ && \
+
 
 # source .bashrc
   bash -c "source /home/ngseasy/.bashrc" && \
