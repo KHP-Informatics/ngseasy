@@ -429,7 +429,7 @@ RUN cd /usr/local/ngs/bin && \
   cp -v ./svtyper/svtyper /usr/local/bin/ && \
   cp -v ./svtyper/scripts/* /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
-  rm -r svtyper
+  rm -r /usr/local/ngs/bin/svtyper
 
 ## ReAligners
 # ABRA - Assembly Based ReAligner https://github.com/mozack/abra
