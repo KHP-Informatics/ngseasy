@@ -2,7 +2,7 @@
 
 NGSeasy: A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box
 =====================================================================================
-[![Join the chat at https://gitter.im/KHP-Informatics/ngseasy](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/KHP-Informatics/ngseasy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/KHP-Informatics/ngseasy](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/KHP-Informatics/ngseasy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.31444.svg)](http://dx.doi.org/10.5281/zenodo.31444)
 
 ### *Undergoing some re-dev...things may be broken...*
 
@@ -17,8 +17,6 @@ We present NGSeasy (Easy Analysis of Next Generation Sequencing), a flexible and
 **Release Version:** **1.0-r001**  
 **Release:** dirty_tango  
 **Citation:** [Folarin AA, Dobson RJ and Newhouse SJ. NGSeasy: a next generation sequencing pipeline in Docker containers [version 1; referees: 3 approved with reservations] F1000Research 2015, 4(ISCB Comm J):997 (doi: 10.12688/f1000research.7104.1).](http://f1000research.com/articles/4-997/v1)   
-
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.31444.svg)](http://dx.doi.org/10.5281/zenodo.31444)
 
 ## Acknowledgements
 This work is funded by the National Institute for Health Research (NIHR) Biomedical Research Centre at South London and Maudsley NHS Foundation Trust and King’s College London.
