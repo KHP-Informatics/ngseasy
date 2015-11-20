@@ -485,3 +485,4 @@ CMD ["/bin/bash"]
 ENV HOME /home/ngseasy
 USER ngseasy
 WORKDIR /home/ngseasy
+VOLUME /home/ngseasy/ngs_projects

@@ -90,7 +90,7 @@ docker images | grep ngseasy-trimmomatic 2>&1 || { echo "compbio/ngseasy-trimmom
 ########################################################################################################
 ## docker run command
 ########################################################################################################
-DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+DOCKER_RUN="docker run -P -w /home/ngseasy -e HOME=/home/ngseasy -e USER=ngseasy --user ngseasy"
 
 ########################################################################################################
 ## global logging fuction
@@ -279,7 +279,7 @@ $VERSION\t$NGSUSER]"  ${LOGFILE}
 ########################################################################################################
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
 ########################################################################################################
-DOCKERHOME="/home/pipeman/ngs_projects"
+DOCKERHOME="/home/ngseasy/ngs_projects"
 
 ########################################################################################################
 ## Docker OUTPUT SAMPLE DIR
@@ -410,13 +410,13 @@ fi
 # adapter_fa : check of this is in palce and exit if not
 ########################################################################################################
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
-    adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37/contaminant_list.fa"
+    adapter_fa="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_b37/contaminant_list.fa"
 elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
-    adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hg19/contaminant_list.fa"
+    adapter_fa="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_hg19/contaminant_list.fa"
 elif [[ "${GENOMEBUILD}" == "hs37d5" ]]; then
-    adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hs37d5/contaminant_list.fa"
+    adapter_fa="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_hs37d5/contaminant_list.fa"
 elif [[ "${GENOMEBUILD}" == "hs38DH" ]]; then
-    adapter_fa="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hs38DH/contaminant_list.fa"
+    adapter_fa="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_hs38DH/contaminant_list.fa"
 fi
 logger_ngseasy "[${NGSEASY_STEP}]:setting adaptor list docker dir [$adapter_fa]" ${LOGFILE}
 
@@ -476,7 +476,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:[cmd]: ILLUMINACLIP:${adapter_fa}:2:30:10:5:tr
 
 ${DOCKER_RUN} \
     --rm=true \
-    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
     --name trimmomatic_${BAM_PREFIX} \
     -t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
     PE \
@@ -499,7 +499,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:FastQC post Trimmomatic" ${LOGFILE}
 ########################################################################################################
 	${DOCKER_RUN} \
 	--rm=true \
-	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+	-v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
 	--name fastqc_post_trimm_${BAM_PREFIX} \
 	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc \
 	--threads 4 \
@@ -526,7 +526,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:TRIM set to [$TRIM] - basic trim. Just read qu
 ########################################################################################################
 	${DOCKER_RUN} \
 	--rm=true \
-	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+	-v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
 	--name trimmomatic_${BAM_PREFIX} \
 	-t compbio/ngseasy-trimmomatic:${NGSEASYVERSION} java -XX:ParallelGCThreads=1 -jar /usr/local/pipeline/Trimmomatic-0.32/trimmomatic-0.32.jar \
 	PE \
@@ -548,7 +548,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:START FastQC post Trimmomatic" ${LOGFILE}
 ########################################################################################################
 	${DOCKER_RUN} \
 	--rm=true \
-	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+	-v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
 	--name fastqc_post_trimm_${BAM_PREFIX} \
 	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc \
 	--threads 4 \

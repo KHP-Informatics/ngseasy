@@ -93,7 +93,7 @@ command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not ins
 ########################################################################################################
 ## docker run command
 ########################################################################################################
-DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+DOCKER_RUN="docker run -P -w /home/ngseasy -e HOME=/home/ngseasy -e USER=ngseasy --user ngseasy"
 
 ########################################################################################################
 ## global logging fuction
@@ -330,7 +330,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:Sample Directory [${SOUT}] "
 ########################################################################################################
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
 #
-DOCKERHOME="/home/pipeman/ngs_projects"
+DOCKERHOME="/home/ngseasy/ngs_projects"
 logger_ngseasy "[${NGSEASY_STEP}]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
 
 ########################################################################################################
@@ -370,7 +370,7 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
   GENOMEFILE=""
   FAI=""
 
-  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37"
+  REFDIR="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
   REFFASTA="${REFDIR}/human_g1k_v37.fasta"
   DBSNP_RECAB="${REFDIR}/dbsnp_138.b37.recab"
@@ -403,7 +403,7 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   GENOMEFILE=""
   FAI=""
 
-  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hg19"
+  REFDIR="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
   REFFASTA="${REFDIR}/ucsc.hg19.fasta"
   DBSNP_RECAB="${REFDIR}/dbsnp_138.hg19.recab"
@@ -544,7 +544,7 @@ if [[ ! -e ${SOUT}/alignments/${FilteredBAM} ]]
     then
     logger_ngseasy "[${NGSEASY_STEP}]:START Filter BAM Q20 and proper_pair" ${LOGFILE}
     ${DOCKER_RUN} \
-    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
     --name filterBam_${BAM_PREFIX} \
     -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
     "sambamba view \
@@ -592,7 +592,7 @@ if [ "${CNV}" == "sv_lumpy" ]
 
 #### run
   ${DOCKER_RUN} \
-  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
   --name sv_lumpy_${BAM_PREFIX} \
   -t compbio/ngseasy-speedseq:${NGSEASYVERSION} /bin/bash -c \
   "time /usr/local/pipeline/speedseq/bin/speedseq sv \
@@ -628,7 +628,7 @@ elif [ "${CNV}" == "delly" ]
   then
   logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
   ${DOCKER_RUN} \
-  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
   --name ${CNV}_${BAM_PREFIX} \
   -t compbio/ngseasy-delly:${NGSEASYVERSION} /bin/bash -c \
   "[INSERT CODE]"
@@ -645,7 +645,7 @@ elif [ "${CNV}" == "exomedepth" ]
     then
     logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
     ${DOCKER_RUN} \
-    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
     --name ${CNV}_${BAM_PREFIX} \
     -t compbio/ngseasy-exomedepth:${NGSEASYVERSION} /bin/bash -c \
     "[INSERT CODE]"
@@ -662,7 +662,7 @@ elif [ "${CNV}" == "mhmm" ]
       then
       logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
       ${DOCKER_RUN} \
-      -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+      -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
       --name ${CNV}_${BAM_PREFIX} \
       -t compbio/ngseasy-mhmm:${NGSEASYVERSION} /bin/bash -c \
       "[INSERT CODE]"
@@ -679,7 +679,7 @@ elif [ "${CNV}" == "slope" ]
     then
     logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
     ${DOCKER_RUN} \
-    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
     --name ${CNV}_${BAM_PREFIX} \
     -t compbio/ngseasy-delly:${NGSEASYVERSION} /bin/bash -c \
     "[INSERT CODE]"
@@ -696,7 +696,7 @@ elif [ "${CNV}" == "cnvnator" ]
     then
     logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
     ${DOCKER_RUN} \
-    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
     --name ${CNV}_${BAM_PREFIX} \
     -t compbio/ngseasy-delly:${NGSEASYVERSION} /bin/bash -c \
     "[INSERT CODE]"

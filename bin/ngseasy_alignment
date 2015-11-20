@@ -87,7 +87,7 @@ command -v docker >/dev/null 2>&1 || { echo "I require Docker...but it's not ins
 ########################################################################################################
 ## docker run command
 ########################################################################################################
-DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+DOCKER_RUN="docker run -P -w /home/ngseasy -e HOME=/home/ngseasy -e USER=ngseasy --user ngseasy"
 
 ########################################################################################################
 ## global logging fuction
@@ -307,7 +307,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:Sample Directory [${SOUT}] "
 ########################################################################################################
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
 ########################################################################################################
-DOCKERHOME="/home/pipeman/ngs_projects"
+DOCKERHOME="/home/ngseasy/ngs_projects"
 logger_ngseasy "[${NGSEASY_STEP}]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
 
 ########################################################################################################
@@ -345,7 +345,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:Checking genome selected]"  ${LOGFILE}
 
 if [[ "${GENOMEBUILD}" == "b37" ]]; then
 
-  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37"
+  REFDIR="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build index [${GENOMEINDEX}]"  ${LOGFILE}
@@ -354,7 +354,7 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
 
 elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
 
-  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hg19"
+  REFDIR="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build index [${GENOMEINDEX}]"  ${LOGFILE}
@@ -363,7 +363,7 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
 ## hs37d5 and hs38DH added 04.08.15 generated using bwakit
 elif [[ "${GENOMEBUILD}" == "hs37d5" ]]; then
 
-  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hs37d5"
+  REFDIR="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_hs37d5"
   GENOMEINDEX="${REFDIR}/hs37d5"
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build index [${GENOMEINDEX}]"  ${LOGFILE}
@@ -372,7 +372,7 @@ elif [[ "${GENOMEBUILD}" == "hs37d5" ]]; then
 
 elif [[ "${GENOMEBUILD}" == "hs38DH" ]]; then
 
-  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hs38DH"
+  REFDIR="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_hs38DH"
   GENOMEINDEX="${REFDIR}/hs38DH"
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
   logger_ngseasy "[${NGSEASY_STEP}]:Genome Build index [${GENOMEINDEX}]"  ${LOGFILE}
@@ -463,7 +463,7 @@ elif [[ "${ALIGNER}" == "bwa" ]]; then
     logger_ngseasy " START Basic ${ALIGNER} Alignment " ${LOGFILE}
 # align wih bwa
   time ${DOCKER_RUN} \
-  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
   --name alignment_${BAM_PREFIX} \
   -t compbio/ngseasy-bwa:${NGSEASYVERSION} /bin/bash -c \
   "time /usr/local/bin/bwa mem \
@@ -507,7 +507,7 @@ elif [[ "${ALIGNER}" == "novoalign" ]]; then
 
   time ${DOCKER_RUN} \
   --name alignment_${BAM_PREFIX} \
-  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
   -t compbio/ngseasy-novoalign:${NGSEASYVERSION} /bin/bash -c \
     "time /usr/local/bin/novoalign \
    -d ${GENOMEINDEX}.fasta.novoindex \
@@ -558,7 +558,7 @@ elif [[ "${ALIGNER}" == "stampy" ]]
     sleep 1s
 
   time ${DOCKER_RUN} \
-  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
   --name alignment_${BAM_PREFIX}_bwatmp \
   -t compbio/ngseasy-bwa:${NGSEASYVERSION} /bin/bash -c \
   "time /usr/local/bin/bwa mem \
@@ -596,7 +596,7 @@ else
     logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Alignment on BWA Aligned BAM" ${LOGFILE}
     time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
-    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
     -t compbio/ngseasy-stampy:${NGSEASYVERSION} /bin/bash -c \
     "time python  /usr/local/pipeline/${stampy_version}/stampy.py \
       -g ${GENOMEINDEX} \
@@ -640,7 +640,7 @@ else
       # Picard tools CleanSam
       time ${DOCKER_RUN} \
       --name CleanSam_${BAM_PREFIX} \
-      -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+      -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
       -t compbio/ngseasy-picardtools:${NGSEASYVERSION} /bin/bash -c \
       "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/${picard_version}/picard.jar CleanSam \
       TMP_DIR=${SOUTDocker}/tmp \
@@ -657,7 +657,7 @@ else
       # Picard tools AddOrReplaceReadGroups
       time ${DOCKER_RUN} \
       --name AddOrReplaceReadGroups_${BAM_PREFIX} \
-      -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+      -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
       -t compbio/ngseasy-picardtools:${NGSEASYVERSION} /bin/bash -c \
       "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/pipeline/picardtools/${picard_version}/picard.jar AddOrReplaceReadGroups \
       TMP_DIR=${SOUTDocker}/tmp \
@@ -703,7 +703,7 @@ SLOW="--local --sensitive-local"
 
     time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
-    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
     -t compbio/ngseasy-bowtie2:${NGSEASYVERSION} /bin/bash -c "time /usr/local/bin/bowtie2 ${FAST} --threads ${NCPU} -x ${GENOMEINDEX} \
     -I 50 -X 10000 \
     --rg-id ${BAM_PREFIX} \
@@ -750,7 +750,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:START ${ALIGNER} Basic Alignment" ${LOGFILE}
 
     time ${DOCKER_RUN} \
     --name alignment_${BAM_PREFIX} \
-    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
     -t compbio/ngseasy-snap:${NGSEASYVERSION} /bin/bash -c "time /usr/local/pipeline/snap/snap-aligner paired \
     ${REFDIR} \
     ${FQ1} ${FQ2} \

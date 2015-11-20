@@ -52,7 +52,7 @@ BAM_PREFIX=""
 ########################################################################################################
 ## docker run command
 ########################################################################################################
-DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+DOCKER_RUN="docker run -P -w /home/ngseasy -e HOME=/home/ngseasy -e USER=ngseasy --user ngseasy"
 ########################################################################################################
 ### var calling options
 ########################################################################################################
@@ -248,7 +248,7 @@ function set_output_sample_local_directory() {
 ## set Docker Output Dir and Sample output: this is the mouned directory set in docker containers
 ########################################################################################################
 function set_docker_working_and_sample_dir() {
-    DOCKERHOME="/home/pipeman/ngs_projects"
+    DOCKERHOME="/home/ngseasy/ngs_projects"
     logger_ngseasy "[${NGSEASY_STEP}]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
     SAMPLE_OUT_DOCKER="${DOCKERHOME}/${PROJECT_ID}/${SAMPLE_ID}"
     logger_ngseasy "[${NGSEASY_STEP}]:Docker Output directory [${SAMPLE_OUT_DOCKER}]" ${LOGFILE}
@@ -283,7 +283,7 @@ function select_genome_build_and_resources(){
       GENOMEFILE=""
       FAI=""
 
-      REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37"
+      REFDIR="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_b37"
       GENOMEINDEX="${REFDIR}/human_g1k_v37"
       REFFASTA="${REFDIR}/human_g1k_v37.fasta"
       DBSNP_RECAB="${REFDIR}/dbsnp_138.b37.recab"
@@ -316,7 +316,7 @@ function select_genome_build_and_resources(){
       GENOMEFILE=""
       FAI=""
 
-      REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hg19"
+      REFDIR="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_hg19"
       GENOMEINDEX="${REFDIR}/ucsc.hg19"
       REFFASTA="${REFDIR}/ucsc.hg19.fasta"
       DBSNP_RECAB="${REFDIR}/dbsnp_138.hg19.recab"
@@ -458,7 +458,7 @@ function docker_run_basic_pe_filter_bam(){
         then
         logger_ngseasy "[${NGSEASY_STEP}]:START Filter BAM Q20 and proper_pair" ${LOGFILE}
         ${DOCKER_RUN} \
-        -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+        -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
         --name filterBam_${BAM_PREFIX} \
         -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
         "sambamba view \
@@ -587,7 +587,7 @@ elif [ "${CNV}" == "exomedepth" ]
     then
     logger_ngseasy "[${NGSEASY_STEP}]:START SV Calling using ${CNV} " ${LOGFILE}
     ${DOCKER_RUN} \
-    -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+    -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
     --name ${CNV}_${BAM_PREFIX} \
     -t compbio/ngseasy-exomedepth:${NGSEASYVERSION} /bin/bash -c \
     "[INSERT CODE]"

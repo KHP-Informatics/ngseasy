@@ -56,7 +56,7 @@ NGSEASY_STEP="ngseasy_bsqr"
 ########################################################################################################
 ## docker run command
 #
-DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+DOCKER_RUN="docker run -P -w /home/ngseasy -e HOME=/home/ngseasy -e USER=ngseasy --user ngseasy"
 
 ########################################################################################################
 ## global logging fuction
@@ -282,7 +282,7 @@ logger_ngseasy "[${NGSEASY_STEP}]:Sample Directory [${SOUT}] "
 ########################################################################################################
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
 #
-DOCKERHOME="/home/pipeman/ngs_projects"
+DOCKERHOME="/home/ngseasy/ngs_projects"
 logger_ngseasy "[${NGSEASY_STEP}]:Docker home directory [${DOCKERHOME}]" ${LOGFILE}
 
 ########################################################################################################
@@ -319,7 +319,7 @@ if [[ "${GENOMEBUILD}" == "b37" ]]; then
   KNOWN_SNPS_b138=""
   DBSNP_RECAB=""
 
-  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_b37"
+  REFDIR="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_b37"
   GENOMEINDEX="${REFDIR}/human_g1k_v37"
   REFFASTA="${REFDIR}/human_g1k_v37.fasta"
   DBSNP_RECAB="${REFDIR}/dbsnp_138.b37.recab"
@@ -348,7 +348,7 @@ elif [[ "${GENOMEBUILD}" == "hg19" ]]; then
   KNOWN_SNPS_b138=""
   DBSNP_RECAB=""
 
-  REFDIR="/home/pipeman/ngs_projects/ngseasy_resources/reference_genomes_hg19"
+  REFDIR="/home/ngseasy/ngs_projects/ngseasy_resources/reference_genomes_hg19"
   GENOMEINDEX="${REFDIR}/ucsc.hg19"
   REFFASTA="${REFDIR}/ucsc.hg19.fasta"
   DBSNP_RECAB="${REFDIR}/dbsnp_138.hg19.recab"
@@ -437,7 +437,7 @@ if [[ ! -e "${BAMOUTi}" ]]; then
   logger_ngseasy "[${NGSEASY_STEP}]:Run bam recab" ${LOGFILE}
 
   time ${DOCKER_RUN} \
-  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
   --name bam_recab_${BAM_PREFIX} \
   -t compbio/ngseasy-base:${NGSEASYVERSION} /bin/bash -c \
   "time bam recab \
@@ -508,7 +508,7 @@ if [[ ! -e "${BAMOUTi}" ]]; then
   logger_ngseasy "[${NGSEASY_STEP}]:Run GATK BSQR" ${LOGFILE}
 
   time ${DOCKER_RUN} \
-  -v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+  -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
   --name gatk_recab_${BAM_PREFIX} \
   -t compbio/ngseasy-gatk:${NGSEASYVERSION} /bin/bash -c \
   "time java -Xmx12g -Djava.io.tmpdir=${SOUTDocker}/tmp -jar /usr/local/bin/GenomeAnalysisTK.jar \

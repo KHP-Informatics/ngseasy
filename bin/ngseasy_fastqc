@@ -89,7 +89,7 @@ docker images | grep ngseasy-fastqc 2>&1 || { echo "compbio/ngseasy-fastqc:${NGS
 ########################################################################################################
 ## docker run command
 ########################################################################################################
-DOCKER_RUN="docker run -P -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman"
+DOCKER_RUN="docker run -P -w /home/ngseasy -e HOME=/home/ngseasy -e USER=ngseasy --user ngseasy"
 
 ########################################################################################################
 ## global logging fuction
@@ -289,12 +289,12 @@ fi
 logger_ngseasy "[${NGSEASY_STEP}]:Checking selected genome"  ${LOGFILE}
 
 if [[ "${GENOMEBUILD}" -eq "b37" ]]; then
-  REFDIR="/home/pipeman/ngs_resources/reference_genomes_b37"
+  REFDIR="/home/ngseasy/ngs_resources/reference_genomes_b37"
   GENOMEINDEX=${REFDIR}/human_g1k_v37
   logger_ngseasy "[${NGSEASY_STEP}]: Genome Build [${GENOMEBUILD}]" ${LOGFILE}
 
 elif [[ "${GENOMEBUILD}" -eq "hg19" ]]; then
-  REFDIR="/home/pipeman/ngs_resources/reference_genomes_hg19"
+  REFDIR="/home/ngseasy/ngs_resources/reference_genomes_hg19"
   GENOMEINDEX=${REFDIR}/ucsc.hg19
   logger_ngseasy "[${NGSEASY_STEP}]: Genome Build [${GENOMEBUILD}]"  ${LOGFILE}
 
@@ -453,7 +453,7 @@ elif [[ "$FASTQC" == "qc-fastqc" ]]; then
 ########################################################################################################
 ## Docker Output Dir: this is the mouned directory set by ngseasy_volumes_container
 ###########################################################################################
-DOCKERHOME="/home/pipeman/ngs_projects"
+DOCKERHOME="/home/ngseasy/ngs_projects"
 
 ########################################################################################################
 ## Docker OUTPUT SAMPLE DIR
@@ -473,11 +473,11 @@ BAM_PREFIX="${SAMPLE_ID}.${NGS_TYPE}.${DNA_PREP_LIBRARY_ID}.${NGS_PLATFORM}.${TR
 ## call docker: run as -d in background (-d does not work with --rm=true).
 ## This runs all containers in background..simultaneuously!
 #
-logger_ngseasy "[${NGSEASY_STEP}]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/pipeman/ngs_projects -w /home/pipeman -e HOME=/home/pipeman -e USER=pipeman --user pipeman --name fastqc_${BAM_PREFIX} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${FQ1} ${SOUTDocker}/fastq/${FQ2}" ${LOGFILE}
+logger_ngseasy "[${NGSEASY_STEP}]:[cmd]:docker run -d -v ${PROJECT_DIR}:/home/ngseasy/ngs_projects -w /home/ngseasy -e HOME=/home/ngseasy -e USER=ngseasy --user ngseasy --name fastqc_${BAM_PREFIX} -t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${FQ1} ${SOUTDocker}/fastq/${FQ2}" ${LOGFILE}
 
 	${DOCKER_RUN} \
 	-d \
-	-v ${PROJECT_DIR}:/home/pipeman/ngs_projects \
+	-v ${PROJECT_DIR}:/home/ngseasy/ngs_projects \
 	--name fastqc_${BAM_PREFIX} \
 	-t compbio/ngseasy-fastqc:${NGSEASYVERSION} /usr/local/pipeline/FastQC/fastqc --threads 2 --extract \
 	--dir ${SOUTDocker}/tmp --outdir ${SOUTDocker}/fastq ${SOUTDocker}/fastq/${FQ1} ${SOUTDocker}/fastq/${FQ2}
