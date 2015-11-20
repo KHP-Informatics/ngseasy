@@ -192,51 +192,51 @@ RUN apt-get update && \
 
 # fastc
   FASTQC_VERSION="0.11.4" && \
-  cd /usr/local/ngs/bin \
-  && wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQC_VERSION}.zip \
-  && unzip fastqc_v${FASTQC_VERSION}.zip \
-  && chmod -R 777 ./FastQC/ \
-  && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/FastQC/jbzip2-0.9.jar:/usr/local/ngs/bin/FastQC/sam-1.103.jar' /home/ngseasy/.bashrc \
-  && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/FastQC' /home/ngseasy/.bashrc \
-  && ln -s /usr/local/ngs/bin/FastQC/fastqc /usr/local/bin/fastqc && \
+  cd /usr/local/ngs/bin && \
+  wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQC_VERSION}.zip && \
+  unzip fastqc_v${FASTQC_VERSION}.zip && \
+  chmod -R 777 ./FastQC/ && \
+  sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/FastQC/jbzip2-0.9.jar:/usr/local/ngs/bin/FastQC/sam-1.103.jar' /home/ngseasy/.bashrc && \
+  sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/FastQC' /home/ngseasy/.bashrc && \
+  ln -s /usr/local/ngs/bin/FastQC/fastqc /usr/local/bin/fastqc && \
   cd /usr/local/ngs/bin/ && \
   rm -r fastqc_v${FASTQC_VERSION}.zip && \
 
 # Trimmomatic
   TRIMMOMATIC_VERSION="0.32" && \
-  cd /usr/local/ngs/bin \
-  && wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-${TRIMMOMATIC_VERSION}.zip \
-  && unzip Trimmomatic-${TRIMMOMATIC_VERSION}.zip \
-  && chmod -R 777 Trimmomatic-${TRIMMOMATIC_VERSION}/* \
-  && sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/Trimmomatic-0.32/trimmomatic-0.32.jar' /home/ngseasy/.bashrc \
-  && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/Trimmomatic-0.32' /home/ngseasy/.bashrc \
-  && cp -v /usr/local/ngs/bin/Trimmomatic-0.32/trimmomatic-0.32.jar /usr/local/bin && \
+  cd /usr/local/ngs/bin && \
+  wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-${TRIMMOMATIC_VERSION}.zip && \
+  unzip Trimmomatic-${TRIMMOMATIC_VERSION}.zip && \
+  chmod -R 777 Trimmomatic-${TRIMMOMATIC_VERSION}/* && \
+  sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/Trimmomatic-0.32/trimmomatic-0.32.jar' /home/ngseasy/.bashrc && \
+  sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/Trimmomatic-0.32' /home/ngseasy/.bashrc && \
+  cp -v /usr/local/ngs/bin/Trimmomatic-0.32/trimmomatic-0.32.jar /usr/local/bin && \
   cd /usr/local/ngs/bin/ && \
   rm Trimmomatic-${TRIMMOMATIC_VERSION}.zip && \
 
 # Picard
   PICARD_VERSION="1.141" && \
-  cd /usr/local/ngs/bin \
-  && wget https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard-tools-${PICARD_VERSION}.zip \
-  && unzip picard-tools-${PICARD_VERSION}.zip \
-  && chmod -R 777 /usr/local/ngs/bin/picard-tools-${PICARD_VERSION} \
-  && cp -v /usr/local/ngs/bin/picard-tools-${PICARD_VERSION}/* /usr/local/bin/ \
-  && cd /usr/local/ngs/bin/ \
-  && rm -r picard-tools-${PICARD_VERSION}/* \
-  && rm -r picard-tools-${PICARD_VERSION}.zip && \
+  cd /usr/local/ngs/bin && \
+  wget https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard-tools-${PICARD_VERSION}.zip && \
+  unzip picard-tools-${PICARD_VERSION}.zip && \
+  chmod -R 777 /usr/local/ngs/bin/picard-tools-${PICARD_VERSION} && \
+  cp -v /usr/local/ngs/bin/picard-tools-${PICARD_VERSION}/* /usr/local/bin/ && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r picard-tools-${PICARD_VERSION}/* && \
+  rm -r picard-tools-${PICARD_VERSION}.zip && \
 
 ## Aligners
 # bwakit
 # http://sourceforge.net/projects/bio-bwa/files/bwakit/
 # http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-0.7.12_x64-linux.tar.bz2
   BWA_VERSION="0.7.12" && \
-  cd /usr/local/ngs/bin \
-  && wget http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-${BWA_VERSION}_x64-linux.tar.bz2 \
-  && tar xjvf bwakit-${BWA_VERSION}_x64-linux.tar.bz2 \
-  && chmod -R 777 /usr/local/ngs/bin \
-  && ln -s /usr/local/ngs/bin/bwa.kit/bwa /usr/local/bin/bwa \
-  && cd /usr/local/ngs/bin \
-  && rm bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
+  cd /usr/local/ngs/bin && \
+  wget http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
+  tar xjvf bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
+  chmod -R 777 /usr/local/ngs/bin && \
+  ln -s /usr/local/ngs/bin/bwa.kit/bwa /usr/local/bin/bwa && \
+  cd /usr/local/ngs/bin && \
+  rm bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
 
 # snap v1.0beta.18 snap-aligner
   cd /usr/local/ngs/bin && \
@@ -249,7 +249,7 @@ RUN apt-get update && \
   cd /usr/local/ngs/bin/ && \
   rm -r snap && \
 
-# novoalign: need to add novoalign.lic to /usr/local/bin/ after build
+# novoalign: need to add novoalign.lic
   NOVOALIGN_VERSION="V3.03.02" && \
   cd /usr/local/ngs/bin && \
   wget https://s3-eu-west-1.amazonaws.com/novoalign/novocraft${NOVOALIGN_VERSION}.Linux3.0.tar.gz && \
@@ -300,14 +300,14 @@ RUN apt-get update && \
 
 ## Variant Calling
 # freebayes
-  cd /usr/local/ngs/bin \
-  && git clone --recursive git://github.com/ekg/freebayes.git \
-  && cd /usr/local/ngs/bin/freebayes \
-  && make \
-  && chmod -R 777 /usr/local/ngs/bin/freebayes \
-  && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/freebayes/bin' /home/ngseasy/.bashrc \
-  && cp -v /usr/local/ngs/bin/freebayes/bin/* /usr/local/bin \
-  && cp -v /usr/local/ngs/bin/freebayes/scripts/* /usr/local/bin && \
+  cd /usr/local/ngs/bin && \
+  git clone --recursive git://github.com/ekg/freebayes.git && \
+  cd /usr/local/ngs/bin/freebayes && \
+  make && \
+  chmod -R 777 /usr/local/ngs/bin/freebayes && \
+  sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/freebayes/bin' /home/ngseasy/.bashrc && \
+  cp -v /usr/local/ngs/bin/freebayes/bin/* /usr/local/bin && \
+  cp -v /usr/local/ngs/bin/freebayes/scripts/* /usr/local/bin && \
   cd /usr/local/ngs/bin/ && \
   rm -r freebayes && \
 
