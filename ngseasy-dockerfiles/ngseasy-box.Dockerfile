@@ -223,14 +223,14 @@ RUN apt-get update && \
   cp -v /usr/local/ngs/bin/picard-tools-${PICARD_VERSION}/* /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
   rm -r picard-tools-${PICARD_VERSION}/* && \
-  rm -r picard-tools-${PICARD_VERSION}.zip && \
+  rm -r picard-tools-${PICARD_VERSION}.zip
 
 ## Aligners
 # bwakit
 # http://sourceforge.net/projects/bio-bwa/files/bwakit/
 # http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-0.7.12_x64-linux.tar.bz2
+RUN cd /usr/local/ngs/bin && \
   BWA_VERSION="0.7.12" && \
-  cd /usr/local/ngs/bin && \
   wget http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
   tar xjvf bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
   chmod -R 777 /usr/local/ngs/bin && \
@@ -279,6 +279,8 @@ RUN apt-get update && \
   wget http://www.well.ox.ac.uk/bioinformatics/Software/Stampy-latest.tgz && \
   tar -xvf Stampy-latest.tgz && \
   chmod -R 777 stampy-${STAMPY_VERSION} && \
+  cd stampy-${STAMPY_VERSION} && \
+  mv makefile Makefile && \
   make && \
   export PATH=$PATH:/usr/local/ngs/bin/stampy-${STAMPY_VERSION} && \
   cd /usr/local/ngs/bin/ && \
@@ -296,11 +298,11 @@ RUN apt-get update && \
   cp -v snp_indexer /usr/local/bin && \
   cp -v mrsfast /usr/local/bin && \
   cd /usr/local/ngs/bin/ && \
-  rm -r mrsfast && \
+  rm -r mrsfast
 
 ## Variant Calling
 # freebayes
-  cd /usr/local/ngs/bin && \
+RUN cd /usr/local/ngs/bin && \
   git clone --recursive git://github.com/ekg/freebayes.git && \
   cd /usr/local/ngs/bin/freebayes && \
   make && \
@@ -401,7 +403,6 @@ RUN apt-get update && \
   chmod -R 777 ./* && \
   cp -v /usr/local/ngs/bin/bcbio.variation.recall/bin/* /usr/local/bin && \
 
-
 # CNVkit
 # https://github.com/chapmanb/cnvkit and https://github.com/etal/cnvkit
   cd  /usr/local/ngs/bin/ && \
@@ -437,11 +438,11 @@ RUN apt-get update && \
   cp -v ./svtyper/svtyper /usr/local/bin/ && \
   cp -v ./svtyper/scripts/* /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
-  rm -r svtyper && \
+  rm -r svtyper
 
 ## ReAligners
 # ABRA - Assembly Based ReAligner https://github.com/mozack/abra
-  cd /usr/local/ngs/bin && \
+RUN cd /usr/local/ngs/bin && \
   ABRA_VERSION="0.94" && \
   wget https://github.com/mozack/abra/releases/download/v${ABRA_VERSION}/abra-${ABRA_VERSION}-SNAPSHOT-jar-with-dependencies.jar && \
   chmod 777 abra-${ABRA_VERSION}-SNAPSHOT-jar-with-dependencies.jar && \
@@ -468,10 +469,10 @@ RUN apt-get update && \
   cp -v ogap /usr/local/bin/ && \
   cp -v ./smithwaterman/smithwaterman /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
-  rm -r ogap && \
+  rm -r ogap
 
 # source .bashrc
-  bash -c "source /home/ngseasy/.bashrc" && \
+RUN  bash -c "source /home/ngseasy/.bashrc" && \
 
 # Clean up APT when done.
   apt-get clean && \
