@@ -255,7 +255,7 @@ RUN apt-get update && \
   wget https://s3-eu-west-1.amazonaws.com/novoalign/novocraft${NOVOALIGN_VERSION}.Linux3.0.tar.gz && \
   tar xvf novocraft${NOVOALIGN_VERSION}.Linux3.0.tar.gz && \
   chmod -R 777 novocraft && \
-  cp -v novocraft/* /usr/local/bin/ && \
+  cp -vr novocraft/* /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
   rm -r novocraft && \
   rm novocraft${NOVOALIGN_VERSION}.Linux3.0.tar.gz && \
