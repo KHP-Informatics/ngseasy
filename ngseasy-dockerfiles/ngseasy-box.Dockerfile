@@ -471,8 +471,7 @@ RUN  bash -c "source /home/ngseasy/.bashrc" && \
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
   apt-get autoclean && \
   apt-get autoremove -y && \
-  rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
-  rm -rf /usr/local/ngs/bin/*
+  rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 ADD fix_ambiguous /usr/local/bin/
 
