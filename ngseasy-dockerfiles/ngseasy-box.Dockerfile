@@ -427,7 +427,7 @@ RUN cd /usr/local/ngs/bin && \
   git clone --recursive  https://github.com/hall-lab/svtyper.git && \
   chmod -R 777 ./svtyper && \
   cp -v ./svtyper/svtyper /usr/local/bin/ && \
-  cp -v ./svtyper/scripts/* /usr/local/bin/ && \
+  cp -vr ./svtyper/scripts/* /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
   rm -r /usr/local/ngs/bin/svtyper
 
