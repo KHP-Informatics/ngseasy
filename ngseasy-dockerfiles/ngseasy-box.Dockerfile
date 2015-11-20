@@ -214,7 +214,7 @@ RUN cd /usr/local/ngs/bin && \
   cp -v /usr/local/ngs/bin/picard-tools-${PICARD_VERSION}/* /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
   rm -r picard-tools-${PICARD_VERSION}/* && \
-  rm -r picard-tools-${PICARD_VERSION}.zip
+  rm -r picard-tools-${PICARD_VERSION}.zip && \
 
 # bamkit.
   cd  /usr/local/ngs/bin/ && \
