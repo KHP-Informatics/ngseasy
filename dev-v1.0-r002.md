@@ -7,7 +7,7 @@
 |Date:30.10.2015|
 |Git: https://github.com/KHP-Informatics/ngseasy|
 
-## Dev Box: 
+## Dev Box:
 
 ```
 Linux sjn-devbox-ubuntu 3.19.0-31-generic #36-Ubuntu SMP Wed Oct 7 15:04:02 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
@@ -128,7 +128,7 @@ Server:
  OS/Arch:      linux/amd64
 ```
 
-## java version 
+## java version
 
 ```bash
 java version "1.7.0_85"
@@ -150,7 +150,7 @@ Python 2.7.9
 aligners: bwa, snap, mrsfast, bowtie2, novoalign, stampy
 ```
 
-| Aligners | 
+| Aligners |
 |:------|
 |bwa|
 |snap|
@@ -165,7 +165,7 @@ aligners: bwa, snap, mrsfast, bowtie2, novoalign, stampy
 varcallers: freebayes, platypus, VarDict, VarScan, samtools,gatk-hc
 ```
 
-|Variant Callers | 
+|Variant Callers |
 |:------|
 | freebayes |
 | platypus |
@@ -181,7 +181,7 @@ varcallers: freebayes, platypus, VarDict, VarScan, samtools,gatk-hc
 svcallers: lumpy,lumpyexpress,svtyper, cnvkit
 ```
 
-|Structural Variant Callers | 
+|Structural Variant Callers |
 |:------|
 |lumpy |
 |lumpyexpress|
@@ -194,7 +194,7 @@ svcallers: lumpy,lumpyexpress,svtyper, cnvkit
 realn: abra.jar, glia, ogap
 ```
 
-|Re-Aligners| 
+|Re-Aligners|
 |:------|
 |abra|
 |glia|
@@ -202,8 +202,14 @@ realn: abra.jar, glia, ogap
 
 ************
 
+## To Do
+- cwl  
+- nextflow
+- https://www.dockstore.org  
+- Fat, Thin and Tiny Containers    
+
 ## Random Lists...
 Some tools to add?  
 
 - [List of sequence alignment software ](https://en.wikipedia.org/wiki/List_of_sequence_alignment_software)  
-- http://bioinform.github.io/metasv/ 
+- http://bioinform.github.io/metasv/
