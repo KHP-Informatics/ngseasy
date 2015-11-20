@@ -2,9 +2,4 @@
 
 TAG=$1
 
-docker build \
---rm=true \
---tag=compbio/ngseasy-box:${TAG} \
---file=ngseasy-box.Dockerfile .
-
-
+docker build --rm=true --tag=compbio/ngseasy-box:${TAG} --file=ngseasy-box.Dockerfile .
