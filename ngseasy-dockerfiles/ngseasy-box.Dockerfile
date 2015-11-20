@@ -216,6 +216,14 @@ RUN cd /usr/local/ngs/bin && \
   rm -r picard-tools-${PICARD_VERSION}/* && \
   rm -r picard-tools-${PICARD_VERSION}.zip
 
+# bamkit.
+  cd  /usr/local/ngs/bin/ && \
+  git clone --recursive https://github.com/hall-lab/bamkit.git && \
+  chmod -R 777 ./bamkit/ && \
+  cp -v ./bamkit/bam* /usr/local/bin/ && \
+  cp -v ./bamkit/sectosupp /usr/local/bin/ && \
+  rm -r ./bamkit/
+
 ## Aligners
 # bwakit
 # http://sourceforge.net/projects/bio-bwa/files/bwakit/
@@ -392,24 +400,17 @@ RUN cd /usr/local/ngs/bin && \
   export LEIN_ROOT=yes && \
   make && \
   chmod -R 777 ./* && \
-  cp -v /usr/local/ngs/bin/bcbio.variation.recall/bin/* /usr/local/bin && \
+  cp -v /usr/local/ngs/bin/bcbio.variation.recall/bin/* /usr/local/bin
 
+## SV CALLERS
 # CNVkit
 # https://github.com/chapmanb/cnvkit and https://github.com/etal/cnvkit
-  cd  /usr/local/ngs/bin/ && \
+RUN cd  /usr/local/ngs/bin/ && \
   CNVKIT_VERSION="0.7.3" && \
   pip install pandas biopython pysam pyvcf --upgrade && \
   Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite()' && \
   Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("PSCBS", "cghFLasso")' && \
   pip install cnvkit==${CNVKIT_VERSION} && \
-
-# bamkit. this in
-  cd  /usr/local/ngs/bin/ && \
-  git clone --recursive https://github.com/hall-lab/bamkit.git && \
-  chmod -R 777 ./bamkit/ && \
-  cp -v ./bamkit/bam* /usr/local/bin/ && \
-  cp -v ./bamkit/sectosupp /usr/local/bin/ && \
-  rm -r ./bamkit/ && \
 
 # lumpy-sv
   cd  /usr/local/ngs/bin/ && \
