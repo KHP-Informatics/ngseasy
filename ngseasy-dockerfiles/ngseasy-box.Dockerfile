@@ -1,5 +1,5 @@
 # base image
-FROM compbio/debian:v1.0-r002-989f6a1
+FROM compbio/debian:r1.0-002-0936130
 
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
