@@ -6,7 +6,11 @@ NGSeasy: A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box
 
 ### *Undergoing some re-dev...things may be broken...*
 
+## NGSeasy
+
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**  
+
+We present NGSeasy (Easy Analysis of Next Generation Sequencing), a flexible and easy-to-use NGS pipeline for automated alignment, quality control, variant calling and annotation. The pipeline allows users with minimal computational/bioinformatic skills to set up and run an NGS analysis on their own samples, in less than an afternoon, on any operating system (Windows, iOS or Linux) or infrastructure (workstation, cluster or cloud).
 
 ## Authors
 **Authors:** Stephen J Newhouse and Amos Folarin  
