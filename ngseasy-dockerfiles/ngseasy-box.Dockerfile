@@ -33,11 +33,11 @@ RUN apt-get update && \
   chmod -R 777 /usr/local/ngs/bin  && \
   chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin' /home/ngseasy/.bashrc && \
-  bash -c "source /home/ngseasy/.bashrc" && \
+  bash -c "source /home/ngseasy/.bashrc"
 
 ## NGSeasy Tools
 # samtools, htslib, bcftools
-  cd /usr/local/ngs/bin && \
+RUN cd /usr/local/ngs/bin && \
   git clone --branch=develop git://github.com/samtools/htslib.git && \
   git clone --branch=develop git://github.com/samtools/bcftools.git && \
   git clone --branch=develop git://github.com/samtools/samtools.git && \
@@ -56,15 +56,6 @@ RUN apt-get update && \
   rm -r bcftools && \
   rm -r htslib && \
   rm -r samtools && \
-
-# parallel (this is now in little-fatty-deb)
-#  cd /usr/local/ngs/bin && \
-#  wget http://ftpmirror.gnu.org/parallel/parallel-20140222.tar.bz2 && \
-#  bzip2 -dc parallel-20140222.tar.bz2 | tar xvf - && \
-#  cd parallel-20140222 && \
-#  ./configure && \
-#  make && \
-#  make install && \
 
 # libStatGen and bamUtil
   cd /usr/local/ngs/bin && \

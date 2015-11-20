@@ -8,6 +8,7 @@ NGSeasy: A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box
 
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**  
 
+## Authors
 **Authors:** Stephen J Newhouse and Amos Folarin  
 **Release Version:** **1.0-r001**  
 **Release:** dirty_tango  
@@ -15,9 +16,13 @@ NGSeasy: A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box
 
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.31444.svg)](http://dx.doi.org/10.5281/zenodo.31444)
 
+## Acknowledgements
+This work is funded by the National Institute for Health Research (NIHR) Biomedical Research Centre at South London and Maudsley NHS Foundation Trust and King’s College London.
+
+## Releases
 - **NGSeasy-1.0 Full Production release will be available Late 2015**  
 - **NGSeasy-1.0-r001 (dirty_tango) contains most of the core functionality to go from raw fastq to raw vcf calls**
-- **NGSeasy will update every 12 months**
+- **NGSeasy will update every 12 months*
 - **GUI in development**
 - **Lets us know if you want other tools added to NGSeasy**
 
