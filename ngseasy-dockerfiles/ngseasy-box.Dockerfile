@@ -418,7 +418,7 @@ RUN cd /usr/local/ngs/bin && \
   make && \
   chmod -R 777 ./* && \
   cp -v bin/* /usr/local/bin/ && \
-  cp -v scripts/* /usr/local/bin/ && \
+  cp -vr scripts/* /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
   rm -r lumpy-sv && \
 
