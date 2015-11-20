@@ -483,6 +483,6 @@ RUN chmod -R 777 /usr/local/ngs/bin && chown -R ngseasy:ngseasy /usr/local/ngs/b
 CMD ["/bin/bash"]
 
 # run as user ngseasy
-HOME /home/ngseasy
+ENV HOME /home/ngseasy
 USER ngseasy
 WORKDIR /home/ngseasy
