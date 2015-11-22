@@ -7,6 +7,33 @@
 |Date:30.10.2015|
 |Git: https://github.com/KHP-Informatics/ngseasy|
 
+## Check List
+
+- [x] Build base debain image: fatty
+- [x] Build Big Kahuna
+- [ ] Build individual tools Docker
+- [ ] Build tool sets: Base, Aligners, Callers
+- [ ] Build speedseq
+- [ ] Build bcbio-nextgen
+- [ ] Get all genomes and decoys
+ - [ ] hg19
+ - [ ] b37
+ - [ ] b38
+ - [ ] Add decoy genomes to all  
+ - [ ] get resources and lift-over all
+- [ ] Index all genomes for all aligners 
+ - [ ] bwa
+ - [ ] novo
+ - [ ] snap
+ - [ ] bowtie2
+ - [ ] mrsfast  
+- [ ] Test Suite for GCAT and Paper
+- [ ] Add HLA Calling
+- [ ] Add Gemini
+- [ ] Add Nextflow Versions
+- [ ] Add Native non-Docker version
+
+
 ## Dev Box:
 
 ```
