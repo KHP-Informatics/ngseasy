@@ -13,7 +13,7 @@ RUN PICARD_VERSION="1.141" && \
   chmod -R 777 /usr/local/ngs/bin/picard-tools-${PICARD_VERSION} && \
   mv -v /usr/local/ngs/bin/picard-tools-${PICARD_VERSION}/* /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
-  rm -r picard-tools-${PICARD_VERSION}/* && \
+  rm -r picard-tools-${PICARD_VERSION} && \
   rm -r picard-tools-${PICARD_VERSION}.zip && \
   bash -c "source /home/ngseasy/.bashrc" && \
 
