@@ -77,6 +77,20 @@ dpkg-reconfigure locales && \
 # set JAVA_HOME
   ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk-amd64
 
+# Create a user:ngseasy and group:ngseasy
+RUN  useradd -m -U -s /bin/bash ngseasy && \
+  cd /home/ngseasy && \
+  usermod -aG sudo ngseasy && \
+
+# make dirs: /usr/local/ngs/bin and sort permissions out
+  mkdir /usr/local/ngs && \
+  mkdir /usr/local/ngs/bin && \
+  chown ngseasy:ngseasy /usr/local/ngs/bin  && \
+  chmod -R 777 /usr/local/ngs/bin  && \
+  chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
+  sed -i '$aPATH=$PATH:/usr/local/ngs/bin' /home/ngseasy/.bashrc && \
+  bash -c "source /home/ngseasy/.bashrc"
+
 # clean up
 RUN apt-get clean && \
   apt-get autoclean && \
