@@ -28,7 +28,14 @@
   - [ ] samtools
   - [ ] VarScan
   - [ ] VarDict
-- [ ] Build tool sets: Base, Aligners, Callers...
+  - [ ] vcftools
+  - [ ] bedtools
+  - [ ] vt
+  - [ ] bamUtil
+  - [ ] samblaster
+  - [ ] sambamba
+  - [ ] ...
+- [ ] Build tool sets: Base, BAM/VCF/BED parsers ,Aligners, Callers...
 - [ ] Build speedseq and options to call from `ngseasy`
 - [ ] Build bcbio-nextgen
 - [ ] Get all genomes and decoys
@@ -50,7 +57,9 @@
 - [ ] Add Gemini, Annovar, snpEff, VEP
 - [ ] Add Nextflow Versions
 - [ ] Add Native non-Docker version
-
+- [ ] Dockstore Versions
+- [ ] CWL
+- [ ] bcbio-nextgen from ngseasy
 
 ## Dev Box:
 
