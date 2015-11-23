@@ -15,7 +15,7 @@
   - [x] base image small: `ngseasy-dockerfiles/debian-small.Dockerfile`
   - [x] fastqc:  `ngseasy-dockerfiles/fastqc.Dockerfile`
   - [x] trimmomatic: `ngseasy-dockerfiles/trimmomatic.Dockerfile`
-  - [ ] picardtools
+  - [x] picardtools: `ngseasy-dockerfiles/picard.Dockerfile`
   - [ ] bwa
   - [ ] freebayes
   - [ ] gatk
