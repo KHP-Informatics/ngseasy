@@ -267,3 +267,4 @@ Some tools to add?
 
 - [List of sequence alignment software ](https://en.wikipedia.org/wiki/List_of_sequence_alignment_software)  
 - http://bioinform.github.io/metasv/
+- [Piping Hot Containers](http://matthewkwilliams.com/index.php/2015/04/21/piping-hot-docker-containers/)
