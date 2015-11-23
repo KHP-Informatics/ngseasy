@@ -57,6 +57,11 @@ RUN apt-get update && \
   apt-get clean && \
   apt-get purge && \
 
+# Ensure permissions are set for update in place by arbitrary users
+# From: https://github.com/chapmanb/bcbio-nextgen/blob/master/Dockerfile#L68
+  find /usr/local -perm /u+x -execdir chmod a+x {} \; && \
+  find /usr/local -perm /u+w -execdir chmod a+w {} \; && \
+
 # configure locales
 dpkg-reconfigure locales && \
   locale-gen C.UTF-8 && \
@@ -72,13 +77,8 @@ dpkg-reconfigure locales && \
 # set JAVA_HOME
   ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk-amd64
 
-# Ensure permissions are set for update in place by arbitrary users
-# From: https://github.com/chapmanb/bcbio-nextgen/blob/master/Dockerfile#L68
-  find /usr/local -perm /u+x -execdir chmod a+x {} \; && \
-  find /usr/local -perm /u+w -execdir chmod a+w {} \; && \
-
 # clean up
-  apt-get clean && \
+RUN apt-get clean && \
   apt-get autoclean && \
   apt-get autoremove -y && \
   rm -rf /var/lib/apt/lists/* && \
