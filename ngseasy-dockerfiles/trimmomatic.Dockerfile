@@ -12,7 +12,7 @@ RUN TRIMMOMATIC_VERSION="0.32" && \
   chmod -R 777 Trimmomatic-${TRIMMOMATIC_VERSION}/* && \
   sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/Trimmomatic-${TRIMMOMATIC_VERSION}/trimmomatic-${TRIMMOMATIC_VERSION}.jar' /home/ngseasy/.bashrc && \
   sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/Trimmomatic-${TRIMMOMATIC_VERSION}' /home/ngseasy/.bashrc && \
-  cp -v /usr/local/ngs/bin/Trimmomatic-${TRIMMOMATIC_VERSION}/trimmomatic-${TRIMMOMATIC_VERSION}.jar /usr/local/bin && \
+  ln -s /usr/local/ngs/bin/Trimmomatic-${TRIMMOMATIC_VERSION}/trimmomatic-${TRIMMOMATIC_VERSION}.jar /usr/local/bin/trimmomatic.jar && \
   cd /usr/local/ngs/bin/ && \
   rm Trimmomatic-${TRIMMOMATIC_VERSION}.zip && \
   bash -c "source /home/ngseasy/.bashrc" && \
@@ -26,5 +26,5 @@ RUN TRIMMOMATIC_VERSION="0.32" && \
 
 USER ngseasy
 WORKDIR /home/ngseasy
-ENV TRIMMOMATIC_VERSION 0.32
-CMD ["java","-jar","/usr/local/bin/trimmomatic-${TRIMMOMATIC_VERSION}.jar"]
+
+CMD ["java","-jar","/usr/local/bin/trimmomatic.jar"]
