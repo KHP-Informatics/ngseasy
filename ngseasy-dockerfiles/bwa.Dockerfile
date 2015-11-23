@@ -1,40 +1,49 @@
 # Base image
-FROM compbio/ngseasy-base:1.0-r001
+FROM compbio/debian:small-0.1-0bef85c
 
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
-# Set correct environment variables.
-# ENV HOME /root
-# ENV DEBIAN_FRONTEND noninteractive
+# bwakit
+# http://sourceforge.net/projects/bio-bwa/files/bwakit/
+# http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-0.7.12_x64-linux.tar.bz2
+RUN cd /usr/local/ngs/bin && \
+  BWA_VERSION="0.7.12" && \
+  wget http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
+  tar xjvf bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
+  chmod -R 777 /usr/local/ngs/bin && \
+  ln -s /usr/local/ngs/bin/bwa.kit/bwa /usr/local/bin/bwa && \
+  cd /usr/local/ngs/bin && \
+  rm bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
+  chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
 
-# Update
-RUN apt-get update -y && apt-get upgrade -y
+# samblaster
+  cd /usr/local/ngs/bin && \
+  git clone git://github.com/GregoryFaust/samblaster.git && \
+  cd samblaster && \
+  make && \
+  chmod -R 777 /usr/local/ngs/bin && \
+  cp -v samblaster /usr/local/bin/ && \
+  cd /usr/local/ngs/bin && \
+  rm -r /usr/local/ngs/bin/samblaster && \
 
-# + bwa
-RUN wget -O /tmp/bwa-0.7.12.tar.bz2 http://sourceforge.net/projects/bio-bwa/files/bwa-0.7.12.tar.bz2 \
-    && tar xjvf /tmp/bwa-0.7.12.tar.bz2 -C /usr/local/ngs/bin/ \
-    && chmod -R 777 /usr/local/ngs/bin \
-    && cd /usr/local/ngs/bin/bwa-0.7.12 && make \
-    && cp -v /usr/local/ngs/bin/bwa-0.7.12/bwa /usr/local/bin
+# sambamba
+  cd /usr/local/ngs/bin && \
+  SAMBAMBA_VERSION="v0.5.1" && \
+  curl -OL https://github.com/lomereiter/sambamba/releases/download/${SAMBAMBA_VERSION}/sambamba_${SAMBAMBA_VERSION}_linux.tar.bz2 && \
+  tar -xjvf sambamba_${SAMBAMBA_VERSION}_linux.tar.bz2 && \
+  mv sambamba_${SAMBAMBA_VERSION} sambamba && \
+  chmod +rwx sambamba && \
+  cp -v sambamba /usr/local/bin/ && \
+  cd /usr/local/ngs/bin && \
+  rm sambamba_${SAMBAMBA_VERSION}_linux.tar.bz2 && \
+  rm /usr/local/ngs/bin/sambamba && \
 
+# source
+  bash -c "source /home/ngseasy/.bashrc"
 
-#-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/ngs/bin/bwa-0.7.12
-RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin/bwa-0.7.12
-
-#---------------------------------------------------------------------
-#Cleanup the temp dir
-RUN rm -rf /tmp/*
-
-#open ports private only
-EXPOSE 8080
-
-# Use baseimage-docker's bash.
-CMD ["/bin/bash"]
-
-#Clean up APT when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-RUN apt-get autoclean && apt-get autoremove -y && rm -rf /var/lib/{apt,dpkg,cache,log}/
 USER ngseasy
 WORKDIR /home/ngseasy
+
+# Use baseimage-docker's bash.
+CMD ["bwa","mem"]
