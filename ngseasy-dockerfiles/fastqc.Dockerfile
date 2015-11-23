@@ -19,7 +19,7 @@ RUN wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/pro
 RUN apt-get clean && \
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
   apt-get autoclean && \
-  apt-get autoremove -y && |
+  apt-get autoremove -y && \
   rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 USER ngseasy
