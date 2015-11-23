@@ -26,5 +26,5 @@ RUN TRIMMOMATIC_VERSION="0.32" && \
 
 USER ngseasy
 WORKDIR /home/ngseasy
-
+ENV TRIMMOMATIC_VERSION 0.32
 CMD ["java","-jar","trimmomatic-${TRIMMOMATIC_VERSION}.jar","--help"]
