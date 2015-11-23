@@ -25,5 +25,6 @@ RUN apt-get clean && \
 USER ngseasy
 WORKDIR /home/ngseasy
 
-# Use baseimage-docker's bash.
-CMD ["/bin/bash"]
+# base command
+# CMD ["/bin/bash"]
+CMD ["fastqc", "--help"]
