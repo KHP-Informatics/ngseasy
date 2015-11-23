@@ -1,7 +1,9 @@
 # Base image
-FROM compbio/debian
+FROM compbio/debian:small-0.1
+
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
+
 # FastQC
 RUN wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.2.zip && \
   unzip /tmp/fastqc_v0.11.2.zip -d /usr/local/ngs/bin/ && \

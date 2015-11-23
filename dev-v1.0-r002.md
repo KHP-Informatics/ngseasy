@@ -12,7 +12,7 @@
 - [x] Build base debain image: fat dev box image
 - [x] Build Big Kahuna : All the tools in one place
 - [ ] Build individual tools from `<tool>.Dockerfile`
-  - [ ] base image small
+  - [ ] base image small `ngseasy-dockerfiles/debian-small.Dockerfile`
   - [ ] fastqc
   - [ ] trimmomatic
   - [ ] picardtools
