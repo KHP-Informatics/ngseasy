@@ -29,7 +29,7 @@
   - [ ] VarScan
   - [ ] VarDict
 - [ ] Build tool sets: Base, Aligners, Callers...
-- [ ] Build speedseq
+- [ ] Build speedseq and options to call from `ngseasy`
 - [ ] Build bcbio-nextgen
 - [ ] Get all genomes and decoys
  - [ ] hg19
@@ -43,9 +43,11 @@
  - [ ] snap
  - [ ] bowtie2
  - [ ] mrsfast  
-- [ ] Test Suite for GCAT and Paper
+- [ ] Test Suite for GCAT and Paper Revisions
+
+## Coming Soon
 - [ ] Add HLA Calling
-- [ ] Add Gemini
+- [ ] Add Gemini, Annovar, snpEff, VEP
 - [ ] Add Nextflow Versions
 - [ ] Add Native non-Docker version
 
