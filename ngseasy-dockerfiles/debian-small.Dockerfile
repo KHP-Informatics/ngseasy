@@ -42,7 +42,7 @@ RUN apt-get update && \
   tree \
   unzip \
   vim \
-  wget \
+  wget && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
