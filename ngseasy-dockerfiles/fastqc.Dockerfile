@@ -1,5 +1,5 @@
 # Base image
-FROM compbio/debian:small-0.1
+FROM compbio/debian:small-0.1-0bef85c
 
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
