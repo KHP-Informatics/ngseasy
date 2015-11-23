@@ -12,7 +12,8 @@ RUN wget -O /tmp/fastqc_v0.11.2.zip http://www.bioinformatics.babraham.ac.uk/pro
   sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/FastQC' /home/ngseasy/.bashrc && \
   ln -s /usr/local/ngs/bin/FastQC/fastqc /usr/local/bin/fastqc && \
   chmod -R 755 /usr/local/ngs/bin && \
-  chown -R ngseasy:ngseasy /usr/local/ngs/bin
+  chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
+  bash -c "source /home/ngseasy/.bashrc"
 
 #Clean up APT when done.
 RUN apt-get clean && \

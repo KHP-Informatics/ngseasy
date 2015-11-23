@@ -13,7 +13,7 @@
 - [x] Build Big Kahuna : All the tools in one place
 - [ ] Build individual tools from `<tool>.Dockerfile`
   - [x] base image small `ngseasy-dockerfiles/debian-small.Dockerfile`
-  - [ ] fastqc
+  - [x] fastqc:  `ngseasy-dockerfiles/fastqc.Dockerfile`
   - [ ] trimmomatic
   - [ ] picardtools
   - [ ] bwa
