@@ -9,10 +9,26 @@
 
 ## Check List
 
-- [x] Build base debain image: fatty
-- [x] Build Big Kahuna
-- [ ] Build individual tools Docker
-- [ ] Build tool sets: Base, Aligners, Callers
+- [x] Build base debain image: fat dev box image
+- [x] Build Big Kahuna : All the tools in one place
+- [ ] Build individual tools from `<tool>.Dockerfile`
+  - [ ] base image small
+  - [ ] fastqc
+  - [ ] trimmomatic
+  - [ ] picardtools
+  - [ ] bwa
+  - [ ] freebayes
+  - [ ] gatk
+  - [ ] snap
+  - [ ] novoalign
+  - [ ] bowtie2
+  - [ ] stampy
+  - [ ] mrsfast
+  - [ ] platypus
+  - [ ] samtools
+  - [ ] VarScan
+  - [ ] VarDict
+- [ ] Build tool sets: Base, Aligners, Callers...
 - [ ] Build speedseq
 - [ ] Build bcbio-nextgen
 - [ ] Get all genomes and decoys
@@ -21,7 +37,7 @@
  - [ ] b38
  - [ ] Add decoy genomes to all  
  - [ ] get resources and lift-over all
-- [ ] Index all genomes for all aligners 
+- [ ] Index all genomes for all aligners
  - [ ] bwa
  - [ ] novo
  - [ ] snap
