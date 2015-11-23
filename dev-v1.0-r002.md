@@ -14,7 +14,7 @@
 - [ ] Build individual tools from `<tool>.Dockerfile`
   - [x] base image small: `ngseasy-dockerfiles/debian-small.Dockerfile`
   - [x] fastqc:  `ngseasy-dockerfiles/fastqc.Dockerfile`
-  - [ ] trimmomatic
+  - [x] trimmomatic: `ngseasy-dockerfiles/trimmomatic.Dockerfile`
   - [ ] picardtools
   - [ ] bwa
   - [ ] freebayes
