@@ -211,7 +211,7 @@ RUN cd /usr/local/ngs/bin && \
   wget https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard-tools-${PICARD_VERSION}.zip && \
   unzip picard-tools-${PICARD_VERSION}.zip && \
   chmod -R 777 /usr/local/ngs/bin/picard-tools-${PICARD_VERSION} && \
-  cp -v /usr/local/ngs/bin/picard-tools-${PICARD_VERSION}/* /usr/local/bin/ && \
+  mv -v /usr/local/ngs/bin/picard-tools-${PICARD_VERSION}/* /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
   rm -r picard-tools-${PICARD_VERSION}/* && \
   rm -r picard-tools-${PICARD_VERSION}.zip && \
