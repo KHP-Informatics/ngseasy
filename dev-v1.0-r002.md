@@ -10,7 +10,7 @@
 ## Check List
 
 - [x] Build base debain image: fat dev box image
-- [x] Build Big Kahuna : All the tools in one place
+- [x] *Build Big Kahuna : All the tools in one place. May need a re-do after single tool build*
 - [ ] Build, test run and push individual tools from `<tool>.Dockerfile`
   - [x] base image small: `ngseasy-dockerfiles/debian-small.Dockerfile`
   - [x] fastqc:  `ngseasy-dockerfiles/fastqc.Dockerfile`
