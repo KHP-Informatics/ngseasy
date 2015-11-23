@@ -27,4 +27,4 @@ RUN PICARD_VERSION="1.141" && \
 USER ngseasy
 WORKDIR /home/ngseasy
 
-CMD ["java","-jar",""/usr/local/bin/picard.jar"]
+CMD ["java","-jar","/usr/local/bin/picard.jar"]
