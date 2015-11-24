@@ -1,49 +1,84 @@
 # Base image
-FROM compbio/ngseasy-base:1.0
+FROM compbio/debian:small-0.1-0bef85c
 
-# Maintainer 
+# Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
-# Set correct environment variables.
-# ENV HOME /root
-# ENV DEBIAN_FRONTEND noninteractive
+## sam and bam and vcf parsers
+# sambamba
+RUN cd /usr/local/ngs/bin && \
+  SAMBAMBA_VERSION="v0.5.9" && \
+  curl -OL https://github.com/lomereiter/sambamba/releases/download/${SAMBAMBA_VERSION}/sambamba_${SAMBAMBA_VERSION}_linux.tar.bz2 && \
+  tar -xjvf sambamba_${SAMBAMBA_VERSION}_linux.tar.bz2 && \
+  mv sambamba_${SAMBAMBA_VERSION} sambamba && \
+  chmod +rwx sambamba && \
+  cp -v sambamba /usr/local/bin/ && \
+  cd /usr/local/ngs/bin && \
+  rm sambamba_${SAMBAMBA_VERSION}_linux.tar.bz2 && \
+  rm /usr/local/ngs/bin/sambamba && \
 
-# Update
-RUN apt-get update -y && apt-get upgrade -y
+# vcftools https://github.com/vcftools/vcftools
+  cd /usr/local/ngs/bin/ && \
+  git clone https://github.com/vcftools/vcftools.git && \
+  cd vcftools && \
+  ./autogen.sh && \
+  ./configure && \
+  make && \
+  make install && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r ./vcftools && \
 
-#---------------------- FREEBAYES  -------------------------------- 
-RUN cd /usr/local/ngs/bin \
+# vcflib
+  cd /usr/local/ngs/bin/ && \
+  rm -rfv /usr/local/ngs/bin/vcflib && \
+  git clone --recursive git://github.com/ekg/vcflib.git && \
+  cd vcflib && \
+  make && \
+  chmod -R 777 ./bin/ && \
+  cp -v ./bin/* /usr/local/bin/ && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r ./vcflib && \
+
+# bedtools
+  cd /usr/local/ngs/bin && \
+  git clone https://github.com/arq5x/bedtools2.git && \
+  cd bedtools2 && \
+  make all && \
+  chmod -R 777 ./* && \
+  make install && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r ./bedtools2 && \
+
+# vt
+  cd /usr/local/ngs/bin && \
+  git clone https://github.com/atks/vt.git && \
+  chmod -R 777 vt/ && \
+  cd vt && \
+  make && \
+  chmod -R 777 vt && \
+  cp -v vt /usr/local/bin && \
+  cd /usr/local/ngs/bin/ && \
+  rm -r ./vt && \
+
+## Variant caller
+# freebayes
+  cd /usr/local/ngs/bin \
   && git clone --recursive git://github.com/ekg/freebayes.git \
   && cd /usr/local/ngs/bin/freebayes \
   && make \
   && chmod -R 777 /usr/local/ngs/bin/freebayes \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/freebayes/bin' /home/ngseasy/.bashrc \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/freebayes/bin' ~/.bashrc \
-  && cp -v /usr/local/ngs/bin/freebayes/bin/* /usr/local/bin
+  && cp -v /usr/local/ngs/bin/freebayes/bin/* /usr/local/bin && \
+
+# source
+  bash -c "source /home/ngseasy/.bashrc"
 
 ADD fix_ambiguous /usr/local/bin/
 
-#-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/ngs/bin
-RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
-
-#---------------------------------------------------------------------
-#Cleanup the temp dir
-RUN rm -rf /tmp/*
-
-#open ports private only
-EXPOSE 8080
-
-# Use baseimage-docker's bash.
-CMD ["/bin/bash"]
-
-#Clean up APT when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-RUN apt-get autoclean && apt-get autoremove -y && rm -rf /var/lib/{apt,dpkg,cache,log}/
-
-
-
-
-
+# user and wd
 USER ngseasy
 WORKDIR /home/ngseasy
+
+# command
+CMD ["freebayes"]

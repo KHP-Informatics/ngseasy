@@ -42,8 +42,9 @@ RUN cd /usr/local/ngs/bin && \
 # source
   bash -c "source /home/ngseasy/.bashrc"
 
+# user and wd
 USER ngseasy
 WORKDIR /home/ngseasy
 
-# Use baseimage-docker's bash.
+# command
 CMD ["bwa","mem"]

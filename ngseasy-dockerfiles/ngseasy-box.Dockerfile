@@ -83,13 +83,14 @@ RUN cd /usr/local/ngs/bin && \
 
 # sambamba
   cd /usr/local/ngs/bin && \
-  curl -OL https://github.com/lomereiter/sambamba/releases/download/v0.5.1/sambamba_v0.5.1_linux.tar.bz2 && \
-  tar -xjvf sambamba_v0.5.1_linux.tar.bz2 && \
-  mv sambamba_v0.5.1 sambamba && \
+  SAMBAMBA_VERSION="v0.5.9" && \
+  curl -OL https://github.com/lomereiter/sambamba/releases/download/${SAMBAMBA_VERSION}/sambamba_${SAMBAMBA_VERSION}_linux.tar.bz2 && \
+  tar -xjvf sambamba_${SAMBAMBA_VERSION}_linux.tar.bz2 && \
+  mv sambamba_${SAMBAMBA_VERSION} sambamba && \
   chmod +rwx sambamba && \
   cp -v sambamba /usr/local/bin/ && \
   cd /usr/local/ngs/bin && \
-  rm sambamba_v0.5.1_linux.tar.bz2 && \
+  rm sambamba_${SAMBAMBA_VERSION}_linux.tar.bz2 && \
   rm /usr/local/ngs/bin/sambamba && \
 
 # seqtk and trimadap
