@@ -16,7 +16,7 @@
   - [x] fastqc:  `ngseasy-dockerfiles/fastqc.Dockerfile`
   - [x] trimmomatic: `ngseasy-dockerfiles/trimmomatic.Dockerfile`
   - [x] picardtools: `ngseasy-dockerfiles/picard.Dockerfile`
-  - [ ] bwa
+  - [x] bwa: `ngseasy-dockerfiles/bwa.Dockerfile`
   - [ ] freebayes
   - [ ] gatk
   - [ ] snap
@@ -60,6 +60,21 @@
 - [ ] Dockstore Versions
 - [ ] CWL
 - [ ] bcbio-nextgen from ngseasy
+
+## Building Images
+
+```bash
+## move to Dockerfile directory and run:-ß
+TOOL="picard"
+TAG="r0.1"
+
+docker build \
+--no-cache=false \
+--rm=true \
+--force-rm=true \
+--tag=compbio/ngseasy-${TOOL}:${TAG} \
+--file=${TOOL}.Dockerfile .
+```
 
 ## Dev Box:
 
