@@ -6,8 +6,8 @@ MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 ## sam and bam and vcf parsers
 # sambamba
-RUN apt-get install -y --no-install-recommends \
-  zlib1g && \
+RUN apt-get install -y \
+  ldc && \
   cd /usr/local/ngs/bin && \
   SAMBAMBA_VERSION="v0.5.9" && \
   curl -OL https://github.com/lomereiter/sambamba/releases/download/${SAMBAMBA_VERSION}/sambamba_${SAMBAMBA_VERSION}_linux.tar.bz2 && \
