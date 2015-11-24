@@ -5,7 +5,7 @@ FROM compbio/debian:small-0.1-0bef85c
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # sambamba
-RUN apt-get update && apt-get install -y llvm && \
+RUN apt-get update && apt-get install -y llvm zlib1g && \
   cd /usr/local/ngs/bin && \
   SAMBAMBA_VERSION="v0.5.9" && \
   curl -OL https://github.com/lomereiter/sambamba/releases/download/${SAMBAMBA_VERSION}/sambamba_${SAMBAMBA_VERSION}_linux.tar.bz2 && \
