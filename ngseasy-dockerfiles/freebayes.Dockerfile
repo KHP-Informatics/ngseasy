@@ -5,7 +5,8 @@ FROM compbio/debian:small-0.1-0bef85c
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # dependencies
-RUN apt-get update && apt-get install -y cmake llvm zlib1g zlib1g-dev bash python && \
+RUN apt-get update && \
+  apt-get install -y cmake llvm zlib1g zlib1g-dev bash python && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
@@ -87,4 +88,4 @@ USER ngseasy
 WORKDIR /home/ngseasy
 
 # command
-CMD ["freebayes"]
+CMD ["freebayes","-h"]
