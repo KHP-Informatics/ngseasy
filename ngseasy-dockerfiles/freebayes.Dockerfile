@@ -4,10 +4,8 @@ FROM compbio/debian:small-0.1-0bef85c
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
-## sam and bam and vcf parsers
 # sambamba
-RUN apt-get install -y \
-  llvm && \
+RUN apt-get install -y llvm && \
   cd /usr/local/ngs/bin && \
   SAMBAMBA_VERSION="v0.5.9" && \
   curl -OL https://github.com/lomereiter/sambamba/releases/download/${SAMBAMBA_VERSION}/sambamba_${SAMBAMBA_VERSION}_linux.tar.bz2 && \
