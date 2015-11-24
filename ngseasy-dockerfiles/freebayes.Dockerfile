@@ -4,8 +4,13 @@ FROM compbio/debian:small-0.1-0bef85c
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
+# dependencies 
+RUN apt-get update && apt-get install -y cmake llvm zlib1g zlib1g-dev && \
+  apt-get autoremove -y && \
+  apt-get autoclean && \
+  apt-get clean && \
+  apt-get purge && \
 # sambamba
-RUN apt-get update && apt-get install -y cmake llvm zlib1g && \
   cd /usr/local/ngs/bin && \
   SAMBAMBA_VERSION="v0.5.9" && \
   curl -OL https://github.com/lomereiter/sambamba/releases/download/${SAMBAMBA_VERSION}/sambamba_${SAMBAMBA_VERSION}_linux.tar.bz2 && \
