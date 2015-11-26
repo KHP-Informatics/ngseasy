@@ -2,7 +2,7 @@ FROM debian:jessie
 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
-LABEL Description="This is the base image for compbio. Based on debian:jessie. This is Fat Image" NickName="little-fatty-deb" URL="https://hub.docker.com/r/library/debian/" Version="1.0"
+LABEL Description="This is the base image for compbio ngseasy builds. Based on debian:jessie. This is Fat Image" NickName="little-fatty-deb" URL="https://hub.docker.com/r/library/debian/" Version="1.0"
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -14,6 +14,7 @@ ENV R_BASE_VERSION 3.2.2
 RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' /etc/apt/sources.list && \
   apt-key adv --keyserver keys.gnupg.net --recv-key 381BA480 && \
   apt-get update && \
+  apt-get update -y && \
   apt-get dist-upgrade -y && \
   apt-get autoremove -y && \
   apt-get autoclean && \
@@ -151,6 +152,11 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   rm -rf /var/tmp/* && \
   rm -rf /var/lib/{apt,dpkg,cache,log}/
 
+# Create a user:ngseasy and group:ngseasy
+  useradd -m -U -s /bin/bash ngseasy && \
+  cd /home/ngseasy && \
+  usermod -aG sudo ngseasy && \
+
 # configure locales
 RUN dpkg-reconfigure locales && \
   locale-gen C.UTF-8 && \
@@ -164,7 +170,7 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 
 # set JAVA_HOME
-  ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk-amd64
 
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]
