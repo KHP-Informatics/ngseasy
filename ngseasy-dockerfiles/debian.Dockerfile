@@ -2,7 +2,7 @@ FROM debian:jessie
 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
-LABEL Description="This is the base image for compbio ngseasy builds. Based on debian:jessie. This is Fat Image" NickName="little-fatty-deb" URL="https://hub.docker.com/r/library/debian/" Version="1.0"
+LABEL Description="This is the debian:jessie base image for compbio ngseasy builds. This is Fat Image" NickName="little-fatty-deb" URL="https://hub.docker.com/r/library/debian/" Version="0.5"
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -144,6 +144,8 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   find /usr/local -perm /u+w -execdir chmod a+w {} \; && \
 
 # clean up
+  apt-get update && \
+  apt-get update -y && \
   apt-get clean && \
   apt-get autoclean && \
   apt-get autoremove -y && \
