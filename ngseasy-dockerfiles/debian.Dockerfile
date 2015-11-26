@@ -152,12 +152,12 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   rm -rf /var/lib/apt/lists/* && \
   rm -rf /tmp/* && \
   rm -rf /var/tmp/* && \
-  rm -rf /var/lib/{apt,dpkg,cache,log}/
+  rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
 
 # Create a user:ngseasy and group:ngseasy
   useradd -m -U -s /bin/bash ngseasy && \
   cd /home/ngseasy && \
-  usermod -aG sudo ngseasy && \
+  usermod -aG sudo ngseasy
 
 # configure locales
 RUN dpkg-reconfigure locales && \
