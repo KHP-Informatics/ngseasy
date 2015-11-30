@@ -15,10 +15,10 @@ RUN apt-get update && \
 #---------------------------------------------annotation-------------------------------------------------
 
 # + ANNOVAR (see licence, and registration)
-# Available on reg:  http://www.openbioinformatics.org/annovar/download/Ht8qRwQSTi/annovar.latest.tar.gz
-# 11.2014 : http://www.openbioinformatics.org/annovar/download/g4EUwyphi9/annovar.latest.tar.gz
+# Available on reg:  http://www.openbioinformatics.org/annovar/download/0wgxR2rIVP/annovar.latest.tar.gz
+# 11.2014 : http://www.openbioinformatics.org/annovar/download/0wgxR2rIVP/annovar.latest.tar.gz
 
-RUN wget -O /tmp/annovar.latest.tar.gz http://www.openbioinformatics.org/annovar/download/g4EUwyphi9/annovar.latest.tar.gz \
+RUN wget -O /tmp/annovar.latest.tar.gz http://www.openbioinformatics.org/annovar/download/0wgxR2rIVP/annovar.latest.tar.gz \
   && tar xzvf /tmp/annovar.latest.tar.gz -C /usr/local/pipeline/ \
   && sed -i '$aPATH=${PATH}:/usr/local/pipeline/annovar' /home/pipeman/.bashrc \
   && echo "alias ngsAnnovar='/usr/local/pipeline/annovar'" >> /home/pipeman/.bashrc
