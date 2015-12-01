@@ -14,7 +14,7 @@ ENV R_BASE_VERSION 3.2.2
 RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' /etc/apt/sources.list && \
   apt-key adv --keyserver keys.gnupg.net --recv-key 381BA480 && \
   apt-get update && \
-  apt-get update -y && \
+  apt-get upgrade -y && \
   apt-get dist-upgrade -y && \
   apt-get autoremove -y && \
   apt-get autoclean && \

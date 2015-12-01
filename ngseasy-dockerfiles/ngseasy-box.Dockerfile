@@ -1,5 +1,5 @@
 # base image
-FROM compbio/debian:r1.0-002-0936130
+FROM compbio/ngseasy-debian:r1.0-002-0936130
 
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
