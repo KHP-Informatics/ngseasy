@@ -178,7 +178,7 @@ RUN cd /usr/local/ngs/bin && \
   rm -r ./gvcftools-${GVCFTOOLS_VERSION}* && \
 
 # ngsuitls
-#  NGSUTILS_VERSION="0.5.7" && \
+# NGSUTILS_VERSION="0.5.7" && \
   cd /usr/local/ngs/bin && \
   git clone https://github.com/ngsutils/ngsutils.git && \
   chmod -R 777 ./ngsutils && \
@@ -186,9 +186,9 @@ RUN cd /usr/local/ngs/bin && \
   perl -p -i -e s/==/=/g init.sh && \
   make && \
   chmod -R 777 ./bin && \
-  cp -v ./bin/* /usr/local/bin/ && \
-  cd /usr/local/ngs/bin/ && \
-  rm -r ./ngsutils && \
+#  cp -v ./bin/* /usr/local/bin/ && \
+#  cd /usr/local/ngs/bin/ && \
+#  rm -r ./ngsutils && \
 
 # fastc
   FASTQC_VERSION="0.11.4" && \
