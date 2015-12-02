@@ -109,7 +109,7 @@ RUN cd /usr/local/pipeline/ && \
     cp -vrf /usr/local/pipeline/vcftools_0.1.12b/bin/*  /usr/local/bin/ && \
     cd /usr/local/pipeline/ && \
     rm -rfv /usr/local/pipeline/vcflib && \
-    git clone --recursive git://github.com/ekg/vcflib.git && \
+    git clone --recursive https://github.com/ekg/vcflib.git && \
     cd vcflib && \
     make && \
     cp ./bin/* /usr/local/bin/ && \
