@@ -57,6 +57,7 @@ install_scripts:
 	mkdir $(INSTALLDIR)/bin && \
 	cp -rv $(SRC)/* $(TARGET_BIN)/bin/ && \
 	sed -i "$aPATH=$PATH:$(TARGET_BIN)/bin/" >> ~/.bashrc && \
+	sed -i "export NGSEASY_INSTALLDIR=$(INSTALLDIR)" >> ~/.bashrc && \
 	bash -c "source ~/.bashrc"
 
 uninstall:
