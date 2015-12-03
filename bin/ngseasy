@@ -8,8 +8,8 @@ set -o errexit
 # Amos Folarin (amosfolarin@gmail.com)
 #################################################################################
 
-source ${NGSEASY_DIR}/bin/ngseasy_functions
-export ${NGSEASY_DIR}/bin
+source ${INSTALLDIR}/ngseasy/bin/ngseasy_functions
+export PATH=${PATH}:${INSTALLDIR}/ngseasy/bin
 
 ###########################################################################################
 ## Set version and run date

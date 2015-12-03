@@ -49,13 +49,15 @@ SRC=./bin
 ## Basic install  no annotation data bases or manual build tools
 all:	install_scripts	ngsprojectdir dockerimages testdata b37 hg19
 
-## install scripts to target bin eg sudo make install
+## install scripts to target bin
 
 install_scripts:
-	@echo "Installing ngseasy scripts to system..."
+	@echo "Installing ngseasy scripts"
 	chmod 775 $(SRC)/* && \
 	mkdir $(INSTALLDIR)/bin && \
-	cp -rv $(SRC)/* $(TARGET_BIN)/bin/
+	cp -rv $(SRC)/* $(TARGET_BIN)/bin/ && \
+	sed -i "$aPATH=$PATH:$(TARGET_BIN)/bin/" >> ~/.bashrc && \
+	bash -c "source ~/.bashrc"
 
 uninstall:
 	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy
