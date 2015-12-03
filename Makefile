@@ -16,7 +16,7 @@
 
 ################################################################
 ## Edit this to reflect version if ya need
-VERSION=1.0-r001
+VERSION=v1.0-r002
 WHOAMI=$(shell whoami)
 NGSUSER=$(WHOAMI)
 
@@ -47,19 +47,15 @@ SRC=./bin
 ################################################################
 
 ## Basic install  no annotation data bases or manual build tools
-all:	ngsprojectdir dockerimages testdata b37 hg19
+all:	install_scripts	ngsprojectdir dockerimages testdata b37 hg19
 
 ## install scripts to target bin eg sudo make install
 
-install:
+install_scripts:
 	@echo "Installing ngseasy scripts to system..."
 	chmod 775 $(SRC)/* && \
 	mkdir $(INSTALLDIR)/bin && \
 	cp -rv $(SRC)/* $(TARGET_BIN)/bin/
-
-## fix permissions. run - sudo make NGSUSER="ec2-user" fixuser
-fixuser:
-	chown $(NGSUSER):$(NGSUSER) $(INSTALLDIR)
 
 uninstall:
 	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy

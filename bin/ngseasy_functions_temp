@@ -2,17 +2,27 @@
 set -o errexit
 ## set env var for ngseasy and load fucntions. This file must be sourced.
 
-########################################################################################################
+################################################################################
+# force bitwise sorting
+################################################################################
+LC_ALL=C
+
+################################################################################
 # reset shit
-########################################################################################################
+################################################################################
+
+## config file and project directory
 config_tsv=""
 project_directory=""
+
+## docker information
 DOCKERVERSION=""
 DOCKERINFO=""
 NGSEASY_BIN_VERSION=""  # add this option to logs and make so that docker images are seperated from scripts versions and commits
 NGSEASYVERSION=""
 NGSEASY_STEP=""
-## congig options
+
+## config options
 PROJECT_ID=""
 SAMPLE_ID=""
 FASTQ1=""
@@ -49,17 +59,22 @@ SPEEDSEQ_SV=""
 LOGFILE=""
 DOCKERHOME=""
 BAM_PREFIX=""
-########################################################################################################
+
+################################################################################
 ## docker run command
-########################################################################################################
+################################################################################
 DOCKER_RUN="docker run -P -w /home/ngseasy -e HOME=/home/ngseasy -e USER=ngseasy --user ngseasy"
-########################################################################################################
+
+################################################################################
 ### var calling options
-########################################################################################################
+################################################################################
 base_qual="20"
 map_qual="20"
 coverage_min="2"
 
+################################################################################
+## speedseq opptions
+################################################################################
 function select_speedseq_sv_options() {
     if [[ ${SPEEDSEQ_SV} == "complete"  ]]; then
         SV_SPEEDSEQ_OPTIONS=" -g " ## lumpy and svtyper
@@ -74,16 +89,15 @@ function select_speedseq_sv_options() {
 ###########################################################################################
 ## global usage
 ###########################################################################################
-function usage_ngseasy() {
+function usage() {
     echo "
-Program: ${NGSEASY_STEP}
-Version 1.0-r001
-Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
+Program:${NGSEASY_STEP}
+Version:${NGSEASYVERSION}
+Author:Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
-usage:   ${NGSEASY_STEP} -c <config_file> -d <project_directory>
+usage: ${NGSEASY_STEP} -c <config_file>
 
 options:  -c  STRING	configuration file
-          -d  STRING	project directory
           -h  NULL	show this message
 "
 }
@@ -334,6 +348,12 @@ function select_genome_build_and_resources(){
       KNOWN_SNPS_b138="${REFDIR}/dbsnp_138.hg19.vcf"
 
       logger_ngseasy "[${NGSEASY_STEP}]:KNOWN_INDELS [${KNOWN_INDELS}]" ${LOGFILE}
+
+    ## hs38DH
+    elif [[ "${GENOMEBUILD}" == "hs38DH" ]]; then
+
+    ## hs37d5
+    elif [[ "${GENOMEBUILD}" == "hs37d5" ]]; then
 
     else
       logger_ngseasy "[${NGSEASY_STEP}]:No genome selected. Exiting. Choose one of [b37] or [hg19]. [b38 coming soon]"  ${LOGFILE}

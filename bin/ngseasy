@@ -1,49 +1,22 @@
 #!/usr/bin/env bash
 set -o errexit
 
-###########################################################################################
+################################################################################
 # Program: ngseasy
-# Version 1.0-r001
-# Author: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)
-###########################################################################################
-#
-#    Copyright (C) 2015  Stephen Jeffrey Newhouse (bluecell.io)
-#
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License along
-#    with this program; if not, write to the Free Software Foundation, Inc.,
-#    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-#
-###########################################################################################
+# Version v1.0-r002
+# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com);
+# Amos Folarin (amosfolarin@gmail.com)
+#################################################################################
+
+source ${NGSEASY_DIR}/bin/ngseasy_functions
+export ${NGSEASY_DIR}/bin
 
 ###########################################################################################
 ## Set version and run date
 ###########################################################################################
-NGSEASYVERSION="1.0-r001"
+NGSEASYVERSION="v1.0-r002"
+NGSEASY_BIN_VERSION=""
 RUNDATE=`date +"%d%m%y"`
-
-echo -e "\n\n###########################################################################################"
-echo -e "#"
-echo -e "# Program: ngseasy"
-echo -e "# Version ${NGSEASYVERSION}"
-echo -e "# Authors: Stephen Newhouse (stephen.j.newhouse@gmail.com); Amos Folarin (amosfolarin@gmail.com)"
-echo -e "#"
-echo -e "# Copyright (C) 2015  Stephen Jeffrey Newhouse and Amos Folarin"
-echo -e "# NGSeasy (aka ngseasy) Version ${NGSEASYVERSION} comes with ABSOLUTELY NO WARRANTY;"
-echo -e "# for details see the GNU General Public License."
-echo -e "# This is free software, and you are welcome to redistribute it under certain conditions;"
-echo -e "# see the GNU General Public License for details."
-echo -e "#"
-echo -e "###########################################################################################\n\n"
 
 ###########################################################################################
 ## test if docker is intsalled and exit if not
@@ -74,16 +47,15 @@ function logger_ngseasy() {
 ## global usage
 ###########################################################################################
 
-function usage_ngseasy() {
+function usage() {
     echo "
 Program: ngseasy
 Version 1.0-r001
 Author: Stephen Newhouse (stephen.j.newhouse@gmail.com)
 
-usage:   ngseasy -c <config_file> -d <project_directory>
+usage:   ngseasy -c <config_file>
 
 options:  -c  STRING	configuration file
-          -d  STRING	project directory
           -h  NULL	show this message
 "
 }
