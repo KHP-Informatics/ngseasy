@@ -179,16 +179,16 @@ RUN cd /usr/local/ngs/bin && \
 
 # ngsuitls
 # NGSUTILS_VERSION="0.5.7" && \
-  cd /usr/local/ngs/bin && \
-  git clone https://github.com/ngsutils/ngsutils.git && \
-  chmod -R 777 ./ngsutils && \
-  cd ./ngsutils && \
-  perl -p -i -e s/==/=/g init.sh && \
-  make && \
-  chmod -R 777 ./bin && \
-  export PATH=${PATH}:/usr/local/ngs/bin/ngsutils/bin && \
-  export PATH=${PATH}:/usr/local/ngs/bin/ngsutils/ngsutils && \
-  export PATH=${PATH}:/usr/local/ngs/bin/ngsutils/bin && \
+#  cd /usr/local/ngs/bin && \
+#  git clone https://github.com/ngsutils/ngsutils.git && \
+#  chmod -R 777 ./ngsutils && \
+#  cd ./ngsutils && \
+#  perl -p -i -e s/==/=/g init.sh && \
+#  make && \
+#  chmod -R 777 ./bin && \
+#  export PATH=${PATH}:/usr/local/ngs/bin/ngsutils/bin && \
+#  export PATH=${PATH}:/usr/local/ngs/bin/ngsutils/ngsutils && \
+#  export PATH=${PATH}:/usr/local/ngs/bin/ngsutils/bin && \
 #  cp -v ./bin/* /usr/local/bin/ && \
 #  cd /usr/local/ngs/bin/ && \
 #  rm -r ./ngsutils && \
@@ -228,7 +228,7 @@ RUN cd /usr/local/ngs/bin && \
   rm -r picard-tools-${PICARD_VERSION}/* && \
   rm -r picard-tools-${PICARD_VERSION}.zip && \
 
-# bamkit.
+# bamkit
   cd  /usr/local/ngs/bin/ && \
   git clone --recursive https://github.com/hall-lab/bamkit.git && \
   chmod -R 777 ./bamkit/ && \
