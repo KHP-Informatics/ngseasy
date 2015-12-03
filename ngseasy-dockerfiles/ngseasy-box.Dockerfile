@@ -4,7 +4,7 @@ FROM compbio/ngseasy-debian:v1.0
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
-LABEL Description="This is the NGSeasy Big-Kahuna Tool Box" NickName="Big-Kahuna" Version="0.5"
+LABEL Description="This is the NGSeasy Tool Box" NickName="Big-Kahuna" Version="1.0"
 
 # Remain current and get random dependencies
 RUN apt-get update && \
