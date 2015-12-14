@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -o errexit
+
+##
 ## set env var for ngseasy and load fucntions. This file must be sourced.
+##
 
 ################################################################################
 # force bitwise sorting
@@ -8,44 +11,82 @@ set -o errexit
 LC_ALL=C
 
 ################################################################################
-# reset shit
-################################################################################
-
 ## config file and project directory
-config_tsv=""
-project_directory=""
+################################################################################
+CONFIG_TSV=""
+PROJECT_DIRECTORY=""
+INSTALL_DIR=""
 
+################################################################################
 ## docker information
+################################################################################
 DOCKERVERSION=""
 DOCKERINFO=""
 NGSEASY_BIN_VERSION=""  # add this option to logs and make so that docker images are seperated from scripts versions and commits
 NGSEASYVERSION=""
 NGSEASY_STEP=""
 
+################################################################################
 ## config options
+################################################################################
+
+##
+## Project and Sample Names
+##
 PROJECT_ID=""
 SAMPLE_ID=""
+PROJECT_DIR=""
+
+##
+## Fastq File Names
+##
 FASTQ1=""
 FASTQ2=""
-PROJECT_DIR=""
+
+##
+## Project and Sample Information
+##
 DNA_PREP_LIBRARY_ID=""
 NGS_PLATFORM=""
 NGS_TYPE=""
 BAIT=""
 CAPTURE=""
 GENOMEBUILD=""
-FASTQC=""
-TRIM=""
-BSQR=""
-REALN=""
-ALIGNER=""
-VARCALLER=""
-CNV=""
-ANNOTATOR=""
-CLEANUP=""
-NCPU=""
+
+##
+## Pipeline opptions
+##
+FASTQC="" # no-fastqc,fastqc
+TRIM="" # no-trim, atrim, btrim
+ALIGNER="" # no-aln, bwa-mem, snap, novoalign, bowtie2
+BSQR="" # no-bsqr, bam-bsqr, gatk-bsqr
+REALN="" # no-realn, glia, gatk-realn
+VARCALLER="" # no-varcall, freebayes, platypus, gatk-hc, gatk-uc
+CNVCALLER="" # no-svcall, lumpy, cnvkit, svtyper
+ANNOTATOR="" # no-anno, vep,
+
+##
+## Versions
+##
 NGSEASYVERSION=""
+NGSEASY_STEP=""
 NGSUSER=""
+
+##
+## Compute Resources
+##
+NCPU=""
+RAM=""
+JAVA_RAM=""
+
+##
+## Clean up
+##
+CLEANUP=""
+
+##
+## Reference Genomes and Resources
+##
 REFDIR=""
 GENOMEINDEX=""
 REFFASTA=""
@@ -53,8 +94,6 @@ KNOWN_INDELS=""
 KNOWN_SNPS_1000G=""
 KNOWN_SNPS_OMNI=""
 KNOWN_SNPS_b138=""
-SPEEDSEQ_CONFIG=""
-SPEEDSEQ_SV=""
 
 LOGFILE=""
 DOCKERHOME=""
@@ -68,13 +107,23 @@ DOCKER_RUN="docker run -P -w /home/ngseasy -e HOME=/home/ngseasy -e USER=ngseasy
 ################################################################################
 ### var calling options
 ################################################################################
-base_qual="20"
-map_qual="20"
-coverage_min="2"
+BASE_QUAL="20"
+MAP_QUAL="20"
+MIN_COVERAGE="2"
 
 ################################################################################
 ## speedseq opptions
 ################################################################################
+SPEEDSEQ_CONFIG=""
+SPEEDSEQ_SV=""
+
+
+##----------------------------------------------------------------------------##
+
+################################################################################
+## FUNCTIONS
+################################################################################
+
 function select_speedseq_sv_options() {
     if [[ ${SPEEDSEQ_SV} == "complete"  ]]; then
         SV_SPEEDSEQ_OPTIONS=" -g " ## lumpy and svtyper
