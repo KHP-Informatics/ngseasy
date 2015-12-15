@@ -56,7 +56,7 @@ install_scripts:
 	chmod 775 $(SRC)/* && \
 	echo "export PATH=$\${PATH}:$(DIR)/bin/" >> ~/.bashrc && \
 	echo "export NGSEASY_INSTALLDIR=$(shell pwd)/bin/" >> ~/.bashrc && \
-	source ~/.bashrc
+	$(shell source ~/.bashrc)
 
 uninstall:
 	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy
