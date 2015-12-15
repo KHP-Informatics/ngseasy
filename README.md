@@ -18,7 +18,7 @@ We present NGSeasy (Easy Analysis of Next Generation Sequencing), a flexible and
 **Citation:** [Folarin AA, Dobson RJ and Newhouse SJ. NGSeasy: a next generation sequencing pipeline in Docker containers [version 1; referees: 3 approved with reservations] F1000Research 2015, 4(ISCB Comm J):997 (doi: 10.12688/f1000research.7104.1).](http://f1000research.com/articles/4-997/v1)   
 
 ## Acknowledgements
-This work is funded by the National Institute for Health Research (NIHR) Biomedical Research Centre at South London and Maudsley NHS Foundation Trust and King’s College London. 
+This work is funded by the National Institute for Health Research (NIHR) Biomedical Research Centre at South London and Maudsley NHS Foundation Trust and King’s College London.
 
 ## Releases
 - **NGSeasy-1.0 Full Production release will be available Late 2015**  
@@ -295,12 +295,12 @@ As the containers themselves can be run as executables with pre-specified cpu an
 
 ## Genomes
 
-| Genome Build |
-|--------|
-|hs37d5|
-|b37|
-|hg19|
-|hs38DH|
+| Genome Build | Status |
+|--------|------|
+|hs37d5| coming soon |
+|b37|available|
+|hg19|available|
+|hs38DH|coming soon |
 
 ****************
 
