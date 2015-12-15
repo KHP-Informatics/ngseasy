@@ -53,10 +53,10 @@ all:	install_scripts	ngsprojectdir dockerimages testdata b37 hg19
 
 install_scripts:
 	@echo "Installing ngseasy scripts"
-	chmod 775 $(SRC)/* && \
-	sed -i "$aPATH=$PATH:$(DIR)/bin/" >> ~/.bashrc && \
-	sed -i "export NGSEASY_INSTALLDIR=$(DIR)/bin/" >> ~/.bashrc && \
-	bash -c "source ~/.bashrc"
+	shell chmod 775 $(SRC)/* && \
+	shell sed -i "$aPATH=$PATH:$(DIR)/bin/" >> ~/.bashrc && \
+	shell sed -i "export NGSEASY_INSTALLDIR=$(DIR)/bin/" >> ~/.bashrc && \
+	shell source ~/.bashrc
 
 uninstall:
 	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy
