@@ -54,8 +54,8 @@ all:	install_scripts	ngsprojectdir dockerimages testdata b37 hg19
 install_scripts:
 	@echo "Installing ngseasy scripts"
 	chmod 775 $(SRC)/* && \
-	sed -i "$aPATH=$PATH:$(pwd)/bin/" >> ~/.bashrc && \
-	sed -i "export NGSEASY_INSTALLDIR=$(pwd)/bin/" >> ~/.bashrc && \
+	sed -i "$aPATH=$PATH:$(DIR)/bin/" >> ~/.bashrc && \
+	sed -i "export NGSEASY_INSTALLDIR=$(DIR)/bin/" >> ~/.bashrc && \
 	bash -c "source ~/.bashrc"
 
 uninstall:
