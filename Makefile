@@ -41,7 +41,7 @@ TARGET_BIN=$(INSTALLDIR)
 ################################################################
 ## relative path to ngseasy scripts
 SRC=./bin
-
+SOURCE_NGSEASY_BIN=$(shell "bash -c source ~/.bashrc")
 ################################################################
 # Intsalling all or parts...
 ################################################################
@@ -58,7 +58,7 @@ install_scripts:
 	echo "export NGSEASY_INSTALLDIR=$(shell pwd)/bin/" >> ~/.bashrc
 
 source_ngseasy:	install_scripts
-	$(shell "/bin/bash -c source ~/.bashrc")
+	$(SOURCE_NGSEASY_BIN)
 
 uninstall:
 	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy
