@@ -47,7 +47,7 @@ SRC=./bin
 ################################################################
 
 ## Basic install  no annotation data bases or manual build tools
-all:	install_scripts	ngsprojectdir dockerimages testdata b37 hg19
+all:	install_scripts source_ngseasy ngsprojectdir dockerimages testdata b37 hg19
 
 ## install scripts to target bin
 
@@ -55,8 +55,10 @@ install_scripts:
 	@echo "Installing ngseasy scripts"
 	chmod 775 $(SRC)/* && \
 	echo "export PATH=$\${PATH}:$(DIR)/bin/" >> ~/.bashrc && \
-	echo "export NGSEASY_INSTALLDIR=$(shell pwd)/bin/" >> ~/.bashrc && \
-	shell source ~/.bashrc
+	echo "export NGSEASY_INSTALLDIR=$(shell pwd)/bin/" >> ~/.bashrc
+
+source_ngseasy:	install_scripts
+	$(shell "/bin/bash -c source ~/.bashrc")
 
 uninstall:
 	rm -fv $(TARGET_BIN)/ngseasy* && rm -fv $(TARGET_BIN)/ngseasy
