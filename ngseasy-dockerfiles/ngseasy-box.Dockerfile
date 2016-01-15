@@ -488,13 +488,11 @@ RUN  bash -c "source /home/ngseasy/.bashrc" && \
 ADD fix_ambiguous /usr/local/bin/
 
 # PERMISSIONS
-RUN chmod -R 777 /usr/local/ngs/bin && chown -R ngseasy:ngseasy /usr/local/ngs/bin
-
-# Use baseimage-docker's bash.
-CMD ["/bin/bash"]
+RUN chmod -R 755 /usr/local/ngs/bin && chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 # run as user ngseasy
 ENV HOME /home/ngseasy
 USER ngseasy
 WORKDIR /home/ngseasy
 VOLUME /home/ngseasy/ngs_projects
+CMD ["bash"]

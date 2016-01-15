@@ -41,7 +41,7 @@ TARGET_BIN=$(INSTALLDIR)
 ################################################################
 ## relative path to ngseasy scripts
 SRC=./bin
-SOURCE_NGSEASY_BIN=$(shell "bash -c source ~/.bashrc")
+
 ################################################################
 # Intsalling all or parts...
 ################################################################
