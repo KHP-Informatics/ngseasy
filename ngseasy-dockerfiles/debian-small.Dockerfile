@@ -86,7 +86,7 @@ RUN  useradd -m -U -s /bin/bash ngseasy && \
   mkdir /usr/local/ngs && \
   mkdir /usr/local/ngs/bin && \
   chown ngseasy:ngseasy /usr/local/ngs/bin  && \
-  chmod -R 777 /usr/local/ngs/bin  && \
+  chmod -R 755 /usr/local/ngs/bin  && \
   chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin' /home/ngseasy/.bashrc && \
   bash -c "source /home/ngseasy/.bashrc"

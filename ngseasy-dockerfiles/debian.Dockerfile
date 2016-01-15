@@ -130,7 +130,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   cd /tmp && \
   wget http://cython.org/release/Cython-${CYTHON_VERSION}.tar.gz && \
   tar xvf Cython-${CYTHON_VERSION}.tar.gz && \
-  chmod -R 777 Cython-${CYTHON_VERSION} && \
+  chmod -R 755 Cython-${CYTHON_VERSION} && \
   cd Cython-${CYTHON_VERSION} && \
   python setup.py install && \
   apt-get autoremove -y && \

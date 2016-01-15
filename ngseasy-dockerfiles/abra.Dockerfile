@@ -8,7 +8,7 @@ RUN cd /usr/local/ngs/bin && \
     mv -v abra-0.94-SNAPSHOT-jar-with-dependencies.jar /usr/local/bin/abra-0.94
 
 ## PERMISSIONS
-RUN chmod -R 777 /usr/local/ngs/bin
+RUN chmod -R 755 /usr/local/ngs/bin
 RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 ## Cleanup the temp dir

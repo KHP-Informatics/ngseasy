@@ -9,7 +9,7 @@ RUN FASTQC_VERSION="0.11.4" && \
   cd /usr/local/ngs/bin && \
   wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQC_VERSION}.zip && \
   unzip fastqc_v${FASTQC_VERSION}.zip && \
-  chmod -R 777 ./FastQC/ && \
+  chmod -R 755 ./FastQC/ && \
   sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/FastQC/jbzip2-0.9.jar:/usr/local/ngs/bin/FastQC/sam-1.103.jar' /home/ngseasy/.bashrc && \
   sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/FastQC' /home/ngseasy/.bashrc && \
   ln -s /usr/local/ngs/bin/FastQC/fastqc /usr/local/bin/fastqc && \

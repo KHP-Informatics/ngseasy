@@ -49,7 +49,7 @@ RUN /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.
     /usr/bin/Rscript --no-save --no-restore -e 'source("http://www.bioconductor.org/biocLite.R"); biocLite("ExomeDepth",dependencies=TRUE)'
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/ngs/bin
+RUN chmod -R 755 /usr/local/ngs/bin
 RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------

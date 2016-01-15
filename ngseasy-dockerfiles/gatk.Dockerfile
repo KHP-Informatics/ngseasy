@@ -19,13 +19,13 @@ RUN cd /usr/local/ngs/bin/GenomeAnalysisTK-3.3-0 && \
 	sed -i '$aCLASSPATH=:${CLASSPATH}:/usr/local/ngs/bin/GenomeAnalysisTK-3.3-0/GenomeAnalysisTK.jar' /root/.bashrc && \
 	sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/GenomeAnalysisTK-3.3-0' /home/ngseasy/.bashrc && \
 	sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/GenomeAnalysisTK-3.3-0' /root/.bashrc && \
-	chmod 777 /usr/local/ngs/bin/GenomeAnalysisTK-3.3-0/* && \	
+	chmod 755 /usr/local/ngs/bin/GenomeAnalysisTK-3.3-0/* && \	
 	cp -rfv /usr/local/ngs/bin/GenomeAnalysisTK-3.3-0/* /usr/local/bin/
 
 ADD fix_ambiguous /usr/local/bin/ 
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/ngs/bin
+RUN chmod -R 755 /usr/local/ngs/bin
 RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------

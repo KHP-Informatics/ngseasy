@@ -20,7 +20,7 @@ RUN apt-get update -y && apt-get upgrade -y
 RUN mkdir /usr/local/ngs/bin/bcbio  && \
   cd /usr/local/ngs/bin/bcbio && \
   wget https://github.com/chapmanb/bcbio.variation/releases/download/v0.2.4/bcbio.variation-0.2.4-standalone.jar && \
-  chmod 777 bcbio.variation-0.2.4-standalone.jar && \
+  chmod 755 bcbio.variation-0.2.4-standalone.jar && \
   sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/bcbio/bcbio.variation-0.2.4-standalone.jar' /home/ngseasy/.bashrc && \
   sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/bcbio/' /home/ngseasy/.bashrc && \
   sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/bcbio/' ~/.bashrc && \
@@ -43,7 +43,7 @@ RUN cd /usr/local/ngs/bin/ && \
 ADD fix_ambiguous /usr/local/bin/
 
 #-------------------------------PERMISSIONS-------------------------
-RUN chmod -R 777 /usr/local/ngs/bin
+RUN chmod -R 755 /usr/local/ngs/bin
 RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------

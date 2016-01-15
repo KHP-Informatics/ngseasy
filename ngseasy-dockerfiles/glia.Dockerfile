@@ -15,19 +15,19 @@ RUN apt-get update &&  apt-get upgrade -y && apt-get dist-upgrade -y
 # glia
 RUN cd /usr/local/ngs/bin && \
     git clone --recursive https://github.com/ekg/glia.git && \
-    chmod -R 777 ./glia && \
+    chmod -R 755 ./glia && \
     cd ./glia && \
     make && \
     cp -v ./glia /usr/local/bin/ && \
     cd /usr/local/ngs/bin && \
     git clone --branch v0.9.20 --recursive git://github.com/ekg/freebayes.git  && \
-    chmod -R 777 freebayes && \
+    chmod -R 755 freebayes && \
     cd freebayes && \
     make && \
     cp -v ./bin/* /usr/local/bin/
   
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/ngs/bin 
+RUN chmod -R 755 /usr/local/ngs/bin 
 RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------

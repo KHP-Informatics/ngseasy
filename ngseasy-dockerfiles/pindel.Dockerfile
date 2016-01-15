@@ -32,19 +32,19 @@ ADD samtools-0.1.19.tar.bz2 /usr/local/ngs/bin/
 
 RUN cd /usr/local/ngs/bin/ && \
 	cd samtools-0.1.19 && \
-	chmod -R 777 ./* && \
+	chmod -R 755 ./* && \
 	make
 
 RUN cd /usr/local/ngs/bin/ && \
 	git clone git://github.com/genome/pindel.git && \
-	chmod -R 777 ./pindel && \
+	chmod -R 755 ./pindel && \
 	cd pindel && \
 	/bin/sh ./INSTALL /usr/local/ngs/bin/samtools-0.1.19 && \
-    chmod -R 777 /usr/local/ngs/bin/pindel && \
+    chmod -R 755 /usr/local/ngs/bin/pindel && \
     cp -puv Adaptor.pm bam2pindel.pl pindel pindel2vcf sam2pindel /usr/local/bin/
 
 #-------------------------------PERMISSIONS-------------------------
-RUN chmod -R 777 /usr/local/ngs/bin
+RUN chmod -R 755 /usr/local/ngs/bin
 RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------

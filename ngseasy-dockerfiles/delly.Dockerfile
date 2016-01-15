@@ -22,13 +22,13 @@ RUN cd /usr/local/ngs/bin && \
     wget https://github.com/tobiasrausch/delly/releases/download/v0.6.3/delly_v0.6.3_parallel_linux_x86_64bit && \
     mv -v delly_v0.6.3_CentOS5.4_x86_64bit delly && \
     mv -v delly_v0.6.3_parallel_linux_x86_64bit delly-parallel && \
-    chmod -R 777 /usr/local/ngs/bin && \
+    chmod -R 755 /usr/local/ngs/bin && \
     cp -v delly /usr/local/bin && \
     cp -v delly-parallel /usr/local/bin
 
 ADD fix_ambiguous /usr/local/bin/
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/ngs/bin
+RUN chmod -R 755 /usr/local/ngs/bin
 RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------

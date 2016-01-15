@@ -20,7 +20,7 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   mkdir /usr/local/ngs && \
   mkdir /usr/local/ngs/bin && \
   chown ngseasy:ngseasy /usr/local/ngs/bin  && \
-  chmod -R 777 /usr/local/ngs/bin  && \
+  chmod -R 755 /usr/local/ngs/bin  && \
   chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 # STANDARD NGS TOOLS
@@ -85,7 +85,7 @@ RUN cd /usr/local/ngs/bin && \
   git clone https://github.com/lh3/seqtk.git && \
   chown -R ngseasy:ngseasy /usr/local/ngs/bin/seqtk && \
   cd seqtk/ && \
-  chmod -R 777 ./* && \
+  chmod -R 755 ./* && \
   make && \
   cp -v seqtk /usr/local/bin/ && \
   cp -v trimadap /usr/local/bin/ && \
@@ -118,7 +118,7 @@ RUN cd /usr/local/ngs/bin && \
 # vt
   cd /usr/local/ngs/bin && \
   git clone https://github.com/atks/vt.git && \
-  chmod -R 777 vt/ && \
+  chmod -R 755 vt/ && \
   cd vt && \
   make && \
   cp -v vt /usr/local/bin && \
@@ -126,14 +126,14 @@ RUN cd /usr/local/ngs/bin && \
 # vawk
   cd /usr/local/ngs/bin && \
   git clone https://github.com/cc2qe/vawk.git && \
-  chmod -R 777 vawk/ && \
+  chmod -R 755 vawk/ && \
   cp -v vawk/vawk /usr/local/bin && \
   apt-get install -y bison flex byacc && \
 
 # bioawk
   cd /usr/local/ngs/bin && \
   git clone https://github.com/lh3/bioawk.git && \
-  chmod -R 777 bioawk/ && \
+  chmod -R 755 bioawk/ && \
   cd bioawk && \
   make && \
   cp -v bioawk /usr/local/bin && \
@@ -160,7 +160,7 @@ RUN cd /usr/local/ngs/bin && \
   rm -rf /usr/local/ngs/bin/*
 
 # PERMISSIONS
-RUN chmod -R 777 /usr/local/ngs/bin && chown -R ngseasy:ngseasy /usr/local/ngs/bin
+RUN chmod -R 755 /usr/local/ngs/bin && chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]

@@ -16,11 +16,11 @@ RUN cd /usr/local/ngs/bin && \
     wget http://www-genepi.med.utah.edu/suppl/SLOPE/slope_align.cpp && \
     wget http://www-genepi.med.utah.edu/suppl/SLOPE/slope_cluster && \
     wget http://www-genepi.med.utah.edu/suppl/SLOPE/slope_cluster.cpp && \
-    chmod 777 ./* && \
+    chmod 755 ./* && \
     cp -v /usr/local/ngs/bin/slope* /usr/local/bin
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/ngs/bin
+RUN chmod -R 755 /usr/local/ngs/bin
 RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------

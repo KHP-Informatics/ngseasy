@@ -14,7 +14,7 @@ RUN apt-get update -y && apt-get upgrade -y && apt-get install -y python-dev
 # cython
 RUN cd /tmp && \
 	wget https://github.com/cython/cython/archive/0.22.1.tar.gz && \
-	chmod 777 0.22.1.tar.gz && \
+	chmod 755 0.22.1.tar.gz && \
 	tar xvf 0.22.1.tar.gz && \
 	cd cython-0.22.1 && \
 	python setup.py install
@@ -22,7 +22,7 @@ RUN cd /tmp && \
 #-----------------------------PLATYPUS-------------------------------
 RUN cd /tmp && \
 	git clone https://github.com/samtools/htslib.git && \
-	chmod -R 777 htslib && \
+	chmod -R 755 htslib && \
 	cd htslib && \
 	autoconf && \
 	./configure  && \
@@ -31,10 +31,10 @@ RUN cd /tmp && \
 
 RUN cd /usr/local/ngs/bin && \
        git clone --recursive https://github.com/andyrimmer/Platypus.git && \
-       chmod -R 777 Platypus && \
+       chmod -R 755 Platypus && \
        cd Platypus && \
        make && \
-       chmod -R 777 ./* && \
+       chmod -R 755 ./* && \
        cp -vrf ./bin/* /usr/local/bin
 
 ADD fix_ambiguous /usr/local/bin/

@@ -20,7 +20,7 @@ ADD novosortV1.03.01.Linux3.0.tar.gz /tmp/
 
 RUN cp -v /tmp/novocraft/novosort /usr/local/ngs/bin/novocraft/ \
       && sed  -i '$aPATH=${PATH}:/usr/local/ngs/bin/novocraft' /home/ngseasy/.bashrc \
-      && chmod -R 777 /usr/local/ngs/bin/novocraft \
+      && chmod -R 755 /usr/local/ngs/bin/novocraft \
       && cp -rfv /usr/local/ngs/bin/novocraft/* /usr/local/bin
 
 # + get novoalign.lic 

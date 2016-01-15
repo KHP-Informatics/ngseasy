@@ -14,14 +14,14 @@ RUN apt-get update -y && apt-get upgrade -y
 # + snap
 RUN cd /usr/local/ngs/bin && \
 	git clone https://github.com/amplab/snap.git && \
-	chmod -R 777 snap && \
+	chmod -R 755 snap && \
 	cd snap && \
 	make && \
-	chmod -R 777 /usr/local/ngs/bin && \
+	chmod -R 755 /usr/local/ngs/bin && \
 	cp -v snap* /usr/local/bin
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/ngs/bin
+RUN chmod -R 755 /usr/local/ngs/bin
 RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------

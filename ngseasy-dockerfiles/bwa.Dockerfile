@@ -11,7 +11,7 @@ RUN cd /usr/local/ngs/bin && \
   BWA_VERSION="0.7.12" && \
   wget http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
   tar xjvf bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
-  chmod -R 777 /usr/local/ngs/bin && \
+  chmod -R 755 /usr/local/ngs/bin && \
   ln -s /usr/local/ngs/bin/bwa.kit/bwa /usr/local/bin/bwa && \
   cd /usr/local/ngs/bin && \
   rm bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
@@ -22,7 +22,7 @@ RUN cd /usr/local/ngs/bin && \
   git clone git://github.com/GregoryFaust/samblaster.git && \
   cd samblaster && \
   make && \
-  chmod -R 777 /usr/local/ngs/bin && \
+  chmod -R 755 /usr/local/ngs/bin && \
   cp -v samblaster /usr/local/bin/ && \
   cd /usr/local/ngs/bin && \
   rm -r /usr/local/ngs/bin/samblaster && \

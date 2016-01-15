@@ -25,7 +25,7 @@ RUN cd /usr/local/ngs/bin \
 
 ADD fix_ambiguous /usr/local/bin/
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/ngs/bin
+RUN chmod -R 755 /usr/local/ngs/bin
 RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------

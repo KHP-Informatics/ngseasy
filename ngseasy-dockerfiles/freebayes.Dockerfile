@@ -41,7 +41,7 @@ RUN apt-get update && \
   git clone --recursive git://github.com/ekg/vcflib.git && \
   cd vcflib && \
   make && \
-  chmod -R 777 ./bin/ && \
+  chmod -R 755 ./bin/ && \
   cp -v ./bin/* /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
   rm -r ./vcflib && \
@@ -51,7 +51,7 @@ RUN apt-get update && \
   git clone https://github.com/arq5x/bedtools2.git && \
   cd bedtools2 && \
   make all && \
-  chmod -R 777 ./* && \
+  chmod -R 755 ./* && \
   make install && \
   cd /usr/local/ngs/bin/ && \
   rm -r ./bedtools2 && \
@@ -59,10 +59,10 @@ RUN apt-get update && \
 # vt
   cd /usr/local/ngs/bin && \
   git clone https://github.com/atks/vt.git && \
-  chmod -R 777 vt/ && \
+  chmod -R 755 vt/ && \
   cd vt && \
   make && \
-  chmod -R 777 vt && \
+  chmod -R 755 vt && \
   cp -v vt /usr/local/bin && \
   cd /usr/local/ngs/bin/ && \
   rm -r ./vt && \
@@ -73,7 +73,7 @@ RUN apt-get update && \
   && git clone --recursive git://github.com/ekg/freebayes.git \
   && cd /usr/local/ngs/bin/freebayes \
   && make \
-  && chmod -R 777 /usr/local/ngs/bin/freebayes \
+  && chmod -R 755 /usr/local/ngs/bin/freebayes \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/freebayes/bin' /home/ngseasy/.bashrc \
   && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/freebayes/bin' ~/.bashrc \
   && cp -v /usr/local/ngs/bin/freebayes/bin/* /usr/local/bin && \

@@ -16,10 +16,10 @@ RUN apt-get update && apt-get upgrade -y
 RUN wget -O /tmp/stampy-latest.tgz http://www.well.ox.ac.uk/bioinformatics/Software/Stampy-latest.tgz \
     && tar xvf /tmp/stampy-latest.tgz -C /usr/local/ngs/bin/ \
     && sed -i 's/-Wl//' /usr/local/ngs/bin/stampy-1.0.27/makefile \
-    && chmod -R 777 /usr/local/ngs/bin/stampy-1.0.27 \
+    && chmod -R 755 /usr/local/ngs/bin/stampy-1.0.27 \
     && cd /usr/local/ngs/bin/stampy-1.0.27 \
     && make \ 
-    && chmod -R 777 /usr/local/ngs/bin/ \
+    && chmod -R 755 /usr/local/ngs/bin/ \
     && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/stampy-1.0.27' /home/ngseasy/.bashrc \
     && sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/stampy-1.0.27' ~/.bashrc
 

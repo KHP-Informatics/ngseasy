@@ -9,7 +9,7 @@ RUN TRIMMOMATIC_VERSION="0.32" && \
   cd /usr/local/ngs/bin && \
   wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-${TRIMMOMATIC_VERSION}.zip && \
   unzip Trimmomatic-${TRIMMOMATIC_VERSION}.zip && \
-  chmod -R 777 Trimmomatic-${TRIMMOMATIC_VERSION}/* && \
+  chmod -R 755 Trimmomatic-${TRIMMOMATIC_VERSION}/* && \
   sed -i '$aCLASSPATH=.:${CLASSPATH}:/usr/local/ngs/bin/Trimmomatic-${TRIMMOMATIC_VERSION}/trimmomatic-${TRIMMOMATIC_VERSION}.jar' /home/ngseasy/.bashrc && \
   sed -i '$aPATH=${PATH}:/usr/local/ngs/bin/Trimmomatic-${TRIMMOMATIC_VERSION}' /home/ngseasy/.bashrc && \
   ln -s /usr/local/ngs/bin/Trimmomatic-${TRIMMOMATIC_VERSION}/trimmomatic-${TRIMMOMATIC_VERSION}.jar /usr/local/bin/trimmomatic.jar && \

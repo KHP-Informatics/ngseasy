@@ -14,13 +14,13 @@ RUN apt-get update -y && apt-get upgrade -y
 # + bowtie
 RUN wget -O /tmp/bowtie2-2.2.5-linux-x86_64.zip http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.5/bowtie2-2.2.5-linux-x86_64.zip \
     && unzip /tmp/bowtie2-2.2.5-linux-x86_64.zip -d /usr/local/ngs/bin/ \
-    && chmod -R 777 /usr/local/ngs/bin/ \  
+    && chmod -R 755 /usr/local/ngs/bin/ \  
     && sed  -i '$aPATH=${PATH}:/usr/local/ngs/bin/bowtie2-2.2.5:/usr/local/ngs/bin/bowtie2-2.2.5/scripts' /home/ngseasy/.bashrc \
     && sed  -i '$aPATH=${PATH}:/usr/local/ngs/bin/bowtie2-2.2.5:/usr/local/ngs/bin/bowtie2-2.2.5/scripts' ~/.bashrc \
     && cp -v /usr/local/ngs/bin/bowtie2-2.2.5/bowtie* /usr/local/bin/
 
 #-------------------------------PERMISSIONS--------------------------
-RUN chmod -R 777 /usr/local/ngs/bin
+RUN chmod -R 755 /usr/local/ngs/bin
 RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 #---------------------------------------------------------------------

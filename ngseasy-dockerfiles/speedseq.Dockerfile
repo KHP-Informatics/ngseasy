@@ -27,9 +27,9 @@ RUN apt-get install -y \
 # cython
 RUN cd /tmp && \
     wget http://cython.org/release/Cython-0.22.tar.gz && \
-    chmod 777 Cython-0.22.tar.gz && \
+    chmod 755 Cython-0.22.tar.gz && \
     tar xvf Cython-0.22.tar.gz && \
-    chmod -R 777 Cython-0.22 && \
+    chmod -R 755 Cython-0.22 && \
     cd Cython-0.22 && \
     python setup.py install
 
@@ -60,10 +60,10 @@ ENV ROOTSYS /usr/local/root
 
 RUN cd /usr/local/ngs/bin && \
     git clone --recursive https://github.com/cc2qe/speedseq && \
-    chmod -R 777 /usr/local/ngs/bin/speedseq && \
+    chmod -R 755 /usr/local/ngs/bin/speedseq && \
     cd /usr/local/ngs/bin/speedseq && \
     make -j `ncpu` ROOTFLAGS=" -pthread -m64" && \
-    chmod -R 777 /usr/local/ngs/bin/speedseq
+    chmod -R 755 /usr/local/ngs/bin/speedseq
 
 RUN echo "export PATH=/usr/local/ngs/bin/speedseq/bin:\$PATH" >> ~/.bashrc && \
     /bin/bash -c "source ~/.bashrc"
@@ -74,7 +74,7 @@ ADD speedseq_hg19.config /usr/local/ngs/bin/speedseq/bin/
 ################################################################################
 # PERMISSIONS
 ################################################################################
-RUN chmod -R 777 /usr/local/ngs/bin
+RUN chmod -R 755 /usr/local/ngs/bin
 RUN chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 ################################################################################
