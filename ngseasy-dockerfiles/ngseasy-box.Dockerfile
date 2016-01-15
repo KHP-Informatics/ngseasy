@@ -492,7 +492,8 @@ RUN chmod -R 755 /usr/local/ngs/bin && chown -R ngseasy:ngseasy /usr/local/ngs/b
 
 # run as user ngseasy
 ENV HOME /home/ngseasy
+ENV PATH /usr/local/ngs/bin:/usr/local/bin:$PATH
 USER ngseasy
 WORKDIR /home/ngseasy
 VOLUME /home/ngseasy/ngs_projects
-CMD ["bash"]
+CMD ["/bin/bash"]
