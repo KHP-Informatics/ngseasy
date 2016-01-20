@@ -2,7 +2,7 @@ FROM debian:jessie
 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
-LABEL Description="This is the debian:jessie base image for compbio ngseasy builds. This is Fat Image" NickName="little-fatty-deb" URL="https://hub.docker.com/r/library/debian/" Version="0.5"
+LABEL Description="This is the debian:jessie base image for compbio ngseasy builds. This is Fat Dev Box Image to help get around the dependency mess of all the components" NickName="little-fatty-deb"
 
 ENV DEBIAN_FRONTEND noninteractive
 
