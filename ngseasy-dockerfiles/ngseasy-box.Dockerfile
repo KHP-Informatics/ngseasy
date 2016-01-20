@@ -21,6 +21,11 @@ RUN apt-get update && \
   apt-get clean && \
   apt-get purge && \
 
+# Create a user:ngseasy and group:ngseasy
+RUN useradd -m -U -s /bin/bash ngseasy && \
+  cd /home/ngseasy && \
+  usermod -aG sudo ngseasy && \
+
 # make dirs: /usr/local/ngs/bin and sort permissions out
   mkdir /usr/local/ngs && \
   mkdir /usr/local/ngs/bin && \
