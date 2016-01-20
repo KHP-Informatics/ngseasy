@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # set R version
 # https://github.com/rocker-org/rocker/blob/master/r-base/Dockerfile#L38
-ENV R_BASE_VERSION 3.2.2
+ENV R_BASE_VERSION 3.2.3
 
 # Remain current, upgrade apt-get, add build tools, R, JAVA and python
 RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' /etc/apt/sources.list && \
