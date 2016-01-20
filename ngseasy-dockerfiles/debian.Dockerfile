@@ -154,17 +154,17 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   rm -rf /var/tmp/* && \
   rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
 
-  # Create a user:ngseasy and group:ngseasy
-  RUN useradd -m -U -s /bin/bash ngseasy && \
-    cd /home/ngseasy && \
-    usermod -aG sudo ngseasy && \
+# Create a user:ngseasy and group:ngseasy
+  useradd -m -U -s /bin/bash ngseasy && \
+  cd /home/ngseasy && \
+  usermod -aG sudo ngseasy && \
 
-  # make dirs: /usr/local/ngs/bin and sort permissions out
-    mkdir /usr/local/ngs && \
-    mkdir /usr/local/ngs/bin && \
-    chown ngseasy:ngseasy /usr/local/ngs/bin  && \
-    chmod -R 755 /usr/local/ngs/bin  && \
-    chown -R ngseasy:ngseasy /usr/local/ngs/bin
+# make dirs: /usr/local/ngs/bin and sort permissions out
+  mkdir /usr/local/ngs && \
+  mkdir /usr/local/ngs/bin && \
+  chown ngseasy:ngseasy /usr/local/ngs/bin  && \
+  chmod -R 755 /usr/local/ngs/bin  && \
+  chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
 # configure locales
 RUN dpkg-reconfigure locales && \
