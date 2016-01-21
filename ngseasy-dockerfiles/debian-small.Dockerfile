@@ -2,8 +2,6 @@ FROM debian:jessie
 
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
-LABEL Description="This is the base image for compbio. Based on debian:jessie. This is a Slim Image" NickName="little-deb" URL="https://hub.docker.com/r/library/debian/" Version="1.0"
-
 ENV DEBIAN_FRONTEND noninteractive
 
 # Remain current, upgrade apt-get, add build tools and java
@@ -62,8 +60,20 @@ RUN apt-get update && \
   find /usr/local -perm /u+x -execdir chmod a+x {} \; && \
   find /usr/local -perm /u+w -execdir chmod a+w {} \; && \
 
+# Create a user:ngseasy and group:ngseasy
+  useradd -m -U -s /bin/bash ngseasy && \
+  cd /home/ngseasy && \
+  usermod -aG sudo ngseasy && \
+
+# make dirs: /usr/local/ngs/bin and sort permissions out
+  mkdir /usr/local/ngs && \
+  mkdir /usr/local/ngs/bin && \
+  chown ngseasy:ngseasy /usr/local/ngs/bin  && \
+  chmod -R 755 /usr/local/ngs/bin  && \
+  chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
+
 # configure locales
-dpkg-reconfigure locales && \
+  dpkg-reconfigure locales && \
   locale-gen C.UTF-8 && \
   /usr/sbin/update-locale LANG=C.UTF-8 && \
   echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
@@ -76,20 +86,7 @@ dpkg-reconfigure locales && \
 
 # set JAVA_HOME
   ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk-amd64
-
-# Create a user:ngseasy and group:ngseasy
-RUN  useradd -m -U -s /bin/bash ngseasy && \
-  cd /home/ngseasy && \
-  usermod -aG sudo ngseasy && \
-
-# make dirs: /usr/local/ngs/bin and sort permissions out
-  mkdir /usr/local/ngs && \
-  mkdir /usr/local/ngs/bin && \
-  chown ngseasy:ngseasy /usr/local/ngs/bin  && \
-  chmod -R 755 /usr/local/ngs/bin  && \
-  chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
-  sed -i '$aPATH=$PATH:/usr/local/ngs/bin' /home/ngseasy/.bashrc && \
-  bash -c "source /home/ngseasy/.bashrc"
+  ENV PATH /usr/local/ngs/bin:$PATH
 
 # clean up
 RUN apt-get clean && \
