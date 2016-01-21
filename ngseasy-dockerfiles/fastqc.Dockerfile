@@ -1,5 +1,5 @@
 # base image
-FROM compbio/ngseasy-debian:v1.0
+FROM compbio/ngseasy-debian:small
 
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
@@ -23,7 +23,6 @@ RUN apt-get clean && \
 
 # user and env vars
 ENV PATH /usr/local/ngs/bin/FastQC:$PATH
-ENV CLASSPATH /usr/local/ngs/bin/FastQC/jbzip2-0.9.jar:/usr/local/ngs/bin/FastQC/sam-1.103.jar:$CLASSPATH
 ENV HOME /home/ngseasy
 USER ngseasy
 WORKDIR /home/ngseasy
