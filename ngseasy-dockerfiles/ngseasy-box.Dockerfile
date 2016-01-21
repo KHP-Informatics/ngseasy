@@ -22,18 +22,18 @@ RUN apt-get update && \
   apt-get purge && \
 
 # Create a user:ngseasy and group:ngseasy
-RUN useradd -m -U -s /bin/bash ngseasy && \
-  cd /home/ngseasy && \
-  usermod -aG sudo ngseasy && \
-
+# RUN
+# useradd -m -U -s /bin/bash ngseasy && \
+#  cd /home/ngseasy && \
+#  usermod -aG sudo ngseasy && \
 # make dirs: /usr/local/ngs/bin and sort permissions out
-  mkdir /usr/local/ngs && \
-  mkdir /usr/local/ngs/bin && \
-  chown ngseasy:ngseasy /usr/local/ngs/bin  && \
-  chmod -R 755 /usr/local/ngs/bin  && \
-  chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
-  sed -i '$aPATH=$PATH:/usr/local/ngs/bin' /home/ngseasy/.bashrc && \
-  bash -c "source /home/ngseasy/.bashrc"
+#  mkdir /usr/local/ngs && \
+#  mkdir /usr/local/ngs/bin && \
+#  chown ngseasy:ngseasy /usr/local/ngs/bin  && \
+#  chmod -R 755 /usr/local/ngs/bin  && \
+#  chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
+#  sed -i '$aPATH=$PATH:/usr/local/ngs/bin' /home/ngseasy/.bashrc && \
+#  bash -c "source /home/ngseasy/.bashrc"
 
 ## NGSeasy Tools
 # samtools, htslib, bcftools
