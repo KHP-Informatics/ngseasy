@@ -21,7 +21,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   apt-get clean && \
   apt-get purge && \
   apt-get install -y --no-install-recommends \
-  apt-utils \
+  apt-utils && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
