@@ -5,7 +5,7 @@ FROM compbio/ngseasy-debian:small
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
 # fastc
-RUN FASTQC_VERSION="0.11.4" && \
+RUN  FASTQC_VERSION="0.11.4" && \
   cd /usr/local/ngs/bin && \
   wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQC_VERSION}.zip && \
   unzip fastqc_v${FASTQC_VERSION}.zip && \
