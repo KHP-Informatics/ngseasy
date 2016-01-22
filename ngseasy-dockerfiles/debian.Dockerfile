@@ -89,6 +89,8 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   vim \
   wget \
   zlib1g && \
+  apt-get update && \
+  apt-get upgrade -y && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
@@ -98,6 +100,8 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   apt-get install -y --no-install-recommends \
   openjdk-${JAVA_INSTALL_VERSION}-jre \
   openjdk-${JAVA_INSTALL_VERSION}-jdk && \
+  apt-get update && \
+  apt-get upgrade -y && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
