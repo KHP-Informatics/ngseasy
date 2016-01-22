@@ -22,8 +22,8 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   apt-get purge && \
   apt-get install -y --no-install-recommends \
   apt-utils \
-  ant \
-  asciidoc \
+#  ant \
+# asciidoc \
   automake \
   bash \
   binutils \
@@ -45,7 +45,7 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   gnuplot \
   gradle \
   graphviz \
-  htop \
+# htop \
   less \
   libatlas-dev \
   libblas-dev \
@@ -66,8 +66,8 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   locales \
   make \
   ncurses-dev \
-  openssl \
-  openssl-blacklist \
+#  openssl \
+#  openssl-blacklist \
   parallel \
   pkg-config \
   python \
@@ -75,8 +75,8 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   python2.7-dev \
   python-pip \
   python-yaml \
-  ssl-cert \
-  sudo \
+#  ssl-cert \
+#  sudo \
   tabix \
   time \
   tree \
@@ -89,10 +89,10 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   apt-get clean && \
   apt-get purge && \
 # java
+  JAVA_INSTALL_VERSION="8" && \
   apt-get install -y --no-install-recommends \
-  openjdk-7-jdk \
-  openjdk-7-doc \
-  openjdk-7-jre-lib && \
+  openjdk-${JAVA_INSTALL_VERSION}-jre \
+  openjdk-${JAVA_INSTALL_VERSION}-jdk && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
@@ -101,11 +101,16 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
 # https://github.com/rocker-org/rocker/blob/master/r-base/Dockerfile#L45
   apt-get install -y --no-install-recommends \
   libatlas3-base \
-  libopenblas-base \
+  libopenblas-base && \
+  apt-get autoremove -y && \
+  apt-get autoclean && \
+  apt-get clean && \
+  apt-get purge && \
+  apt-get install -y --no-install-recommends \
   r-base=${R_BASE_VERSION}* \
   r-base-dev=${R_BASE_VERSION}* \
-  r-recommended=${R_BASE_VERSION}* \
-  littler && \
+  r-recommended=${R_BASE_VERSION}* && \
+# littler && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
