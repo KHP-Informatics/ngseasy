@@ -22,8 +22,13 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   apt-get purge && \
   apt-get install -y --no-install-recommends \
   apt-utils \
-#  ant \
+  apt-get autoremove -y && \
+  apt-get autoclean && \
+  apt-get clean && \
+  apt-get purge && \
+# ant \
 # asciidoc \
+  apt-get install -y --no-install-recommends \
   automake \
   bash \
   binutils \
