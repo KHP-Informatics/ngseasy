@@ -1,23 +1,31 @@
 ![NGSeasy_logo](https://github.com/KHP-Informatics/ngseasy/blob/sjn_dev/figs/NGSeasy_logo_0.0.1.png)
 
+**Project Dev Delayed1**
+
 NGSeasy: A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box
 =====================================================================================
-[![Join the chat at https://gitter.im/KHP-Informatics/ngseasy](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/KHP-Informatics/ngseasy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/KHP-Informatics/ngseasy](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/KHP-Informatics/ngseasy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.31444.svg)](http://dx.doi.org/10.5281/zenodo.31444)
 
 ### *Undergoing some re-dev...things may be broken...*
 
+## NGSeasy
+
 **With NGSeasy you can now have full suite of NGS tools up and running on any high end workstation in an afternoon**  
+
+We present NGSeasy (Easy Analysis of Next Generation Sequencing), a flexible and easy-to-use NGS pipeline for automated alignment, quality control, variant calling and annotation. The pipeline allows users with minimal computational/bioinformatic skills to set up and run an NGS analysis on their own samples, in less than an afternoon, on any operating system (Windows, iOS or Linux) or infrastructure (workstation, cluster or cloud).
 
 **Authors:** Stephen J Newhouse and Amos Folarin  
 **Release Version:** **1.0-r001**  
 **Release:** dirty_tango  
-**Publication:** Folarin AA, Dobson RJ and Newhouse SJ. NGSeasy: a next generation sequencing pipeline in Docker containers [version 1; referees: 3 approved with reservations] F1000Research 2015, 4(ISCB Comm J):997 (doi: 10.12688/f1000research.7104.1).   
+**Citation:** [Folarin AA, Dobson RJ and Newhouse SJ. NGSeasy: a next generation sequencing pipeline in Docker containers [version 1; referees: 3 approved with reservations] F1000Research 2015, 4(ISCB Comm J):997 (doi: 10.12688/f1000research.7104.1).](http://f1000research.com/articles/4-997/v1)   
 
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.31444.svg)](http://dx.doi.org/10.5281/zenodo.31444)
+## Acknowledgements
+This work is funded by the National Institute for Health Research (NIHR) Biomedical Research Centre at South London and Maudsley NHS Foundation Trust and King’s College London.
 
+## Releases
 - **NGSeasy-1.0 Full Production release will be available Late 2015**  
 - **NGSeasy-1.0-r001 (dirty_tango) contains most of the core functionality to go from raw fastq to raw vcf calls**
-- **NGSeasy will update every 12 months**
+- **NGSeasy will update every 12 months*
 - **GUI in development**
 - **Lets us know if you want other tools added to NGSeasy**
 
@@ -289,12 +297,12 @@ As the containers themselves can be run as executables with pre-specified cpu an
 
 ## Genomes
 
-| Genome Build |
-|--------|
-|hs37d5|
-|b37|
-|hg19|
-|hs38DH|
+| Genome Build | Status |
+|--------|------|
+|hs37d5| coming soon |
+|b37|available|
+|hg19|available|
+|hs38DH|coming soon |
 
 ****************
 
