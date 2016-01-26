@@ -808,4 +808,4 @@ sudo docker build -t compbio/ngseasy-snpeff:${VERSION} .
 - http://plagnol-lab.blogspot.co.uk/2013/11/faq-and-clarifications-for-exomedepth-r.html
 
 *************************
-(C) 2015 Stephen J Newhouse & Amos Folarin
+(C) 2015 Kings College London
