@@ -480,6 +480,23 @@ RUN cd /usr/local/ngs/bin && \
   cd /usr/local/ngs/bin/ && \
   rm -r ogap
 
+## ADD FIREPONY BSQR
+#https://github.com/broadinstitute/firepony/wiki
+# make sure add-apt-repository is installed
+#sudo apt-get install software-properties-common
+#
+# the following line is required only on Ubuntu 12 and 14 systems
+#sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+#
+# add the firepony repository and key
+#sudo add-apt-repository http://packages.shadau.com/debian
+#sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key 285514D704F4CDB7
+
+# install firepony
+sudo apt-get update
+sudo apt-get install firepony
+
+
 # source .bashrc
 RUN  bash -c "source /home/ngseasy/.bashrc" && \
 
