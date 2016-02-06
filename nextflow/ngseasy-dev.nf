@@ -8,15 +8,17 @@
  *
  */
 
+ // nextflow run ngseasy.nf --studyId --sampleID --projectDir --
+
 // define run parameters
 
 params.studyId =
 params.sampleId =
-params.ngsProjectDir =
-params.fq1 =
-params.fq2 =
+params.ProjectDir =
+params.fastq1 =
+params.fastq2 =
 params.refgenome =
-params.fastqc =
+params.fastqc = 
 params.trimmomatic =
 params.aligner =
 params.indelRealigner =
@@ -24,18 +26,20 @@ params.baserecal =
 params.variantCaller =
 params.svCaller =
 
-process ngs-fastqc {
-  container 'compbio/ngseasy-fastqc:v1.0-r002'
+
+
+
+process run-fastqc-00 {
 
   """
-  hshshs
+  fastqc
   """
 }
 
-process ngs-qctrimm {
+process run-trimmomatic-01 {
 }
 
-process ngs-align {
+process run-alignment {
 }
 
 process ngs-realign {

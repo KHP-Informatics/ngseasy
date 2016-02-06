@@ -222,6 +222,15 @@ RUN cd /usr/local/ngs/bin && \
   cd /usr/local/ngs/bin/ && \
   rm Trimmomatic-${TRIMMOMATIC_VERSION}.zip && \
 
+# skewer https://github.com/relipmoc/skewer
+cd /usr/local/ngs/bin && \
+git clone https://github.com/relipmoc/skewer.git && \
+cd skewer && \
+make && \
+chmod -R 755 ./* && \
+sudo make install && \
+cd /usr/local/ngs/bin/ && \
+
 # Picard
   PICARD_VERSION="1.141" && \
   cd /usr/local/ngs/bin && \
