@@ -670,7 +670,7 @@ elif [ "${VARCALLER}" == "freebayes-default" ]
     --min-repeat-entropy 1 \
     --genotype-qualities > ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf && \
     time cat ${SOUTDocker}/vcf/${BAM_PREFIX}.raw.snps.indels.${VARCALLER}.vcf | \
-    vcffilter -f 'QUAL > 5' -s | \
+    vcffilter -f 'QUAL > 5' -f 'DP > 8' -s | \
     fix_ambiguous | \
     vcfallelicprimitives --keep-geno | \
     vcffixup - | \
