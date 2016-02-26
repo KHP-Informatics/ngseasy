@@ -4,7 +4,7 @@ FROM compbio/ngseasy-debian:v1.0
 # Maintainer
 MAINTAINER Stephen Newhouse stephen.j.newhouse@gmail.com
 
-LABEL Description="This is the NGSeasy Tool Box" NickName="Big-Kahuna" Version="1.0"
+LABEL Description="This is the NGSeasy Tool Box" NickName="Big-Kahuna"
 
 # Remain current and get random dependencies
 RUN apt-get update && \
@@ -22,11 +22,10 @@ RUN apt-get update && \
   apt-get purge && \
 
 # Create a user:ngseasy and group:ngseasy
-# RUN
-# useradd -m -U -s /bin/bash ngseasy && \
+# RUN useradd -m -U -s /bin/bash ngseasy && \
 #  cd /home/ngseasy && \
 #  usermod -aG sudo ngseasy && \
-# make dirs: /usr/local/ngs/bin and sort permissions out
+#  make dirs: /usr/local/ngs/bin and sort permissions out
 #  mkdir /usr/local/ngs && \
 #  mkdir /usr/local/ngs/bin && \
 #  chown ngseasy:ngseasy /usr/local/ngs/bin  && \
@@ -35,7 +34,7 @@ RUN apt-get update && \
 #  sed -i '$aPATH=$PATH:/usr/local/ngs/bin' /home/ngseasy/.bashrc && \
 #  bash -c "source /home/ngseasy/.bashrc"
 
-## NGSeasy Tools
+## NGS Tools -------------------------------------------------------------------
 # samtools, htslib, bcftools
 RUN cd /usr/local/ngs/bin && \
   git clone --branch=develop git://github.com/samtools/htslib.git && \
@@ -223,13 +222,13 @@ RUN cd /usr/local/ngs/bin && \
   rm Trimmomatic-${TRIMMOMATIC_VERSION}.zip && \
 
 # skewer https://github.com/relipmoc/skewer
-cd /usr/local/ngs/bin && \
-git clone https://github.com/relipmoc/skewer.git && \
-cd skewer && \
-make && \
-chmod -R 755 ./* && \
-sudo make install && \
-cd /usr/local/ngs/bin/ && \
+  cd /usr/local/ngs/bin && \
+  git clone https://github.com/relipmoc/skewer.git && \
+  cd skewer && \
+  make && \
+  chmod -R 755 ./* && \
+  sudo make install && \
+  cd /usr/local/ngs/bin/ && \
 
 # Picard
   PICARD_VERSION="1.141" && \
@@ -250,13 +249,13 @@ cd /usr/local/ngs/bin/ && \
   cp -v ./bamkit/sectosupp /usr/local/bin/ && \
   rm -r ./bamkit/
 
-## Aligners
+## Aligners --------------------------------------------------------------------
 # bwakit
 # http://sourceforge.net/projects/bio-bwa/files/bwakit/
-# http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-0.7.12_x64-linux.tar.bz2
 RUN cd /usr/local/ngs/bin && \
   BWA_VERSION="0.7.12" && \
-  wget http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
+  wget \
+  http://sourceforge.net/projects/bio-bwa/files/bwakit/bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
   tar xjvf bwakit-${BWA_VERSION}_x64-linux.tar.bz2 && \
   chmod -R 755 /usr/local/ngs/bin && \
   ln -s /usr/local/ngs/bin/bwa.kit/bwa /usr/local/bin/bwa && \
@@ -325,7 +324,7 @@ RUN cd /usr/local/ngs/bin && \
   cd /usr/local/ngs/bin/ && \
   rm -r mrsfast
 
-## Variant Calling
+## Variant Calling -------------------------------------------------------------
 # freebayes
 RUN cd /usr/local/ngs/bin && \
   git clone --recursive git://github.com/ekg/freebayes.git && \
@@ -381,7 +380,7 @@ RUN cd /usr/local/ngs/bin && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/build/install/VarDict/bin' /home/ngseasy/.bashrc && \
   sed -i '$aPATH=$PATH:/usr/local/ngs/bin/VarDictJava/build/install/VarDict/lib' /home/ngseasy/.bashrc && \
 
-## chapmanb/bcbio.variation
+## chapmanb/bcbio.variation ----------------------------------------------------
 # lein for chapmanb/bcbio.variation
   cd  /usr/local/ngs/bin/ && \
   wget -O lein https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein && \
@@ -428,7 +427,7 @@ RUN cd /usr/local/ngs/bin && \
   chmod -R 755 ./* && \
   cp -v /usr/local/ngs/bin/bcbio.variation.recall/bin/* /usr/local/bin
 
-## SV CALLERS
+## SV CALLERS ------------------------------------------------------------------
 # CNVkit
 # https://github.com/chapmanb/cnvkit and https://github.com/etal/cnvkit
 RUN cd  /usr/local/ngs/bin/ && \
@@ -456,9 +455,27 @@ RUN cd  /usr/local/ngs/bin/ && \
   cp -v ./svtyper/svtyper /usr/local/bin/ && \
   cp -vr ./svtyper/scripts/* /usr/local/bin/ && \
   cd /usr/local/ngs/bin/ && \
-  rm -r /usr/local/ngs/bin/svtyper
+  rm -r /usr/local/ngs/bin/svtyper && \
 
-## ReAligners
+# wham: https://github.com/zeeev/wham
+  cd  /usr/local/ngs/bin/ && \
+  pip install -U numpy scipy scikit-learn argparse && \
+  git clone --recursive https://github.com/jewmanchue/wham.git && \
+  chmod -R 755 ./wham && \
+  cd wham && \
+  make && \
+  cp -v ./wham/WHAM-BAM /usr/local/bin/ && \
+  cp -v ./wham/mergeIndvs /usr/local/bin/ && \
+  cp -v ./wham/WHAM-GRAPHENING/usr/local/bin/ && \
+
+# manta
+  MANTA_VERSON="0.29.4" && \
+  cd  /usr/local/ngs/bin/ && \
+  wget https://github.com/Illumina/manta/releases/download/v${MANTA_VERSON}/manta-${MANTA_VERSON}.centos5_x86_64.tar.bz2 && \
+  tar -xjvf manta-${MANTA_VERSON}.centos5_x86_64.tar.bz2 && \
+  
+
+## ReAligners ------------------------------------------------------------------
 # ABRA - Assembly Based ReAligner https://github.com/mozack/abra
 RUN cd /usr/local/ngs/bin && \
   ABRA_VERSION="0.94" && \
@@ -489,22 +506,8 @@ RUN cd /usr/local/ngs/bin && \
   cd /usr/local/ngs/bin/ && \
   rm -r ogap
 
-## ADD FIREPONY BSQR
-#https://github.com/broadinstitute/firepony/wiki
-# make sure add-apt-repository is installed
-#sudo apt-get install software-properties-common
-#
-# the following line is required only on Ubuntu 12 and 14 systems
-#sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-#
-# add the firepony repository and key
-#sudo add-apt-repository http://packages.shadau.com/debian
-#sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key 285514D704F4CDB7
-
-# install firepony
-sudo apt-get update
-sudo apt-get install firepony
-
+## Nextflow --------------------------------------------------------------------
+RUN cd /usr/local/bin/ && curl -fsSL get.nextflow.io | bash && cd
 
 # source .bashrc
 RUN  bash -c "source /home/ngseasy/.bashrc" && \
@@ -519,9 +522,10 @@ RUN  bash -c "source /home/ngseasy/.bashrc" && \
 ADD fix_ambiguous /usr/local/bin/
 
 # PERMISSIONS
-RUN chmod -R 755 /usr/local/ngs/bin && chown -R ngseasy:ngseasy /usr/local/ngs/bin
+RUN chmod -R 755 /usr/local/ngs/bin && \
+  chown -R ngseasy:ngseasy /usr/local/ngs/bin
 
-# run as user ngseasy
+# run as non root user ngseasy
 ENV HOME /home/ngseasy
 ENV PATH /usr/local/ngs/bin:/usr/local/bin:$PATH
 USER ngseasy
