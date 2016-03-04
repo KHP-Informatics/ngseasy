@@ -1,4 +1,4 @@
-# base image 
+# base image
 FROM compbio/ngseasy-debian:v1.0
 
 # Maintainer
@@ -19,20 +19,7 @@ RUN apt-get update && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
-  apt-get purge && \
-
-# Create a user:ngseasy and group:ngseasy
-# RUN useradd -m -U -s /bin/bash ngseasy && \
-#  cd /home/ngseasy && \
-#  usermod -aG sudo ngseasy && \
-#  make dirs: /usr/local/ngs/bin and sort permissions out
-#  mkdir /usr/local/ngs && \
-#  mkdir /usr/local/ngs/bin && \
-#  chown ngseasy:ngseasy /usr/local/ngs/bin  && \
-#  chmod -R 755 /usr/local/ngs/bin  && \
-#  chown -R ngseasy:ngseasy /usr/local/ngs/bin && \
-#  sed -i '$aPATH=$PATH:/usr/local/ngs/bin' /home/ngseasy/.bashrc && \
-#  bash -c "source /home/ngseasy/.bashrc"
+  apt-get purge
 
 ## NGS Tools -------------------------------------------------------------------
 # samtools, htslib, bcftools
@@ -181,22 +168,6 @@ RUN cd /usr/local/ngs/bin && \
   cd /usr/local/ngs/bin/ && \
   rm -r ./gvcftools-${GVCFTOOLS_VERSION}* && \
 
-# ngsuitls
-# NGSUTILS_VERSION="0.5.7" && \
-#  cd /usr/local/ngs/bin && \
-#  git clone https://github.com/ngsutils/ngsutils.git && \
-#  chmod -R 755 ./ngsutils && \
-#  cd ./ngsutils && \
-#  perl -p -i -e s/==/=/g init.sh && \
-#  make && \
-#  chmod -R 755 ./bin && \
-#  export PATH=${PATH}:/usr/local/ngs/bin/ngsutils/bin && \
-#  export PATH=${PATH}:/usr/local/ngs/bin/ngsutils/ngsutils && \
-#  export PATH=${PATH}:/usr/local/ngs/bin/ngsutils/bin && \
-#  cp -v ./bin/* /usr/local/bin/ && \
-#  cd /usr/local/ngs/bin/ && \
-#  rm -r ./ngsutils && \
-
 # fastc
   FASTQC_VERSION="0.11.4" && \
   cd /usr/local/ngs/bin && \
@@ -227,7 +198,7 @@ RUN cd /usr/local/ngs/bin && \
   cd skewer && \
   make && \
   chmod -R 755 ./* && \
-  sudo make install && \
+  make install && \
   cd /usr/local/ngs/bin/ && \
 
 # Picard

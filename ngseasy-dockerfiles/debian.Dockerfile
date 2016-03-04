@@ -50,7 +50,6 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   gnuplot \
   gradle \
   graphviz \
-# htop \
   less \
   libatlas-dev \
   libblas-dev \
@@ -71,8 +70,6 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   locales \
   make \
   ncurses-dev \
-#  openssl \
-#  openssl-blacklist \
   parallel \
   pkg-config \
   python \
@@ -80,8 +77,6 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   python2.7-dev \
   python-pip \
   python-yaml \
-#  ssl-cert \
-#  sudo \
   tabix \
   time \
   tree \
@@ -94,21 +89,35 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
-  apt-get purge && \
+  apt-get purge
+
 # java
-  JAVA_INSTALL_VERSION="8" && \
+# http://www.webupd8.org/2014/03/how-to-install-oracle-java-8-in-debian.html
+RUN JAVA_INSTALL_VERSION="8" && \
+  echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee /etc/apt/sources.list.d/webupd8team-java.list && \
+  echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list && \
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886 && \
+  apt-get update && \
+  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections && \
   apt-get install -y --no-install-recommends \
-  openjdk-${JAVA_INSTALL_VERSION}-jre \
-  openjdk-${JAVA_INSTALL_VERSION}-jdk && \
+  oracle-java8-installer && \
   apt-get update && \
   apt-get upgrade -y && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
   apt-get purge && \
+  apt-get install -y --no-install-recommends oracle-java8-set-default && \
+  apt-get update && \
+  apt-get upgrade -y && \
+  apt-get autoremove -y && \
+  apt-get autoclean && \
+  apt-get clean && \
+  apt-get purge
+
 # Install R
 # https://github.com/rocker-org/rocker/blob/master/r-base/Dockerfile#L45
-  apt-get install -y --no-install-recommends \
+RUN apt-get install -y --no-install-recommends \
   libatlas3-base \
   libopenblas-base && \
   apt-get autoremove -y && \
@@ -119,13 +128,13 @@ RUN sed -i '$adeb http://cran.ma.imperial.ac.uk/bin/linux/debian jessie-cran3/' 
   r-base=${R_BASE_VERSION}* \
   r-base-dev=${R_BASE_VERSION}* \
   r-recommended=${R_BASE_VERSION}* && \
-# littler && \
   apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
-  apt-get purge && \
+  apt-get purge
+
 # python modules scipy stack
-  apt-get install -y  --no-install-recommends \
+RUN apt-get install -y  --no-install-recommends \
   python-biopython \
   python-numpy \
   python-scipy \
@@ -191,9 +200,6 @@ RUN dpkg-reconfigure locales && \
 ENV LC_ALL C.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
-
-# set JAVA_HOME
-ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk-amd64
 
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]
