@@ -473,7 +473,7 @@ RUN cd  /usr/local/ngs/bin/ && \
   cd  /usr/local/ngs/bin/ && \
   wget https://github.com/Illumina/manta/releases/download/v${MANTA_VERSON}/manta-${MANTA_VERSON}.centos5_x86_64.tar.bz2 && \
   tar -xjvf manta-${MANTA_VERSON}.centos5_x86_64.tar.bz2 && \
-  
+
 
 ## ReAligners ------------------------------------------------------------------
 # ABRA - Assembly Based ReAligner https://github.com/mozack/abra
@@ -531,4 +531,5 @@ ENV PATH /usr/local/ngs/bin:/usr/local/bin:$PATH
 USER ngseasy
 WORKDIR /home/ngseasy
 VOLUME /home/ngseasy/ngs_projects
+VOLUME /home/ngseasy/scripts
 CMD ["/bin/bash"]
