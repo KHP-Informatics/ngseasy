@@ -1,4 +1,4 @@
-# base image
+# base image 
 FROM compbio/ngseasy-debian:v1.0
 
 # Maintainer
