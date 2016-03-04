@@ -200,6 +200,6 @@ RUN dpkg-reconfigure locales && \
 ENV LC_ALL C.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
-
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 # Use baseimage-docker's bash.
 CMD ["/bin/bash"]
