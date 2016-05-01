@@ -342,7 +342,6 @@ RUN cd /usr/local/ngs/bin && \
 
 # VarDict cmd: VarDict
   cd /usr/local/ngs/bin/ && \
-  export JAVA_HOME="/usr/lib/jvm/java-1.7.0-openjdk-amd64" && \
   git clone --recursive https://github.com/AstraZeneca-NGS/VarDictJava.git && \
   cd /usr/local/ngs/bin/VarDictJava && \
   ./gradlew clean installApp && \
