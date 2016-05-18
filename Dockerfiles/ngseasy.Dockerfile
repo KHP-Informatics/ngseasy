@@ -20,17 +20,6 @@ RUN apt-get update --fix-missing && \
     apt-get purge && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# get tini
-RUN TINI_VERSION=`curl https://github.com/krallin/tini/releases/latest | grep -o "/v.*\"" | sed 's:^..\(.*\).$:\1:'` && \
-  curl -L "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini_${TINI_VERSION}.deb" > tini.deb && \
-  dpkg -i tini.deb && \
-  rm tini.deb && \
-  apt-get autoremove -y && \
-  apt-get autoclean && \
-  apt-get clean && \
-  apt-get purge && \
-  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
 ENV LANG C.UTF-8
@@ -53,7 +42,7 @@ RUN cd /home/ngseasy && \
     rm ./Anaconda2-4.0.0-Linux-x86_64.sh
 
 # set env for conda bib
-ENV PATH /opt/conda/bin:$PATH
+ENV PATH /home/ngseasy/conda/bin:$PATH
 
 # volumes
 VOLUME /home/ngseasy
@@ -70,5 +59,4 @@ EXPOSE 80
 EXPOSE 8080
 
 # starting point
-ENTRYPOINT [ "/usr/bin/tini", "--" ]
 CMD [ "/bin/bash" ]
