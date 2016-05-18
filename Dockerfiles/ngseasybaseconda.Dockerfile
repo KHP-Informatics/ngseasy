@@ -12,8 +12,8 @@ RUN apt-get update --fix-missing && \
     libglib2.0-0 libxext6 libsm6 libxrender1 \
     git mercurial subversion \
     make cmake gcc build-essential zlib1g-dev \
-    curl grep sed dpkg \
-    unzip tree && \
+    wget curl grep sed dpkg \
+    unzip tree libc6 time && \
     apt-get autoremove -y && \
     apt-get autoclean && \
     apt-get clean && \
