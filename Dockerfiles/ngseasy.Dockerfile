@@ -12,8 +12,8 @@ RUN apt-get update --fix-missing && \
     libglib2.0-0 libxext6 libsm6 libxrender1 \
     git mercurial subversion \
     make cmake gcc build-essential \
-    curl grep sed dpkgm \
-    unzip \
+    curl grep sed dpkg \
+    unzip && \
     apt-get autoremove -y && \
     apt-get autoclean && \
     apt-get clean && \
@@ -46,9 +46,8 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
 USER ngseasy
 
 # Anaconda2 install
-RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
-    wget --quiet https://repo.continuum.io/archive/Anaconda2-4.0.0-Linux-x86_64.sh && \
-    /bin/bash /Anaconda2-4.0.0-Linux-x86_64.sh -b -p /opt/conda && \
+RUN wget --quiet https://repo.continuum.io/archive/Anaconda2-4.0.0-Linux-x86_64.sh && \
+    /bin/bash /Anaconda2-4.0.0-Linux-x86_64.sh -b -p /home/conda && \
     rm /Anaconda2-4.0.0-Linux-x86_64.sh
 
 # set env for conda bib
