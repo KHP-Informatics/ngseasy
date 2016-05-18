@@ -11,7 +11,7 @@ RUN apt-get update --fix-missing && \
     wget bzip2 ca-certificates \
     libglib2.0-0 libxext6 libsm6 libxrender1 \
     git mercurial subversion \
-    make cmake gcc build-essential \
+    make cmake gcc build-essential zlib1g-dev \
     curl grep sed dpkg \
     unzip && \
     apt-get autoremove -y && \
@@ -40,15 +40,17 @@ ENV LANG C.UTF-8
 RUN useradd -m -U -s /bin/bash ngseasy && \
   cd /home/ngseasy && \
   chown ngseasy:ngseasy /home/ngseasy && \
-  usermod -aG sudo ngseasy
+  usermod -aG sudo ngseasy && \
+  echo 'export PATH=/home/ngseasy/bin:$PATH' > /etc/profile.d/conda.sh
 
 # switch to ngseasy user
 USER ngseasy
 
 # Anaconda2 install
-RUN wget --quiet https://repo.continuum.io/archive/Anaconda2-4.0.0-Linux-x86_64.sh && \
-    /bin/bash /Anaconda2-4.0.0-Linux-x86_64.sh -b -p /home/conda && \
-    rm /Anaconda2-4.0.0-Linux-x86_64.sh
+RUN cd /home/ngseasy && \
+    wget --quiet https://repo.continuum.io/archive/Anaconda2-4.0.0-Linux-x86_64.sh && \
+    /bin/bash ./Anaconda2-4.0.0-Linux-x86_64.sh -b -p /home/ngseasy/conda && \
+    rm ./Anaconda2-4.0.0-Linux-x86_64.sh
 
 # set env for conda bib
 ENV PATH /opt/conda/bin:$PATH
@@ -60,7 +62,7 @@ VOLUME /home/ngseasy/ngs_projects
 VOLUME /home/ngseasy/scratch
 
 # set Home
-HOME /home/ngseasy
+ENV HOME /home/ngseasy
 WORKDIR /home/ngseasy
 
 # Expose for future
