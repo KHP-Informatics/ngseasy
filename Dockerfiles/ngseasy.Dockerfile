@@ -39,9 +39,16 @@ USER ngseasy
 RUN cd /home/ngseasy && \
     wget --quiet https://repo.continuum.io/archive/Anaconda2-4.0.0-Linux-x86_64.sh && \
     /bin/bash ./Anaconda2-4.0.0-Linux-x86_64.sh -b -p /home/ngseasy/conda && \
-    rm ./Anaconda2-4.0.0-Linux-x86_64.sh
+    rm ./Anaconda2-4.0.0-Linux-x86_64.sh && \
+    apt-get update --fix-missing && \
+    apt-get upgrade -y && \
+    apt-get autoremove -y && \
+    apt-get autoclean && \
+    apt-get clean && \
+    apt-get purge && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# set env for conda bib
+# add conda bin to path
 ENV PATH /home/ngseasy/conda/bin:$PATH
 
 # volumes
