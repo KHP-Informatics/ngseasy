@@ -8,7 +8,6 @@ ADD ngs_conda_tool_list.txt ngs_conda_tool_list.txt
 
 RUN conda update -y conda
 RUN conda update -y conda-build
-RUN conda index /anaconda/conda-bld/linux-64 /anaconda/conda-bld/osx-64
 RUN conda config --add channels bioconda
 RUN conda config --add channels r
 RUN conda config --add channels sjnewhouse
