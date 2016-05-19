@@ -7,7 +7,7 @@ set -o nounset
 ## version
 VERSION="0.1"
 
-INSTALL_DIR="/home/${USER}"
+INSTALL_DIR="/home/ngseasy"
 
 echo "Installing to [${INSTALL_DIR}]"
 
@@ -20,7 +20,7 @@ echo "Anaconda is being installed at [${INSTALL_DIR}/anaconda2]"
 
 # add conda bin to path
 export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
-echo 'PATH=$PATH:${INSTALL_DIR}/anaconda2/bin' >> /home/${USER}/.bashrc
+echo 'PATH=$PATH:${INSTALL_DIR}/anaconda2/bin' >> /home/ngseasy/.bashrc
 
 # setup conda
 conda update -y conda
