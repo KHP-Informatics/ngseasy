@@ -5,19 +5,19 @@ local INSTALL_DIR="/home/${USER}"
 cd ${INSTALL_DIR}
 
 wget https://repo.continuum.io/archive/Anaconda2-4.0.0-Linux-x86_64.sh && \
-/bin/bash ./Anaconda2-4.0.0-Linux-x86_64.sh -b -p ${INSTALL_DIR}/conda && \
+/bin/bash ./Anaconda2-4.0.0-Linux-x86_64.sh -b -p ${INSTALL_DIR}/anaconda2 && \
 rm -v ./Anaconda2-4.0.0-Linux-x86_64.sh
 
 # add conda bin to path
-export PATH=$PATH:${INSTALL_DIR}/conda/bin
-echo 'PATH=$PATH:${INSTALL_DIR}/conda/bin' >> ~/home/${USER}/.bashrc
+export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
+echo 'PATH=$PATH:${INSTALL_DIR}/anaconda2/bin' >> ~/home/${USER}/.bashrc
 
 # setup conda
 conda update -y conda
 conda update -y conda-build
 conda update -y --all
-mkdir -p ${INSTALL_DIR}/conda/conda-bld/linux-64 ${INSTALL_DIR}/conda/conda-bld/osx-64
-conda index ${INSTALL_DIR}/conda/conda-bld/linux-64 ${INSTALL_DIR}/conda/conda-bld/osx-64
+mkdir -p ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/conda-bld/osx-64
+conda index ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/conda-bld/osx-64
 
 ## add channels
 conda config --add channels bioconda
@@ -40,4 +40,4 @@ nextflow self-update
 
 # list
 local TIME_STAMP=`date +"%d-%m-%y"`
-conda list -e > ${INSTALL_DIR}/conda/spec-file-${TIME_STAMP}.txt
+conda list -e > ${INSTALL_DIR}/anaconda2/spec-file-${TIME_STAMP}.txt
