@@ -7,11 +7,11 @@ RUN mkdir -p /home/ngseasy/conda/conda-bld/linux-64 /home/ngseasy/conda/conda-bl
 ADD ngs_conda_tool_list.txt ngs_conda_tool_list.txt
 
 RUN conda update -y conda
-RUN conda update -y conda-build
+RUN conda update -y conda conda-build
 RUN conda config --add channels bioconda
 RUN conda config --add channels r
 RUN conda config --add channels sjnewhouse
-
+RUN conda install anaconda-client
 RUN conda install -y --file ngs_conda_tool_list.txt
 RUN nextflow self-update
 
