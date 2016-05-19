@@ -20,7 +20,7 @@ echo "Anaconda is being installed at [${INSTALL_DIR}/anaconda2]"
 
 # add conda bin to path
 export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
-echo 'PATH=$PATH:${INSTALL_DIR}/anaconda2/bin' >> ~/home/${USER}/.bashrc
+echo 'PATH=$PATH:${INSTALL_DIR}/anaconda2/bin' >> /home/${USER}/.bashrc
 
 # setup conda
 conda update -y conda
