@@ -1,8 +1,7 @@
 #!/bin/env bash
 
 local INSTALL_DIR="/home/${USER}"
-echo "Installing to [{INSTALL_DIR}]"
-
+echo "Installing to [${INSTALL_DIR}]"
 cd ${INSTALL_DIR} && pwd
 
 wget https://repo.continuum.io/archive/Anaconda2-4.0.0-Linux-x86_64.sh && \
