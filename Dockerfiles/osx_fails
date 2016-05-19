@@ -1,0 +1,18 @@
+Error:  Packages missing in current osx-64 channels:
+  - parallel
+  - biobambam
+  - samblaster
+  - vt
+  - vawk
+  - pysamstats
+  - trim-galore
+  - snap-aligner
+  - khmer
+  - platypus-variant
+  - scalpel
+  - delly
+  - wham
+  - manta
+  - pindel
+  - svtools
+  - svtyper
