@@ -4,7 +4,8 @@ MAINTAINER Stephen Newhouse <stephen.j.newhouse@gmail.com>
 
 ADD ngseasy_conda_local_install.sh ngseasy_conda_local_install.sh
 
-RUN bash ngseasy_conda_local_install.sh && rm ngseasy_conda_local_install.sh
+RUN /bin/bash ngseasy_conda_local_install.sh && \
+ rm ngseasy_conda_local_install.sh
 
 ENV PATH /home/ngseasy/anaconda2/bin
 
