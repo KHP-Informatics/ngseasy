@@ -36,7 +36,7 @@ conda config --add channels sjnewhouse
 
 
 ## ngs tools
-wget https://github.com/KHP-Informatics/ngseasy/blob/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt
+wget https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt
 
 ## create ngseasy environment python >=2.7 for ngs tools
 conda create --yes --name ngseasy --file ngs_conda_tool_list.txt
