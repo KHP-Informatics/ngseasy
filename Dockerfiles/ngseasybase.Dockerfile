@@ -46,8 +46,6 @@ RUN apt-get update --fix-missing && \
     apt-get purge && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# http://bugs.python.org/issue19846
-# > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
 # configure locales
 RUN dpkg-reconfigure locales && \
   locale-gen C.UTF-8 && \
@@ -61,7 +59,6 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 
 # User set up
-# Create a user:ngseasy and group:ngseasy
 RUN useradd -m -U -s /bin/bash ngseasy && \
   cd /home/ngseasy && \
   chown ngseasy:ngseasy /home/ngseasy && \

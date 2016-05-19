@@ -34,16 +34,14 @@ conda config --add channels bioconda
 conda config --add channels r
 conda config --add channels sjnewhouse
 
-## create ngseasy environment python >=2.7 for ngs tools
-conda create --yes --name ngseasy
-source activate ngseasy
 
 ## ngs tools
 wget https://github.com/KHP-Informatics/ngseasy/blob/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt
 
-conda install -y \
---update-dependencies \
---file ./ngs_conda_tool_list.txt
+## create ngseasy environment python >=2.7 for ngs tools
+conda create --yes --name ngseasy --file ngs_conda_tool_list.txt
+source activate ngseasy
+
 rm -v ./ngs_conda_tool_list.txt
 
 ## update nextflow
