@@ -73,29 +73,6 @@ RUN chown -R ngseasy:ngseasy /home/ngseasy/
 # switch to ngseasy user
 USER ngseasy
 
-# Anaconda2 install
-RUN cd /home/ngseasy && \
- wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh  && \
- /bin/bash /home/ngseasy/Miniconda2-latest-Linux-x86_64.sh -b -p /home/ngseasy/conda && \
- rm -v /home/ngseasy/Miniconda2-latest-Linux-x86_64.sh
-
-RUN mkdir -p /home/ngseasy/conda/conda-bld/linux-64 /home/ngseasy/conda/conda-bld/osx-64
-
-# add conda bin to path
-ENV PATH /home/ngseasy/conda/bin:$PATH
-
-# setup conda
-ADD requirements.txt requirements.txt
-RUN conda update -y conda
-RUN conda install -y --file requirements.txt
-RUN conda update -y conda-build
-RUN conda index /home/ngseasy/conda/conda-bld/linux-64 /home/ngseasy/conda/conda-bld/osx-64
-
-## add channels
-RUN conda config --add channels bioconda
-RUN conda config --add channels r
-RUN conda config --add channels sjnewhouse
-
 # volumes
 VOLUME /home/ngseasy
 VOLUME /home/ngseasy/reference_genomes
