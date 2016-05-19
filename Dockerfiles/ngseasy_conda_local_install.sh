@@ -23,24 +23,26 @@ export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
 echo 'PATH=$PATH:${INSTALL_DIR}/anaconda2/bin' >> /home/ngseasy/.bashrc
 
 # setup conda
-conda update -y conda
-conda update -y conda-build
-conda update -y --all
+${INSTALL_DIR}/anaconda2/bin/conda update -y conda
+${INSTALL_DIR}/anaconda2/bin/conda update -y conda-build
+${INSTALL_DIR}/anaconda2/bin/conda update -y --all
 mkdir -p ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/conda-bld/osx-64
-conda index ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/conda-bld/osx-64
+${INSTALL_DIR}/anaconda2/bin/conda index ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/conda-bld/osx-64
 
 ## add channels
-conda config --add channels bioconda
-conda config --add channels r
-conda config --add channels sjnewhouse
+${INSTALL_DIR}/anaconda2/bin/conda config --add channels bioconda
+${INSTALL_DIR}/anaconda2/bin/conda config --add channels r
+${INSTALL_DIR}/anaconda2/bin/conda config --add channels sjnewhouse
 
 
 ## ngs tools
 wget https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt
 
 ## create ngseasy environment python >=2.7 for ngs tools
-conda create --yes --name ngseasy --file ngs_conda_tool_list.txt
-source activate ngseasy
+${INSTALL_DIR}/anaconda2/bin/conda create --yes --name ngseasy --file ngs_conda_tool_list.txt
+
+## activate
+ /bin/bash -c "source ${INSTALL_DIR}/anaconda2/bin/activate ngseasy"
 
 rm -v ./ngs_conda_tool_list.txt
 
@@ -49,4 +51,4 @@ nextflow self-update
 
 # list
 TIME_STAMP=`date +"%d-%m-%y"`
-conda list -e > ${INSTALL_DIR}/anaconda2/ngseasy-spec-file-${TIME_STAMP}.txt
+${INSTALL_DIR}/anaconda2/bin/conda list -e > ${INSTALL_DIR}/anaconda2/ngseasy-spec-file-${TIME_STAMP}.txt
