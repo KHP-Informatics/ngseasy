@@ -24,8 +24,8 @@ bcbio-variation-recall
 fastqc
 trimmomatic
 skewer
-trim-galore
 cutadapt
+trim-galore
 seqtk
 glia
 bwa
