@@ -1,4 +1,4 @@
-FROM debian:7.4
+FROM debian:stable
 
 MAINTAINER Stephen Newhouse <stephen.j.newhouse@gmail.com>
 
@@ -8,12 +8,34 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update --fix-missing && \
     apt-get upgrade -y && \
     apt-get install -y \
-    wget bzip2 ca-certificates \
-    libglib2.0-0 libxext6 libsm6 libxrender1 \
-    git mercurial subversion \
-    make cmake gcc build-essential zlib1g-dev \
-    wget curl grep sed dpkg \
-    unzip tree libc6 time && \
+    wget \
+    bzip2 \
+    ca-certificates \
+    libglib2.0-0 \
+    libxext6 \
+    libsm6 \
+    libxrender1 \
+    git \
+    mercurial \
+    subversion \
+    make \
+    cmake \
+    gcc \
+    build-essential \
+    zlib1g-dev \
+    patch \
+    perl \
+    libextutils-pkgconfig-perl \
+    byacc \
+    wget \
+    curl \
+    grep \
+    sed \
+    dpkg \
+    unzip \
+    tree \
+    libc6 \
+    time && \
     apt-get autoremove -y && \
     apt-get autoclean && \
     apt-get clean && \
@@ -22,7 +44,8 @@ RUN apt-get update --fix-missing && \
 
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
-ENV LANG C.UTF-8
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
 
 # User set up
 # Create a user:ngseasy and group:ngseasy
@@ -37,12 +60,27 @@ USER ngseasy
 
 # Anaconda2 install
 RUN cd /home/ngseasy && \
-    wget --quiet https://repo.continuum.io/archive/Anaconda2-4.0.0-Linux-x86_64.sh && \
-    /bin/bash ./Anaconda2-4.0.0-Linux-x86_64.sh -b -p /home/ngseasy/conda && \
-    rm ./Anaconda2-4.0.0-Linux-x86_64.sh
+ wget https://repo.continuum.io/archive/Anaconda2-4.0.0-Linux-x86_64.sh && \
+ /bin/bash ./Anaconda2-4.0.0-Linux-x86_64.sh -b -p /home/ngseasy/conda && \
+ rm -v /home/ngseasy/Anaconda2-4.0.0-Linux-x86_64.sh
+
+RUN mkdir -p /home/ngseasy/conda/conda-bld/linux-64 /home/ngseasy/conda/conda-bld/osx-64
 
 # add conda bin to path
 ENV PATH /home/ngseasy/conda/bin:$PATH
+
+# setup conda
+ADD requirements.txt requirements.txt
+RUN conda update -y conda
+RUN conda install -y --file requirements.txt
+RUN conda update -y conda-build
+RUN conda index /anaconda/conda-bld/linux-64 /anaconda/conda-bld/osx-64
+
+## add channels
+RUN conda config --add channels bioconda
+RUN conda config --add channels r
+RUN conda config --add channels sjnewhouse
+RUN conda config --add channels file://anaconda/conda-bld
 
 # volumes
 VOLUME /home/ngseasy
@@ -50,7 +88,7 @@ VOLUME /home/ngseasy/reference_genomes
 VOLUME /home/ngseasy/ngs_projects
 VOLUME /home/ngseasy/scratch
 
-RUN chown -R sgeasy:nsgeasy /home/ngseasy/
+RUN chown -R nsgeasy:nsgeasy /home/ngseasy/
 
 # set Home
 ENV HOME /home/ngseasy
