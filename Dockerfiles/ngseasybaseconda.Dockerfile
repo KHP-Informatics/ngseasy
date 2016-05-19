@@ -50,6 +50,8 @@ VOLUME /home/ngseasy/reference_genomes
 VOLUME /home/ngseasy/ngs_projects
 VOLUME /home/ngseasy/scratch
 
+RUN chown -R sgeasy:nsgeasy /home/ngseasy/
+
 # set Home
 ENV HOME /home/ngseasy
 WORKDIR /home/ngseasy
