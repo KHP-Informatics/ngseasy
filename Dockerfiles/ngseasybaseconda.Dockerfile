@@ -75,9 +75,9 @@ USER ngseasy
 
 # Anaconda2 install
 RUN cd /home/ngseasy && \
- wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh  && \
- /bin/bash /home/ngseasy/Miniconda3-latest-Linux-x86_64.sh -b -p /home/ngseasy/conda && \
- rm -v /home/ngseasy/Miniconda3-latest-Linux-x86_64.sh
+ wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh  && \
+ /bin/bash /home/ngseasy/Miniconda2-latest-Linux-x86_64.sh -b -p /home/ngseasy/conda && \
+ rm -v /home/ngseasy/Miniconda2-latest-Linux-x86_64.sh
 
 RUN mkdir -p /home/ngseasy/conda/conda-bld/linux-64 /home/ngseasy/conda/conda-bld/osx-64
 
