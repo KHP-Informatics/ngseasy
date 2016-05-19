@@ -2,7 +2,7 @@
 set -o errexit
 set -o pipefail
 #set -o nounset
-set -o xtrace
+#set -o xtrace
 
 ## version
 VERSION="ngseasy-v0.1-conda"
@@ -12,15 +12,37 @@ MYOS=`uname`
 MYHOME=${HOME}
 GETUSER=${USER}
 ARCH=`uname -m`
+echo "-------------------------------------------------------------------------"
+echo "NGSeasy (conda) Version : ${VERSION}"
+echo "-------------------------------------------------------------------------"
+echo "Installs Anaconda2-4 to local system along with a suite of NGS tools"
+echo "Currently only supports x86_64 Linux and Darwin (MAC OSX)"
+echo "Contact: stephen.j.newhouse@gmail.com"
+echo "-------------------------------------------------------------------------"
+echo ""
 echo "User: ${GETUSER}"
 echo "Home: ${MYHOME}"
-echo "OS: ${MYOS} ${ARCH}"
+
+## check arch
+if [[ "${ARCH}" == "x86_64" ]]; then
+  echo "OS: ${MYOS} ${ARCH}"
+  echo ""
+else
+  echo "Error: Currently only supports x86_64 Linux and Darwin (MAC OSX)"
+  echo "Exiting"
+  sleep 2s
+  exit 1
+fi
 
 ## Set Install directory. Default is HOME
 if [[ -z "${1}"  ]]; then
   INSTALL_DIR="${HOME}"
   echo "No arguments supplied"
   echo "Install directory set to default /home/user [${INSTALL_DIR}]"
+  echo ""
+  echo "Usage: bash ngseasy_conda_install.sh /PATH/TO/INSTALL/DIR"
+  echo ""
+  sleep 1s
 else
   INSTALL_DIR="${1}"
   echo "Install directory set to [${INSTALL_DIR}]"
@@ -39,8 +61,12 @@ if [[ "${MYOS}" == "Linux" ]]; then
   rm -v ./${CONDA}
   unset CONDA
   # add conda bin to path
-  echo "running: export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin"
   export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
+  # source dotfile
+  echo "Souce dotfile"
+  touch ${INSTALL_DIR}/.conda_bin
+  echo "export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin" >> ${INSTALL_DIR}/.conda_bin ## linux
+  /bin/bash -c "source ${INSTALL_DIR}/.conda_bin"
 
 elif [[  "${MYOS}" == "Darwin"  ]]; then
   CONDA=""
@@ -49,38 +75,22 @@ elif [[  "${MYOS}" == "Darwin"  ]]; then
   wget https://repo.continuum.io/archive/${CONDA} && \
   /bin/bash ./${CONDA} -b -p ${INSTALL_DIR}/anaconda2 && \
   rm -v ./${CONDA}
-  unset CONDA=
+  unset CONDA
   # add conda bin to path
-  echo "running: export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin"
   export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
-
-else
-   echo "Error: No OS detected"
-   echo "Exiting"
-   sleep 2s
-   exit 1
-fi
-
-# source dotfile
-echo "Souce dotfile"
-if [[ "${MYOS}" == "Linux" ]]; then
+  # source dotfile
+  echo "Souce dotfile"
   touch ${INSTALL_DIR}/.conda_bin
-  echo 'PATH=$PATH:${INSTALL_DIR}/anaconda2/bin' >> ${INSTALL_DIR}/.conda_bin ## linux
+  echo "export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin" >> ${INSTALL_DIR}/.conda_bin ## linux
   /bin/bash -c "source ${INSTALL_DIR}/.conda_bin"
-
-elif [[  "${MYOS}" == "Darwin"  ]]; then
-   touch ${INSTALL_DIR}/.conda_bin
-   echo 'PATH=$PATH:${INSTALL_DIR}/anaconda2/bin' >> ${INSTALL_DIR}/.conda_bin ## mac
-  /bin/bash -c "source ${INSTALL_DIR}/.conda_bin"
-
 else
-   echo "Error: No OS detected"
-   echo "Exiting"
-   sleep 2s
-   exit 1
+  echo "Error: No OS detected"
+  echo "Exiting"
+  sleep 2s
+  exit 1
 fi
 
-
+if [[ -x  "${INSTALL_DIR}/anaconda2/bin/conda" ]]; then
 # setup conda
 echo "Start conda set up"
 ${INSTALL_DIR}/anaconda2/bin/conda update -y conda
@@ -111,6 +121,13 @@ echo "activate ngseasy environment"
 
 ## update nextflow
 nextflow self-update
+
+else
+  echo "Error: can not find ${INSTALL_DIR}/anaconda2/bin/conda"
+  echo "Exiting"
+  sleep 2s
+  exit 1
+fi
 
 # list
 TIME_STAMP=`date +"%d-%m-%y"`
