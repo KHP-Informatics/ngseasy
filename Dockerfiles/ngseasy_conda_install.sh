@@ -110,6 +110,21 @@ ${INSTALL_DIR}/anaconda2/bin/conda config --add channels sjnewhouse
 echo "get ngs tool list"
 wget https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt
 
+# some tools are not built for osx yet. quikc fix is to remove them from list
+# I will see if we can build thiese tools for osx-64 conda...coming soon
+# some pretty important tools
+#  - parallel
+#  - biobambam
+#  - samblaster
+#  - vt
+#  - vawk
+#  - pysamstats
+#  - trim-galore
+#  - snap-aligner
+#  - khmer
+
+  #statements
+
 ## create ngseasy environment python >=2.7 for ngs tools
 echo "create ngseasy environment"
 ${INSTALL_DIR}/anaconda2/bin/conda create --yes --name ngseasy --file ngs_conda_tool_list.txt

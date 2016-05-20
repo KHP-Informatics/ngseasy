@@ -1,0 +1,9 @@
+parallel
+biobambam
+samblaster
+vt
+vawk
+pysamstats
+trim-galore
+snap-aligner
+khmer
