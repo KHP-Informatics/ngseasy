@@ -109,7 +109,7 @@ ${INSTALL_DIR}/anaconda2/bin/conda config --add channels sjnewhouse
 ## ngs tools
 echo "get ngs tool list"
 wget https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt
-
+wget https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list_osx_64_may2016.txt
 # some tools are not built for osx yet. quikc fix is to remove them from list
 # I will see if we can build thiese tools for osx-64 conda...coming soon
 # some pretty important tools
