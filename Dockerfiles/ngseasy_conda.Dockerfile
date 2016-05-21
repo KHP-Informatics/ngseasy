@@ -78,8 +78,10 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
 # switch to ngseasy user
 USER ngseasy
 
+# get ngseasy_conda_install script
 ADD ngseasy_conda_install.sh ngseasy_conda_install.sh
 
+# install conda and ngs tools
 RUN /bin/bash ngseasy_conda_install.sh && \
 rm ngseasy_conda_install.sh
 
