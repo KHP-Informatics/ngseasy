@@ -82,8 +82,7 @@ USER ngseasy
 ADD ngseasy_conda_install.sh /home/nsgeasy/ngseasy_conda_install.sh
 
 # install conda and ngs tools
-RUN /bin/bash /home/nsgeasy/ngseasy_conda_install.sh && \
-rm /home/nsgeasy/ngseasy_conda_install.sh
+RUN /bin/bash /home/nsgeasy/ngseasy_conda_install.sh
 
 # volumes
 VOLUME /home/ngseasy
