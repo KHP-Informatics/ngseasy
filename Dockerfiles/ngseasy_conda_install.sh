@@ -14,6 +14,7 @@ MYOS=`uname`
 MYHOME=${HOME}
 GETUSER=${USER}
 ARCH=`uname -m`
+echo ""
 echo "-------------------------------------------------------------------------"
 echo "NGSeasy (conda) Version : ${VERSION}"
 echo "-------------------------------------------------------------------------"
@@ -49,11 +50,11 @@ if [[ -z "${1}"  ]]; then
     sleep 3s
     exit 1
   fi
+  echo "RUNNING: ngseasy_conda_install.sh ${1}"
   echo "WARNING: No INSTALL_DIR specified"
   echo "WARNING:Install directory  will be set to default /home/user [${INSTALL_DIR}]"
   echo ""
   echo "Usage: bash ngseasy_conda_install.sh /PATH/TO/INSTALL/DIR"
-  echo ""
   sleep 1s
 else
   INSTALL_DIR="${1}"
