@@ -78,17 +78,14 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
 # switch to ngseasy user
 USER ngseasy
 
-ADD ngseasy_conda_install.sh ngseasy_conda_install.sh
-
-RUN /bin/bash ngseasy_conda_install.sh && \
-rm ngseasy_conda_install.sh
-
 # volumes
 VOLUME /home/ngseasy
 VOLUME /home/ngseasy/reference_genomes
 VOLUME /home/ngseasy/ngs_projects
+VOLUME /home/ngseasy/ngs_projects/fastq
 VOLUME /home/ngseasy/scratch
 VOLUME /home/ngseasy/anaconda2/bin
+
 
 # set Home
 ENV HOME /home/ngseasy

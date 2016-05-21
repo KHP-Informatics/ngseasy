@@ -76,11 +76,6 @@ if [[ "${MYOS}" == "Linux" ]]; then
   unset CONDA
   # add conda bin to path
   export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
-  # source dotfile
-  #echo "Souce dotfile"
-  #touch ${INSTALL_DIR}/.conda_bin
-  #echo "export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin" >> ${INSTALL_DIR}/.conda_bin ## linux
-  #/bin/bash -c "source ${INSTALL_DIR}/.conda_bin"
 
 elif [[  "${MYOS}" == "Darwin"  ]]; then
   CONDA=""
@@ -92,11 +87,7 @@ elif [[  "${MYOS}" == "Darwin"  ]]; then
   unset CONDA
   # add conda bin to path
   export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
-  # source dotfile
-  #echo "Souce dotfile"
-  #touch ${INSTALL_DIR}/.conda_bin
-  #echo "export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin" >> ${INSTALL_DIR}/.conda_bin ## linux
-  #/bin/bash -c "source ${INSTALL_DIR}/.conda_bin"
+
 else
   echo "ERROR: No OS detected"
   echo "Exiting"
