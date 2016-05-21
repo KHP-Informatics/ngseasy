@@ -89,6 +89,7 @@ rm ngseasy_conda_install.sh
 VOLUME /home/ngseasy
 VOLUME /home/ngseasy/reference_genomes
 VOLUME /home/ngseasy/ngs_projects
+VOLUME /home/ngseasy/ngs_projects/fastq
 VOLUME /home/ngseasy/scratch
 VOLUME /home/ngseasy/anaconda2/bin
 
