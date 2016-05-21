@@ -18,7 +18,7 @@ echo "-------------------------------------------------------------------------"
 echo "NGSeasy (conda) Version : ${VERSION}"
 echo "-------------------------------------------------------------------------"
 echo "Installs Anaconda2-4 to local system along with a suite of NGS tools"
-echo "Currently only supports x86_64 Linux and Darwin (MAC OSX)"
+echo "WARNING: Currently only supports x86_64 Linux and Darwin (MAC OSX)"
 echo "WARNING: Some important tools are missing for mac osx-64"
 echo "Contact: stephen.j.newhouse@gmail.com"
 echo "-------------------------------------------------------------------------"
@@ -44,8 +44,9 @@ if [[ -z "${1}"  ]]; then
   INSTALL_DIR="${HOME}"
   if [ "${INSTALL_DIR}" == "/home/root" ]; then
     echo "ERROR: trying to install to /home/root not permitted"
+    echo "are you really root?"
     echo "Exiting"
-    sleep 2s
+    sleep 3s
     exit 1
   fi
   echo "WARNING: No INSTALL_DIR specified"
@@ -74,10 +75,10 @@ if [[ "${MYOS}" == "Linux" ]]; then
   # add conda bin to path
   export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
   # source dotfile
-  echo "Souce dotfile"
-  touch ${INSTALL_DIR}/.conda_bin
-  echo "export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin" >> ${INSTALL_DIR}/.conda_bin ## linux
-  /bin/bash -c "source ${INSTALL_DIR}/.conda_bin"
+  #echo "Souce dotfile"
+  #touch ${INSTALL_DIR}/.conda_bin
+  #echo "export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin" >> ${INSTALL_DIR}/.conda_bin ## linux
+  #/bin/bash -c "source ${INSTALL_DIR}/.conda_bin"
 
 elif [[  "${MYOS}" == "Darwin"  ]]; then
   CONDA=""
@@ -90,10 +91,10 @@ elif [[  "${MYOS}" == "Darwin"  ]]; then
   # add conda bin to path
   export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
   # source dotfile
-  echo "Souce dotfile"
-  touch ${INSTALL_DIR}/.conda_bin
-  echo "export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin" >> ${INSTALL_DIR}/.conda_bin ## linux
-  /bin/bash -c "source ${INSTALL_DIR}/.conda_bin"
+  #echo "Souce dotfile"
+  #touch ${INSTALL_DIR}/.conda_bin
+  #echo "export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin" >> ${INSTALL_DIR}/.conda_bin ## linux
+  #/bin/bash -c "source ${INSTALL_DIR}/.conda_bin"
 else
   echo "ERROR: No OS detected"
   echo "Exiting"
