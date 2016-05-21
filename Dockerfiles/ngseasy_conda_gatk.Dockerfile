@@ -101,7 +101,7 @@ EXPOSE 80
 EXPOSE 8080
 
 ## gatk
-ADD ../../GATK_Install/GenomeAnalysisTK-3.5.tar.bz2 /home/ngseasy/anaconda2/bin/gatk-3.5.jar
+ADD GenomeAnalysisTK.jar /home/ngseasy/anaconda2/bin/gatk-3.5.jar
 
 # starting point
 CMD [ "/bin/bash" ]
