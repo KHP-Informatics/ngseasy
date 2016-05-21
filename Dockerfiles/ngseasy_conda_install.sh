@@ -104,7 +104,8 @@ fi
 
 if [[ -x  "${INSTALL_DIR}/anaconda2/bin/conda" ]]; then
 # setup conda
-echo "Start conda set up"
+which conda
+echo "Start conda set up and updates"
 ${INSTALL_DIR}/anaconda2/bin/conda update -y conda
 ${INSTALL_DIR}/anaconda2/bin/conda update -y conda-build
 ${INSTALL_DIR}/anaconda2/bin/conda update -y --all
@@ -112,7 +113,7 @@ mkdir -p ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/co
 ${INSTALL_DIR}/anaconda2/bin/conda index ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/conda-bld/osx-64
 
 ## add channels
-echo "add channels"
+echo "add channels bioconda r sjnewhouse"
 ${INSTALL_DIR}/anaconda2/bin/conda config --add channels bioconda
 ${INSTALL_DIR}/anaconda2/bin/conda config --add channels r
 ${INSTALL_DIR}/anaconda2/bin/conda config --add channels sjnewhouse
@@ -151,8 +152,10 @@ nextflow self-update
 
 else
   echo "ERROR: can not find ${INSTALL_DIR}/anaconda2/bin/conda"
+  which conda
+  echo "WARNING: did you install Anaconda2-4"
   echo "Exiting"
-  sleep 2s
+  sleep 3s
   exit 1
 fi
 
