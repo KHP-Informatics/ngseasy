@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 set -o errexit
 set -o pipefail
 #set -o nounset
@@ -12,7 +13,7 @@ VERSION="ngseasy-v0.1-conda"
 ## home and user
 MYOS=`uname`
 MYHOME=${HOME}
-GETUSER=${USER}
+GETUSER=`whoami`
 ARCH=`uname -m`
 echo ""
 echo "-------------------------------------------------------------------------"
@@ -137,19 +138,9 @@ wget https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerf
 #  - snap-aligner
 #  - khmer
 
-  #statements
-
-## create ngseasy environment python >=2.7 for ngs tools
-echo "create ngseasy environment"
-${INSTALL_DIR}/anaconda2/bin/conda create --yes --name ngseasy --file ngs_conda_tool_list.txt
+echo "Install ngseast tools"
+${INSTALL_DIR}/anaconda2/bin/conda install --yes --file ngs_conda_tool_list.txt
 rm -v ./ngs_conda_tool_list.txt
-
-## activate
-echo "activate ngseasy environment"
- /bin/bash -c "source ${INSTALL_DIR}/anaconda2/bin/activate ngseasy"
-
-## update nextflow
-nextflow self-update
 
 else
   echo "ERROR: can not find ${INSTALL_DIR}/anaconda2/bin/conda"
@@ -163,6 +154,7 @@ fi
 # list
 TIME_STAMP=`date +"%d-%m-%y"`
 ${INSTALL_DIR}/anaconda2/bin/conda list -e > ${INSTALL_DIR}/anaconda2/ngseasy-spec-file-${TIME_STAMP}.txt
+conda info
 unset INSTALL_DIR
 unset MYOS
 unset MYHOME
