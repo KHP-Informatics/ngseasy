@@ -63,7 +63,13 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   cd /home/ngseasy && \
   chown ngseasy:ngseasy /home/ngseasy && \
   usermod -aG sudo ngseasy && \
-  echo 'export PATH=/home/ngseasy/bin:$PATH' > /etc/profile.d/conda.sh
+  echo 'export PATH=/home/ngseasy/bin:$PATH' > /etc/profile.d/conda.sh && \
+  groupadd docker && \
+  usermod -aG docker ngseasy && \
+# Ensure permissions are set for update in place by arbitrary users
+# From: https://github.com/chapmanb/bcbio-nextgen/blob/master/Dockerfile#L68
+  find /usr/local -perm /u+x -execdir chmod a+x {} \; && \
+  find /usr/local -perm /u+w -execdir chmod a+w {} \; && \
 
 RUN chown -R ngseasy:ngseasy /home/ngseasy/
 

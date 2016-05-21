@@ -17,6 +17,7 @@ echo "NGSeasy (conda) Version : ${VERSION}"
 echo "-------------------------------------------------------------------------"
 echo "Installs Anaconda2-4 to local system along with a suite of NGS tools"
 echo "Currently only supports x86_64 Linux and Darwin (MAC OSX)"
+echo "WARNING: Some tools are missing for mac osx-64"
 echo "Contact: stephen.j.newhouse@gmail.com"
 echo "-------------------------------------------------------------------------"
 echo ""
@@ -37,6 +38,12 @@ fi
 ## Set Install directory. Default is HOME
 if [[ -z "${1}"  ]]; then
   INSTALL_DIR="${HOME}"
+  if [ "${INSTALL_DIR}" == "/home/root" ]; then
+    echo "ERROR: trying to install to /home/root not permitted"
+    echo "Exiting"
+    sleep 2s
+    exit 1
+  fi
   echo "No arguments supplied"
   echo "Install directory set to default /home/user [${INSTALL_DIR}]"
   echo ""
