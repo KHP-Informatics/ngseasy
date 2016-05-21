@@ -70,8 +70,7 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
 # From: https://github.com/chapmanb/bcbio-nextgen/blob/master/Dockerfile#L68
   find /usr/local -perm /u+x -execdir chmod a+x {} \; && \
   find /usr/local -perm /u+w -execdir chmod a+w {} \; && \
-
-RUN chown -R ngseasy:ngseasy /home/ngseasy/
+  chown -R ngseasy:ngseasy /home/ngseasy/
 
 # switch to ngseasy user
 USER ngseasy

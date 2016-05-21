@@ -1,4 +1,4 @@
-FROM snewhouse/ngseasybase:aplha-0.0.3
+FROM snewhouse/ngseasybase:aplha-0.0.4
 
 MAINTAINER Stephen Newhouse <stephen.j.newhouse@gmail.com>
 
