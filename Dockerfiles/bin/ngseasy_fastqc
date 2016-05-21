@@ -26,5 +26,4 @@ local CMD=`${${EXEC} ${OPTIONS} ${FASTQ1} ${FASTQ2}`
 echo "RUN: ${CMD}"
 ${CMD}
 
-
 rm -rf $PROJECT/TEMP-FASTQC
