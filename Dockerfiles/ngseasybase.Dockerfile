@@ -67,6 +67,7 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   chown ngseasy:ngseasy /home/ngseasy && \
   usermod -aG sudo ngseasy && \
 # echo 'export PATH=/home/ngseasy/anaconda2/bin:$PATH' > /etc/profile.d/conda.sh && \
+  echo 'export PATH=/home/ngseasy/anaconda2/bin:$PATH' > /home/ngseasy/.bashrc && \
   groupadd docker && \
   usermod -aG docker ngseasy && \
 # Ensure permissions are set for update in place by arbitrary users
