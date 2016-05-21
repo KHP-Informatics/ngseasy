@@ -79,13 +79,14 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
 USER ngseasy
 
 # get ngseasy_conda_install script
-ADD ngseasy_conda_install.sh /home/nsgeasy/ngseasy_conda_install.sh
+COPY ngseasy_conda_install.sh /home/ngseasy/
 
 # install conda and ngs tools
 RUN /bin/bash /home/nsgeasy/ngseasy_conda_install.sh
 
 # volumes
 VOLUME /home/ngseasy
+VOLUME /home/ngseasy/resources
 VOLUME /home/ngseasy/reference_genomes
 VOLUME /home/ngseasy/ngs_projects
 VOLUME /home/ngseasy/ngs_projects/fastq

@@ -70,7 +70,7 @@ if [[ "${MYOS}" == "Linux" ]]; then
   CONDA=""
   CONDA="Anaconda2-4.0.0-Linux-x86_64.sh"
   echo "Anaconda2-4.0.0 is being installed to [${INSTALL_DIR}/anaconda2]"
-  wget https://repo.continuum.io/archive/${CONDA} && \
+  wget --quiet https://repo.continuum.io/archive/${CONDA} && \
   /bin/bash ./${CONDA} -b -p ${INSTALL_DIR}/anaconda2 && \
   rm -v ./${CONDA}
   unset CONDA
@@ -81,7 +81,7 @@ elif [[  "${MYOS}" == "Darwin"  ]]; then
   CONDA=""
   CONDA="Anaconda2-4.0.0-MacOSX-x86_64.sh"
   echo "Anaconda2-4.0.0 is being installed to [${INSTALL_DIR}/anaconda2]"
-  wget https://repo.continuum.io/archive/${CONDA} && \
+  wget --quiet  https://repo.continuum.io/archive/${CONDA} && \
   /bin/bash ./${CONDA} -b -p ${INSTALL_DIR}/anaconda2 && \
   rm -v ./${CONDA}
   unset CONDA
