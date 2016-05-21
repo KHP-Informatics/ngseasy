@@ -129,7 +129,7 @@ wget https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerf
 #  - snap-aligner
 #  - khmer
 
-echo "Install ngseast tools"
+echo "Install ngseasy tools"
 ${INSTALL_DIR}/anaconda2/bin/conda install --yes --file ngs_conda_tool_list.txt
 rm -v ./ngs_conda_tool_list.txt
 
