@@ -79,11 +79,11 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
 USER ngseasy
 
 # get ngseasy_conda_install script
-ADD ngseasy_conda_install.sh ngseasy_conda_install.sh
+ADD ngseasy_conda_install.sh /home/nsgeasy/ngseasy_conda_install.sh
 
 # install conda and ngs tools
-RUN /bin/bash ngseasy_conda_install.sh && \
-rm ngseasy_conda_install.sh
+RUN /bin/bash /home/nsgeasy/ngseasy_conda_install.sh && \
+rm /home/nsgeasy/ngseasy_conda_install.sh
 
 # volumes
 VOLUME /home/ngseasy
