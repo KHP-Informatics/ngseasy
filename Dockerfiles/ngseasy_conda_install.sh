@@ -4,9 +4,11 @@ set -o pipefail
 #set -o nounset
 #set -o xtrace
 
+##----------------------------------------------------------------------------##
 ## version
 VERSION="ngseasy-v0.1-conda"
 
+##----------------------------------------------------------------------------##
 ## home and user
 MYOS=`uname`
 MYHOME=${HOME}
@@ -24,17 +26,19 @@ echo ""
 echo "User: ${GETUSER}"
 echo "Home: ${MYHOME}"
 
+##----------------------------------------------------------------------------##
 ## check arch
 if [[ "${ARCH}" == "x86_64" ]]; then
   echo "OS: ${MYOS} ${ARCH}"
   echo ""
 else
-  echo "Error: Currently only supports x86_64 Linux and Darwin (MAC OSX)"
+  echo "ERROR: Currently only supports x86_64 Linux and Darwin (MAC OSX)"
   echo "Exiting"
   sleep 2s
   exit 1
 fi
 
+##----------------------------------------------------------------------------##
 ## Set Install directory. Default is HOME
 if [[ -z "${1}"  ]]; then
   INSTALL_DIR="${HOME}"
@@ -44,8 +48,8 @@ if [[ -z "${1}"  ]]; then
     sleep 2s
     exit 1
   fi
-  echo "No arguments supplied"
-  echo "Install directory set to default /home/user [${INSTALL_DIR}]"
+  echo "WARNING: No INSTALL_DIR specified"
+  echo "WARNING:Install directory  will be set to default /home/user [${INSTALL_DIR}]"
   echo ""
   echo "Usage: bash ngseasy_conda_install.sh /PATH/TO/INSTALL/DIR"
   echo ""
@@ -55,7 +59,7 @@ else
   echo "Install directory set to [${INSTALL_DIR}]"
 fi
 
-
+##----------------------------------------------------------------------------##
 ## Install anaconda2
 cd ${INSTALL_DIR}
 
@@ -91,7 +95,7 @@ elif [[  "${MYOS}" == "Darwin"  ]]; then
   echo "export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin" >> ${INSTALL_DIR}/.conda_bin ## linux
   /bin/bash -c "source ${INSTALL_DIR}/.conda_bin"
 else
-  echo "Error: No OS detected"
+  echo "ERROR: No OS detected"
   echo "Exiting"
   sleep 2s
   exit 1
@@ -112,7 +116,7 @@ ${INSTALL_DIR}/anaconda2/bin/conda config --add channels bioconda
 ${INSTALL_DIR}/anaconda2/bin/conda config --add channels r
 ${INSTALL_DIR}/anaconda2/bin/conda config --add channels sjnewhouse
 
-
+##----------------------------------------------------------------------------##
 ## ngs tools
 echo "get ngs tool list"
 wget https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt
@@ -145,7 +149,7 @@ echo "activate ngseasy environment"
 nextflow self-update
 
 else
-  echo "Error: can not find ${INSTALL_DIR}/anaconda2/bin/conda"
+  echo "ERROR: can not find ${INSTALL_DIR}/anaconda2/bin/conda"
   echo "Exiting"
   sleep 2s
   exit 1
@@ -159,6 +163,8 @@ unset MYOS
 unset MYHOME
 unset GETUSER
 unset ARCH
+
+##----------------------------------------------------------------------------##
 ## The end
 echo "Done installing ngseasy tools [Version: ${VERSION}]"
 unset VERSION

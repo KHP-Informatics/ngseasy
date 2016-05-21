@@ -39,7 +39,10 @@ RUN apt-get update --fix-missing && \
     libc6 \
     llvm \
     locales \
-    time && \
+    time \
+    sudo && \
+    apt-get update --fix-missing && \
+    apt-get upgrade -y && \
     apt-get autoremove -y && \
     apt-get autoclean && \
     apt-get clean && \
