@@ -6,10 +6,10 @@ sets up ngseasy user and some of the volumes
 installs some basic tools to build stuff  
 
 ### ngseasy
-- uses `conda` to add ngs tools. see `ngseasy_conda_install.sh`    
-- see install script for details  
-- the single "APP" here is an NGS tool box for alignment and variant calling 
-- see `ngseasy_conda.Dockerfile`
+- uses `conda` to add ngs tools (see `ngs_conda_tool_list.txt`)  
+- see install script for details. see `ngseasy_conda_install.sh`  
+- the single "APP" here is an NGS tool box for alignment and variant calling  
+- see `ngseasy_conda.Dockerfile`  
 
 **ngseasy_conda.Dockerfile**  
 
