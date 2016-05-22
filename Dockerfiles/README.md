@@ -37,6 +37,8 @@ snewhouse/ngseasy   aplha-0.0.3         47bde4210d45        5 seconds ago       
 
 ```bash
 docker save 47bde4210d45 | sudo docker-squash -t snewhouse/ngseasy:squash-a-0.0.3 | docker load
+
+save  47bde4210d45 | sudo docker-squash -t squash -verbose | docker load
 ```
 
 ## Create NGSeasy env?
