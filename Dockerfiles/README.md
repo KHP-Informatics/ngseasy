@@ -27,6 +27,19 @@ This file `ngseasy-spec-file-22-05-16.txt` may be used to create an environment 
 conda create --name ngseasy --file ngseasy-spec-file-22-05-16.txt
 ```
 
+## A thought
+
+```bash
+docker run \
+-v ${DATA}:/home/ngseasy/ngs_projects \
+-v ${RAWFASTQ}:/home/ngseasy/ngs_projects/fastq \
+-v ${REFGENOMES}:/home/ngseasy/reference_genomes \
+-v ${NOVOALIGN_LIC}:/home/ngseasy/anaconda2/bin \
+-v ${GATK}:/home/ngseasy/anaconda2/bin \
+--rm=true \
+-it snewhouse/ngseasy:aplha-0.0.2 bash ngseasy -c runconfig.tsv
+```
+
 ## Warning
 conda builds for some important tools are missing for osx_64 Mac and I guess Windows. 
 
