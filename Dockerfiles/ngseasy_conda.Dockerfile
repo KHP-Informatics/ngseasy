@@ -75,14 +75,14 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
   find /usr/local -perm /u+w -execdir chmod a+w {} \; && \
   chown -R ngseasy:ngseasy /home/ngseasy/
 
-# switch to ngseasy user
-USER ngseasy
-
 # get ngseasy_conda_install script
 COPY ngseasy_conda_install.sh /home/ngseasy/
 
 # install conda and ngs tools
 RUN /bin/bash /home/nsgeasy/ngseasy_conda_install.sh
+
+# switch to ngseasy user
+USER ngseasy
 
 # volumes
 VOLUME /home/ngseasy
