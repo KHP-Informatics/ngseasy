@@ -20,6 +20,13 @@ installs some basic tools to build stuff
 docker build --force-rm --rm=true --file=ngseasy_conda.Dockerfile -t snewhouse/ngseasy:aplha-0.0.1 .
 ```
 
+## Create NGSeasy env?
+This file `ngseasy-spec-file-22-05-16.txt` may be used to create an environment using:
+
+```bash
+conda create --name ngseasy --file ngseasy-spec-file-22-05-16.txt
+```
+
 ## Warning
 conda builds for some important tools are missing for osx_64 Mac and I guess Windows. 
 
