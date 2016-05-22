@@ -6,9 +6,18 @@ sets up ngseasy user and some of the volumes
 installs some basic tools to build stuff  
 
 ### ngseasy
-- uses `conda` to add ngs tools    
+- uses `conda` to add ngs tools. see `ngseasy_conda_install.sh`    
 - see install script for details  
 - the single "APP" here is an NGS tool box for alignment and variant calling 
+- see `ngseasy_conda.Dockerfile`
+
+**ngseasy_conda.Dockerfile**  
+
+- test build  
+
+```bash
+docker build --force-rm --rm=true --file=ngseasy_conda.Dockerfile -t snewhouse/ngseasy:aplha-0.0.1 .
+```
 
 ## Warning
 conda builds for some important tools are missing for osx_64 Mac and I guess Windows. 
