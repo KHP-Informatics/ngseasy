@@ -67,6 +67,7 @@ conda builds for some important tools are missing for osx_64 Mac and I guess Win
 - network issues mean that pulling images takes ages
 - wget install file for anaconda > 24hours
 - moved dev to AWS; using my personal account (t2.small , 50GB Storage)
+- all built in less than an hour!!!!!!
 
 ### smaller images
 - see mulled project: https://github.com/mulled/mulled
