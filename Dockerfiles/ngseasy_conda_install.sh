@@ -43,7 +43,7 @@ fi
 ## Set Install directory. Default is HOME
 if [[ -z "${1}"  ]]; then
   INSTALL_DIR="${HOME}"
-  if [ "${INSTALL_DIR}" == "/home/root" ]; then
+  if [ "${INSTALL_DIR}" == "/home/root" ] || [ "${INSTALL_DIR}" == "/root" ] ; then
     echo "ERROR: trying to install to /home/root not permitted"
     echo "are you really root?"
     echo "Exiting"
