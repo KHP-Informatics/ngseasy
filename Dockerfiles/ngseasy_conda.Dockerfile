@@ -90,7 +90,9 @@ RUN mkdir -p /home/ngseasy/resources && \
     mkdir -p /home/ngseasy/reference_genomes && \
     mkdir -p /home/ngseasy/ngs_projects && \
     mkdir -p /home/ngseasy/ngs_projects/fastq && \
-    mkdir -p /home/ngseasy/scratch
+    mkdir -p /home/ngseasy/scratch && \
+    export "export PATH=$PATH:/home/ngseasy/anaconda2/bin" >> /home/ngseasy/.bashrc && \
+    /bin/bash -c "source /home/ngseasy/.bashrc"
 
 # set Home
 ENV HOME /home/ngseasy
