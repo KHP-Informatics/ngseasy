@@ -86,13 +86,11 @@ RUN /bin/bash /home/ngseasy/ngseasy_conda_install.sh /home/ngseasy && \
 USER ngseasy
 
 # volumes
-VOLUME /home/ngseasy
-VOLUME /home/ngseasy/resources
-VOLUME /home/ngseasy/reference_genomes
-VOLUME /home/ngseasy/ngs_projects
-VOLUME /home/ngseasy/ngs_projects/fastq
-VOLUME /home/ngseasy/scratch
-VOLUME /home/ngseasy/anaconda2/bin
+RUN mkdir -p /home/ngseasy/resources && \
+    mkdir -p /home/ngseasy/reference_genomes && \
+    mkdir -p /home/ngseasy/ngs_projects && \
+    mkdir -p /home/ngseasy/ngs_projects/fastq && \
+    mkdir -p /home/ngseasy/scratch
 
 # set Home
 ENV HOME /home/ngseasy
