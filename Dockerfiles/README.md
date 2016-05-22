@@ -31,7 +31,9 @@ snewhouse/ngseasy   aplha-0.0.3         47bde4210d45        5 seconds ago       
 
 - https://github.com/jwilder/docker-squash
 
-
+```bash
+docker save 47bde4210d45 | sudo docker-squash -t snewhouse/ngseasy:squash-a-0.0.3 | docker load
+```
 
 ## Create NGSeasy env?
 This file `ngseasy-spec-file-22-05-16.txt` may be used to create an environment using:
