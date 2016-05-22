@@ -17,8 +17,21 @@ installs some basic tools to build stuff
 - test build  
 
 ```bash
-docker build --force-rm --rm=true --file=ngseasy_conda.Dockerfile -t snewhouse/ngseasy:aplha-0.0.1 .
+docker build --force-rm --rm=true --file=ngseasy_conda.Dockerfile -t snewhouse/ngseasy:aplha-0.0.3 .
 ```
+
+- v0.0.3 : after fixing mess with volumes being ROOT and adding anaconda2/bin to PATH
+
+```
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+snewhouse/ngseasy   aplha-0.0.3         47bde4210d45        5 seconds ago       4.934 GB
+```
+
+**docker-squash**
+
+- https://github.com/jwilder/docker-squash
+
+
 
 ## Create NGSeasy env?
 This file `ngseasy-spec-file-22-05-16.txt` may be used to create an environment using:
