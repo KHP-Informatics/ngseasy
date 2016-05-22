@@ -11,6 +11,9 @@ installs some basic tools to build stuff
 - See install script for details. see `ngseasy_conda_install.sh`  
 - The single "APP" here is an NGS tool box for alignment and variant calling  
 - See `ngseasy_conda.Dockerfile`  
+- Full Anaconda install
+- miniconda maybe : after we work out all the required dependencies
+- i have a feeling it will still be quite large image
 
 **ngseasy_conda.Dockerfile**  
 
