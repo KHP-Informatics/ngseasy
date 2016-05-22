@@ -14,3 +14,9 @@ installs some basic tools to build stuff
 conda builds for some important tools are missing for osx_64 Mac and I guess Windows. 
 
 **Use Linux Folks** and run NGS on HPC or the cloud or Workstation with >16CPUs, > 30GB RAM and LOOOOTS of storage!
+
+## misc
+
+- dev on rosalind openstack takes toooo long.
+- network issues mean that pulling images takes ages
+- wget install file for anaconda > 24hours
