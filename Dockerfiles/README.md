@@ -21,6 +21,7 @@ docker build --force-rm --rm=true --file=ngseasy_conda.Dockerfile -t snewhouse/n
 ```
 
 - v0.0.3 : after fixing mess with volumes being ROOT and adding anaconda2/bin to PATH
+- **4.934 GB** Image
 
 ```
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
