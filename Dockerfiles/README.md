@@ -10,3 +10,5 @@ installs some basic tools to build stuff
 - see install script for details  
 - the single "APP" here is an NGS tool box for alignment and variant calling 
 
+## Warning
+conda builds for some important tools are missing for osx_64 Mac and I guess Windows. Use Linux Folks and run NGS on HPC or the cloud of Workstation with >16CPUs, > 30GB RAM and LOOOOTS of storage!
