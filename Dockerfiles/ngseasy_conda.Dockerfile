@@ -81,7 +81,7 @@ RUN /bin/bash /home/ngseasy/ngseasy_conda_install.sh /home/ngseasy && \
   find /usr/local -perm /u+w -execdir chmod a+w {} \; && \
   chown -R ngseasy:ngseasy /home/ngseasy/ && \
   chmod -R 755 /home/ngseasy/anaconda2
-  
+
 # switch to ngseasy user
 USER ngseasy
 

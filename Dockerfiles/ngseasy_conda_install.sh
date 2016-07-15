@@ -131,6 +131,7 @@ wget https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerf
 
 echo "Install ngseasy tools"
 ${INSTALL_DIR}/anaconda2/bin/conda install --yes --file ngs_conda_tool_list.txt
+${INSTALL_DIR}/anaconda2/bin/conda clean -tipsy
 rm -v ./ngs_conda_tool_list.txt
 
 else
@@ -157,4 +158,3 @@ unset ARCH
 echo "Done installing ngseasy tools [Version: ${VERSION}]"
 unset VERSION
 sleep 3s
-
