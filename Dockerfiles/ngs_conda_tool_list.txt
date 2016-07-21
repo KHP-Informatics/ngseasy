@@ -52,3 +52,10 @@ pindel
 svtools
 svtyper
 lofreq
+qualimap
+star
+tophat
+cufflinks
+kallisto
+stringtie
+sailfish
