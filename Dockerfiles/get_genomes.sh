@@ -30,7 +30,7 @@ if [ $# -eq 0 ]; then
 fi
 
 if [ $1 == "hs38DH" ]; then
-	(wget -O- $url38 | gzip -dc; cat $root/resource-GRCh38/hs38DH-extra.fa) > $1.fa
+	wget -O- $url38 | gzip -dc; cat $root/resource-GRCh38/hs38DH-extra.fa > $1.fa
 	[ ! -f $1.fa.alt ] && cp $root/resource-GRCh38/hs38DH.fa.alt $1.fa.alt
 elif [ $1 == "hs38a" ]; then
 	wget -O- $url38 | gzip -dc > $1.fa
