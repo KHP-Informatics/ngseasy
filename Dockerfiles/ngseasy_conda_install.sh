@@ -40,9 +40,9 @@ else
 fi
 
 ##----------------------------------------------------------------------------##
-## Set Install directory. Default is HOME
+## Set Install directory. Default is /opt
 if [[ -z "${1}"  ]]; then
-  INSTALL_DIR="${HOME}"
+  INSTALL_DIR="/opt"
   if [ "${INSTALL_DIR}" == "/home/root" ] || [ "${INSTALL_DIR}" == "/root" ] ; then
     echo "ERROR: trying to install to /home/root not permitted"
     echo "are you really root?"
@@ -52,7 +52,7 @@ if [[ -z "${1}"  ]]; then
   fi
   echo "RUNNING: ngseasy_conda_install.sh ${1}"
   echo "WARNING: No INSTALL_DIR specified"
-  echo "WARNING:Install directory  will be set to default /home/user [${INSTALL_DIR}]"
+  echo "WARNING:Install directory  will be set to default /opt"
   echo "USEAGE: bash ngseasy_conda_install.sh /PATH/TO/INSTALL/DIR"
   sleep 1s
 else
@@ -130,8 +130,11 @@ wget https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerf
 #  - khmer
 
 echo "Install ngseasy tools"
+
 ${INSTALL_DIR}/anaconda2/bin/conda install --yes --file ngs_conda_tool_list.txt
+
 ${INSTALL_DIR}/anaconda2/bin/conda clean -tipsy
+
 rm -v ./ngs_conda_tool_list.txt
 
 else
@@ -139,7 +142,7 @@ else
   which conda
   echo "WARNING: did you install Anaconda2-4"
   echo "Exiting"
-  sleep 2s
+  #sleep 2s
   exit 1
 fi
 
