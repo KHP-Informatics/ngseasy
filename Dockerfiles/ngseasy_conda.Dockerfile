@@ -74,13 +74,12 @@ RUN useradd -m -U -s /bin/bash ngseasy && \
 COPY ngseasy_conda_install.sh /home/ngseasy/
 
 # install Anaconda and NGS tools
-RUN /bin/bash /home/ngseasy/ngseasy_conda_install.sh /home/ngseasy && \
+RUN /bin/bash /home/ngseasy/ngseasy_conda_install.sh /opt && \
 # Ensure permissions are set for update in place by arbitrary users
 # From: https://github.com/chapmanb/bcbio-nextgen/blob/master/Dockerfile#L68
   find /usr/local -perm /u+x -execdir chmod a+x {} \; && \
   find /usr/local -perm /u+w -execdir chmod a+w {} \; && \
-  chown -R ngseasy:ngseasy /home/ngseasy/ && \
-  chmod -R 755 /home/ngseasy/anaconda2
+  chown -R ngseasy:ngseasy /home/ngseasy/
 
 # switch to ngseasy user
 USER ngseasy
