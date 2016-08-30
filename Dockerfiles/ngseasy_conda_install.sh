@@ -82,7 +82,7 @@ fi
 cd ${INSTALL_DIR}
 
   CONDA=""
-  CONDA="Anaconda2-4.0.0-Linux-x86_64.sh"
+  CONDA="Anaconda2-4.1.1-Linux-x86_64.sh"
   echo "Anaconda2-4.0.0 is being installed to [${INSTALL_DIR}/anaconda2]"
   echo "wget -N --quiet https://repo.continuum.io/archive/${CONDA} && \
     /bin/bash ./${CONDA} -b -p ${INSTALL_DIR}/anaconda2 && \
