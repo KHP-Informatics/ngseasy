@@ -68,6 +68,7 @@ When sending bug reports etc please provide:-
 - Date of Download
 - OS and version
 - Basic Machine Specs (CPU, RAM)
+- Docker Version  
 - Network Speed ([Testing Internet Connection Speed](https://github.com/KHP-Informatics/ngseasy/tree/master#recommended-network-speed))
 - The Code you ran eg:- `ngseasy -c my.config.tsv -d /My/Dir `
 - your config file  
