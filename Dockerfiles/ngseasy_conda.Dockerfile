@@ -48,8 +48,7 @@ RUN apt-get update --fix-missing && \
     apt-get clean && \
     apt-get purge && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    # configure locales
-    && dpkg-reconfigure locales && \
+    dpkg-reconfigure locales && \
     locale-gen C.UTF-8 && \
     /usr/sbin/update-locale LANG=C.UTF-8 && \
     echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
@@ -63,31 +62,31 @@ ENV LANGUAGE en_US.UTF-8
 # get ngseasy_conda_install script
 COPY ngseasy_conda_install.sh /opt
 
-# install Anaconda and NGS tools
-RUN /bin/bash /opt/ngseasy_conda_install.sh /opt && \
+# install Anaconda
+# install NGS tools
+# install tini
 # Ensure permissions are set for update in place by arbitrary users
 # From: https://github.com/chapmanb/bcbio-nextgen/blob/master/Dockerfile#L68
+RUN /bin/bash /opt/ngseasy_conda_install.sh /opt && \
   find /usr/local -perm /u+x -execdir chmod a+x {} \; && \
   find /usr/local -perm /u+w -execdir chmod a+w {} \; && \
-  chown -R ngseasy:ngseasy /home/ngseasy/
+  TINI_VERSION=`curl https://github.com/krallin/tini/releases/latest | grep -o "/v.*\"" | sed 's:^..\(.*\).$:\1:'` && \
+  curl -L "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini_${TINI_VERSION}.deb" > tini.deb && \
+  dpkg -i tini.deb && \
+  rm tini.deb && \
+  pt-get autoremove -y && \
+  apt-get autoclean && \
+  apt-get clean && \
+  apt-get purge && \
+  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-
-  RUN apt-get install -y curl grep sed dpkg && \
-      TINI_VERSION=`curl https://github.com/krallin/tini/releases/latest | grep -o "/v.*\"" | sed 's:^..\(.*\).$:\1:'` && \
-      curl -L "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini_${TINI_VERSION}.deb" > tini.deb && \
-      dpkg -i tini.deb && \
-      rm tini.deb && \
-      apt-get clean
-
-  ENV PATH /opt/conda/bin:$PATH
-
-  ENTRYPOINT [ "/usr/bin/tini", "--" ]
-  CMD [ "/bin/bash" ]
-
+# add anaconda2/bin to PATH
+ENV PATH /opt/anaconda2/bin:$PATH
 
 # Expose for future
 EXPOSE 80
 EXPOSE 8080
 
-# starting point
+# entrypoint and base command
+ENTRYPOINT [ "/usr/bin/tini", "--" ]
 CMD [ "/bin/bash" ]

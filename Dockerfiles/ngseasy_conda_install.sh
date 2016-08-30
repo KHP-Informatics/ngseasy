@@ -84,15 +84,22 @@ cd ${INSTALL_DIR}
   CONDA=""
   CONDA="Anaconda2-4.0.0-Linux-x86_64.sh"
   echo "Anaconda2-4.0.0 is being installed to [${INSTALL_DIR}/anaconda2]"
+  echo "wget -N --quiet https://repo.continuum.io/archive/${CONDA} && \
+    /bin/bash ./${CONDA} -b -p ${INSTALL_DIR}/anaconda2 && \
+    rm -v ./${CONDA}"
+
   wget -N --quiet https://repo.continuum.io/archive/${CONDA} && \
   /bin/bash ./${CONDA} -b -p ${INSTALL_DIR}/anaconda2 && \
   rm -v ./${CONDA}
   unset CONDA
   # add conda bin to path
+  echo "export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin"
   export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
 
-if [[ -x  "${INSTALL_DIR}/anaconda2/bin/conda" ]]; then
+
+##----------------------------------------------------------------------------##
 # setup conda
+if [[ -x  "${INSTALL_DIR}/anaconda2/bin/conda" ]]; then
 which conda
 echo "Start conda set up and updates"
 echo "
@@ -143,20 +150,18 @@ wait
 echo "rm -v ./ngs_conda_tool_list.txt"
 rm -v ./ngs_conda_tool_list.txt
 
-
 else
   echo "ERROR: can not find ${INSTALL_DIR}/anaconda2/bin/conda"
-  which conda
   echo "WARNING: did you install Anaconda2-4"
   echo "Exiting"
-  #sleep 2s
   exit 1
 fi
 
-# list
+##----------------------------------------------------------------------------##
+# list tools and versions
 TIME_STAMP=`date +"%d-%m-%y"`
-${INSTALL_DIR}/anaconda2/bin/conda list -e > ${INSTALL_DIR}/anaconda2/ngseasy-spec-file-${TIME_STAMP}.txt
-conda info
+conda info > ${INSTALL_DIR}/anaconda2/ngseasy-spec-file-${TIME_STAMP}.txt
+${INSTALL_DIR}/anaconda2/bin/conda list -e >> ${INSTALL_DIR}/anaconda2/ngseasy-spec-file-${TIME_STAMP}.txt
 unset INSTALL_DIR
 unset MYOS
 unset MYHOME
