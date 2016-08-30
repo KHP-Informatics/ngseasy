@@ -2,7 +2,7 @@
 
 set -o errexit
 set -o pipefail
-#set -o nounset
+set -o nounset
 #set -o xtrace
 
 ##----------------------------------------------------------------------------##
@@ -11,17 +11,20 @@ VERSION="ngseasy-v0.1-conda"
 
 ##----------------------------------------------------------------------------##
 ## home and user
-MYOS=`uname`
+MYOS=$(uname)
 MYHOME=${HOME}
-GETUSER=`whoami`
-ARCH=`uname -m`
+GETUSER=$(whoami)
+ARCH=$(uname -m)
+
+##----------------------------------------------------------------------------##
+## opening message
 echo ""
 echo "-------------------------------------------------------------------------"
 echo "NGSeasy (conda) Version : ${VERSION}"
 echo "-------------------------------------------------------------------------"
 echo "Installs Anaconda2-4 to local system along with a suite of NGS tools"
-echo "WARNING: Currently only supports x86_64 Linux and Darwin (MAC OSX)"
-echo "WARNING: Some important tools are missing for mac osx-64"
+echo "WARNING: Currently only supports x86_64 Linux"
+echo "NOTE: Some important conda builds are missing for mac osx-64"
 echo "Contact: stephen.j.newhouse@gmail.com"
 echo "-------------------------------------------------------------------------"
 echo ""
@@ -29,15 +32,30 @@ echo "User: ${GETUSER}"
 echo "Home: ${MYHOME}"
 
 ##----------------------------------------------------------------------------##
+## check OS
+if [[ "${MYOS}" == "Linux" ]]; then
+  echo "${MYOS}" == "Linux"
+elif [[  "${MYOS}" == "Darwin"  ]]; then
+  echo "${MYOS}" == "Darwin"
+  echo "Currently only supports x86_64 Linux"
+  echo "Exiting"
+  exit 1
+else
+  echo "ERROR: No OS detected"
+  echo "Exiting"
+  exit 1
+fi
+
+##----------------------------------------------------------------------------##
 ## check arch
 if [[ "${ARCH}" == "x86_64" ]]; then
   echo "OS: ${MYOS} ${ARCH}"
 else
-  echo "ERROR: Currently only supports x86_64 Linux and Darwin (MAC OSX)"
+  echo "ERROR: Currently only supports x86_64 Linux"
   echo "Exiting"
-  sleep 2s
   exit 1
 fi
+
 
 ##----------------------------------------------------------------------------##
 ## Set Install directory. Default is /opt
@@ -47,7 +65,6 @@ if [[ -z "${1}"  ]]; then
     echo "ERROR: trying to install to /home/root not permitted"
     echo "are you really root?"
     echo "Exiting"
-    sleep 3s
     exit 1
   fi
   echo "RUNNING: ngseasy_conda_install.sh ${1}"
@@ -64,41 +81,29 @@ fi
 ## Install anaconda2
 cd ${INSTALL_DIR}
 
-if [[ "${MYOS}" == "Linux" ]]; then
   CONDA=""
   CONDA="Anaconda2-4.0.0-Linux-x86_64.sh"
   echo "Anaconda2-4.0.0 is being installed to [${INSTALL_DIR}/anaconda2]"
-  wget --quiet https://repo.continuum.io/archive/${CONDA} && \
-  sleep 2s && \
+  wget -N --quiet https://repo.continuum.io/archive/${CONDA} && \
   /bin/bash ./${CONDA} -b -p ${INSTALL_DIR}/anaconda2 && \
   rm -v ./${CONDA}
   unset CONDA
   # add conda bin to path
   export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
-
-elif [[  "${MYOS}" == "Darwin"  ]]; then
-  CONDA=""
-  CONDA="Anaconda2-4.0.0-MacOSX-x86_64.sh"
-  echo "Anaconda2-4.0.0 is being installed to [${INSTALL_DIR}/anaconda2]"
-  wget --quiet  https://repo.continuum.io/archive/${CONDA} && \
-  sleep 2s && \
-  /bin/bash ./${CONDA} -b -p ${INSTALL_DIR}/anaconda2 && \
-  rm -v ./${CONDA}
-  unset CONDA
-  # add conda bin to path
-  export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
-
-else
-  echo "ERROR: No OS detected"
-  echo "Exiting"
-  sleep 2s
-  exit 1
-fi
 
 if [[ -x  "${INSTALL_DIR}/anaconda2/bin/conda" ]]; then
 # setup conda
 which conda
 echo "Start conda set up and updates"
+echo "
+${INSTALL_DIR}/anaconda2/bin/conda update -y conda
+${INSTALL_DIR}/anaconda2/bin/conda update -y conda-build
+${INSTALL_DIR}/anaconda2/bin/conda update -y --all
+mkdir -p ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/conda-bld/osx-64
+${INSTALL_DIR}/anaconda2/bin/conda index ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/conda-bld/osx-64
+"
+
+# run cmd
 ${INSTALL_DIR}/anaconda2/bin/conda update -y conda
 ${INSTALL_DIR}/anaconda2/bin/conda update -y conda-build
 ${INSTALL_DIR}/anaconda2/bin/conda update -y --all
@@ -107,6 +112,12 @@ ${INSTALL_DIR}/anaconda2/bin/conda index ${INSTALL_DIR}/anaconda2/conda-bld/linu
 
 ## add channels
 echo "add channels bioconda r sjnewhouse"
+echo "
+${INSTALL_DIR}/anaconda2/bin/conda config --add channels bioconda
+${INSTALL_DIR}/anaconda2/bin/conda config --add channels r
+${INSTALL_DIR}/anaconda2/bin/conda config --add channels sjnewhouse
+"
+
 ${INSTALL_DIR}/anaconda2/bin/conda config --add channels bioconda
 ${INSTALL_DIR}/anaconda2/bin/conda config --add channels r
 ${INSTALL_DIR}/anaconda2/bin/conda config --add channels sjnewhouse
@@ -114,28 +125,24 @@ ${INSTALL_DIR}/anaconda2/bin/conda config --add channels sjnewhouse
 ##----------------------------------------------------------------------------##
 ## ngs tools
 echo "get ngs tool list"
-wget https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt
-wget https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list_osx_64_may2016.txt
-# some tools are not built for osx yet. quikc fix is to remove them from list
-# I will see if we can build thiese tools for osx-64 conda...coming soon
-# some pretty important tools
-#  - parallel
-#  - biobambam
-#  - samblaster
-#  - vt
-#  - vawk
-#  - pysamstats
-#  - trim-galore
-#  - snap-aligner
-#  - khmer
+echo "wget -N https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt"
+
+wget -N https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt
 
 echo "Install ngseasy tools"
+echo "${INSTALL_DIR}/anaconda2/bin/conda install --yes --file ngs_conda_tool_list.txt"
 
 ${INSTALL_DIR}/anaconda2/bin/conda install --yes --file ngs_conda_tool_list.txt
+wait
+
+echo "${INSTALL_DIR}/anaconda2/bin/conda clean -tipsy"
 
 ${INSTALL_DIR}/anaconda2/bin/conda clean -tipsy
+wait
 
+echo "rm -v ./ngs_conda_tool_list.txt"
 rm -v ./ngs_conda_tool_list.txt
+
 
 else
   echo "ERROR: can not find ${INSTALL_DIR}/anaconda2/bin/conda"
@@ -160,4 +167,3 @@ unset ARCH
 ## The end
 echo "Done installing ngseasy tools [Version: ${VERSION}]"
 unset VERSION
-sleep 3s
