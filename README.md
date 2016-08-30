@@ -4,8 +4,6 @@
 		
 		I am looking for collaborators (dev help) to help progress this project. Please get in contact
 
-### *Undergoing some re-dev...things may be broken...*
-
 NGSeasy: A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box
 =====================================================================================
 [![Join the chat at https://gitter.im/KHP-Informatics/ngseasy](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/KHP-Informatics/ngseasy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.31444.svg)](http://dx.doi.org/10.5281/zenodo.31444)
