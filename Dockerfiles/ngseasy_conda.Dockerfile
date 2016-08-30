@@ -74,7 +74,7 @@ RUN /bin/bash /opt/ngseasy_conda_install.sh /opt && \
   curl -L "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini_${TINI_VERSION}.deb" > tini.deb && \
   dpkg -i tini.deb && \
   rm tini.deb && \
-  pt-get autoremove -y && \
+  apt-get autoremove -y && \
   apt-get autoclean && \
   apt-get clean && \
   apt-get purge && \

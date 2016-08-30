@@ -9,6 +9,7 @@ bamtools
 bamutil
 sambamba
 samblaster
+picard
 bioawk
 vcftools
 vt

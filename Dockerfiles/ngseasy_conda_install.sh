@@ -102,13 +102,6 @@ cd ${INSTALL_DIR}
 if [[ -x  "${INSTALL_DIR}/anaconda2/bin/conda" ]]; then
 which conda
 echo "Start conda set up and updates"
-echo "
-${INSTALL_DIR}/anaconda2/bin/conda update -y conda
-${INSTALL_DIR}/anaconda2/bin/conda update -y conda-build
-${INSTALL_DIR}/anaconda2/bin/conda update -y --all
-mkdir -p ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/conda-bld/osx-64
-${INSTALL_DIR}/anaconda2/bin/conda index ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/conda-bld/osx-64
-"
 
 # run cmd
 ${INSTALL_DIR}/anaconda2/bin/conda update -y conda
@@ -119,11 +112,6 @@ ${INSTALL_DIR}/anaconda2/bin/conda index ${INSTALL_DIR}/anaconda2/conda-bld/linu
 
 ## add channels
 echo "add channels bioconda r sjnewhouse"
-echo "
-${INSTALL_DIR}/anaconda2/bin/conda config --add channels bioconda
-${INSTALL_DIR}/anaconda2/bin/conda config --add channels r
-${INSTALL_DIR}/anaconda2/bin/conda config --add channels sjnewhouse
-"
 
 ${INSTALL_DIR}/anaconda2/bin/conda config --add channels bioconda
 ${INSTALL_DIR}/anaconda2/bin/conda config --add channels r
@@ -132,20 +120,14 @@ ${INSTALL_DIR}/anaconda2/bin/conda config --add channels sjnewhouse
 ##----------------------------------------------------------------------------##
 ## ngs tools
 echo "get ngs tool list"
-curl -L https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt -o /opt/ngs_conda_tool_list.txt
+curl -L https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt \
+-o ${INSTALL_DIR}//ngs_conda_tool_list.txt
 
 echo "Install ngseasy tools"
-echo "${INSTALL_DIR}/anaconda2/bin/conda install --yes --file /opt/ngs_conda_tool_list.txt"
-
-${INSTALL_DIR}/anaconda2/bin/conda install --yes --file /opt/ngs_conda_tool_list.txt
+${INSTALL_DIR}/anaconda2/bin/conda install --yes --file ${INSTALL_DIR}/ngs_conda_tool_list.txt
 wait
-
-echo "${INSTALL_DIR}/anaconda2/bin/conda clean -tipsy"
-
 ${INSTALL_DIR}/anaconda2/bin/conda clean -tipsy
 wait
-
-echo "rm -v ./ngs_conda_tool_list.txt"
 rm -v ./ngs_conda_tool_list.txt
 
 else
