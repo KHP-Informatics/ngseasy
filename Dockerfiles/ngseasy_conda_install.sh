@@ -139,7 +139,7 @@ wget -N https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dock
 echo "Install ngseasy tools"
 echo "${INSTALL_DIR}/anaconda2/bin/conda install --yes --file ngs_conda_tool_list.txt"
 
-${INSTALL_DIR}/anaconda2/bin/conda install --yes --file ngs_conda_tool_list.txt
+${INSTALL_DIR}/anaconda2/bin/conda install --yes --file /opt/ngs_conda_tool_list.txt
 wait
 
 echo "${INSTALL_DIR}/anaconda2/bin/conda clean -tipsy"

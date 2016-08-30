@@ -61,6 +61,7 @@ ENV LANGUAGE en_US.UTF-8
 
 # get ngseasy_conda_install script
 COPY ngseasy_conda_install.sh /opt
+COPY ngs_conda_tool_list.txt /opt
 
 # install Anaconda
 # install NGS tools
