@@ -84,7 +84,7 @@ cd ${INSTALL_DIR}
   CONDA=""
   CONDA="Anaconda2-4.1.1-Linux-x86_64.sh"
   echo "Anaconda2-4.0.0 is being installed to [${INSTALL_DIR}/anaconda2]"
-  echo "wget -N --quiet https://repo.continuum.io/archive/${CONDA} && \
+  echo "wget -N https://repo.continuum.io/archive/${CONDA} && \
     /bin/bash ./${CONDA} -b -p ${INSTALL_DIR}/anaconda2 && \
     rm -v ./${CONDA}"
 
@@ -132,12 +132,10 @@ ${INSTALL_DIR}/anaconda2/bin/conda config --add channels sjnewhouse
 ##----------------------------------------------------------------------------##
 ## ngs tools
 echo "get ngs tool list"
-echo "wget -N https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt"
-
-wget -N https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt
+curl -L https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt -o /opt/ngs_conda_tool_list.txt
 
 echo "Install ngseasy tools"
-echo "${INSTALL_DIR}/anaconda2/bin/conda install --yes --file ngs_conda_tool_list.txt"
+echo "${INSTALL_DIR}/anaconda2/bin/conda install --yes --file /opt/ngs_conda_tool_list.txt"
 
 ${INSTALL_DIR}/anaconda2/bin/conda install --yes --file /opt/ngs_conda_tool_list.txt
 wait
