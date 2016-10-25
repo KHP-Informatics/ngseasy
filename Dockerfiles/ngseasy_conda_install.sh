@@ -60,7 +60,7 @@ fi
 ##----------------------------------------------------------------------------##
 ## Set Install directory. Default is /opt
 if [[ $# -eq 0  ]]; then
-  echo "WARNING: no arguments set. Using opt as default install directory"
+  echo "WARNING: no arguments set"
   INSTALL_DIR="/opt"
   if [ "${INSTALL_DIR}" == "/home/root" ] || [ "${INSTALL_DIR}" == "/root" ] ; then
     echo "ERROR: trying to install to /home/root not permitted"
@@ -68,7 +68,7 @@ if [[ $# -eq 0  ]]; then
     echo "Exiting"
     exit 1
   fi
-  echo "RUNNING: ngseasy_conda_install.sh ${1}"
+  echo "RUNNING: ngseasy_conda_install.sh ${INSTALL_DIR}"
   echo "WARNING: No INSTALL_DIR specified"
   echo "WARNING:Install directory  will be set to default /opt"
   echo "USEAGE: bash ngseasy_conda_install.sh /PATH/TO/INSTALL/DIR"
