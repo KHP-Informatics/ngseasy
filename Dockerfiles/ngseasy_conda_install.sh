@@ -59,7 +59,8 @@ fi
 
 ##----------------------------------------------------------------------------##
 ## Set Install directory. Default is /opt
-if [[ -z "${1}"  ]]; then
+if [[ $# -eq 0  ]]; then
+  echo "WARNING: no arguments set. Using opt as default install directory"
   INSTALL_DIR="/opt"
   if [ "${INSTALL_DIR}" == "/home/root" ] || [ "${INSTALL_DIR}" == "/root" ] ; then
     echo "ERROR: trying to install to /home/root not permitted"
