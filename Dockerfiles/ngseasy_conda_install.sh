@@ -28,28 +28,28 @@ echo "NOTE: Some important conda builds are missing for mac osx-64"
 echo "Contact: stephen.j.newhouse@gmail.com"
 echo "-------------------------------------------------------------------------"
 echo ""
-echo "User: ${GETUSER}"
-echo "Home: ${MYHOME}"
+echo "INFO: User: ${GETUSER}"
+echo "INFO: Home: ${MYHOME}"
 
 ##----------------------------------------------------------------------------##
 ## check OS
 if [[ "${MYOS}" == "Linux" ]]; then
-  echo "${MYOS}" == "Linux"
+  echo "INFO: ${MYOS}" == "Linux"
 elif [[  "${MYOS}" == "Darwin"  ]]; then
-  echo "${MYOS}" == "Darwin"
-  echo "Currently only supports x86_64 Linux"
-  echo "Exiting"
+  echo "INFO: ${MYOS}" == "Darwin"
+  echo "INFO: Currently only supports x86_64 Linux"
+  echo "INFO: Exiting"
   exit 1
 else
   echo "ERROR: No OS detected"
-  echo "Exiting"
+  echo "INFO: Exiting"
   exit 1
 fi
 
 ##----------------------------------------------------------------------------##
 ## check arch
 if [[ "${ARCH}" == "x86_64" ]]; then
-  echo "OS: ${MYOS} ${ARCH}"
+  echo "INFO: OS: ${MYOS} ${ARCH}"
 else
   echo "ERROR: Currently only supports x86_64 Linux"
   echo "Exiting"
@@ -64,18 +64,18 @@ if [[ $# -eq 0  ]]; then
   INSTALL_DIR="/opt"
   if [ "${INSTALL_DIR}" == "/home/root" ] || [ "${INSTALL_DIR}" == "/root" ] ; then
     echo "ERROR: trying to install to /home/root not permitted"
-    echo "are you really root?"
-    echo "Exiting"
+    echo "WARNING: are you really root?"
+    echo "INFO: Exiting"
     exit 1
   fi
-  echo "RUNNING: ngseasy_conda_install.sh ${INSTALL_DIR}"
+  echo "INFO: RUNNING: ngseasy_conda_install.sh ${INSTALL_DIR}"
   echo "WARNING: No INSTALL_DIR specified"
-  echo "WARNING:Install directory  will be set to default /opt"
+  echo "WARNING: Install directory  will be set to default /opt"
   echo "USEAGE: bash ngseasy_conda_install.sh /PATH/TO/INSTALL/DIR"
   sleep 1s
 else
   INSTALL_DIR="${1}"
-  echo "Install directory set to [${INSTALL_DIR}]"
+  echo "INFO: Install directory set to [${INSTALL_DIR}]"
 fi
 
 ##----------------------------------------------------------------------------##
@@ -84,17 +84,14 @@ cd ${INSTALL_DIR}
 
   CONDA=""
   CONDA="Anaconda2-4.1.1-Linux-x86_64.sh"
-  echo "Anaconda2-4.0.0 is being installed to [${INSTALL_DIR}/anaconda2]"
-  echo "wget -N https://repo.continuum.io/archive/${CONDA} && \
-    /bin/bash ./${CONDA} -b -p ${INSTALL_DIR}/anaconda2 && \
-    rm -v ./${CONDA}"
+  echo "Anaconda2 is being installed to [${INSTALL_DIR}/anaconda2]"
 
   wget -N --quiet https://repo.continuum.io/archive/${CONDA} && \
   /bin/bash ./${CONDA} -b -p ${INSTALL_DIR}/anaconda2 && \
   rm -v ./${CONDA}
   unset CONDA
   # add conda bin to path
-  echo "export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin"
+  echo "INFO: export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin"
   export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
 
 
@@ -102,7 +99,7 @@ cd ${INSTALL_DIR}
 # setup conda
 if [[ -x  "${INSTALL_DIR}/anaconda2/bin/conda" ]]; then
 which conda
-echo "Start conda set up and updates"
+echo "INFO: Start conda set up and updates"
 
 # run cmd
 ${INSTALL_DIR}/anaconda2/bin/conda update -y conda
@@ -112,7 +109,7 @@ mkdir -p ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/co
 ${INSTALL_DIR}/anaconda2/bin/conda index ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/conda-bld/osx-64
 
 ## add channels
-echo "add channels bioconda r sjnewhouse"
+echo "INFO: add channels bioconda r sjnewhouse"
 
 ${INSTALL_DIR}/anaconda2/bin/conda config --add channels bioconda
 ${INSTALL_DIR}/anaconda2/bin/conda config --add channels r
@@ -120,11 +117,11 @@ ${INSTALL_DIR}/anaconda2/bin/conda config --add channels sjnewhouse
 
 ##----------------------------------------------------------------------------##
 ## ngs tools
-echo "get ngs tool list"
+echo "INFO: get ngs tool list"
 curl -L https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dockerfiles/ngs_conda_tool_list.txt \
 -o ${INSTALL_DIR}//ngs_conda_tool_list.txt
 
-echo "Install ngseasy tools"
+echo "INFO: Install ngseasy tools"
 ${INSTALL_DIR}/anaconda2/bin/conda install --yes --file ${INSTALL_DIR}/ngs_conda_tool_list.txt
 wait
 ${INSTALL_DIR}/anaconda2/bin/conda clean -tipsy
@@ -134,7 +131,7 @@ rm -v ./ngs_conda_tool_list.txt
 else
   echo "ERROR: can not find ${INSTALL_DIR}/anaconda2/bin/conda"
   echo "WARNING: did you install Anaconda2-4"
-  echo "Exiting"
+  echo "INFO: Exiting"
   exit 1
 fi
 
@@ -151,5 +148,5 @@ unset ARCH
 
 ##----------------------------------------------------------------------------##
 ## The end
-echo "Done installing ngseasy tools [Version: ${VERSION}]"
+echo "INFO: Done installing ngseasy tools [Version: ${VERSION}]"
 unset VERSION
