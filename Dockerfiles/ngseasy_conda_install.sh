@@ -15,6 +15,10 @@ MYOS=$(uname)
 MYHOME=${HOME}
 GETUSER=$(whoami)
 ARCH=$(uname -m)
+CONDA_URL="https://repo.continuum.io/archive"
+CONDA_VERSION="4.2.0"
+PYTHON_VERSION="2"
+BIN_DIR="anaconda${PY_VERSION}"
 
 ##----------------------------------------------------------------------------##
 ## opening message
@@ -79,41 +83,43 @@ else
 fi
 
 ##----------------------------------------------------------------------------##
-## Install anaconda2
+## Install anaconda
+
+## move to install dir
 cd ${INSTALL_DIR}
 
-  CONDA=""
-  CONDA="Anaconda2-4.1.1-Linux-x86_64.sh"
-  echo "Anaconda2 is being installed to [${INSTALL_DIR}/anaconda2]"
+## set version name
+CONDA="Anaconda${PY_VERSION}-${CONDA_VERSION}-Linux-x86.sh"
+echo "Anaconda${PY_VERSION} is being installed to [${INSTALL_DIR}/anaconda${PY_VERSION}]"
 
-  wget -N --quiet https://repo.continuum.io/archive/${CONDA} && \
-  /bin/bash ./${CONDA} -b -p ${INSTALL_DIR}/anaconda2 && \
+## get install script from https://repo.continuum.io/archive/
+  wget -N https://repo.continuum.io/archive/${CONDA} && \
+  /bin/bash ./${CONDA} -b -p ${INSTALL_DIR}/anaconda${PY_VERSION} && \
   rm -v ./${CONDA}
   unset CONDA
-  # add conda bin to path
-  echo "INFO: export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin"
-  export PATH=$PATH:${INSTALL_DIR}/anaconda2/bin
+
+## add conda bin to path
+echo "INFO: export PATH=$PATH:${INSTALL_DIR}/anaconda${PY_VERSION}/bin"
+export PATH=$PATH:${INSTALL_DIR}/anaconda${PY_VERSION}/bin
 
 
 ##----------------------------------------------------------------------------##
 # setup conda
-if [[ -x  "${INSTALL_DIR}/anaconda2/bin/conda" ]]; then
+if [[ -x  "${INSTALL_DIR}/anaconda${PY_VERSION}/bin/conda" ]]; then
 which conda
 echo "INFO: Start conda set up and updates"
 
 # run cmd
-${INSTALL_DIR}/anaconda2/bin/conda update -y conda
-${INSTALL_DIR}/anaconda2/bin/conda update -y conda-build
-${INSTALL_DIR}/anaconda2/bin/conda update -y --all
-mkdir -p ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/conda-bld/osx-64
-${INSTALL_DIR}/anaconda2/bin/conda index ${INSTALL_DIR}/anaconda2/conda-bld/linux-64 ${INSTALL_DIR}/anaconda2/conda-bld/osx-64
+${INSTALL_DIR}/anaconda${PY_VERSION}/bin/conda update -y conda
+${INSTALL_DIR}/anaconda${PY_VERSION}/bin/conda update -y conda-build
+${INSTALL_DIR}/anaconda${PY_VERSION}/bin/conda update -y --all
 
 ## add channels
 echo "INFO: add channels bioconda r sjnewhouse"
 
-${INSTALL_DIR}/anaconda2/bin/conda config --add channels bioconda
-${INSTALL_DIR}/anaconda2/bin/conda config --add channels r
-${INSTALL_DIR}/anaconda2/bin/conda config --add channels sjnewhouse
+${INSTALL_DIR}/anaconda${PY_VERSION}/bin/conda config --add channels bioconda
+${INSTALL_DIR}/anaconda${PY_VERSION}/bin/conda config --add channels r
+${INSTALL_DIR}/anaconda${PY_VERSION}/bin/conda config --add channels sjnewhouse
 
 ##----------------------------------------------------------------------------##
 ## ngs tools
@@ -122,15 +128,15 @@ curl -L https://raw.githubusercontent.com/KHP-Informatics/ngseasy/f1000_dev/Dock
 -o ${INSTALL_DIR}//ngs_conda_tool_list.txt
 
 echo "INFO: Install ngseasy tools"
-${INSTALL_DIR}/anaconda2/bin/conda install --yes --file ${INSTALL_DIR}/ngs_conda_tool_list.txt
+${INSTALL_DIR}/anaconda${PY_VERSION}/bin/conda install --yes --file ${INSTALL_DIR}/ngs_conda_tool_list.txt
 wait
-${INSTALL_DIR}/anaconda2/bin/conda clean -tipsy
+${INSTALL_DIR}/anaconda${PY_VERSION}/bin/conda clean -tipsy
 wait
 rm -v ./ngs_conda_tool_list.txt
 
 else
-  echo "ERROR: can not find ${INSTALL_DIR}/anaconda2/bin/conda"
-  echo "WARNING: did you install Anaconda2-4"
+  echo "ERROR: can not find ${INSTALL_DIR}/anaconda${PY_VERSION}/bin/conda"
+  echo "WARNING: did you install Anaconda"
   echo "INFO: Exiting"
   exit 1
 fi
