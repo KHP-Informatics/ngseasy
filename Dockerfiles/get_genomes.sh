@@ -16,13 +16,14 @@ url37="ftp://ftp.ncbi.nlm.nih.gov/1000genomes/ftp/technical/reference/human_g1k_
 urlHG19="http://hgdownload.cse.ucsc.edu/goldenpath/hg19/bigZips/chromFa.tar.gz"
 
 if [ $# -eq 0 ]; then
-	echo "Usage: $0 <hs38|hs38a|hs38DH|hs37|hs37d5|hg19>"
+	echo "Usage: $0 <hs38|hs38a|hs38DH|hs37|hs37d5|hg19|viral>"
 	echo "Analysis sets:"
 	echo "  hs38     primary assembly of GRCh38 (incl. chromosomes, unplaced and unlocalized contigs) and EBV"
 	echo "  hs38a    hs38 plus ALT contigs"
 	echo "  hs38DH   hs38a plus decoy contigs and HLA genes (recommended for GRCh38 mapping)"
 	echo "  hs37     primary assembly of GRCh37 (used by 1000g phase 1) plus the EBV genome"
 	echo "  hs37d5   hs37 plus decoy contigs (used by 1000g phase 3)"
+	echo "  hg19     hg19 ucsc plus all alts"
 	echo ""
 	echo "Note: This script downloads human reference genomes. For hs38a and hs38DH, it needs additional"
 	echo "      sequences and ALT-to-REF mapping included in the bwa.kit package."
