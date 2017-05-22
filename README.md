@@ -1,8 +1,7 @@
 ![NGSeasy_logo](https://github.com/KHP-Informatics/ngseasy/blob/sjn_dev/figs/NGSeasy_logo_0.0.1.png)
 
-**Project Dev Delayed! (sorry)**
 		
-		I am looking for collaborators (dev help) to help progress this project. Please get in contact
+		I am looking for collaborators (dev help). Please get in contact
 
 NGSeasy: A [Dockerized](https://www.docker.com/) NGS pipeline and tool-box
 =====================================================================================
