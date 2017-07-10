@@ -804,3 +804,14 @@ sudo docker build -t compbio/ngseasy-snpeff:${VERSION} .
 
 *************************
 (C) 2015 Kings College London
+
+******
+
+<p align="center">
+  Development funded as part of:</br>
+  <a href="http://www.maudsleybrc.nihr.ac.uk/">NIHR Maudsley Biomedical Research Centre (BRC), King's College London</a> and the </br>  
+    <a href="http://www.ucl.ac.uk/health-informatics/">Farr Institute of Health Informatics Research, UCL Institute of Health Informatics, University College London</a>
+  </br>
+  <a href="http://phidatalab.org/">PHI Data Lab</a>:</br>
+  <a href="https://www.kcl.ac.uk/ioppn/index.aspx">Institute of Psychiatry, Psychology & Neuroscience,King's College London</a>.
+</p>
